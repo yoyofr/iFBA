@@ -1,0 +1,35 @@
+//
+// Prefix header for all source files of the 'iFBA' target in the 'iFBA' project
+//
+#include "TargetConditionals.h"
+#define TARGET_IPHONE_SIMULATOR 1
+
+#import <Availability.h>
+
+#ifndef __IPHONE_4_0
+#warning "This project uses features only available in iOS SDK 4.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+#endif
+
+#define IOS_BUILD 1
+
+#define __cdecl
+#define __fastcall
+#define USE_SPEEDHACKS 1
+#define LSB_FIRST 1
+#define BUILD_SDL 1
+
+
+//#undef _UNICODE
+//#define _stprintf swprintf 
+#define _T
+
+
+#if TARGET_IPHONE_SIMULATOR
+#else
+#endif
+

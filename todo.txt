@@ -1,0 +1,9 @@
+todo:
+
+Burn.cpp:
+potential mem leaks in BurnLocalisationSetName
+
+Neogeo:
+removed cd interface => to implement again
+
+
