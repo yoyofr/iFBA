@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3354E92A14F90A0E001DAF9D /* MenuViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */; };
+		3354E92C14F90A19001DAF9D /* MenuViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */; };
+		3354E93414F90ADE001DAF9D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3354E93614F90ADE001DAF9D /* Localizable.strings */; };
+		3354E93914F914AE001DAF9D /* GameBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */; };
+		3354E93C14F91697001DAF9D /* GameBrowserViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */; };
 		336B536614F4439B00CE9A63 /* burn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B4FAF14F4439A00CE9A63 /* burn.cpp */; };
 		336B536714F4439B00CE9A63 /* burn_gun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B4FB114F4439A00CE9A63 /* burn_gun.cpp */; };
 		336B536814F4439B00CE9A63 /* burn_led.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B4FB314F4439A00CE9A63 /* burn_led.cpp */; };
@@ -542,8 +547,6 @@
 		339E5FBF14F1851E006FB970 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FBE14F1851E006FB970 /* main.m */; };
 		339E5FC314F1851E006FB970 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FC214F1851E006FB970 /* AppDelegate.mm */; };
 		339E5FC614F1851E006FB970 /* MenuViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FC514F1851E006FB970 /* MenuViewController.mm */; };
-		339E5FD414F1851E006FB970 /* MenuViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FD214F1851E006FB970 /* MenuViewController_iPhone.xib */; };
-		339E5FD714F1851E006FB970 /* MenuViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FD514F1851E006FB970 /* MenuViewController_iPad.xib */; };
 		339E62E014F1944B006FB970 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E62DF14F1944A006FB970 /* OpenGLES.framework */; };
 		339E62E214F19454006FB970 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E62E114F19454006FB970 /* CoreAudio.framework */; };
 		339E630E14F19493006FB970 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E630D14F19492006FB970 /* AudioToolbox.framework */; };
@@ -560,6 +563,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuViewController_iPhone.xib; sourceTree = "<group>"; };
+		3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuViewController_iPad.xib; sourceTree = "<group>"; };
+		3354E93014F90A3C001DAF9D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = /Users/ymagnien/Desktop/dev/iphone/new/iFBA/iFBA/fr.lproj/InfoPlist.strings; sourceTree = "<absolute>"; };
+		3354E93514F90ADE001DAF9D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3354E93714F90AF4001DAF9D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameBrowserViewController.xib; sourceTree = "<group>"; };
+		3354E93A14F9152B001DAF9D /* GameBrowserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameBrowserViewController.h; sourceTree = "<group>"; };
+		3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameBrowserViewController.mm; sourceTree = "<group>"; };
 		336B4FAE14F4439A00CE9A63 /* bitswap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitswap.h; sourceTree = "<group>"; };
 		336B4FAF14F4439A00CE9A63 /* burn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = burn.cpp; sourceTree = "<group>"; };
 		336B4FB014F4439A00CE9A63 /* burn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = burn.h; sourceTree = "<group>"; };
@@ -1299,8 +1310,6 @@
 		339E5FC214F1851E006FB970 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		339E5FC414F1851E006FB970 /* MenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
 		339E5FC514F1851E006FB970 /* MenuViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MenuViewController.mm; sourceTree = "<group>"; };
-		339E5FD314F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MenuViewController_iPhone.xib; sourceTree = "<group>"; };
-		339E5FD614F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MenuViewController_iPad.xib; sourceTree = "<group>"; };
 		339E62DF14F1944A006FB970 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		339E62E114F19454006FB970 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		339E630D14F19492006FB970 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -2563,11 +2572,14 @@
 				339E636514F1B8BC006FB970 /* GlErrors.h */,
 				33F444D814F5685100BA36E1 /* EmuViewController.h */,
 				33F444D914F5685100BA36E1 /* EmuViewController.mm */,
+				3354E93A14F9152B001DAF9D /* GameBrowserViewController.h */,
+				3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */,
 				339E5FC414F1851E006FB970 /* MenuViewController.h */,
 				339E5FC514F1851E006FB970 /* MenuViewController.mm */,
 				33F444D614F567DC00BA36E1 /* EmuViewController.xib */,
-				339E5FD214F1851E006FB970 /* MenuViewController_iPhone.xib */,
-				339E5FD514F1851E006FB970 /* MenuViewController_iPad.xib */,
+				3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */,
+				3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */,
+				3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */,
 				339E5FB914F1851E006FB970 /* Supporting Files */,
 			);
 			path = iFBA;
@@ -2588,6 +2600,7 @@
 			isa = PBXGroup;
 			children = (
 				339E62D914F18B35006FB970 /* FBA */,
+				3354E93614F90ADE001DAF9D /* Localizable.strings */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2652,6 +2665,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				fr,
 			);
 			mainGroup = 339E5FA314F1851D006FB970;
 			productRefGroup = 339E5FAF14F1851E006FB970 /* Products */;
@@ -2669,8 +2683,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				339E5FBD14F1851E006FB970 /* InfoPlist.strings in Resources */,
-				339E5FD414F1851E006FB970 /* MenuViewController_iPhone.xib in Resources */,
-				339E5FD714F1851E006FB970 /* MenuViewController_iPad.xib in Resources */,
+				3354E92A14F90A0E001DAF9D /* MenuViewController_iPhone.xib in Resources */,
+				3354E92C14F90A19001DAF9D /* MenuViewController_iPad.xib in Resources */,
 				339A94DA14F238E600225183 /* Icon.png in Resources */,
 				339A94DC14F238E900225183 /* Icon@2x.png in Resources */,
 				339A94DE14F238EF00225183 /* Default.png in Resources */,
@@ -2683,6 +2697,8 @@
 				336B55B914F4439B00CE9A63 /* zconf.h.in in Resources */,
 				336B55F814F4439B00CE9A63 /* license.txt in Resources */,
 				33F444D714F567DC00BA36E1 /* EmuViewController.xib in Resources */,
+				3354E93414F90ADE001DAF9D /* Localizable.strings in Resources */,
+				3354E93914F914AE001DAF9D /* GameBrowserViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3218,34 +3234,30 @@
 				33F444CB14F50D8800BA36E1 /* cd_interface.cpp in Sources */,
 				33F444D314F5186000BA36E1 /* support_paths.cpp in Sources */,
 				33F444DA14F5685100BA36E1 /* EmuViewController.mm in Sources */,
+				3354E93C14F91697001DAF9D /* GameBrowserViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		3354E93614F90ADE001DAF9D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3354E93514F90ADE001DAF9D /* en */,
+				3354E93714F90AF4001DAF9D /* fr */,
+			);
+			name = Localizable.strings;
+			path = Resources/UILocalStrings;
+			sourceTree = "<group>";
+		};
 		339E5FBB14F1851E006FB970 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				339E5FBC14F1851E006FB970 /* en */,
+				3354E93014F90A3C001DAF9D /* fr */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		339E5FD214F1851E006FB970 /* MenuViewController_iPhone.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				339E5FD314F1851E006FB970 /* en */,
-			);
-			name = MenuViewController_iPhone.xib;
-			sourceTree = "<group>";
-		};
-		339E5FD514F1851E006FB970 /* MenuViewController_iPad.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				339E5FD614F1851E006FB970 /* en */,
-			);
-			name = MenuViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

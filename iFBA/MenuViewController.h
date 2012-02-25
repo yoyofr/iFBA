@@ -10,13 +10,16 @@
 #import <UIKit/UIView.h>
 
 @interface MenuViewController : UIViewController {
-    IBOutlet UIButton *btn_start;
+    IBOutlet UITableView *tabView;
+    IBOutlet UIBarButtonItem *btn_backToEmu;
     UIViewController *emuvc;
+    UIViewController *gamebrowservc;
 }
 
-@property (nonatomic, retain) IBOutlet UIButton *btn_start;
-@property (nonatomic, retain) UIViewController *emuvc;
+@property (nonatomic, retain) UIViewController *emuvc,*gamebrowservc;
+@property (nonatomic, retain) IBOutlet UITableView *tabView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
 
--(IBAction) btn_StartEmu;
+-(IBAction) backToEmu;
 
 @end

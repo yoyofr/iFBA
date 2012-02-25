@@ -56,7 +56,7 @@ int InputExit();
 int InputMake(bool bCopy);
 
 //TODO:
-#define szAppBurnVer 1
+#define szAppBurnVer "1"
 
 class StringSet {
 public:

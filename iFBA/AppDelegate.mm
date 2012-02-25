@@ -28,17 +28,17 @@
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
     // Override point for customization after application launch.
-    UIViewController *viewController1, *viewController2;
+    UIViewController *menuvc;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        viewController1 = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPhone" bundle:nil] autorelease];
+        menuvc = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPhone" bundle:nil] autorelease];
     } else {
-        viewController1 = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPad" bundle:nil] autorelease];
+        menuvc = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPad" bundle:nil] autorelease];
     }
     self.navController = [[[UINavigationController alloc] init] autorelease];
-    [[self.navController navigationBar] setBarStyle:UIBarStyleBlack];
-    [[self.navController navigationBar] setTranslucent:YES];
+    [[self.navController navigationBar] setBarStyle:UIBarStyleDefault];
+//    [[self.navController navigationBar] setTranslucent:YES];
     
-    [self.navController pushViewController:viewController1 animated:YES];
+    [self.navController pushViewController:menuvc animated:YES];
     
     self.window.rootViewController = self.navController;
     

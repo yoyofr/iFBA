@@ -1,5 +1,6 @@
 // Run module
 #include "burner.h"
+#include "unistd.h"
 
 
 bool bAltPause = 0;
@@ -254,22 +255,10 @@ int RunMessageLoop()
 
 		GameInpCheckMouse();															// Hide the cursor
 		while (!finished) {
-#ifdef IOS_BUILD
-            if (nShouldExit) finished=1;
-#else
-			SDL_Event event;
-			if ( SDL_PollEvent(&event) ) {
-			switch (event.type) {
-				case SDL_QUIT: /* Windows was closed */
-					finished=1;
-					break;
-				}
-			}
-			else 
-#endif                
-			{
+            if (nShouldExit==1) finished=1;
+            if (nShouldExit==0) {
 				RunIdle();
-			}
+			} else usleep(10000); //10ms
 		}
 		RunExit();
 	} while (bRestartVideo);

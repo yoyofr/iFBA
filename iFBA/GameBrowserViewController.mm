@@ -1,23 +1,19 @@
 //
-//  MenuViewController.m
+//  GameBrowserViewController.m
 //  iFBA
 //
 //  Created by Yohann Magnien on 19/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "MenuViewController.h"
-#import "EmuViewController.h"
 #import "GameBrowserViewController.h"
+#include "string.h"
 
-extern int launchGame;
 extern char gameName[64];
-extern volatile int emuThread_running;
+extern int launchGame;
 
-@implementation MenuViewController
-@synthesize emuvc,gamebrowservc;
+@implementation GameBrowserViewController
 @synthesize tabView;
-@synthesize btn_backToEmu;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -26,7 +22,7 @@ extern volatile int emuThread_running;
     }
     return self;
 }
-							
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -34,8 +30,6 @@ extern volatile int emuThread_running;
 }
 
 - (void)dealloc{
-    [emuvc dealloc];
-    [gamebrowservc dealloc];
     [super dealloc];
 }
 
@@ -43,8 +37,6 @@ extern volatile int emuThread_running;
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.    
-    emuvc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];
-    gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
 }
 
 
@@ -55,25 +47,40 @@ extern volatile int emuThread_running;
     // e.g. self.myOutlet = nil;
 }
 
+- (void)scanRomsDir {
+    NSError *error;
+    NSArray *dirContent;
+    NSFileManager *mFileMngr = [[NSFileManager alloc] init];
+    NSString *cpath=[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents/"];
+    NSString *file;
+    NSArray *filetype_extROMFILE=[@"ZIP,FBA" componentsSeparatedByString:@","];    
+    
+    romlist=[[NSMutableArray alloc] init];
+    
+    dirContent=[mFileMngr subpathsOfDirectoryAtPath:cpath error:&error];
+    for (file in dirContent) {
+        NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
+        if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
+            [romlist addObject:file];
+        }
+    }
+    [mFileMngr release];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    if (emuThread_running) {
-        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
-        self.navigationItem.rightBarButtonItem = btn_backToEmu;
-    }
+    [self scanRomsDir];
+    [[self tabView] reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (launchGame) {
-        [self.navigationController pushViewController:emuvc animated:YES];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
+    [romlist release];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -83,25 +90,10 @@ extern volatile int emuThread_running;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-//    [emuvc shouldAutorotateToInterfaceOrientation:interfaceOrientation];
-//    [gamebrowservc shouldAutorotateToInterfaceOrientation:interfaceOrientation];
     return YES;
 }
 
 #pragma mark - UI Actions
--(IBAction) backToEmu {    
-//    [self pushViewController:vc animated:YES];
-//    [self.navigationController pushViewController:vc animated:YES];
-    //UIWindow *win=[[UIApplication sharedApplication] keyWindow];
-    //[win addSubview:emuvc.view];
-    /*UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
-    UIView *tabBar = [self.tabBarController.view.subviews objectAtIndex:1];
-    tabBar.hidden=TRUE;
-    transView.frame=CGRectMake(0,0,320,480);
-    [self.view addSubview:emuvc.view];*/
-    //[[self navigationController] setNavigationBarHidden:NO animated:NO];    
-    [self.navigationController pushViewController:emuvc animated:YES];
-}
 
 #pragma mark - UITableView
 
@@ -113,7 +105,7 @@ extern volatile int emuThread_running;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    if (section==0) return 3;
+    if (section==0) return [romlist count];
 	return 0;
 }
 
@@ -132,20 +124,21 @@ extern volatile int emuThread_running;
     }
     
 	if (indexPath.section==0) {
-		if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
-		if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Options",@"");
-		if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"About",@"");
+        cell.textLabel.text=[romlist objectAtIndex:indexPath.row];
 	}
 	
-	cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+	cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
     
     return cell;
 }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section==0) {//Game browser
-        [self.navigationController pushViewController:gamebrowservc animated:YES];
+    if (indexPath.section==0) {
+        sprintf(gameName,"%s",[[(NSString *)[romlist objectAtIndex:indexPath.row] stringByDeletingPathExtension] UTF8String]);
+        NSLog(@"gamename %s",gameName);
+        launchGame=1;
+        [[self navigationController] popViewControllerAnimated:NO];
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "EmuViewController.h"
+#include "string.h"
 
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch);
 
@@ -14,9 +15,12 @@ static unsigned short *vbuffer;
 static int visible_area_w,visible_area_h;
 static int vid_rotated,vid_aspectX,vid_aspectY;
 int nShouldExit;
-static GLuint txt_vbuffer;    
+static GLuint txt_vbuffer;  
 
-static volatile int emuThread_running;
+char gameName[64];
+int launchGame;
+
+volatile int emuThread_running;
 
 static GLfloat vertices[5][2];  /* Holds Float Info For 4 Sets Of Vertices */
 static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordinates. */
@@ -28,6 +32,7 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
     if (self) {
         self.title = NSLocalizedString(@"Emu", @"Emu");
         //self.tabBarItem.image = [UIImage imageNamed:@"Emu"];
+        launchGame=0;        
     }
     return self;
 }
@@ -105,18 +110,32 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden=YES;    
     
-    //get ogl context & bind
+    //Setup opengl & activate frame update
 	[EAGLContext setCurrentContext:m_oglContext];	
     [m_oglView bind];
-	
-    //	self.navigationController.navigationBar.hidden = YES;
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doFrame)];
     m_displayLink.frameInterval = 1;
 	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
-    nShouldExit=0;
+    //If resuming
+    if (nShouldExit==2) {
+        //launch new game ?
+        if (launchGame) {//yes, exit current one
+            nShouldExit=1;
+            while (emuThread_running) {
+                [NSThread sleepForTimeInterval:0.01]; //10ms        
+            }
+        } else {//no, only resume
+            nShouldExit=0;
+        }
+    }
     
-	[NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
+    //If required launch game / emuthread
+    if (launchGame) {    
+        nShouldExit=0;    
+        [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
+        launchGame=0;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -128,8 +147,10 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 	[super viewWillDisappear:animated];    
     if (m_displayLink) [m_displayLink invalidate];
     
+    if (nShouldExit==1) {
     while (emuThread_running) {
         [NSThread sleepForTimeInterval:0.01]; //10ms        
+    }
     }
     self.navigationController.navigationBar.hidden = NO;    
 }
@@ -149,6 +170,7 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 }
 //******************************************
 extern int fba_main( int argc, char **argv );
+
 -(void) emuThread {
     emuThread_running=1;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -157,10 +179,13 @@ extern int fba_main( int argc, char **argv );
     /* Set working directory to resource path */
     [[NSFileManager defaultManager] changeCurrentDirectoryPath: documentsDirectory];
     
-    
     int argc=2;
-    char *argv[4]={"iFBA","sengoku3","",""};
-    fba_main(argc,argv);
+    char *argv[2];
+    argv[0]=(char*)malloc(5);
+    sprintf(argv[0],"%s","iFBA");
+    argv[1]=(char*)malloc(strlen(gameName)+1);
+    sprintf(argv[1],"%s",gameName);
+    fba_main(argc,(char**)argv);
     
     [pool release];
     emuThread_running=0;
@@ -171,7 +196,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
         case 1: //Pressed
             NSLog(@"te: pressed at %f x %f / %08X",x,y,touch_id);
             if ((x<32)&&(y<32)) {
-                nShouldExit=1;
+                nShouldExit=2; //pause
             }
             break;
         case 2: //Moved
@@ -239,10 +264,7 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     /* Enable Texture Coordinations Pointer */
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     
-    
     glColor4ub(255,255,255,255);
-    
-    
     
     if (vid_rotated) {
         texcoords[1][0]=(float)0/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
