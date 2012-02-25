@@ -9,18 +9,17 @@
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
-#import "FirstViewController.h"
-#import "SecondViewController.h"
+#import "MenuViewController.h"
 
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize tabBarController = _tabBarController;
+@synthesize navController = _navController;
 
 - (void)dealloc
 {
     [_window release];
-    [_tabBarController release];
+    [_navController release];
     [super dealloc];
 }
 
@@ -31,15 +30,17 @@
     // Override point for customization after application launch.
     UIViewController *viewController1, *viewController2;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        viewController1 = [[[FirstViewController alloc] initWithNibName:@"FirstViewController_iPhone" bundle:nil] autorelease];
-        viewController2 = [[[SecondViewController alloc] initWithNibName:@"SecondViewController_iPhone" bundle:nil] autorelease];
+        viewController1 = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPhone" bundle:nil] autorelease];
     } else {
-        viewController1 = [[[FirstViewController alloc] initWithNibName:@"FirstViewController_iPad" bundle:nil] autorelease];
-        viewController2 = [[[SecondViewController alloc] initWithNibName:@"SecondViewController_iPad" bundle:nil] autorelease];
+        viewController1 = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPad" bundle:nil] autorelease];
     }
-    self.tabBarController = [[[UITabBarController alloc] init] autorelease];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewController1, viewController2, nil];
-    self.window.rootViewController = self.tabBarController;
+    self.navController = [[[UINavigationController alloc] init] autorelease];
+    [[self.navController navigationBar] setBarStyle:UIBarStyleBlack];
+    [[self.navController navigationBar] setTranslucent:YES];
+    
+    [self.navController pushViewController:viewController1 animated:YES];
+    
+    self.window.rootViewController = self.navController;
     
     [self.window makeKeyAndVisible];
     return YES;

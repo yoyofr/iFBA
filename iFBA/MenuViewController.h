@@ -1,5 +1,5 @@
 //
-//  FirstViewController.h
+//  MenuViewController.h
 //  iFBA
 //
 //  Created by Yohann Magnien on 19/02/12.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIView.h>
 
-@interface FirstViewController : UIViewController {
+@interface MenuViewController : UIViewController {
     IBOutlet UIButton *btn_start;
     UIViewController *emuvc;
 }

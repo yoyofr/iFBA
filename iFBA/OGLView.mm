@@ -71,45 +71,70 @@
 	return touched;
 }
 
+void ios_fingerEvent(long touch_id, int evt_type, float x, float y);
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch *touch;
-	m_1clicked = FALSE;
-    m_hasmoved = FALSE;
-	m_touched = true;
-	m_poptrigger = FALSE;
-	m_touchcount+=[touches count];
-    touch = [touches anyObject];
-    currentTouchLocation=[touch locationInView:touch.view];
-	if([touches count] == 1) {
-		touch = [touches anyObject];
-		previousTouchLocation = [touch locationInView:touch.view];
-		currentMove.x=currentMove.y=0.0f;
-	}
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    NSEnumerator *enumerator = [touches objectEnumerator];
+    UITouch *touch = (UITouch*)[enumerator nextObject];
+    
+    while(touch) {
+        //CGPoint locationInView = [self touchLocation:touch];
+        CGPoint point = [touch locationInView: touch.view];
+        
+        //FIXME: TODO: Using touch as the fingerId is potentially dangerous
+        //It is also much more efficient than storing the UITouch pointer
+        //and comparing it to the incoming event.
+        ios_fingerEvent((long)touch, 1, point.x, point.y);
+        
+        touch = (UITouch*)[enumerator nextObject];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	if ((m_hasmoved==FALSE)&&(m_touchcount==1)) m_1clicked=TRUE;
-	m_touchcount-=[touches count];
+    NSEnumerator *enumerator = [touches objectEnumerator];
+    UITouch *touch = (UITouch*)[enumerator nextObject];
+    
+    while(touch) {
+        //CGPoint locationInView = [self touchLocation:touch];
+        CGPoint point = [touch locationInView: touch.view];
+        
+        //FIXME: TODO: Using touch as the fingerId is potentially dangerous
+        //It is also much more efficient than storing the UITouch pointer
+        //and comparing it to the incoming event.
+        ios_fingerEvent((long)touch, 0, point.x, point.y);
+        
+        touch = (UITouch*)[enumerator nextObject];
+    }
 }
 
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    NSEnumerator *enumerator = [touches objectEnumerator];
+    UITouch *touch = (UITouch*)[enumerator nextObject];
+    
+    while(touch) {
+        //CGPoint locationInView = [self touchLocation:touch];
+        CGPoint point = [touch locationInView: touch.view];
+        
+        //FIXME: TODO: Using touch as the fingerId is potentially dangerous
+        //It is also much more efficient than storing the UITouch pointer
+        //and comparing it to the incoming event.
+        ios_fingerEvent((long)touch, 2, point.x, point.y);
+        
+        touch = (UITouch*)[enumerator nextObject];
+    }
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [touches anyObject];
-    currentTouchLocation=[touch locationInView:touch.view];
-	
-	//m_touchcount=[touches count];
-	if([touches count] == 1) {
-		UITouch *touch = [touches anyObject];
-		CGPoint location = [touch locationInView:touch.view];
-		currentMove.x=location.x-previousTouchLocation.x;
-		currentMove.y=location.y-previousTouchLocation.y;
-        m_hasmoved=TRUE;
-	}
-	
+    /*
+     this can happen if the user puts more than 5 touches on the screen
+     at once, or perhaps in other circumstances.  Usually (it seems)
+     all active touches are canceled.
+     */
+    [self touchesEnded: touches withEvent: event];
 }
+
 
 
 @end

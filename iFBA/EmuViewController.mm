@@ -11,8 +11,12 @@
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch);
 
 static unsigned short *vbuffer;
-static int visible_area_w,visible_area_h,visible_area_rot;
+static int visible_area_w,visible_area_h;
+static int vid_rotated,vid_aspectX,vid_aspectY;
+int nShouldExit;
 static GLuint txt_vbuffer;    
+
+static volatile int emuThread_running;
 
 static GLfloat vertices[5][2];  /* Holds Float Info For 4 Sets Of Vertices */
 static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordinates. */
@@ -71,15 +75,22 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
     glGenTextures(1, &txt_vbuffer);               /* Create 1 Texture */
     glBindTexture(GL_TEXTURE_2D, txt_vbuffer);    /* Bind The Texture */
 	
-    glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
+    if (1) {
+        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	} else {
+        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	    
+    }
 	glBindTexture(GL_TEXTURE_2D, 0);
     
     vbuffer=(unsigned short*)malloc(TEXTURE_W*TEXTURE_H*2);
     visible_area_w=480;
     visible_area_h=320;
-    visible_area_rot=0;
+    vid_rotated=0;
+    vid_aspectX=4;
+    vid_aspectY=3;
 }
 
 
@@ -92,7 +103,7 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    //self.navigationController.navigationBar.hidden=YES;    
+    self.navigationController.navigationBar.hidden=YES;    
     
     //get ogl context & bind
 	[EAGLContext setCurrentContext:m_oglContext];	
@@ -103,6 +114,8 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
     m_displayLink.frameInterval = 1;
 	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
+    nShouldExit=0;
+    
 	[NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
 }
 
@@ -112,9 +125,13 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-    
+	[super viewWillDisappear:animated];    
     if (m_displayLink) [m_displayLink invalidate];
+    
+    while (emuThread_running) {
+        [NSThread sleepForTimeInterval:0.01]; //10ms        
+    }
+    self.navigationController.navigationBar.hidden = NO;    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -133,6 +150,7 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 //******************************************
 extern int fba_main( int argc, char **argv );
 -(void) emuThread {
+    emuThread_running=1;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
@@ -141,17 +159,36 @@ extern int fba_main( int argc, char **argv );
     
     
     int argc=2;
-    char *argv[4]={"iFBA","progear","",""};
+    char *argv[4]={"iFBA","sengoku3","",""};
     fba_main(argc,argv);
     
-    [pool release];    
+    [pool release];
+    emuThread_running=0;
 }
 
+void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
+    switch (evt_type) {
+        case 1: //Pressed
+            NSLog(@"te: pressed at %f x %f / %08X",x,y,touch_id);
+            if ((x<32)&&(y<32)) {
+                nShouldExit=1;
+            }
+            break;
+        case 2: //Moved
+            NSLog(@"te: moved at %f x %f / %08X",x,y,touch_id);
+            break;
+        case 0: //Release
+            NSLog(@"te: released at %f x %f / %08X",x,y,touch_id);
+            break;
+    }
+}
 
-void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated) {
-    visible_area_rot=rotated;
+void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nXAspect,int nYAspect) {
+    vid_rotated=rotated;
     visible_area_w=w;
     visible_area_h=h;
+    vid_aspectX=nXAspect;
+    vid_aspectY=nYAspect;
     pitch>>=1;
     for (int y=0;y<h;y++) 
         for (int x=0;x<w;x++) {
@@ -162,11 +199,28 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated) {
 - (void)doFrame {
     int width,height,rw,rh;
     //get ogl context & bind
+    
+    if (nShouldExit) {
+        [[self navigationController] popViewControllerAnimated:YES];
+        return;
+    }
+    
 	[EAGLContext setCurrentContext:m_oglContext];
 	[m_oglView bind];
     
     width=m_oglView.frame.size.width;
     height=m_oglView.frame.size.height;
+    
+    /*********************/
+    /*Handle input*/
+    /*********************/
+    if (m_oglView->m_touchcount) { 
+		m_oglView->currentTouchLocation.x;
+        m_oglView->currentTouchLocation.y;
+    }
+    /**********************************/
+    /* Redraw */
+    /**********************************/
     
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -188,19 +242,25 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated) {
     
     glColor4ub(255,255,255,255);
     
-    if (visible_area_rot) {
+    
+    
+    if (vid_rotated) {
         texcoords[1][0]=(float)0/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
         texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)0/TEXTURE_H;
         texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)(visible_area_h)/TEXTURE_H;
         texcoords[2][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
-        if (width/height>visible_area_h/visible_area_w) {
-            rw=visible_area_h*height/visible_area_w;
+        float ios_aspect=(float)width/(float)height;
+        float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        
+        if (ios_aspect>game_aspect) {
             rh=height;
+            rw=rh*vid_aspectX/vid_aspectY;
+            glViewport((width-rw)>>1, 0, rw, rh);
         } else {
             rw=width;
-            rh=visible_area_w*width/visible_area_h;        
-        }
-        glViewport(0, height-rh, rw, rh);
+            rh=rw*vid_aspectY/vid_aspectX;
+            glViewport(0, height-rh, rw, rh);
+        }            
+        
         
         vertices[0][0]=1; vertices[0][1]=-1;
         vertices[1][0]=-1; vertices[1][1]=-1;
@@ -212,16 +272,17 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated) {
         texcoords[1][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
         texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
         texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
-        if ((width/height>visible_area_w/visible_area_h)) {
-            rw=visible_area_w*height/visible_area_h;
+        float ios_aspect=(float)width/(float)height;
+        float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        
+        if (ios_aspect>game_aspect) {
             rh=height;
+            rw=rh*vid_aspectX/vid_aspectY;
+            glViewport((width-rw)>>1, 0, rw, rh);
         } else {
             rw=width;
-            rh=visible_area_h*width/visible_area_w;        
-        }
-        
-        glViewport(0, height-rh, rw, rh);
-        
+            rh=rw*vid_aspectY/vid_aspectX;
+            glViewport(0, height-rh, rw, rh);
+        }            
         
         vertices[0][0]=-1; vertices[0][1]=1;
         vertices[1][0]=1; vertices[1][1]=1;

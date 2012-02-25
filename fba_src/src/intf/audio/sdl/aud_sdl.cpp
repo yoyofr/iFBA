@@ -83,6 +83,19 @@ static int SDLSoundExit() {
     
     free(nAudNextSound);
 	nAudNextSound = NULL;
+    
+    for (int i=0;i<SOUND_BUFFER_NB;i++) {
+        free(buffer_ana[i]);
+    }    
+    free((void*)buffer_ana_flag);
+    free(buffer_ana);
+    
+    
+    for (int i=0; i<SOUND_BUFFER_NB; i++) {
+		AudioQueueFreeBuffer( mAudioQueue, mBuffers[i] );		
+    }
+    free(mBuffers);
+    
 
 	return 0;
 }
@@ -256,7 +269,7 @@ static int SDLSoundInit()
 		mBuffers[i]=mBuffer;
     }
     /* Set initial playback volume */
-//    err = AudioQueueSetParameter( mAudioQueue, kAudioQueueParam_Volume, mVolume );
+    err = AudioQueueSetParameter( mAudioQueue, kAudioQueueParam_Volume, mVolume );
     
     nAudNextSound = (short*)malloc(nAudSegLen << 2);
 	if (nAudNextSound == NULL) {

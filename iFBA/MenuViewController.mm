@@ -1,23 +1,21 @@
 //
-//  FirstViewController.m
+//  MenuViewController.m
 //  iFBA
 //
 //  Created by Yohann Magnien on 19/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "FirstViewController.h"
+#import "MenuViewController.h"
 #import "EmuViewController.h"
 
-@implementation FirstViewController
+@implementation MenuViewController
 @synthesize btn_start,emuvc;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"First", @"First");
-        self.tabBarItem.image = [UIImage imageNamed:@"first"];
     }
     return self;
 }
@@ -78,11 +76,13 @@
 //    [self.navigationController pushViewController:vc animated:YES];
     //UIWindow *win=[[UIApplication sharedApplication] keyWindow];
     //[win addSubview:emuvc.view];
-    UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
+    /*UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
     UIView *tabBar = [self.tabBarController.view.subviews objectAtIndex:1];
     tabBar.hidden=TRUE;
     transView.frame=CGRectMake(0,0,320,480);
-    [self.view addSubview:emuvc.view];
+    [self.view addSubview:emuvc.view];*/
+    //[[self navigationController] setNavigationBarHidden:NO animated:NO];    
+    [self.navigationController pushViewController:emuvc animated:YES];
 }
 
 @end

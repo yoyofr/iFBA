@@ -15,6 +15,8 @@ static int nUseBlitter;
 static int nUseSys;
 static int nDirectAccess = 1;
 static int nRotateGame = 0;
+static int nXAspect,nYAspect;
+
 
 static int PrimClear()
 {
@@ -132,6 +134,8 @@ static int Init()
 	if (bDrvOkay) {
 		// Get the game screen size
 		BurnDrvGetVisibleSize(&nGameWidth, &nGameHeight);
+        
+        BurnDrvGetAspect(&nXAspect,&nYAspect);
 
 	    if (BurnDrvGetFlags() & BDF_ORIENTATION_VERTICAL) {
 			if (nVidRotationAdjust & 1) {
@@ -186,10 +190,10 @@ static int vidScale(RECT* , int, int)
 	return 0;
 }
 
-void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated);
+void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nXAspect,int nYAspect);
 static int MemToSurf()
 {
-    updateVbuffer((unsigned short*)pVidImage,nVidImageWidth,nVidImageHeight,nVidImagePitch,nRotateGame);
+    updateVbuffer((unsigned short*)pVidImage,nVidImageWidth,nVidImageHeight,nVidImagePitch,nRotateGame,nXAspect,nYAspect);
 /*	VidSoftFXApplyEffectSDL(sdlsBlitFX[1 ^ nDirectAccess]);
 
 	if (nUseSys == 0 && nDirectAccess == 0) {

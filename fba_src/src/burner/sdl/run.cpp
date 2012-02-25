@@ -9,6 +9,7 @@ int bAlwaysDrawFrames = 0;
 static bool bShowFPS = false;
 
 int counter;								// General purpose variable used when debugging
+extern int nShouldExit;
 
 static unsigned int nNormalLast = 0;		// Last value of timeGetTime()
 static int nNormalFrac = 0;					// Extra fraction we did
@@ -254,6 +255,7 @@ int RunMessageLoop()
 		GameInpCheckMouse();															// Hide the cursor
 		while (!finished) {
 #ifdef IOS_BUILD
+            if (nShouldExit) finished=1;
 #else
 			SDL_Event event;
 			if ( SDL_PollEvent(&event) ) {

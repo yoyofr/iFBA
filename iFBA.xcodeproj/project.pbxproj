@@ -541,16 +541,9 @@
 		339E5FBD14F1851E006FB970 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FBB14F1851E006FB970 /* InfoPlist.strings */; };
 		339E5FBF14F1851E006FB970 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FBE14F1851E006FB970 /* main.m */; };
 		339E5FC314F1851E006FB970 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FC214F1851E006FB970 /* AppDelegate.mm */; };
-		339E5FC614F1851E006FB970 /* FirstViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FC514F1851E006FB970 /* FirstViewController.mm */; };
-		339E5FC814F1851E006FB970 /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FC714F1851E006FB970 /* first.png */; };
-		339E5FCA14F1851E006FB970 /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FC914F1851E006FB970 /* first@2x.png */; };
-		339E5FCD14F1851E006FB970 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FCC14F1851E006FB970 /* SecondViewController.m */; };
-		339E5FCF14F1851E006FB970 /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FCE14F1851E006FB970 /* second.png */; };
-		339E5FD114F1851E006FB970 /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FD014F1851E006FB970 /* second@2x.png */; };
-		339E5FD414F1851E006FB970 /* FirstViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FD214F1851E006FB970 /* FirstViewController_iPhone.xib */; };
-		339E5FD714F1851E006FB970 /* FirstViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FD514F1851E006FB970 /* FirstViewController_iPad.xib */; };
-		339E5FDA14F1851E006FB970 /* SecondViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FD814F1851E006FB970 /* SecondViewController_iPhone.xib */; };
-		339E5FDD14F1851E006FB970 /* SecondViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FDB14F1851E006FB970 /* SecondViewController_iPad.xib */; };
+		339E5FC614F1851E006FB970 /* MenuViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FC514F1851E006FB970 /* MenuViewController.mm */; };
+		339E5FD414F1851E006FB970 /* MenuViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FD214F1851E006FB970 /* MenuViewController_iPhone.xib */; };
+		339E5FD714F1851E006FB970 /* MenuViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FD514F1851E006FB970 /* MenuViewController_iPad.xib */; };
 		339E62E014F1944B006FB970 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E62DF14F1944A006FB970 /* OpenGLES.framework */; };
 		339E62E214F19454006FB970 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E62E114F19454006FB970 /* CoreAudio.framework */; };
 		339E630E14F19493006FB970 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E630D14F19492006FB970 /* AudioToolbox.framework */; };
@@ -1304,23 +1297,14 @@
 		339E5FC014F1851E006FB970 /* iFBA-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iFBA-Prefix.pch"; sourceTree = "<group>"; };
 		339E5FC114F1851E006FB970 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		339E5FC214F1851E006FB970 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
-		339E5FC414F1851E006FB970 /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
-		339E5FC514F1851E006FB970 /* FirstViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FirstViewController.mm; sourceTree = "<group>"; };
-		339E5FC714F1851E006FB970 /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
-		339E5FC914F1851E006FB970 /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
-		339E5FCB14F1851E006FB970 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
-		339E5FCC14F1851E006FB970 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
-		339E5FCE14F1851E006FB970 /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
-		339E5FD014F1851E006FB970 /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
-		339E5FD314F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FirstViewController_iPhone.xib; sourceTree = "<group>"; };
-		339E5FD614F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FirstViewController_iPad.xib; sourceTree = "<group>"; };
-		339E5FD914F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SecondViewController_iPhone.xib; sourceTree = "<group>"; };
-		339E5FDC14F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SecondViewController_iPad.xib; sourceTree = "<group>"; };
+		339E5FC414F1851E006FB970 /* MenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
+		339E5FC514F1851E006FB970 /* MenuViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MenuViewController.mm; sourceTree = "<group>"; };
+		339E5FD314F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MenuViewController_iPhone.xib; sourceTree = "<group>"; };
+		339E5FD614F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MenuViewController_iPad.xib; sourceTree = "<group>"; };
 		339E62DF14F1944A006FB970 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		339E62E114F19454006FB970 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		339E630D14F19492006FB970 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		339E630F14F1949C006FB970 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		339E631A14F19818006FB970 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		339E631F14F199E9006FB970 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		339E632114F199EF006FB970 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		339E636314F1B8BC006FB970 /* FrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameBuffer.h; sourceTree = "<group>"; };
@@ -2538,7 +2522,6 @@
 				339A94D914F238E600225183 /* Icon.png */,
 				339E632114F199EF006FB970 /* GLKit.framework */,
 				339E631F14F199E9006FB970 /* QuartzCore.framework */,
-				339E631A14F19818006FB970 /* libz.1.1.3.dylib */,
 				339E5FB814F1851E006FB970 /* iFBA */,
 				339E62D814F18ACA006FB970 /* Resources */,
 				339E5FB114F1851E006FB970 /* Frameworks */,
@@ -2580,19 +2563,11 @@
 				339E636514F1B8BC006FB970 /* GlErrors.h */,
 				33F444D814F5685100BA36E1 /* EmuViewController.h */,
 				33F444D914F5685100BA36E1 /* EmuViewController.mm */,
-				339E5FC414F1851E006FB970 /* FirstViewController.h */,
-				339E5FC514F1851E006FB970 /* FirstViewController.mm */,
-				339E5FC714F1851E006FB970 /* first.png */,
-				339E5FC914F1851E006FB970 /* first@2x.png */,
-				339E5FCB14F1851E006FB970 /* SecondViewController.h */,
-				339E5FCC14F1851E006FB970 /* SecondViewController.m */,
-				339E5FCE14F1851E006FB970 /* second.png */,
-				339E5FD014F1851E006FB970 /* second@2x.png */,
+				339E5FC414F1851E006FB970 /* MenuViewController.h */,
+				339E5FC514F1851E006FB970 /* MenuViewController.mm */,
 				33F444D614F567DC00BA36E1 /* EmuViewController.xib */,
-				339E5FD214F1851E006FB970 /* FirstViewController_iPhone.xib */,
-				339E5FD514F1851E006FB970 /* FirstViewController_iPad.xib */,
-				339E5FD814F1851E006FB970 /* SecondViewController_iPhone.xib */,
-				339E5FDB14F1851E006FB970 /* SecondViewController_iPad.xib */,
+				339E5FD214F1851E006FB970 /* MenuViewController_iPhone.xib */,
+				339E5FD514F1851E006FB970 /* MenuViewController_iPad.xib */,
 				339E5FB914F1851E006FB970 /* Supporting Files */,
 			);
 			path = iFBA;
@@ -2694,14 +2669,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				339E5FBD14F1851E006FB970 /* InfoPlist.strings in Resources */,
-				339E5FC814F1851E006FB970 /* first.png in Resources */,
-				339E5FCA14F1851E006FB970 /* first@2x.png in Resources */,
-				339E5FCF14F1851E006FB970 /* second.png in Resources */,
-				339E5FD114F1851E006FB970 /* second@2x.png in Resources */,
-				339E5FD414F1851E006FB970 /* FirstViewController_iPhone.xib in Resources */,
-				339E5FD714F1851E006FB970 /* FirstViewController_iPad.xib in Resources */,
-				339E5FDA14F1851E006FB970 /* SecondViewController_iPhone.xib in Resources */,
-				339E5FDD14F1851E006FB970 /* SecondViewController_iPad.xib in Resources */,
+				339E5FD414F1851E006FB970 /* MenuViewController_iPhone.xib in Resources */,
+				339E5FD714F1851E006FB970 /* MenuViewController_iPad.xib in Resources */,
 				339A94DA14F238E600225183 /* Icon.png in Resources */,
 				339A94DC14F238E900225183 /* Icon@2x.png in Resources */,
 				339A94DE14F238EF00225183 /* Default.png in Resources */,
@@ -2726,8 +2695,7 @@
 			files = (
 				339E5FBF14F1851E006FB970 /* main.m in Sources */,
 				339E5FC314F1851E006FB970 /* AppDelegate.mm in Sources */,
-				339E5FC614F1851E006FB970 /* FirstViewController.mm in Sources */,
-				339E5FCD14F1851E006FB970 /* SecondViewController.m in Sources */,
+				339E5FC614F1851E006FB970 /* MenuViewController.mm in Sources */,
 				339E636614F1B8BD006FB970 /* FrameBuffer.mm in Sources */,
 				339E636914F1B8C8006FB970 /* OGLView.mm in Sources */,
 				336B536614F4439B00CE9A63 /* burn.cpp in Sources */,
@@ -3264,36 +3232,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		339E5FD214F1851E006FB970 /* FirstViewController_iPhone.xib */ = {
+		339E5FD214F1851E006FB970 /* MenuViewController_iPhone.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				339E5FD314F1851E006FB970 /* en */,
 			);
-			name = FirstViewController_iPhone.xib;
+			name = MenuViewController_iPhone.xib;
 			sourceTree = "<group>";
 		};
-		339E5FD514F1851E006FB970 /* FirstViewController_iPad.xib */ = {
+		339E5FD514F1851E006FB970 /* MenuViewController_iPad.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				339E5FD614F1851E006FB970 /* en */,
 			);
-			name = FirstViewController_iPad.xib;
-			sourceTree = "<group>";
-		};
-		339E5FD814F1851E006FB970 /* SecondViewController_iPhone.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				339E5FD914F1851E006FB970 /* en */,
-			);
-			name = SecondViewController_iPhone.xib;
-			sourceTree = "<group>";
-		};
-		339E5FDB14F1851E006FB970 /* SecondViewController_iPad.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				339E5FDC14F1851E006FB970 /* en */,
-			);
-			name = SecondViewController_iPad.xib;
+			name = MenuViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
