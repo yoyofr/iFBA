@@ -19,6 +19,10 @@ static int visible_area_w,visible_area_h;
 static int vid_rotated,vid_aspectX,vid_aspectY;
 int nShouldExit;
 static GLuint txt_vbuffer;  
+static volatile float pb_value;
+static volatile int pb_total;
+static char pb_msg[256];
+
 
 int device_isIpad;
 unsigned char virtual_stick_buttons_alpha=64;
@@ -259,6 +263,9 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
     //If required launch game / emuthread
     if (launchGame) {    
         nShouldExit=0;    
+        pb_value=0;
+        pb_total=0;
+        pb_msg[0]=0;
         [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
         launchGame=0;
     }
@@ -373,15 +380,10 @@ int vstick_update_status(int rx,int ry) {
 
 
 void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
+    //printf("touch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
     switch (evt_type) {
         case 1: //Pressed            
-            if ((x<32)&&(y<32)) {
-                nShouldExit=2; //pause
-            }
-            
             virtual_stick_on=1;
-            
-            
             if (vstick_update_status(x,y)) { //finger is on pad
                 joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
                 joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
@@ -405,6 +407,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
 
             break;
         case 2: //Moved
+            virtual_stick_on=1;
             if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
                 if (vstick_update_status(x,y)==0) virtual_stick_padfinger=0;
                 joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
@@ -453,6 +456,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
             
             break;
         case 0: //Release
+            virtual_stick_on=1;
             if (virtual_stick_padfinger==touch_id) {
                 virtual_stick_pad=0;                    
                 joy_state[0][GN_UP]=0;
@@ -630,6 +634,22 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
         glDisable(GL_BLEND);        
 }
 
+int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
+    
+    pb_total+=nLen;
+    if (totalLen) pb_value=(float)pb_total/(float)totalLen;
+    else pb_value=1;
+    strcpy(pb_msg,pszText);
+    
+    //printf("%f %d %d %d %s",pb_value,pb_total,nLen,totalLen,pszText);
+	return 0;
+}
+
+int StopProgressBar() {
+    pb_value=1;
+}
+
+
 - (void)doFrame {
     int width,height,rw,rh;
     //get ogl context & bind
@@ -723,6 +743,25 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     }
     
     if (virtual_stick_on) [self drawVPad];
+    
+    if (pb_value<1) {        
+        glViewport(0,0,width,height);
+        glDisable(GL_TEXTURE_2D);
+        
+        glColor4ub(255,255,255,255);
+        vertices[0][0]=-0.5; vertices[0][1]=0.1;
+        vertices[1][0]=-0.5+pb_value; vertices[1][1]=0.1;
+        vertices[2][0]=-0.5; vertices[2][1]=-0.1;
+        vertices[3][0]=-0.5+pb_value; vertices[3][1]=-0.1;
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        
+        glColor4ub(255/2,255/2,255/2,255);
+        vertices[0][0]=-0.5+pb_value; vertices[0][1]=0.1;
+        vertices[1][0]=0.5; vertices[1][1]=0.1;
+        vertices[2][0]=-0.5+pb_value; vertices[2][1]=-0.1;
+        vertices[3][0]=0.5; vertices[3][1]=-0.1;
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
 	
     [m_oglContext presentRenderbuffer:GL_RENDERBUFFER_OES];
 }

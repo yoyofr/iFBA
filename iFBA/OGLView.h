@@ -23,8 +23,6 @@
 
 - (void)initialize:(EAGLContext*)oglContext scaleFactor:(float)scaleFactor;
 - (void)bind;
-- (bool)popTouch;
-
 
 @end
 

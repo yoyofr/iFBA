@@ -267,7 +267,7 @@ static int __cdecl BzipBurnLoadRom(unsigned char* Dest, int* pnWrote, int i)
 	} else {
 		_stprintf(szText + _tcslen(szText), _T(" %hs..."), pszRomName);
 	}
-	ProgressUpdateBurner(ri.nLen ? 1.0 / ((double)nTotalSize / ri.nLen) : 0, szText, 0);
+	ProgressUpdateBurner(ri.nLen,nTotalSize, szText);    
 
 #if defined (BUILD_WIN32)
 	// Check for messages:
@@ -277,7 +277,7 @@ static int __cdecl BzipBurnLoadRom(unsigned char* Dest, int* pnWrote, int i)
 #endif
 
 	if (RomFind[i].nState == 0) {							// Rom not found in zip at all
-		return 1;
+        		return 1;
 	}
 
 	nWantZip = RomFind[i].nZip;								// Which zip file it is in

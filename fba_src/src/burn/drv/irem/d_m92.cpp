@@ -1324,9 +1324,21 @@ UINT8 __fastcall m92ReadPort(UINT32 port)
 	return 0;
 }
 
-static void set_pf_info(INT32 layer, INT32 data)
-{
-	struct _m92_layer *ptr = m92_layers[layer];
+static void set_pf_info(INT32 layer, INT32 data) {
+    //Stupid compiler issue, using a ptr on the struct lead to crash
+	if (data & 0x10) {
+		m92_layers[layer]->enable = 0;
+	} else {
+		m92_layers[layer]->enable = 1;
+		m92_layers[layer]->wide = (data & 0x04) ? 128 : 64;
+	}
+    
+	m92_layers[layer]->enable_rowscroll = data & 0x40;
+    
+	m92_layers[layer]->vram = (UINT16*)(DrvVidRAM + ((data & 0x03) * 0x4000));
+/*	struct _m92_layer *ptr = m92_layers[layer];
+    //printf("%d %d %08X\n",layer,data,ptr);
+   // printf("%d\n",m92_layers[layer]->enable);
 
 	if (data & 0x10) {
 		ptr->enable = 0;
@@ -1337,7 +1349,7 @@ static void set_pf_info(INT32 layer, INT32 data)
 
 	ptr->enable_rowscroll = data & 0x40;
 
-	ptr->vram = (UINT16*)(DrvVidRAM + ((data & 0x03) * 0x4000));
+	ptr->vram = (UINT16*)(DrvVidRAM + ((data & 0x03) * 0x4000));*/
 }
 
 static void set_pf_scroll(INT32 layer)
@@ -1590,7 +1602,7 @@ static void loadDecodeGfx03(UINT8 *tmp, INT32 rid, INT32 shift, INT32 size)
 	}
 }
 
-static INT32 MemIndex(INT32 gfxlen1, INT32 gfxlen2)
+/*static*/ INT32 MemIndex(INT32 gfxlen1, INT32 gfxlen2)
 {
 	UINT8 *Next; Next = Mem;
 	DrvV33ROM 	= Next; Next += 0x180000;
@@ -1620,10 +1632,12 @@ static INT32 MemIndex(INT32 gfxlen1, INT32 gfxlen2)
 	pf_control[1]	= Next; Next += 0x000008;
 	pf_control[2]	= Next; Next += 0x000008;
 	pf_control[3]	= Next; Next += 0x000008;
-
+    
 	m92_layers[0]	= (struct _m92_layer*)Next; Next += sizeof(struct _m92_layer);
 	m92_layers[1]	= (struct _m92_layer*)Next; Next += sizeof(struct _m92_layer);
 	m92_layers[2]	= (struct _m92_layer*)Next; Next += sizeof(struct _m92_layer);
+
+//    printf("m92_layers %08X %08X %08X\n",m92_layers[0],m92_layers[1],m92_layers[2]);
 
 	RamEnd		= Next;
 
@@ -1683,7 +1697,8 @@ static INT32 DrvInit(INT32 (*pRomLoadCallback)(), const UINT8 *sound_decrypt_tab
 	Mem = NULL;
 	MemIndex(gfxlen1, gfxlen2);
 	INT32 nLen = MemEnd - (UINT8 *)0;
-	if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) return 1;
+    if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) return 1;
+    
 	memset(Mem, 0, nLen);
 	MemIndex(gfxlen1, gfxlen2);
 

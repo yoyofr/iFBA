@@ -45,7 +45,12 @@ static void fd1094_setstate_and_decrypt(INT32 state)
 	fd1094_state = state;
 
 	// force a flush of the prefetch cache
+#ifdef EMU_M68K
 	m68k_set_reg(M68K_REG_PREF_ADDR, 0x1000);
+#else
+    
+#endif
+    
 	
 	/* set the FD1094 state ready to decrypt.. */
 	state = fd1094_set_state(fd1094_key,state);

@@ -62,15 +62,6 @@
 }
 
 
-- (bool)popTouch
-{
-	const bool touched = m_touched;
-	m_touched = false;
-	m_touchcount=0;
-	m_poptrigger=TRUE;
-	return touched;
-}
-
 void ios_fingerEvent(long touch_id, int evt_type, float x, float y);
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

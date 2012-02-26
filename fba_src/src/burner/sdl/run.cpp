@@ -2,6 +2,7 @@
 #include "burner.h"
 #include "unistd.h"
 
+//#define NO_SOUND
 
 bool bAltPause = 0;
 
@@ -136,6 +137,7 @@ static int RunGetNextSound(int bDraw)
 
 	// Render frame with sound
 	pBurnSoundOut = nAudNextSound;
+    //YOYOFR
 	RunFrame(bDraw, 0);
 	if (bAppDoStep) {
 		memset(nAudNextSound, 0, nAudSegLen << 2);		// Write silence into the buffer
@@ -213,9 +215,12 @@ int RunReset()
 static int RunInit()
 {
 	// Try to run with sound
+#ifdef NO_SOUND
+    bAudOkay=0;
+#else    
 	AudSetCallback(RunGetNextSound);
 	AudSoundPlay();
-
+#endif
 	RunReset();
 
 	return 0;

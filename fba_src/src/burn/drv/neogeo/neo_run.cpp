@@ -1652,7 +1652,12 @@ INT32 __fastcall NeoCDIRQCallback(INT32 /* nIRQ */)
 		nNeoCDIRQVectorAck = 0;
 		return nNeoCDIRQVector;
 	}
+#ifdef EMU_C68K
+    return CYCLONE_INT_ACK_AUTOVECTOR;
+#endif
+#ifdef EMU_M68K
 	return M68K_INT_ACK_AUTOVECTOR;
+#endif
 }
 
 static inline INT32 NeoConvertIRQPosition(INT32 nOffset)

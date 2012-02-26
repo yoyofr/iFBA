@@ -68,6 +68,8 @@ int fba_main(int argc, char *argv[])
 
 	InputInit();
 	init_emu(i);
+    
+    StopProgressBar();
 	
 	RunMessageLoop();
 	InputExit();

@@ -4,6 +4,8 @@ Burn.cpp:
 potential mem leaks in BurnLocalisationSetName
 
 Neogeo:
-removed cd interface => to implement again
+missing cd iso emu for sdl
 
 
+sys16_fd1094.cpp
+not covered by cyclone: m68k_set_reg(M68K_REG_PREF_ADDR, 0x1000);

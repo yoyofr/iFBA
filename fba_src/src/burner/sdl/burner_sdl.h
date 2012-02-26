@@ -39,7 +39,8 @@ extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 int DrvInit(int nDrvNum, bool bRestore);
 int DrvInitCallback(); // Used when Burn library needs to load a game. DrvInit(nBurnSelect, false)
 int DrvExit();
-int ProgressUpdateBurner(double dProgress, const TCHAR* pszText, bool bAbs);
+int ProgressUpdateBurner(int nLen,int totalLen, const TCHAR* pszText);
+void StopProgressBar();
 int AppError(TCHAR* szText, int bWarning);
 
 //run.cpp

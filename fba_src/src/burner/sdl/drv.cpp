@@ -131,13 +131,13 @@ int DrvExit()
 
 	return 0;
 }
-
+/*
 int ProgressUpdateBurner(double dProgress, const TCHAR* pszText, bool bAbs)
 {
 	printf(".");
 	return 0;
 }
-
+*/
 int AppError(TCHAR* szText, int bWarning)
 {
 	return 0;

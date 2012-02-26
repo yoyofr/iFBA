@@ -9,7 +9,7 @@
 #define EMU_C68K								// Use Dave's Cyclone  68000 
 
 //#define SEK_MAX	(4)								// Maximum number of CPUs supported
-#define SEK_MAX	(1)								// Maximum number of CPUs supported
+#define SEK_MAX	(4)								// Maximum number of CPUs supported
 
 #if defined EMU_M68K
  #include "m68k.h"
@@ -17,8 +17,8 @@
 
 #if defined EMU_C68K
 #include "cyclone.h"
-extern struct Cyclone PicoCpu;
-#define	m68k_ICount PicoCpu.cycles
+extern struct Cyclone PicoCpu[SEK_MAX];
+#define	m68k_ICount PicoCpu[nSekActive].cycles
 #endif
 
 

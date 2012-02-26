@@ -14,7 +14,7 @@ int (*GetNextSound)(int);				// Callback used to request more sound
 
 //static SDL_AudioSpec audiospec;
 
-#define PLAYBACK_FREQ 44100
+#define PLAYBACK_FREQ 22050
 static int mInterruptShoudlRestart;
 static short int **buffer_ana;
 static volatile int buffer_ana_gen_ofs,buffer_ana_play_ofs;
@@ -70,7 +70,7 @@ static int SDLSoundCheck() {
     //		dprintf(_T("Filling seg %i at %i\n"), nSDLFillSeg, nSDLFillSeg * (nAudSegLen << 2));
     
     GetNextSound(didWait);    
-    if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
+//    if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
     memcpy(buffer_ana[buffer_ana_gen_ofs], nAudNextSound, nAudSegLen << 2);
     buffer_ana_flag[buffer_ana_gen_ofs]=1;
     buffer_ana_gen_ofs++;
