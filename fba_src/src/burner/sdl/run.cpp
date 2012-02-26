@@ -1,6 +1,7 @@
 // Run module
 #include "burner.h"
 #include "unistd.h"
+#include <sys/time.h>
 
 //#define NO_SOUND
 
@@ -147,9 +148,29 @@ static int RunGetNextSound(int bDraw)
 	return 0;
 }
 
-int RunIdle()
-{
+static struct timeval start;
+void SDL_StartTicks(void) {
+    /* Set first ticks value */
+    gettimeofday(&start, NULL);
+}
+
+uint32_t SDL_GetTicks(void) {
+    uint32_t ticks;
+    struct timeval now;
+    
+    gettimeofday(&now, NULL);
+    ticks = (now.tv_sec - start.tv_sec) * 1000 + (now.tv_usec - start.tv_usec) / 1000;
+    return (ticks);
+}
+
+static int now, done=0, fps = 0;
+static float timer = 0,tick=0,  ticks=0;
+
+
+int RunIdle() {
 	int nTime, nCount;
+    float frame_limit = (float)nBurnFPS/100.0f, frametime = 100000.0f/(float)nBurnFPS;
+
 
 	if (bAudPlaying) {
 		// Run with sound
@@ -157,45 +178,26 @@ int RunIdle()
 		return 0;
 	}
 
-	// Run without sound
-#ifdef IOS_BUILD
-    nCount=10;
-#else    
-	nTime = SDL_GetTicks() - nNormalLast;
-	nCount = (nTime * nAppVirtualFps - nNormalFrac) / 100000;
-	if (nCount <= 0) {						// No need to do anything for a bit
-		SDL_Delay(3);
-
-		return 0;
-	}
-#endif
-	nNormalFrac += nCount * 100000;
-	nNormalLast += nNormalFrac / nAppVirtualFps;
-	nNormalFrac %= nAppVirtualFps;
-
-	if (bAppDoFast){						// Temporarily increase virtual fps
-		nCount *= nFastSpeed;
-	}
-	if (nCount > 100) {						// Limit frame skipping
-		nCount = 100;
-	}
-	if (bRunPause) {
-		if (bAppDoStep) {					// Step one frame
-			nCount = 10;
-		} else {
-			RunFrame(1, 1);					// Paused
-			return 0;
-		}
-	}
-	bAppDoStep = 0;
-
-	for (int i = nCount / 10; i > 0; i--) {	// Mid-frames
-		RunFrame(!bAlwaysDrawFrames, 0);
-	}
-	RunFrame(1, 0);							// End-frame
-	// temp added for SDLFBA
-	//VidPaint(0);
-	return 0;
+    timer = SDL_GetTicks()/frametime;
+    if(timer-tick>frame_limit && bShowFPS) {
+        fps = nFramesRendered;
+        nFramesRendered = 0;
+        tick = timer;
+    }
+    now = timer;
+    ticks=now-done;
+    if(ticks<1) {
+        usleep(100); //0.1ms
+        return 0;
+    }
+    if(ticks>10) ticks=10;
+    for (int i=0; i<ticks-1; i++) {
+        RunFrame(0,0);	
+    } 
+    RunFrame(1,0);
+    
+    done = now;
+    return 0;
 }
 
 int RunReset()
@@ -204,10 +206,7 @@ int RunReset()
 	nNormalLast = 0; nNormalFrac = 0;
 	if (!bAudPlaying) {
 		// run without sound
-#ifdef IOS_BUILD
-#else
 		nNormalLast = SDL_GetTicks();
-#endif        
 	}
 	return 0;
 }
@@ -239,6 +238,9 @@ int RunMessageLoop()
 {
 	int bRestartVideo;
 	int finished= 0;
+    
+    SDL_StartTicks();
+    
 	do {
 		bRestartVideo = 0;
 
@@ -259,6 +261,8 @@ int RunMessageLoop()
 		RunInit();
 
 		GameInpCheckMouse();															// Hide the cursor
+        
+        done=0;timer = 0;ticks=0;tick=0;fps = 0;
 		while (!finished) {
             if (nShouldExit==1) finished=1;
             if (nShouldExit==0) {

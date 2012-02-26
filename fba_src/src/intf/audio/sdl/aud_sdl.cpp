@@ -69,7 +69,7 @@ static int SDLSoundCheck() {
     
     //		dprintf(_T("Filling seg %i at %i\n"), nSDLFillSeg, nSDLFillSeg * (nAudSegLen << 2));
     
-    GetNextSound(didWait);    
+    GetNextSound(1);//didWait);    
 //    if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
     memcpy(buffer_ana[buffer_ana_gen_ofs], nAudNextSound, nAudSegLen << 2);
     buffer_ana_flag[buffer_ana_gen_ofs]=1;
