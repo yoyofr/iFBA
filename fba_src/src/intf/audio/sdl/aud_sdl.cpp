@@ -52,7 +52,7 @@ static int SDLSoundBlankSound()
 #define WRAP_INC(x) { x++; if (x >= nAudSegCount) x = 0; }
 
 static int SDLSoundCheck() {
-    
+    int didWait=0;
 	if (!bAudPlaying) {
 		dprintf(_T("SDLSoundCheck (not playing)\n"));
 		return 0;
@@ -60,7 +60,8 @@ static int SDLSoundCheck() {
     
     while (buffer_ana_flag[buffer_ana_gen_ofs]) {
 		//[NSThread sleepForTimeInterval:DEFAULT_WAIT_TIME_MS];
-        usleep(1000); //1ms
+        didWait=1;
+        usleep(100); //0.1ms
 		if (bAudPlaying==0) {
 			return 0;
 		}
@@ -68,7 +69,7 @@ static int SDLSoundCheck() {
     
     //		dprintf(_T("Filling seg %i at %i\n"), nSDLFillSeg, nSDLFillSeg * (nAudSegLen << 2));
     
-    GetNextSound(1);    
+    GetNextSound(didWait);    
     if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
     memcpy(buffer_ana[buffer_ana_gen_ofs], nAudNextSound, nAudSegLen << 2);
     buffer_ana_flag[buffer_ana_gen_ofs]=1;

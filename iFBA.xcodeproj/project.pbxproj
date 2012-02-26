@@ -12,6 +12,8 @@
 		3354E93414F90ADE001DAF9D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3354E93614F90ADE001DAF9D /* Localizable.strings */; };
 		3354E93914F914AE001DAF9D /* GameBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */; };
 		3354E93C14F91697001DAF9D /* GameBrowserViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */; };
+		3354E97314F9573D001DAF9D /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 3354E97114F9573D001DAF9D /* button.png */; };
+		3354E97414F9573D001DAF9D /* dpad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3354E97214F9573D001DAF9D /* dpad.png */; };
 		336B536614F4439B00CE9A63 /* burn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B4FAF14F4439A00CE9A63 /* burn.cpp */; };
 		336B536714F4439B00CE9A63 /* burn_gun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B4FB114F4439A00CE9A63 /* burn_gun.cpp */; };
 		336B536814F4439B00CE9A63 /* burn_led.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B4FB314F4439A00CE9A63 /* burn_led.cpp */; };
@@ -571,6 +573,8 @@
 		3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameBrowserViewController.xib; sourceTree = "<group>"; };
 		3354E93A14F9152B001DAF9D /* GameBrowserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameBrowserViewController.h; sourceTree = "<group>"; };
 		3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameBrowserViewController.mm; sourceTree = "<group>"; };
+		3354E97114F9573D001DAF9D /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
+		3354E97214F9573D001DAF9D /* dpad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dpad.png; sourceTree = "<group>"; };
 		336B4FAE14F4439A00CE9A63 /* bitswap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitswap.h; sourceTree = "<group>"; };
 		336B4FAF14F4439A00CE9A63 /* burn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = burn.cpp; sourceTree = "<group>"; };
 		336B4FB014F4439A00CE9A63 /* burn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = burn.h; sourceTree = "<group>"; };
@@ -1366,6 +1370,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3354E97014F9573D001DAF9D /* Textures */ = {
+			isa = PBXGroup;
+			children = (
+				3354E97114F9573D001DAF9D /* button.png */,
+				3354E97214F9573D001DAF9D /* dpad.png */,
+			);
+			name = Textures;
+			path = Resources/Textures;
+			sourceTree = "<group>";
+		};
 		336B4FAC14F4439A00CE9A63 /* fbasrc */ = {
 			isa = PBXGroup;
 			children = (
@@ -2599,6 +2613,7 @@
 		339E62D814F18ACA006FB970 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3354E97014F9573D001DAF9D /* Textures */,
 				339E62D914F18B35006FB970 /* FBA */,
 				3354E93614F90ADE001DAF9D /* Localizable.strings */,
 			);
@@ -2699,6 +2714,8 @@
 				33F444D714F567DC00BA36E1 /* EmuViewController.xib in Resources */,
 				3354E93414F90ADE001DAF9D /* Localizable.strings in Resources */,
 				3354E93914F914AE001DAF9D /* GameBrowserViewController.xib in Resources */,
+				3354E97314F9573D001DAF9D /* button.png in Resources */,
+				3354E97414F9573D001DAF9D /* dpad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

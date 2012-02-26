@@ -19,16 +19,14 @@ extern volatile int emuThread_running;
 @synthesize tabView;
 @synthesize btn_backToEmu;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
     }
     return self;
 }
 							
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
 }
@@ -48,8 +46,7 @@ extern volatile int emuThread_running;
 }
 
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -62,10 +59,10 @@ extern volatile int emuThread_running;
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }
+    [tabView reloadData];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (launchGame) {
         [self.navigationController pushViewController:emuvc animated:YES];
@@ -76,8 +73,7 @@ extern volatile int emuThread_running;
 	[super viewWillDisappear:animated];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
 }
 
@@ -113,7 +109,10 @@ extern volatile int emuThread_running;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    if (section==0) return 3;
+    if (section==0) {
+        if (emuThread_running) return 5;
+        else return 3;
+    }
 	return 0;
 }
 
@@ -132,9 +131,18 @@ extern volatile int emuThread_running;
     }
     
 	if (indexPath.section==0) {
+        if (emuThread_running) {
+            if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load State",@"");
+            if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
+            if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
+            if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"Options",@"");
+            if (indexPath.row==4) cell.textLabel.text=NSLocalizedString(@"About",@"");
+            
+        } else {
 		if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
 		if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Options",@"");
 		if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"About",@"");
+        }
 	}
 	
 	cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
@@ -142,10 +150,28 @@ extern volatile int emuThread_running;
     return cell;
 }
 
+int StatedLoad(int slot);
+int StatedSave(int slot);
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==0) {//Game browser
-        [self.navigationController pushViewController:gamebrowservc animated:YES];
+        if (emuThread_running) {
+            if (indexPath.row==0) { //load state
+                StatedLoad(0);
+                [self backToEmu];
+            }
+            if (indexPath.row==1) { //save state
+                StatedSave(0);
+                [self backToEmu];
+            }
+            if (indexPath.row==2) { //game browser
+                [self.navigationController pushViewController:gamebrowservc animated:YES];
+            }
+        } else {
+            if (indexPath.row==0) { //game browser
+                [self.navigationController pushViewController:gamebrowservc animated:YES];
+            }
+        }
     }
 }
 

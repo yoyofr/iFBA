@@ -11,6 +11,8 @@
 
 #import "MenuViewController.h"
 
+extern int device_isIpad;
+
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -31,8 +33,10 @@
     UIViewController *menuvc;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         menuvc = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPhone" bundle:nil] autorelease];
+        device_isIpad=0;
     } else {
         menuvc = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPad" bundle:nil] autorelease];
+        device_isIpad=1;
     }
     self.navController = [[[UINavigationController alloc] init] autorelease];
     [[self.navController navigationBar] setBarStyle:UIBarStyleDefault];

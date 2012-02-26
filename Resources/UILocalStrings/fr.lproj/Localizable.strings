@@ -6,6 +6,8 @@
   Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 */
 
+"Load State"="Charger état";
+"Save State"="Sauver état";
 "Load game"="Lancer jeu";
 "Options"="Options";
 "About"="A Propos";

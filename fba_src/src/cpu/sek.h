@@ -5,17 +5,22 @@
  #define __fastcall
 #endif
 
-#if defined BUILD_A68K
- #define EMU_A68K								// Use A68K Assembler 68000 emulator
-#endif
+//#define EMU_M68K								// Use Musashi 68000 emulator
+#define EMU_C68K								// Use Dave's Cyclone  68000 
 
-#define EMU_M68K								// Use Musashi 68000 emulator
-
-#define SEK_MAX	(4)								// Maximum number of CPUs supported
+//#define SEK_MAX	(4)								// Maximum number of CPUs supported
+#define SEK_MAX	(1)								// Maximum number of CPUs supported
 
 #if defined EMU_M68K
  #include "m68k.h"
 #endif
+
+#if defined EMU_C68K
+#include "cyclone.h"
+extern struct Cyclone PicoCpu;
+#define	m68k_ICount PicoCpu.cycles
+#endif
+
 
 // Number of bits used for each page in the fast memory map
 #define SEK_BITS		(10)					// 10 = 0x0400 page size
@@ -31,32 +36,6 @@
  #error At least one set of handlers for memory access must be used.
 #endif
 
-#ifdef EMU_A68K
- extern "C" void __cdecl M68000_RUN();
- extern "C" void __cdecl M68000_RESET();
-#endif
-
-#ifdef EMU_A68K
- // The format of the data in a68k.asm (at the _M68000_regs location)
- struct A68KContext {
-	UINT32 d[8], a[8];
-	UINT32 isp, srh, ccr, xc, pc, irq, sr;
-	INT32 (*IrqCallback) (INT32 nIrq);
-	UINT32 ppc;
-	INT32 (*ResetCallback)();
-	INT32 (*RTECallback)();
-	INT32 (*CmpCallback)(UINT32 val, INT32 reg);
-	UINT32 sfc, dfc, usp, vbr;
-	UINT32 nAsmBank, nCpuVersion;
- };
- extern "C" struct A68KContext M68000_regs;
- extern     struct A68KContext* SekRegs[SEK_MAX];
-
- extern "C" UINT8* OP_ROM;
- extern "C" UINT8* OP_RAM;
-
- void __fastcall AsekChangePc(UINT32 pc);
-#endif
 
 #ifdef EMU_M68K
  extern "C" INT32 nSekM68KContextSize[SEK_MAX];
