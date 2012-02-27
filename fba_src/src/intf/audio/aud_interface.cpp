@@ -1,6 +1,8 @@
 // Audio Output
 #include "burner.h"
 
+extern bool bSoundOn;
+
 INT32 nAudSampleRate[8] = { 22050,22050,22050,22050,22050,22050,22050,22050 };			// sample rate
 INT32 nAudVolume = 10000;				// Sound volume (% * 100)
 INT32 nAudSegCount = 6;				// Segs in the pdsbLoop buffer
@@ -68,6 +70,7 @@ INT32 AudSoundCheck()
 INT32 AudSoundInit()
 {
 	INT32 nRet;
+    if (!bSoundOn) return 1;
 
 	if (nAudSelect >= AUD_LEN) {
 		return 1;

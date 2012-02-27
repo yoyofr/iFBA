@@ -178,7 +178,7 @@ void deco16_palette_recalculate(UINT32 *palette, UINT8 *pal)
 		INT32 g = (p[i + 1] >> 8) & 0xff;
 		INT32 r = (p[i + 1] >> 0) & 0xff;
 
-		palette[i/2] = BurnHighCol(r, g, b, 0);
+		palette[i/2] = HighCol16(r, g, b, 0);
 	}
 }
 

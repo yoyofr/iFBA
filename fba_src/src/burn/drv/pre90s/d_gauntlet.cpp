@@ -2331,7 +2331,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = ((nColour >> 4) & 15) * i;
 	b = ((nColour >> 0) & 15) * i;
 	
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void DrvCalcPalette()

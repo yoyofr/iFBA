@@ -4,11 +4,15 @@
 #include "burner.h"
 #include "inp_sdl_keys.h"
 
-#define MAX_JOYSTICKS (4)
+#define MAX_JOYSTICKS 4
 
 static int* JoyPrevAxes = NULL;
 static int nJoystickCount = 0;						// Number of joysticks connected to this machine
 extern int vpad_button_nb;
+extern float joy_analog_x[MAX_JOYSTICKS];
+extern float joy_analog_y[MAX_JOYSTICKS];
+extern float joy_analog_l[MAX_JOYSTICKS];
+extern float joy_analog_r[MAX_JOYSTICKS];
 
 // Sets up one Joystick (for example the range of the joystick's axes)
 static int SDLinpJoystickInit(int i)
@@ -110,6 +114,23 @@ int SDLinpJoyAxis(int i, int nAxis)
 	if (ReadJoystick() != 0) {						// There was an error polling the joystick
 		return 0;
 	}
+    
+    if (nAxis > 2) return 0;
+    
+    switch (nAxis) {
+        case 0:
+            return joy_analog_x[i]*32767;
+            break;
+        case 1:
+            return joy_analog_y[i]*32767;
+            break;
+        case 2:
+            return joy_analog_l[i]*32767;
+            break;
+        case 3:
+            return joy_analog_r[i]*32767;
+            break;
+    }
     
     return 0;
 }

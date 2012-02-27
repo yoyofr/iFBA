@@ -14,7 +14,7 @@
  *   Add driver Turbo Force (turbofrc)
  *
  * 6.10.2007
- *   Add BurnHighCol support, and add BDF_16BIT_ONLY into driver.   thanks to KEV
+ *   Add HighCol16 support, and add BDF_16BIT_ONLY into driver.   thanks to KEV
  *
  */
 
@@ -89,7 +89,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	b = (nColour & 0x7C00) >> 7;	// Blue
 	b |= b >> 5;
 
-	return BurnHighCol(b, g, r, 0);
+	return HighCol16(b, g, r, 0);
 }
 
 #else

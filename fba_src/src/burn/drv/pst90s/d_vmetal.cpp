@@ -216,7 +216,7 @@ static inline void palette_write(INT32 offset)
 		UINT8 r = (rgb >> 6) & 0x1f;
 		UINT8 b = (rgb >> 1) & 0x1f;
 
-		DrvPalette[(offset/2)&0xfff] = BurnHighCol((r << 3) | (r >> 5), (g << 3) | (g >> 5), (b << 3) | (b >> 5), 0);
+		DrvPalette[(offset/2)&0xfff] = HighCol16((r << 3) | (r >> 5), (g << 3) | (g >> 5), (b << 3) | (b >> 5), 0);
 	}
 }
 

@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33231C0014FBA67A00AD7823 /* BTDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BE814FBA67A00AD7823 /* BTDevice.m */; };
+		33231C0114FBA67A00AD7823 /* BTDiscoveryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEA14FBA67A00AD7823 /* BTDiscoveryViewController.m */; };
+		33231C0214FBA67A00AD7823 /* BTInquiryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEC14FBA67A00AD7823 /* BTInquiryViewController.m */; };
+		33231C0314FBA67A00AD7823 /* BTstackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEF14FBA67A00AD7823 /* BTstackManager.m */; };
+		33231C0414FBA67A00AD7823 /* wiimote.c in Sources */ = {isa = PBXBuildFile; fileRef = 33231BFA14FBA67A00AD7823 /* wiimote.c */; };
+		33231C0514FBA67A00AD7823 /* iCadeReaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BFE14FBA67A00AD7823 /* iCadeReaderView.m */; };
+		334F5FB614FC000900ED3CDB /* libBTstack.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 334F5FB514FC000900ED3CDB /* libBTstack.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		334F5FC314FC282E00ED3CDB /* DrZ80.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 334F5FBD14FC282E00ED3CDB /* DrZ80.o */; };
+		334F5FCE14FC31B800ED3CDB /* OptionsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */; };
+		334F5FCF14FC31B800ED3CDB /* OptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */; };
 		3354E92A14F90A0E001DAF9D /* MenuViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */; };
 		3354E92C14F90A19001DAF9D /* MenuViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */; };
 		3354E93414F90ADE001DAF9D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3354E93614F90ADE001DAF9D /* Localizable.strings */; };
@@ -557,6 +567,8 @@
 		339E632214F199EF006FB970 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E632114F199EF006FB970 /* GLKit.framework */; };
 		339E636614F1B8BD006FB970 /* FrameBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E636414F1B8BC006FB970 /* FrameBuffer.mm */; };
 		339E636914F1B8C8006FB970 /* OGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E636814F1B8C8006FB970 /* OGLView.mm */; };
+		33A7E73F14FA97E5007B42B9 /* sdl_font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */; };
+		33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33A7E74314FABEDB007B42B9 /* fastarm_memfunc.o */; };
 		33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AD897B14F85A4D00239FB6 /* Cyclone.o */; };
 		33F444CB14F50D8800BA36E1 /* cd_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33F444C514F50D8800BA36E1 /* cd_interface.cpp */; };
 		33F444D314F5186000BA36E1 /* support_paths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33F444D214F5186000BA36E1 /* support_paths.cpp */; };
@@ -565,6 +577,41 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		33231BE714FBA67A00AD7823 /* BTDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDevice.h; sourceTree = "<group>"; };
+		33231BE814FBA67A00AD7823 /* BTDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTDevice.m; sourceTree = "<group>"; };
+		33231BE914FBA67A00AD7823 /* BTDiscoveryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDiscoveryViewController.h; sourceTree = "<group>"; };
+		33231BEA14FBA67A00AD7823 /* BTDiscoveryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTDiscoveryViewController.m; sourceTree = "<group>"; };
+		33231BEB14FBA67A00AD7823 /* BTInquiryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTInquiryViewController.h; sourceTree = "<group>"; };
+		33231BEC14FBA67A00AD7823 /* BTInquiryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTInquiryViewController.m; sourceTree = "<group>"; };
+		33231BED14FBA67A00AD7823 /* btstack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btstack.h; sourceTree = "<group>"; };
+		33231BEE14FBA67A00AD7823 /* BTstackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTstackManager.h; sourceTree = "<group>"; };
+		33231BEF14FBA67A00AD7823 /* BTstackManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTstackManager.m; sourceTree = "<group>"; };
+		33231BF014FBA67A00AD7823 /* hal_cpu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hal_cpu.h; sourceTree = "<group>"; };
+		33231BF114FBA67A00AD7823 /* hal_tick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hal_tick.h; sourceTree = "<group>"; };
+		33231BF214FBA67A00AD7823 /* hal_uart_dma.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hal_uart_dma.h; sourceTree = "<group>"; };
+		33231BF314FBA67A00AD7823 /* hci_cmds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hci_cmds.h; sourceTree = "<group>"; };
+		33231BF414FBA67A00AD7823 /* linked_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linked_list.h; sourceTree = "<group>"; };
+		33231BF514FBA67A00AD7823 /* memory_pool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memory_pool.h; sourceTree = "<group>"; };
+		33231BF614FBA67A00AD7823 /* run_loop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = run_loop.h; sourceTree = "<group>"; };
+		33231BF714FBA67A00AD7823 /* sdp_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sdp_util.h; sourceTree = "<group>"; };
+		33231BF814FBA67A00AD7823 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		33231BF914FBA67A00AD7823 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		33231BFA14FBA67A00AD7823 /* wiimote.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wiimote.c; sourceTree = "<group>"; };
+		33231BFB14FBA67A00AD7823 /* wiimote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wiimote.h; sourceTree = "<group>"; };
+		33231BFD14FBA67A00AD7823 /* iCadeReaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCadeReaderView.h; sourceTree = "<group>"; };
+		33231BFE14FBA67A00AD7823 /* iCadeReaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCadeReaderView.m; sourceTree = "<group>"; };
+		33231BFF14FBA67A00AD7823 /* iCadeState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCadeState.h; sourceTree = "<group>"; };
+		334F5FB514FC000900ED3CDB /* libBTstack.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libBTstack.dylib; sourceTree = "<group>"; };
+		334F5FBC14FC282E00ED3CDB /* DrZ80.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrZ80.h; sourceTree = "<group>"; };
+		334F5FBD14FC282E00ED3CDB /* DrZ80.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = DrZ80.o; sourceTree = "<group>"; };
+		334F5FBE14FC282E00ED3CDB /* DrZ80.org.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = DrZ80.org.s; sourceTree = "<group>"; };
+		334F5FBF14FC282E00ED3CDB /* DrZ80.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = DrZ80.s; sourceTree = "<group>"; };
+		334F5FC014FC282E00ED3CDB /* DrZ80.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DrZ80.txt; sourceTree = "<group>"; };
+		334F5FC114FC282E00ED3CDB /* gas-pre.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = "gas-pre.pl"; sourceTree = "<group>"; };
+		334F5FC214FC282E00ED3CDB /* gpl.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gpl.txt; sourceTree = "<group>"; };
+		334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsViewController.h; sourceTree = "<group>"; };
+		334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptionsViewController.mm; sourceTree = "<group>"; };
+		334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptionsViewController.xib; sourceTree = "<group>"; };
 		3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuViewController_iPhone.xib; sourceTree = "<group>"; };
 		3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuViewController_iPad.xib; sourceTree = "<group>"; };
 		3354E93014F90A3C001DAF9D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = /Users/ymagnien/Desktop/dev/iphone/new/iFBA/iFBA/fr.lproj/InfoPlist.strings; sourceTree = "<absolute>"; };
@@ -1325,6 +1372,10 @@
 		339E636514F1B8BC006FB970 /* GlErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlErrors.h; sourceTree = "<group>"; };
 		339E636714F1B8C8006FB970 /* OGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGLView.h; sourceTree = "<group>"; };
 		339E636814F1B8C8006FB970 /* OGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OGLView.mm; sourceTree = "<group>"; };
+		33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sdl_font.cpp; sourceTree = "<group>"; };
+		33A7E73E14FA97D7007B42B9 /* sdl_font.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sdl_font.h; sourceTree = "<group>"; };
+		33A7E74014FAB881007B42B9 /* fastarm_memfunc.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = fastarm_memfunc.s; sourceTree = "<group>"; };
+		33A7E74314FABEDB007B42B9 /* fastarm_memfunc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = fastarm_memfunc.o; sourceTree = "<group>"; };
 		33AD897A14F85A4D00239FB6 /* cyclone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclone.h; sourceTree = "<group>"; };
 		33AD897B14F85A4D00239FB6 /* Cyclone.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Cyclone.o; sourceTree = "<group>"; };
 		33AD897C14F85A4D00239FB6 /* Cyclone.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = Cyclone.s; sourceTree = "<group>"; };
@@ -1364,12 +1415,75 @@
 				339E5FB514F1851E006FB970 /* Foundation.framework in Frameworks */,
 				339E5FB714F1851E006FB970 /* CoreGraphics.framework in Frameworks */,
 				33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */,
+				33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */,
+				334F5FB614FC000900ED3CDB /* libBTstack.dylib in Frameworks */,
+				334F5FC314FC282E00ED3CDB /* DrZ80.o in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		33231BE614FBA67A00AD7823 /* BTstack */ = {
+			isa = PBXGroup;
+			children = (
+				33231BE714FBA67A00AD7823 /* BTDevice.h */,
+				33231BE814FBA67A00AD7823 /* BTDevice.m */,
+				33231BE914FBA67A00AD7823 /* BTDiscoveryViewController.h */,
+				33231BEA14FBA67A00AD7823 /* BTDiscoveryViewController.m */,
+				33231BEB14FBA67A00AD7823 /* BTInquiryViewController.h */,
+				33231BEC14FBA67A00AD7823 /* BTInquiryViewController.m */,
+				33231BED14FBA67A00AD7823 /* btstack.h */,
+				33231BEE14FBA67A00AD7823 /* BTstackManager.h */,
+				33231BEF14FBA67A00AD7823 /* BTstackManager.m */,
+				33231BF014FBA67A00AD7823 /* hal_cpu.h */,
+				33231BF114FBA67A00AD7823 /* hal_tick.h */,
+				33231BF214FBA67A00AD7823 /* hal_uart_dma.h */,
+				33231BF314FBA67A00AD7823 /* hci_cmds.h */,
+				33231BF414FBA67A00AD7823 /* linked_list.h */,
+				33231BF514FBA67A00AD7823 /* memory_pool.h */,
+				33231BF614FBA67A00AD7823 /* run_loop.h */,
+				33231BF714FBA67A00AD7823 /* sdp_util.h */,
+				33231BF814FBA67A00AD7823 /* utils.h */,
+				33231BF914FBA67A00AD7823 /* version.h */,
+				33231BFA14FBA67A00AD7823 /* wiimote.c */,
+				33231BFB14FBA67A00AD7823 /* wiimote.h */,
+			);
+			path = BTstack;
+			sourceTree = "<group>";
+		};
+		33231BFC14FBA67A00AD7823 /* iCade */ = {
+			isa = PBXGroup;
+			children = (
+				33231BFD14FBA67A00AD7823 /* iCadeReaderView.h */,
+				33231BFE14FBA67A00AD7823 /* iCadeReaderView.m */,
+				33231BFF14FBA67A00AD7823 /* iCadeState.h */,
+			);
+			path = iCade;
+			sourceTree = "<group>";
+		};
+		33231C0714FBA88B00AD7823 /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				334F5FB514FC000900ED3CDB /* libBTstack.dylib */,
+			);
+			path = Lib;
+			sourceTree = "<group>";
+		};
+		334F5FBB14FC282E00ED3CDB /* drz80 */ = {
+			isa = PBXGroup;
+			children = (
+				334F5FBC14FC282E00ED3CDB /* DrZ80.h */,
+				334F5FBD14FC282E00ED3CDB /* DrZ80.o */,
+				334F5FBE14FC282E00ED3CDB /* DrZ80.org.s */,
+				334F5FBF14FC282E00ED3CDB /* DrZ80.s */,
+				334F5FC014FC282E00ED3CDB /* DrZ80.txt */,
+				334F5FC114FC282E00ED3CDB /* gas-pre.pl */,
+				334F5FC214FC282E00ED3CDB /* gpl.txt */,
+			);
+			path = drz80;
+			sourceTree = "<group>";
+		};
 		3354E97014F9573D001DAF9D /* Textures */ = {
 			isa = PBXGroup;
 			children = (
@@ -2117,6 +2231,8 @@
 		336B51E914F4439A00CE9A63 /* sdl */ = {
 			isa = PBXGroup;
 			children = (
+				33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */,
+				33A7E73E14FA97D7007B42B9 /* sdl_font.h */,
 				33F444D214F5186000BA36E1 /* support_paths.cpp */,
 				336B51EA14F4439A00CE9A63 /* burner_sdl.h */,
 				336B51EB14F4439A00CE9A63 /* bzip.cpp */,
@@ -2177,6 +2293,7 @@
 				336B529C14F4439B00CE9A63 /* sh2 */,
 				336B529F14F4439B00CE9A63 /* vez.cpp */,
 				336B52A014F4439B00CE9A63 /* vez.h */,
+				334F5FBB14FC282E00ED3CDB /* drz80 */,
 				336B52A114F4439B00CE9A63 /* z80 */,
 			);
 			path = cpu;
@@ -2449,6 +2566,8 @@
 				336B532F14F4439B00CE9A63 /* interface.cpp */,
 				336B533014F4439B00CE9A63 /* interface.h */,
 				336B533514F4439B00CE9A63 /* video */,
+				33A7E74014FAB881007B42B9 /* fastarm_memfunc.s */,
+				33A7E74314FABEDB007B42B9 /* fastarm_memfunc.o */,
 			);
 			path = intf;
 			sourceTree = "<group>";
@@ -2547,6 +2666,7 @@
 				339E631F14F199E9006FB970 /* QuartzCore.framework */,
 				339E5FB814F1851E006FB970 /* iFBA */,
 				339E62D814F18ACA006FB970 /* Resources */,
+				33231C0714FBA88B00AD7823 /* Lib */,
 				339E5FB114F1851E006FB970 /* Frameworks */,
 				339E5FAF14F1851E006FB970 /* Products */,
 			);
@@ -2578,6 +2698,8 @@
 			isa = PBXGroup;
 			children = (
 				339E5FC114F1851E006FB970 /* AppDelegate.h */,
+				33231BE614FBA67A00AD7823 /* BTstack */,
+				33231BFC14FBA67A00AD7823 /* iCade */,
 				339E5FC214F1851E006FB970 /* AppDelegate.mm */,
 				339E636714F1B8C8006FB970 /* OGLView.h */,
 				339E636814F1B8C8006FB970 /* OGLView.mm */,
@@ -2586,13 +2708,16 @@
 				339E636514F1B8BC006FB970 /* GlErrors.h */,
 				33F444D814F5685100BA36E1 /* EmuViewController.h */,
 				33F444D914F5685100BA36E1 /* EmuViewController.mm */,
+				33F444D614F567DC00BA36E1 /* EmuViewController.xib */,
+				334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */,
+				334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */,
+				334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */,
 				3354E93A14F9152B001DAF9D /* GameBrowserViewController.h */,
 				3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */,
+				3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */,
 				339E5FC414F1851E006FB970 /* MenuViewController.h */,
 				339E5FC514F1851E006FB970 /* MenuViewController.mm */,
-				33F444D614F567DC00BA36E1 /* EmuViewController.xib */,
 				3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */,
-				3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */,
 				3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */,
 				339E5FB914F1851E006FB970 /* Supporting Files */,
 			);
@@ -2716,6 +2841,7 @@
 				3354E93914F914AE001DAF9D /* GameBrowserViewController.xib in Resources */,
 				3354E97314F9573D001DAF9D /* button.png in Resources */,
 				3354E97414F9573D001DAF9D /* dpad.png in Resources */,
+				334F5FCF14FC31B800ED3CDB /* OptionsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3252,6 +3378,14 @@
 				33F444D314F5186000BA36E1 /* support_paths.cpp in Sources */,
 				33F444DA14F5685100BA36E1 /* EmuViewController.mm in Sources */,
 				3354E93C14F91697001DAF9D /* GameBrowserViewController.mm in Sources */,
+				33A7E73F14FA97E5007B42B9 /* sdl_font.cpp in Sources */,
+				33231C0014FBA67A00AD7823 /* BTDevice.m in Sources */,
+				33231C0114FBA67A00AD7823 /* BTDiscoveryViewController.m in Sources */,
+				33231C0214FBA67A00AD7823 /* BTInquiryViewController.m in Sources */,
+				33231C0314FBA67A00AD7823 /* BTstackManager.m in Sources */,
+				33231C0414FBA67A00AD7823 /* wiimote.c in Sources */,
+				33231C0514FBA67A00AD7823 /* iCadeReaderView.m in Sources */,
+				334F5FCE14FC31B800ED3CDB /* OptionsViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3344,6 +3478,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/fba-gp2x\"",
+					"\"$(SRCROOT)/Lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -3361,6 +3496,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/fba-gp2x\"",
+					"\"$(SRCROOT)/Lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

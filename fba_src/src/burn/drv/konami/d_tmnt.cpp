@@ -5254,7 +5254,7 @@ static void DrvCalcPalette()
 		UINT32 Data = (PaletteRam[Offset] << 8) | PaletteRam[Offset + 1];
 
 		Palette[Offset >> 1] = (pal5bit(Data >> 0) << 16) | (pal5bit(Data >> 5) << 8) | pal5bit(Data >> 10);
-		DrvPalette[Offset >> 1] = BurnHighCol(pal5bit(Data >> 0), pal5bit(Data >> 5), pal5bit(Data >> 10), 0);
+		DrvPalette[Offset >> 1] = HighCol16(pal5bit(Data >> 0), pal5bit(Data >> 5), pal5bit(Data >> 10), 0);
 	}
 }
 
@@ -5266,7 +5266,7 @@ static void BlswhstlCalcPalette()
 		UINT32 Data = PaletteRam[i];
 
 		Palette[i] = (pal5bit(Data >> 0) << 16) | (pal5bit(Data >> 5) << 8) | pal5bit(Data >> 10);
-		DrvPalette[i] = BurnHighCol(pal5bit(Data >> 0), pal5bit(Data >> 5), pal5bit(Data >> 10), 0);
+		DrvPalette[i] = HighCol16(pal5bit(Data >> 0), pal5bit(Data >> 5), pal5bit(Data >> 10), 0);
 	}
 }
 
@@ -5314,7 +5314,7 @@ static inline void BlswhstlCalcPaletteWithContrast(INT32 i, INT32 brt)
 	g = (g * brt) / 100;
 	b = (b * brt) / 100;
 
-	DrvPalette[i] = BurnHighCol(r, g, b, 0);
+	DrvPalette[i] = HighCol16(r, g, b, 0);
 }
 
 static void PaletteDim(INT32 dimslayer)

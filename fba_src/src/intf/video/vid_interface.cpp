@@ -113,7 +113,7 @@ static bool bVidRecalcPalette;
 static UINT8* pVidTransImage = NULL;
 static UINT32* pVidTransPalette = NULL;
 
-static UINT32 __cdecl HighCol15(INT32 r, INT32 g, INT32 b, INT32  /* i */)
+static UINT32 __cdecl myHighCol15(INT32 r, INT32 g, INT32 b, INT32  /* i */)
 {
 	UINT32 t;
 
@@ -158,11 +158,7 @@ INT32 VidInit()
 	}
 #endif
 
-#if defined (BUILD_WIN32) && defined (ENABLE_PREVIEW)
-	if ((nVidSelect < VID_LEN) && (bDrvOkay || hbitmap)) {
-#else
 	if ((nVidSelect < VID_LEN) && bDrvOkay) {
-#endif
 		nVidActive = nVidSelect;
 		if ((nRet = pVidOut[nVidActive]->Init()) == 0) {
 			nBurnBpp = nVidImageBPP;								// Set Burn library Bytes per pixel
@@ -175,7 +171,7 @@ INT32 VidInit()
 				pVidTransPalette = (UINT32*)malloc(32768 * sizeof(UINT32));
 				pVidTransImage = (UINT8*)malloc(nVidImageWidth * nVidImageHeight * sizeof(INT16));
 
-				BurnHighCol = HighCol15;
+//				HighCol16 = HighCol16;
 
 				if (pVidTransPalette == NULL || pVidTransImage == NULL) {
 					VidExit();
@@ -185,62 +181,6 @@ INT32 VidInit()
 		}
 	}
 
-#if defined (BUILD_WIN32) && defined (ENABLE_PREVIEW)
-	if (bVidOkay && hbitmap) {
-		BITMAPINFO bitmapinfo;
-		UINT8* pLineBuffer = (UINT8*)malloc(bitmap.bmWidth * 4);
-		HDC hDC = GetDC(hVidWnd);
-
-		if (hDC && pLineBuffer) {
-
-			memset(&bitmapinfo, 0, sizeof(BITMAPINFO));
-			bitmapinfo.bmiHeader.biSize = sizeof(BITMAPINFO);
-			bitmapinfo.bmiHeader.biWidth = bitmap.bmWidth;
-			bitmapinfo.bmiHeader.biHeight = bitmap.bmHeight;
-			bitmapinfo.bmiHeader.biPlanes = 1;
-			bitmapinfo.bmiHeader.biBitCount = 24;
-			bitmapinfo.bmiHeader.biCompression = BI_RGB;
-			
-			for (INT32 y = 0; y < nVidImageHeight; y++) {
-				UINT8* pd = pVidImage + y * nVidImagePitch;
-				UINT8* ps = pLineBuffer;
-
-				GetDIBits(hDC, hbitmap, nVidImageHeight - 1 - y, 1, ps, &bitmapinfo, DIB_RGB_COLORS);
-
-				for (INT32 x = 0; x < nVidImageWidth; x++, ps += 3) {
-					UINT32 nColour = VidHighCol(ps[2], ps[1], ps[0], 0);
-					switch (nVidImageBPP) {
-						case 2:
-							*((UINT16*)pd) = (UINT16)nColour;
-							pd += 2;
-							break;
-						case 3:
-							pd[0] = (nColour >> 16) & 0xFF;
-							ps[1] = (nColour >>  8) & 0xFF;
-							pd[2] = (nColour >>  0) & 0xFF;
-							pd += 3;
-							break;
-						case 4:
-							*((UINT32*)pd) = nColour;
-							pd += 4;
-							break;
-					}
-				}
-			}
-		}
-		if (hDC) {
-			ReleaseDC(hVidWnd, hDC);
-		}
-		if (pLineBuffer) {
-			free(pLineBuffer);
-			pLineBuffer = NULL;
-		}
-	}
-
-	if (hbitmap) {
-		DeleteObject(hbitmap);
-	}
-#endif
 
 	return nRet;
 }

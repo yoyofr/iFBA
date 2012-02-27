@@ -25,24 +25,36 @@
 #include <stdint.h>
 #import "OGLView.h"
 
+#import "iCadeReaderView.h"
+#import "BTstack/BTstackManager.h"
+#import "BTstack/BTDiscoveryViewController.h"
+@class BTstackManager;
+@class BTDiscoveryViewController;
+
 
 @class OGLView;
 @class EAGLContext;
 @class CADisplayLink;
 
 #define TEXTURE_W 512
-#define TEXTURE_H 256
+#define TEXTURE_H 512
 
-@interface EmuViewController : UIViewController {
+@interface EmuViewController : UIViewController <iCadeEventDelegate, BTstackManagerDelegate, BTstackManagerListener,BTDiscoveryDelegate> {
     OGLView* m_oglView;
 	EAGLContext* m_oglContext;	
 	CADisplayLink* m_displayLink;
 	
+    iCadeReaderView *control;
+    BTDiscoveryViewController* discoveryView;
+    
+    
     float mScaleFactor;
     int mDeviceType,mDevice_ww,mDevice_hh;        
     
     
 }
+
+@property (readwrite) iCadeReaderView *control;
 
 - (void)doFrame;
 //@property (nonatomic, retain) IBOutlet OGLView* m_oglView;

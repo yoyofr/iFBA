@@ -1669,7 +1669,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = pal5bit(nColour >>  5);
 	b = pal5bit(nColour >> 10);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 inline static UINT32 CtribeCalcCol(UINT16 nColour)
@@ -1680,7 +1680,7 @@ inline static UINT32 CtribeCalcCol(UINT16 nColour)
 	g = pal4bit(nColour >> 4);
 	b = pal4bit(nColour >> 8);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void DrvCalcPalette()

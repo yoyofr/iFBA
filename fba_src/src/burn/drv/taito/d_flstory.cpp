@@ -1086,7 +1086,7 @@ static inline void DrvRecalcPalette()
 		b = (d >> 8) & 0x0f;
 		g = (d >> 4) & 0x0f;
 		r = d & 0x0f;
-		DrvPalette[i] = BurnHighCol((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
+		DrvPalette[i] = HighCol16((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
 	}
 }
 

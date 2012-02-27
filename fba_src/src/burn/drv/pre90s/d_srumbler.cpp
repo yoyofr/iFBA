@@ -564,7 +564,7 @@ static INT32 DrvDraw()
 			g = (d >>  8) & 0x0f;
 			b = (d >>  4) & 0x0f;
 
-			DrvPalette[i >> 1] = BurnHighCol((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
+			DrvPalette[i >> 1] = HighCol16((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
 		}
 	}
 

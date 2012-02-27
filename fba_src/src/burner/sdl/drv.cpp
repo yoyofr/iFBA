@@ -2,10 +2,13 @@
 #include "burner.h"
 
 int bDrvOkay = 0;						// 1 if the Driver has been initted okay, and it's okay to use the BurnDrv functions
+extern bool bSoundOn;
 
 char szAppRomPaths[DIRS_MAX][MAX_PATH] = {{"/usr/local/share/roms/"},{"roms/"}, };
 
 static bool bSaveRAM = false;
+
+extern int ErrorWhileLoading(const char* pszText);
 
 static int DoLibInit()					// Do Init of Burn library driver
 {
@@ -39,8 +42,10 @@ static int DrvLoadRom(unsigned char* Dest, int* pnWrote, int i)
 		char* pszFilename;
 
 		BurnDrvGetRomName(&pszFilename, i, 0);
-		sprintf(szText, "Error loading %s, requested by %s.\nThe emulation will likely suffer problems.", pszFilename, BurnDrvGetTextA(0));
-	}
+		sprintf(szText, "Error loading %s\nrequested by %s.\nThe emulation will likely\nsuffer problems.", pszFilename, BurnDrvGetTextA(0));
+            
+        ErrorWhileLoading(szText);
+    }
 
 	BzipClose();
 
@@ -78,7 +83,8 @@ int DrvInit(int nDrvNum, bool bRestore)
 
 		BurnDrvExit();				// Exit the driver
 
-		_stprintf (szTemp, _T("There was an error starting '%s'.\n"), BurnDrvGetText(DRV_FULLNAME));
+		_stprintf (szTemp, _T("There was an error starting\n'%s'\nCheck your rom file(s)."), BurnDrvGetText(DRV_FULLNAME));
+        ErrorWhileLoading(szTemp);
 		return 1;
 	}
 

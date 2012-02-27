@@ -213,19 +213,19 @@ extern const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 #endif
 
 #if defined(pyr)
-#  define NO_MEMCPY
+#  define NO_memcpy
 #endif
 #if defined(SMALL_MEDIUM) && !defined(_MSC_VER) && !defined(__SC__)
  /* Use our own functions for small and medium model with MSC <= 5.0.
   * You may have to use the same strategy for Borland C (untested).
   * The __SC__ check is for Symantec.
   */
-#  define NO_MEMCPY
+#  define NO_memcpy
 #endif
-#if defined(STDC) && !defined(HAVE_MEMCPY) && !defined(NO_MEMCPY)
-#  define HAVE_MEMCPY
+#if defined(STDC) && !defined(HAVE_memcpy) && !defined(NO_memcpy)
+#  define HAVE_memcpy
 #endif
-#ifdef HAVE_MEMCPY
+#ifdef HAVE_memcpy
 #  ifdef SMALL_MEDIUM /* MSDOS small or medium model */
 #    define zmemcpy _fmemcpy
 #    define zmemcmp _fmemcmp

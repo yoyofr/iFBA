@@ -2,15 +2,11 @@
 #include "burnint.h"
 #include "sekdebug.h"
 
-#ifdef EMU_C68K
 struct Cyclone PicoCpu[SEK_MAX];
 static bool bCycloneInited = false;
-#endif
 
-#ifdef EMU_M68K
 INT32 nSekM68KContextSize[SEK_MAX];
 INT8* SekM68KContext[SEK_MAX];
-#endif
 
 INT32 nSekCount = -1;							// Number of allocated 68000s
 struct SekExt *SekExt[SEK_MAX] = { NULL, }, *pSekExt = NULL;
@@ -284,7 +280,6 @@ inline static void WriteLongROM(UINT32 a, UINT32 d)
 }
 
 
-#ifdef EMU_M68K
 extern "C" {
     UINT32 __fastcall M68KReadByte(UINT32 a) { return (UINT32)ReadByte(a); }
     UINT32 __fastcall M68KReadWord(UINT32 a) { return (UINT32)ReadWord(a); }
@@ -299,7 +294,6 @@ extern "C" {
     void __fastcall M68KWriteWord(UINT32 a, UINT32 d) { WriteWord(a, d); }
     void __fastcall M68KWriteLong(UINT32 a, UINT32 d) { WriteLong(a, d); }
 }
-#endif
 
 
 // ----------------------------------------------------------------------------
@@ -325,7 +319,6 @@ void SekWriteLongROM(UINT32 a, UINT32 d) { WriteLongROM(a, d); }
 // ----------------------------------------------------------------------------
 // Callbacks for Musashi
 
-#ifdef EMU_M68K
 extern "C" INT32 M68KIRQAcknowledge(INT32 nIRQ)
 {
 	if (nSekIRQPending[nSekActive] & SEK_IRQSTATUS_AUTO) {
@@ -360,13 +353,11 @@ extern "C" void M68KcmpildCallback(UINT32 val, INT32 reg)
 		pSekExt->CmpCallback(val, reg);
 	}
 }
-#endif
 
 // ----------------------------------------------------------------------------
 // Initialisation/exit/reset
 
 
-#ifdef EMU_M68K
 static INT32 SekInitCPUM68K(INT32 nCount, INT32 nCPUType)
 {
 	nSekCPUType[nCount] = nCPUType;
@@ -395,7 +386,6 @@ static INT32 SekInitCPUM68K(INT32 nCount, INT32 nCPUType)
     
 	return 0;
 }
-#endif
 
 void SekNewFrame()
 {
@@ -413,8 +403,6 @@ void SekSetCyclesScanline(INT32 nCycles)
 	nSekCyclesScanline = nCycles;
 }
 
-#ifdef EMU_C68K
-
 unsigned int PicoCheckPc(unsigned int pc) {
 	pc -= PicoCpu[nSekActive].membase; // Get real pc
 	pc &= 0xffffff;
@@ -425,12 +413,16 @@ unsigned int PicoCheckPc(unsigned int pc) {
 }
 
 static int PicoIrqCallback(int int_level) {
-	if (nSekIRQPending[nSekActive] & SEK_IRQSTATUS_AUTO)
-		PicoCpu[nSekActive].irq = 0;
+	if (nSekIRQPending[nSekActive] & SEK_IRQSTATUS_AUTO) {
+		PicoCpu[nSekActive].irq = 0;    
+        nSekIRQPending[nSekActive] = 0;
+    }
     
-	nSekIRQPending[nSekActive] = 0;
-    return CYCLONE_INT_ACK_AUTOVECTOR;
-    
+    if (pSekExt->IrqCallback) {
+		return pSekExt->IrqCallback(int_level);
+	}
+        
+    return CYCLONE_INT_ACK_AUTOVECTOR;    
 }
 
 static void PicoResetCallback()
@@ -448,17 +440,13 @@ static int UnrecognizedCallback()
 	return 0;
 }
 
-
-#endif
-
-
 INT32 SekInit(INT32 nCount, INT32 nCPUType)
 {
 	DebugCPU_SekInitted = 1;
 	
 	struct SekExt* ps = NULL;
     
-	bBurnUseASMCPUEmulation = false;
+	//bBurnUseASMCPUEmulation = false;
     
 	if (nSekActive >= 0) {
 		SekClose();
@@ -561,42 +549,39 @@ INT32 SekInit(INT32 nCount, INT32 nCPUType)
 		ps->WriteLong[j] = DefWriteLong0;
 	}
 #endif
-    
-#ifdef EMU_M68K
-    m68k_init();
-    if (SekInitCPUM68K(nCount, nCPUType)) {
-        SekExit();
-        return 1;
-    }
-#endif
-#ifdef EMU_C68K
-	if (!bCycloneInited) {
-		CycloneInit();
-		bCycloneInited = true;
-	}
-	memset(&PicoCpu[nCount], 0, sizeof(PicoCpu));
-	
-	PicoCpu[nCount].read8	= ReadByte;
-	PicoCpu[nCount].read16	= ReadWord;
-	PicoCpu[nCount].read32	= ReadLong;
-    
-	PicoCpu[nCount].write8	= WriteByte;
-	PicoCpu[nCount].write16	= WriteWord;
-	PicoCpu[nCount].write32	= WriteLong;
-    
-	PicoCpu[nCount].fetch8	= FetchByte;
-	PicoCpu[nCount].fetch16	= FetchWord;
-	PicoCpu[nCount].fetch32	= FetchLong;	
-	
-	PicoCpu[nCount].checkpc = PicoCheckPc;
-	
-	PicoCpu[nCount].IrqCallback = PicoIrqCallback;
-	PicoCpu[nCount].ResetCallback = PicoResetCallback;
-	PicoCpu[nCount].UnrecognizedCallback = UnrecognizedCallback;
-	
-#endif
-    
-    
+    if (bBurnUseASMCPUEmulation==0) {
+        m68k_init();
+        if (SekInitCPUM68K(nCount, nCPUType)) {
+            SekExit();
+            return 1;
+        }
+    } else {
+        nSekCPUType[nCount] = nCPUType;
+        if (!bCycloneInited) {
+            CycloneInit();
+            bCycloneInited = true;
+        }
+        memset(&PicoCpu[nCount], 0, sizeof(PicoCpu));
+        
+        PicoCpu[nCount].read8	= ReadByte;
+        PicoCpu[nCount].read16	= ReadWord;
+        PicoCpu[nCount].read32	= ReadLong;
+        
+        PicoCpu[nCount].write8	= WriteByte;
+        PicoCpu[nCount].write16	= WriteWord;
+        PicoCpu[nCount].write32	= WriteLong;
+        
+        PicoCpu[nCount].fetch8	= FetchByte;
+        PicoCpu[nCount].fetch16	= FetchWord;
+        PicoCpu[nCount].fetch32	= FetchLong;	
+        
+        PicoCpu[nCount].checkpc = PicoCheckPc;
+        
+        PicoCpu[nCount].IrqCallback = PicoIrqCallback;
+        PicoCpu[nCount].ResetCallback = PicoResetCallback;
+        PicoCpu[nCount].UnrecognizedCallback = UnrecognizedCallback;
+        
+    }    
     
 	nSekCycles[nCount] = 0;
 	nSekIRQPending[nCount] = 0;
@@ -610,19 +595,14 @@ INT32 SekInit(INT32 nCount, INT32 nCPUType)
 }
 
 
-#ifdef EMU_M68K
-static void SekCPUExitM68K(INT32 i)
-{
+static void SekCPUExitM68K(INT32 i){
     if(SekM68KContext[i]) {
         free(SekM68KContext[i]);
         SekM68KContext[i] = NULL;
     }
 }
-#endif
 
-#ifdef EMU_C68K
-static void PicoReset()
-{
+static void PicoReset() {
     memset(&PicoCpu, 0, 22 * 4); // clear all regs
 	
     //YOYOFR
@@ -634,8 +614,6 @@ static void PicoReset()
 	PicoCpu[nSekActive].membase	= 0;
 	PicoCpu[nSekActive].pc		= PicoCpu[nSekActive].checkpc(FetchLong(4)); // Program Counter
 }
-#endif
-
 
 INT32 SekExit()
 {
@@ -644,9 +622,7 @@ INT32 SekExit()
 	for (INT32 i = 0; i <= nSekCount; i++) {
         
         
-#ifdef EMU_M68K
-		SekCPUExitM68K(i);
-#endif
+        if (bBurnUseASMCPUEmulation==0) SekCPUExitM68K(i);
         
 		// Deallocate other context data
 		if (SekExt[i]) {
@@ -665,80 +641,55 @@ INT32 SekExit()
 	return 0;
 }
 
-void SekReset()
-{
-    
-    
-#ifdef EMU_M68K
-    m68k_pulse_reset();
-#endif
-    
-#ifdef EMU_C68K
-	PicoReset();
-#endif
-    
+void SekReset() {
+    if (!bBurnUseASMCPUEmulation) m68k_pulse_reset();
+    else PicoReset();
 }
 
 // ----------------------------------------------------------------------------
 // Control the active CPU
 
 // Open a CPU
-void SekOpen(const INT32 i)
-{
-    
+void SekOpen(const INT32 i) {
 	if (i != nSekActive) {
 		nSekActive = i;
         
 		pSekExt = SekExt[nSekActive];						// Point to cpu context
         
         
-#ifdef EMU_M68K
-        m68k_set_context(SekM68KContext[nSekActive]);
-#endif
-        
-		nSekCyclesTotal = nSekCycles[nSekActive];
+        if (!bBurnUseASMCPUEmulation) m68k_set_context(SekM68KContext[nSekActive]);
+        else nSekCyclesTotal = nSekCycles[nSekActive];
 	}
 }
 
 // Close the active cpu
-void SekClose()
-{
-#ifdef EMU_M68K
-    m68k_get_context(SekM68KContext[nSekActive]);
-#endif
-    
-    
+void SekClose() {
+    if (!bBurnUseASMCPUEmulation) m68k_get_context(SekM68KContext[nSekActive]);
 	nSekCycles[nSekActive] = nSekCyclesTotal;
-	
 	nSekActive = -1;
 }
 
 // Get the current CPU
-INT32 SekGetActive()
-{
+INT32 SekGetActive() {
 	return nSekActive;
 }
 
 // Set the status of an IRQ line on the active CPU
-void SekSetIRQLine(const INT32 line, const INT32 status)
-{
-    
+void SekSetIRQLine(const INT32 line, const INT32 status) {
     //	bprintf(PRINT_NORMAL, _T("  - irq line %i -> %i\n"), line, status);
     
 	if (status) {
 		nSekIRQPending[nSekActive] = line | status;
         
         
-#ifdef EMU_M68K
-        m68k_set_irq(line);
-#endif
-        
-#ifdef EMU_C68K
-        nSekCyclesTotal += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
-		nSekCyclesDone += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
-		PicoCpu[nSekActive].irq = line;
-        m68k_ICount = nSekCyclesToDo = -1;
-#endif        
+        if (!bBurnUseASMCPUEmulation) m68k_set_irq(line);
+        else {
+            m68k_ICount=PicoCpu[nSekActive].cycles;
+            nSekCyclesTotal += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
+            nSekCyclesDone += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
+            PicoCpu[nSekActive].irq = line;
+            PicoCpu[nSekActive].cycles=m68k_ICount = nSekCyclesToDo = -1;
+        }
         
         
 		return;
@@ -747,89 +698,82 @@ void SekSetIRQLine(const INT32 line, const INT32 status)
 	nSekIRQPending[nSekActive] = 0;
     
     
-#ifdef EMU_M68K
-    m68k_set_irq(0);
-#endif
-#ifdef EMU_C68K	
-	PicoCpu[nSekActive].irq = 0;
-#endif    
-    
+    if (!bBurnUseASMCPUEmulation) m68k_set_irq(0);
+    else PicoCpu[nSekActive].irq = 0;
 }
 
 // Adjust the active CPU's timeslice
-void SekRunAdjust(const INT32 nCycles)
-{
-	if (nCycles < 0 && m68k_ICount < -nCycles) {
-		SekRunEnd();
-		return;
-	}
-    
-#ifdef EMU_M68K
-    nSekCyclesToDo += nCycles;
-    m68k_modify_timeslice(nCycles);
-#endif
-#ifdef EMU_C68K
-    m68k_ICount += nCycles;
-	nSekCyclesToDo += nCycles;
-	nSekCyclesSegment += nCycles;
-#endif
-    
+void SekRunAdjust(const INT32 nCycles) {    
+    if (!bBurnUseASMCPUEmulation) {
+        if (nCycles < 0 && m68k_ICount < -nCycles) {
+            SekRunEnd();
+            return;
+        }
+        nSekCyclesToDo += nCycles;
+        m68k_modify_timeslice(nCycles);
+    } else {
+        m68k_ICount=PicoCpu[nSekActive].cycles;
+        if (nCycles < 0 && m68k_ICount < -nCycles) {
+            SekRunEnd();
+            return;
+        }
+
+        m68k_ICount += nCycles;
+        nSekCyclesToDo += nCycles;
+        nSekCyclesSegment += nCycles;
+        PicoCpu[nSekActive].cycles=m68k_ICount;
+    }    
 }
 
 // End the active CPU's timeslice
-void SekRunEnd()
-{
-    
-#ifdef EMU_M68K
-    m68k_end_timeslice();
-#endif
-#ifdef EMU_C68K
-    nSekCyclesTotal += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
-	nSekCyclesDone += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
-	nSekCyclesSegment = nSekCyclesDone;
-	m68k_ICount = nSekCyclesToDo = -1;
-#endif
+void SekRunEnd() {
+    if (!bBurnUseASMCPUEmulation) m68k_end_timeslice();
+    else {
+        m68k_ICount=PicoCpu[nSekActive].cycles;
+        nSekCyclesTotal += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
+        nSekCyclesDone += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
+        nSekCyclesSegment = nSekCyclesDone;
+        PicoCpu[nSekActive].cycles=m68k_ICount = nSekCyclesToDo = -1;
+    }
     
 }
 
 // Run the active CPU
-INT32 SekRun(const INT32 nCycles)
-{
-    
-#ifdef EMU_M68K
-    nSekCyclesToDo = nCycles;
-    
-    nSekCyclesSegment = m68k_execute(nCycles);
-    
-    nSekCyclesTotal += nSekCyclesSegment;
-    nSekCyclesToDo = m68k_ICount = -1;
-    
-    return nSekCyclesSegment;
-#endif
-#ifdef EMU_C68K
-	nSekCyclesDone = 0;
-	nSekCyclesSegment = nCycles;
-	do {
-		m68k_ICount = nSekCyclesToDo = nSekCyclesSegment - nSekCyclesDone;
+INT32 SekRun(const INT32 nCycles) {
+    if (!bBurnUseASMCPUEmulation) {
+        nSekCyclesToDo = nCycles;
         
-		if (PicoCpu[nSekActive].irq == 0x80) {						// Cpu is in stopped state till interrupt
-			// dprintf("Cpu is in stopped state till interrupt\n", nCycles);
-			nSekCyclesDone = nSekCyclesSegment;
-			nSekCyclesTotal += nSekCyclesSegment;
-		} else {
-			CycloneRun(&PicoCpu[nSekActive]);
-			nSekCyclesDone += nSekCyclesToDo - m68k_ICount;
-			nSekCyclesTotal += nSekCyclesToDo - m68k_ICount;
-		}
-	} while (nSekCyclesDone < nSekCyclesSegment);
-    
-	nSekCyclesSegment = nSekCyclesDone;
-	nSekCyclesToDo = m68k_ICount = -1;
-	nSekCyclesDone = 0;
-    
-	return nSekCyclesSegment;		
-
-#endif
+        nSekCyclesSegment = m68k_execute(nCycles);
+        
+        nSekCyclesTotal += nSekCyclesSegment;
+        nSekCyclesToDo = m68k_ICount = -1;
+        
+        return nSekCyclesSegment;
+    } else {
+        nSekCyclesDone = 0;
+        nSekCyclesSegment = nCycles;
+        do {
+            m68k_ICount = PicoCpu[nSekActive].cycles = nSekCyclesToDo = nSekCyclesSegment - nSekCyclesDone;
+            
+            if (PicoCpu[nSekActive].irq == 0x80) {						// Cpu is in stopped state till interrupt
+                // dprintf("Cpu is in stopped state till interrupt\n", nCycles);
+                nSekCyclesDone = nSekCyclesSegment;
+                nSekCyclesTotal += nSekCyclesSegment;
+            } else {
+                CycloneRun(&PicoCpu[nSekActive]);
+                nSekCyclesDone += nSekCyclesToDo - m68k_ICount;
+                nSekCyclesTotal += nSekCyclesToDo - m68k_ICount;
+            }
+        } while (nSekCyclesDone < nSekCyclesSegment);
+        
+        
+        nSekCyclesSegment = nSekCyclesDone;
+        PicoCpu[nSekActive].cycles = nSekCyclesToDo = m68k_ICount = -1;
+        nSekCyclesDone = 0;
+        
+        return nSekCyclesSegment;		
+        
+    }
     
 }
 // ----------------------------------------------------------------------------
@@ -991,31 +935,24 @@ INT32 SekSetWriteLongHandler(INT32 i, pSekWriteLongHandler pHandler)
 // Query register values
 
 INT32 SekGetPC(INT32) {
-#ifdef EMU_M68K
-    return m68k_get_reg(NULL, M68K_REG_PC);
-#endif
-#ifdef EMU_C68K
-    return PicoCpu[nSekActive].pc-PicoCpu[nSekActive].membase;;
-#endif
-    
+    if (!bBurnUseASMCPUEmulation) return m68k_get_reg(NULL, M68K_REG_PC);
+    else return PicoCpu[nSekActive].pc-PicoCpu[nSekActive].membase;;
 }
 
 INT32 SekDbgGetCPUType() {
-#ifdef EMU_C68K
-    return 0x68000;
-#endif
-#ifdef EMU_M68K
-	switch (nSekCPUType[nSekActive]) {
-		case 0:
-		case 0x68000:
-			return M68K_CPU_TYPE_68000;
-		case 0x68010:
-			return M68K_CPU_TYPE_68010;
-		case 0x68EC020:
-			return M68K_CPU_TYPE_68EC020;
-	}
-	return 0;
-#endif
+    if (bBurnUseASMCPUEmulation) return 0x68000;
+    else {
+        switch (nSekCPUType[nSekActive]) {
+            case 0:
+            case 0x68000:
+                return M68K_CPU_TYPE_68000;
+            case 0x68010:
+                return M68K_CPU_TYPE_68010;
+            case 0x68EC020:
+                return M68K_CPU_TYPE_68EC020;
+        }
+        return 0;
+    }
 }
 
 INT32 SekDbgGetPendingIRQ() {
@@ -1046,35 +983,44 @@ INT32 SekScan(INT32 nAction) {
 	nSekActive = -1;
     
 	for (INT32 i = 0; i <= nSekCount; i++) {
-#ifdef EMU_C68K
-        char szName[] = "Cyclone #n";
-#endif
-#ifdef EMU_M68K
-		char szName[] = "MC68000 #n";
-#endif
+        char szName[11];
+        if (bBurnUseASMCPUEmulation) strcpy(szName,"Cyclone #n");
+        else strcpy(szName,"MC68000 #n");
         
 		szName[9] = '0' + i;
         
 		SCAN_VAR(nSekCPUType[i]);
         
-#ifdef EMU_C68K
-        //if (nSekCPUType != 0) {
-        ba.Data = & PicoCpu[i];
-        ba.nLen = 24 * 4;
-        ba.szName = szName;
-        BurnAcb(&ba);
-		//}
-#endif
-#ifdef EMU_M68K
-        if (nSekCPUType[i] != 0) {
-            ba.Data = SekM68KContext[i];
-            ba.nLen = nSekM68KContextSize[i];
+        if (bBurnUseASMCPUEmulation) {
+            //if (nSekCPUType != 0) {
+            ba.Data = &PicoCpu[i];
+            ba.nLen = 24 * 4;
             ba.szName = szName;
             BurnAcb(&ba);
+            //}
+        } else {
+            if (nSekCPUType[i] != 0) {
+                ba.Data = SekM68KContext[i];
+                ba.nLen = nSekM68KContextSize[i];
+                ba.szName = szName;
+                BurnAcb(&ba);
+            }
         }
-#endif
         
 	}
     
 	return 0;
 }
+
+#if TARGET_IPHONE_SIMULATOR
+void CycloneInit(void) {
+    
+}
+
+// Run cyclone. Cycles should be specified in context (pcy->cycles)
+void CycloneRun(struct Cyclone *pcy) {
+    
+}
+
+#endif
+

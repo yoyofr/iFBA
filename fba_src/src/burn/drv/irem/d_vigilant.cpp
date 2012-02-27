@@ -879,7 +879,7 @@ void __fastcall VigilanteZ80Write1(UINT16 a, UINT8 d)
 		g = (DrvPaletteRam[Bank + Offset + 0x100] << 3) & 0xff;
 		b = (DrvPaletteRam[Bank + Offset + 0x200] << 3) & 0xff;
 		
-		DrvPalette[(Bank >> 2) + Offset] = BurnHighCol(r, g, b, 0);		
+		DrvPalette[(Bank >> 2) + Offset] = HighCol16(r, g, b, 0);		
 		return;
 	}
 	
@@ -1073,7 +1073,7 @@ void __fastcall KikcubicZ80Write1(UINT16 a, UINT8 d)
 		g = (DrvPaletteRam[Bank + Offset + 0x100] << 3) & 0xff;
 		b = (DrvPaletteRam[Bank + Offset + 0x200] << 3) & 0xff;
 		
-		DrvPalette[(Bank >> 2) + Offset] = BurnHighCol(r, g, b, 0);
+		DrvPalette[(Bank >> 2) + Offset] = HighCol16(r, g, b, 0);
 		return;
 	}
 	
@@ -1736,13 +1736,13 @@ static void DrvRenderBackground()
 		g = (DrvPaletteRam[0x500 + 16 * DrvRearColour + i] << 3) & 0xff;
 		b = (DrvPaletteRam[0x600 + 16 * DrvRearColour + i] << 3) & 0xff;
 
-		DrvPalette[512 + i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[512 + i] = HighCol16(r, g, b, 0);
 
 		r = (DrvPaletteRam[0x400 + 16 * DrvRearColour + 32 + i] << 3) & 0xff;
 		g = (DrvPaletteRam[0x500 + 16 * DrvRearColour + 32 + i] << 3) & 0xff;
 		b = (DrvPaletteRam[0x600 + 16 * DrvRearColour + 32 + i] << 3) & 0xff;
 
-		DrvPalette[512 + 16 + i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[512 + 16 + i] = HighCol16(r, g, b, 0);
 	}
 	
 	for (INT32 Page = 0; Page < 4; Page++) {

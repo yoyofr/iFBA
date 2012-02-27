@@ -838,9 +838,9 @@ static void DrvDoPalette(UINT32 *dst, INT32 c)
 		b = p[i] >>  8;
 
 		if (c == 0x7f) {
-			dst[i] = BurnHighCol(r, g, b, 0);
+			dst[i] = HighCol16(r, g, b, 0);
 		} else {
-			dst[i] = BurnHighCol((r * c) / 0x7f, (g * c) / 0x7f, (b * c) / 0x7f, 0);
+			dst[i] = HighCol16((r * c) / 0x7f, (g * c) / 0x7f, (b * c) / 0x7f, 0);
 		}
 	}
 }
@@ -852,8 +852,8 @@ static void DrvRecalcPalette()
 	DrvDoPalette(DrvPalette + 0x000, DrvBrightVal[0]);
 	DrvDoPalette(DrvPalette + 0x800, DrvBrightVal[1]);
 
-	DrvPalette[0x1000] = BurnHighCol(p[0x800] >> 24, p[0x800] >> 16, p[0x800] >> 8, 0);
-	DrvPalette[0x1001] = BurnHighCol(p[0x801] >> 24, p[0x801] >> 16, p[0x801] >> 8, 0);
+	DrvPalette[0x1000] = HighCol16(p[0x800] >> 24, p[0x800] >> 16, p[0x800] >> 8, 0);
+	DrvPalette[0x1001] = HighCol16(p[0x801] >> 24, p[0x801] >> 16, p[0x801] >> 8, 0);
 }
 
 static INT32 DrvDraw()

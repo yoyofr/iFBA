@@ -246,7 +246,7 @@
 /* The following definitions for FAR are needed only for MSDOS mixed
  * model programming (small or medium model with some far allocations).
  * This was tested only with MSC; for other MSDOS compilers you may have
- * to define NO_MEMCPY in zutil.h.  If you don't need the mixed model,
+ * to define NO_memcpy in zutil.h.  If you don't need the mixed model,
  * just define FAR to be empty.
  */
 #ifdef SYS16BIT

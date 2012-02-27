@@ -32,7 +32,7 @@ inline static UINT32 CalcColCPS1(UINT16 a)
 	g *= f; g /= F_OFFSET + 0x0F;
 	b *= f; b /= F_OFFSET + 0x0F;
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static UINT32 CalcColCPS2(UINT16 a)
@@ -59,7 +59,7 @@ static UINT32 CalcColCPS2(UINT16 a)
 	g *= f; g /= F_OFFSET + 0x0F;
 	b *= f; b /= F_OFFSET + 0x0F;
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static INT32 CalcAll()

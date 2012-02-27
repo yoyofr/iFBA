@@ -277,7 +277,7 @@ static void palette_init()
 		INT32 g = ((pen >> 2) & 1) * (((pen & 8) >> 1) ^ 0xff);
 		INT32 b = ((pen >> 1) & 1) * (((pen & 8) >> 1) ^ 0xff);
 
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 

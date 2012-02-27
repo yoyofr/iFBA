@@ -4,7 +4,8 @@ int nIniVersion = 0;
 
 static void CreateConfigName(char* szConfig)
 {
-	memcpy(szConfig, "fba.ini", 12);
+	//memcpy(szConfig, "fba.ini", 8);
+    strcpy(szConfig, "fba.ini");
 	return;
 }
 

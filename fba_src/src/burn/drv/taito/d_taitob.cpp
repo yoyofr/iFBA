@@ -1934,7 +1934,7 @@ static void DrvPaletteUpdate()
 		g |= g << 4;
 		b |= b << 4;
 
-		TaitoPalette[i] = BurnHighCol(r, g, b, 0);
+		TaitoPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 

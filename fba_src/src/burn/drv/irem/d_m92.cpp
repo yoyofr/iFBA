@@ -1230,7 +1230,7 @@ inline static UINT32 CalcCol(INT32 offs)
 	b = (nColour & 0x7C00) >> 7;
 	b |= b >> 5;
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void m92YM2151IRQHandler(INT32 nStatus)

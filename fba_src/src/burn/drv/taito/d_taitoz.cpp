@@ -4041,13 +4041,10 @@ static void TaitoZZ80Init()
 
 static void SwitchToMusashi()
 {
-	if (bBurnUseASMCPUEmulation) {
-#if 1 && defined FBA_DEBUG
-		bprintf(PRINT_NORMAL, _T("Switching to Musashi 68000 core\n"));
-#endif
+/*	if (bBurnUseASMCPUEmulation) {
 		bUseAsm68KCoreOldValue = bBurnUseASMCPUEmulation;
 		bBurnUseASMCPUEmulation = false;
-	}
+	}*/
 }
 
 static INT32 AquajackInit()
@@ -4936,7 +4933,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  5);
 	b = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 10);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void TaitoZCalcPalette()

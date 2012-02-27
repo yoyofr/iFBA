@@ -4,22 +4,29 @@
 #include <sys/time.h>
 
 //#define NO_SOUND
+//#define BENCH
 
 bool bAltPause = 0;
+bool bSoundOn=1;
 
 int bAlwaysDrawFrames = 0;
 
-static bool bShowFPS = false;
+bool bShowFPS = true;
+int sdl_fps;
 
 int counter;								// General purpose variable used when debugging
 extern int nShouldExit;
+
+static int now, done=0;
+static float timer = 0,tick=0,  ticks=0;
+
 
 static unsigned int nNormalLast = 0;		// Last value of timeGetTime()
 static int nNormalFrac = 0;					// Extra fraction we did
 
 static bool bAppDoStep = 0;
-static bool bAppDoFast = 0;
-static int nFastSpeed = 6;
+/*static*/ bool bAppDoFast = 0;
+static int nFastSpeed = 10;
 
 static int GetInput(bool bCopy)
 {
@@ -110,10 +117,27 @@ static int RunFrame(int bDraw, int bPause)
 	return 0;
 }
 
+static struct timeval start;
+void SDL_StartTicks(void) {
+    /* Set first ticks value */
+    gettimeofday(&start, NULL);
+}
+
+unsigned int SDL_GetTicks(void) {
+    unsigned int ticks;
+    struct timeval now;
+    
+    gettimeofday(&now, NULL);
+    ticks = (now.tv_sec - start.tv_sec) * 1000 + (now.tv_usec - start.tv_usec) / 1000;
+    return (ticks);
+}
+
+
 
 // Callback used when DSound needs more sound
-static int RunGetNextSound(int bDraw)
-{
+static int RunGetNextSound(int bDraw) {
+    float frame_limit = (float)nBurnFPS/100.0f, frametime = 100000.0f/(float)nBurnFPS;
+    
 	if (nAudNextSound == NULL) {
 		return 1;
 	}
@@ -134,7 +158,19 @@ static int RunGetNextSound(int bDraw)
 		for (int i = 0; i < nFastSpeed; i++) {
 			RunFrame(0, 0);
 		}
-	}
+        bDraw=1;
+        sdl_fps = 0;
+        nFramesRendered = 0;        
+	} else {
+        
+        timer = SDL_GetTicks()/frametime;
+        if(timer-tick>frame_limit && bShowFPS) {
+            sdl_fps = nFramesRendered;
+            nFramesRendered = 0;
+            tick = timer;
+            //printf("fps:%d\n",fps);
+        }        
+    }
 
 	// Render frame with sound
 	pBurnSoundOut = nAudNextSound;
@@ -148,23 +184,7 @@ static int RunGetNextSound(int bDraw)
 	return 0;
 }
 
-static struct timeval start;
-void SDL_StartTicks(void) {
-    /* Set first ticks value */
-    gettimeofday(&start, NULL);
-}
 
-uint32_t SDL_GetTicks(void) {
-    uint32_t ticks;
-    struct timeval now;
-    
-    gettimeofday(&now, NULL);
-    ticks = (now.tv_sec - start.tv_sec) * 1000 + (now.tv_usec - start.tv_usec) / 1000;
-    return (ticks);
-}
-
-static int now, done=0, fps = 0;
-static float timer = 0,tick=0,  ticks=0;
 
 
 int RunIdle() {
@@ -178,14 +198,28 @@ int RunIdle() {
 		return 0;
 	}
 
-    timer = SDL_GetTicks()/frametime;
-    if(timer-tick>frame_limit && bShowFPS) {
-        fps = nFramesRendered;
+    
+#ifdef BENCH
+    timer = SDL_GetTicks();
+    if(timer-tick>1000 && bShowFPS) {
+        sdl_fps = nFramesRendered;
         nFramesRendered = 0;
         tick = timer;
+        printf("fps:%d\n",sdl_fps);
     }
     now = timer;
     ticks=now-done;
+#else
+    timer = SDL_GetTicks()/frametime;
+    if(timer-tick>frame_limit && bShowFPS) {
+        sdl_fps = nFramesRendered;
+        nFramesRendered = 0;
+        tick = timer;
+        //printf("fps:%d\n",fps);
+    }
+    now = timer;
+    ticks=now-done;
+    
     if(ticks<1) {
         usleep(100); //0.1ms
         return 0;
@@ -194,9 +228,11 @@ int RunIdle() {
     for (int i=0; i<ticks-1; i++) {
         RunFrame(0,0);	
     } 
+#endif        
     RunFrame(1,0);
     
     done = now;
+
     return 0;
 }
 
@@ -214,12 +250,13 @@ int RunReset()
 static int RunInit()
 {
 	// Try to run with sound
-#ifdef NO_SOUND
-    bAudOkay=0;
-#else    
+    if (bSoundOn) {
 	AudSetCallback(RunGetNextSound);
 	AudSoundPlay();
-#endif
+    } else {
+        bAudOkay=0;
+        AudSetCallback(NULL);
+    }
 	RunReset();
 
 	return 0;
@@ -229,7 +266,7 @@ static int RunExit()
 {
 	nNormalLast = 0;
 	// Stop sound if it was playing
-	AudSoundStop();
+    if (bSoundOn) AudSoundStop();
 	return 0;
 }
 
@@ -262,12 +299,16 @@ int RunMessageLoop()
 
 		GameInpCheckMouse();															// Hide the cursor
         
-        done=0;timer = 0;ticks=0;tick=0;fps = 0;
+        done=0;timer = 0;ticks=0;tick=0;sdl_fps = 0;
 		while (!finished) {
-            if (nShouldExit==1) finished=1;
+            if (nShouldExit==1) {
+                finished=1;                
+            }
             if (nShouldExit==0) {
 				RunIdle();
-			} else usleep(10000); //10ms
+			} else {
+                usleep(10000); //10ms
+            }
 		}
 		RunExit();
 	} while (bRestartVideo);

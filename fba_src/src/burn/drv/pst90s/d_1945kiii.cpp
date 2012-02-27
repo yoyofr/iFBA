@@ -109,7 +109,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	b = (nColour & 0x7C00) >> 7;
 	b |= b >> 5;
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void sndSetBank(UINT8 bank0, UINT8 bank1)

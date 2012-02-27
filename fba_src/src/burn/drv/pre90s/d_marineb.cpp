@@ -678,7 +678,7 @@ static INT32 DrvDraw()
 		for (INT32 i = 0; i < 256; i++) {
 			UINT32 tmp = TempPalette[i];
 			// Recalc Colors 
-			DrvPalette[i] = BurnHighCol((tmp >> 16)  & 0xFF, (tmp >> 8) & 0xFF, tmp & 0xFF, 0);			
+			DrvPalette[i] = HighCol16((tmp >> 16)  & 0xFF, (tmp >> 8) & 0xFF, tmp & 0xFF, 0);			
 		}
 		DrvRecalcPalette = 0;
 	}

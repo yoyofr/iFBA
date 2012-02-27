@@ -323,7 +323,7 @@ static inline void palette_update(UINT16 offset)
 	g = (g << 3) | (g >> 2);
 	b = (b << 3) | (b >> 2);
 
-	DrvPalette[offset/2] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset/2] = HighCol16(r, g, b, 0);
 }
 
 void __fastcall jchan_palette_write_word(UINT32 address, UINT16 data)

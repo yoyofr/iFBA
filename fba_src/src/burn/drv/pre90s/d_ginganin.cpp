@@ -435,7 +435,7 @@ static void DrvRecalcPalette()
 		INT32 g = (pal[i] >>  8) & 0x0f;
 		INT32 b = (pal[i] >>  4) & 0x0f;
 
-		DrvPalette[i] = BurnHighCol((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
+		DrvPalette[i] = HighCol16((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
 	}
 }
 

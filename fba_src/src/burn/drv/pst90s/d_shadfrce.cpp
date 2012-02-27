@@ -62,7 +62,7 @@ inline static void CalcCol(INT32 idx)
 	r = (r * nBrightness) >> 8;
 	g = (g * nBrightness) >> 8;
 	b = (b * nBrightness) >> 8;
-	RamCurPal[idx] = BurnHighCol(r, g, b, 0);
+	RamCurPal[idx] = HighCol16(r, g, b, 0);
 }
 
 static struct BurnInputInfo shadfrceInputList[] = {

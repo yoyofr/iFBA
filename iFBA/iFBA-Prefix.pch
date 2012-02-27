@@ -2,7 +2,7 @@
 // Prefix header for all source files of the 'iFBA' target in the 'iFBA' project
 //
 #include "TargetConditionals.h"
-#define TARGET_IPHONE_SIMULATOR 1
+//#define TARGET_IPHONE_SIMULATOR 1
 
 #import <Availability.h>
 
@@ -30,6 +30,18 @@
 
 
 #if TARGET_IPHONE_SIMULATOR
+#define memcpy_neon memcpy
+#define memset_neon memset
 #else
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    void	*memcpy_neon(void *, const void *, int);
+    void	*memset_neon(void *, int, int);
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 

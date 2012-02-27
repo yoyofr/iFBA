@@ -657,7 +657,7 @@ static void DrvCalcPalette()
 		Bit3 = (DrvProm[i + 0x100] >> 3) & 0x01;
 		b = 0x0e * Bit0 + 0x1f * Bit1 + 0x43 * Bit2 + 0x8f * Bit3;
 
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 

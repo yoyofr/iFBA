@@ -7,7 +7,6 @@
 
 #include <AudioToolbox/AudioToolbox.h>
 
-
 static unsigned int nSoundFps;	
 
 int (*GetNextSound)(int);				// Callback used to request more sound
@@ -15,11 +14,14 @@ int (*GetNextSound)(int);				// Callback used to request more sound
 //static SDL_AudioSpec audiospec;
 
 #define PLAYBACK_FREQ 22050
+#define SOUND_BUFFER_NB 6
+
+
 static int mInterruptShoudlRestart;
 static short int **buffer_ana;
 static volatile int buffer_ana_gen_ofs,buffer_ana_play_ofs;
 static volatile int *buffer_ana_flag;
-#define SOUND_BUFFER_NB 8
+
 static AudioQueueRef mAudioQueue;
 static AudioQueueBufferRef *mBuffers;
 static float mVolume=1.0f;
@@ -52,7 +54,7 @@ static int SDLSoundBlankSound()
 #define WRAP_INC(x) { x++; if (x >= nAudSegCount) x = 0; }
 
 static int SDLSoundCheck() {
-    int didWait=0;
+    int drawframe=0;
 	if (!bAudPlaying) {
 		dprintf(_T("SDLSoundCheck (not playing)\n"));
 		return 0;
@@ -60,7 +62,6 @@ static int SDLSoundCheck() {
     
     while (buffer_ana_flag[buffer_ana_gen_ofs]) {
 		//[NSThread sleepForTimeInterval:DEFAULT_WAIT_TIME_MS];
-        didWait=1;
         usleep(100); //0.1ms
 		if (bAudPlaying==0) {
 			return 0;
@@ -68,8 +69,10 @@ static int SDLSoundCheck() {
 	}
     
     //		dprintf(_T("Filling seg %i at %i\n"), nSDLFillSeg, nSDLFillSeg * (nAudSegLen << 2));
-    
-    GetNextSound(1);//didWait);    
+    int diff_buf=buffer_ana_gen_ofs-buffer_ana_play_ofs;
+    if (diff_buf<0) diff_buf+=SOUND_BUFFER_NB;
+    if (diff_buf>=SOUND_BUFFER_NB/2) drawframe=1;
+    GetNextSound(drawframe);    
 //    if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
     memcpy(buffer_ana[buffer_ana_gen_ofs], nAudNextSound, nAudSegLen << 2);
     buffer_ana_flag[buffer_ana_gen_ofs]=1;
@@ -103,7 +106,7 @@ static int SDLSoundExit() {
 
 static int SDLSetCallback(int (*pCallback)(int)) {
     GetNextSound = pCallback;
-    dprintf(_T("SDL callback set\n"));
+    //dprintf(_T("SDL callback set\n"));
 	return 0;
 }
 
@@ -285,7 +288,7 @@ static int SDLSoundInit()
 
 static int SDLSoundPlay()
 {
-	dprintf(_T("SDLSoundPlay\n"));
+//	dprintf(_T("SDLSoundPlay\n"));
     
     UInt32 err;
     UInt32 i;
@@ -316,7 +319,7 @@ static int SDLSoundPlay()
 
 static int SDLSoundStop()
 {
-	dprintf(_T("SDLSoundStop\n"));
+//	dprintf(_T("SDLSoundStop\n"));
 	bAudPlaying = 0;    
     AudioQueueStop( mAudioQueue, TRUE );
 	AudioQueueReset( mAudioQueue );	

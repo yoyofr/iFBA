@@ -4226,7 +4226,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = pal5bit(nColour >> 10);
 	b = pal5bit(nColour >>  0);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 INT32 Kaneko16CalcPalette(INT32 num)
@@ -4291,7 +4291,7 @@ static void BerlwallFrameRender()
 			INT32 r = pal5bit(i >> 5);
 			INT32 g = pal5bit(i >> 10);
 			INT32 b = pal5bit(i >> 0);
-			Kaneko16Palette[i + 2048] = BurnHighCol(r, g, b, 0);
+			Kaneko16Palette[i + 2048] = HighCol16(r, g, b, 0);
 		}
 		
 		Kaneko16RecalcBg15Palette = 0;

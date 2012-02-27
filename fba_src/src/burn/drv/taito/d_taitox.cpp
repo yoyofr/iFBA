@@ -1223,7 +1223,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  5);
 	b = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  0);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void TaitoXCalcPalette()

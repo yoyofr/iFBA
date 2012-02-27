@@ -485,7 +485,7 @@ static void palette_write(INT32 offset, UINT16 pal)
 	b = (b << 4) | b;
 
 	Palette[offset] = (r << 16) | (g << 8) | b;
-	DrvPalette[offset] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset] = HighCol16(r, g, b, 0);
 }
 
 UINT8 __fastcall gaiden_read_byte(UINT32 address)
@@ -1378,7 +1378,7 @@ static INT32 DrgnbowlDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x1000; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 
@@ -1404,7 +1404,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x1000; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 

@@ -4778,7 +4778,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = pal3bit(nColour >> 3);
 	b = pal2bit(nColour >> 6);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static INT32 System1CalcPalette()
@@ -4809,7 +4809,7 @@ static INT32 System1CalcPalette()
 			bit3 = (val >> 3) & 0x01;
 			b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 	
-			System1Palette[i] = BurnHighCol(r, g, b, 0);
+			System1Palette[i] = HighCol16(r, g, b, 0);
 		}
 	} else {
 		for (INT32 i = 0; i < 0x600; i++) {

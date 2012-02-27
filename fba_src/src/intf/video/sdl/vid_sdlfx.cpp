@@ -3,6 +3,12 @@
 #include "vid_support.h"
 #include "vid_softfx.h"
 
+#include "sdl_font.h"
+extern bool bShowFPS;
+extern int sdl_fps;
+void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nXAspect,int nYAspect);
+
+
 static int nInitedSubsytems = 0;
 
 static int nGameWidth = 0, nGameHeight = 0;			// screen size
@@ -190,9 +196,16 @@ static int vidScale(RECT* , int, int)
 	return 0;
 }
 
-void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nXAspect,int nYAspect);
 static int MemToSurf()
 {
+    if (bShowFPS) {
+        char buf[10];
+        int x;
+        sprintf(buf, "FPS:%2d", sdl_fps);
+        //draw_text(buf, x, 0, 0xBDF7, 0x2020);
+        DrawRect((uint16 *) (unsigned short *) pVidImage,0, 0, 40, 9, 0,nVidImagePitch>>1,nRotateGame);
+        DrawString (buf, (unsigned short *) pVidImage, 0, 0,nVidImagePitch>>1,nRotateGame);
+    }
     updateVbuffer((unsigned short*)pVidImage,nVidImageWidth,nVidImageHeight,nVidImagePitch,nRotateGame,nXAspect,nYAspect);
 /*	VidSoftFXApplyEffectSDL(sdlsBlitFX[1 ^ nDirectAccess]);
 

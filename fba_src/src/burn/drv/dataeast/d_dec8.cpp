@@ -1580,7 +1580,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x400; i++) {
 			INT32 d = Palette[i];
-			DrvPalette[i] = BurnHighCol(d >> 16, (d >> 8) & 0xff, d & 0xff, 0);
+			DrvPalette[i] = HighCol16(d >> 16, (d >> 8) & 0xff, d & 0xff, 0);
 		}
 	}
 
@@ -2189,7 +2189,7 @@ static INT32 CobraDraw()
 			g |= g << 4;
 			b |= b << 4;
 
-			DrvPalette[i/2] = BurnHighCol(r, g, b, 0);
+			DrvPalette[i/2] = HighCol16(r, g, b, 0);
 		}
 	}
 
@@ -2763,7 +2763,7 @@ static INT32 SrdarwinDraw()
 			g |= g << 4;
 			b |= b << 4;
 
-			DrvPalette[i] = BurnHighCol(r, g, b, 0);
+			DrvPalette[i] = HighCol16(r, g, b, 0);
 		}
 	}
 
@@ -3390,7 +3390,7 @@ static void GondoPaletteRecalc()
 		g |= g << 4;
 		b |= b << 4;
 
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 
@@ -3919,7 +3919,7 @@ static INT32 OscarDraw()
 			g |= g << 4;
 			b |= b << 4;
 
-			DrvPalette[i/2] = BurnHighCol(r, g, b, 0);
+			DrvPalette[i/2] = HighCol16(r, g, b, 0);
 		}
 	}
 
@@ -4627,7 +4627,7 @@ static void DrvRecalcSplit(INT32 len)
 		g |= g << 4;
 		b |= b << 4;
 
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 

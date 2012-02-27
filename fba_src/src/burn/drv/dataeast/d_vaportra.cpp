@@ -415,7 +415,7 @@ static void DrvPaletteRecalc()
 	UINT16 *p1 = (UINT16*)DrvPalRAM1;
 
 	for (INT32 i = 0; i < 0xa00 / 2; i++) {
-		DrvPalette[i] = BurnHighCol(p0[i] & 0xff, p0[i] >> 8, p1[i]& 0xff, 0);
+		DrvPalette[i] = HighCol16(p0[i] & 0xff, p0[i] >> 8, p1[i]& 0xff, 0);
 	}
 }
 

@@ -268,6 +268,7 @@ static int __cdecl BzipBurnLoadRom(unsigned char* Dest, int* pnWrote, int i)
 		_stprintf(szText + _tcslen(szText), _T(" %hs..."), pszRomName);
 	}
 	ProgressUpdateBurner(ri.nLen,nTotalSize, szText);    
+    //strcpy(bLastTriedReadRomFile,pszRomName);
 
 #if defined (BUILD_WIN32)
 	// Check for messages:

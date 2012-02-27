@@ -727,13 +727,10 @@ static INT32 SpriteYOffsets[8]     = { 0, 64, 128, 192, 256, 320, 384, 448 };
 
 static void SwitchToMusashi()
 {
-	if (bBurnUseASMCPUEmulation) {
-#if 1 && defined FBA_DEBUG
-		bprintf(PRINT_NORMAL, _T("Switching to Musashi 68000 core\n"));
-#endif
+/*	if (bBurnUseASMCPUEmulation) {
 		bUseAsm68KCoreOldValue = bBurnUseASMCPUEmulation;
 		bBurnUseASMCPUEmulation = false;
-	}
+	}*/
 }
 
 static INT32 OthunderInit()

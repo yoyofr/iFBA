@@ -377,7 +377,7 @@ static void bankp_plot_pixel(INT32 x, INT32 y, INT32 color, UINT8 src, INT32 tra
 	INT32 pxl = Palette[color | src];
 	if (transp && !pxl) return;
 
-	PutPix(pBurnDraw + (y * 224 + x) * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
+	PutPix(pBurnDraw + (y * 224 + x) * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
 }
 
 

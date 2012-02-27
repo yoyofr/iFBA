@@ -278,7 +278,7 @@ static void palette_write(INT32 offset)
 	g |= g << 4;
 	b |= b << 4;
 
-	DrvPalette[offset / 2] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset / 2] = HighCol16(r, g, b, 0);
 }
 
 static const UINT16 f1dream_613ea_lookup[16] = {

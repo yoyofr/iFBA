@@ -11,7 +11,9 @@
 
 @interface GameBrowserViewController : UIViewController {
     IBOutlet UITableView *tabView;
-    NSMutableArray *romlist;
+    NSMutableArray *romlist[28];
+    NSMutableArray *indexTitles;
+    NSMutableArray *burn_supportedRoms;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;

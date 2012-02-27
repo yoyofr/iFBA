@@ -1006,7 +1006,7 @@ static void DrvCalcPalette()
 		bit2 = (DrvPromPalette[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 		
-		Palette[i] = BurnHighCol(r, g, b, 0);
+		Palette[i] = HighCol16(r, g, b, 0);
 	}
 	
 	for (i = 0; i < 64; i++) {
@@ -1020,7 +1020,7 @@ static void DrvCalcPalette()
 		bits = (i >> 4) & 0x03;
 		b = map[bits];
 		
-		Palette[32 + i] = BurnHighCol(r, g, b, 0);
+		Palette[32 + i] = HighCol16(r, g, b, 0);
 	}
 	
 	for (i = 0; i < 256; i++) {

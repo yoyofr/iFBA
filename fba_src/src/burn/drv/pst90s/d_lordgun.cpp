@@ -1150,10 +1150,10 @@ static void DrvPaletteRecalc()
 		g |= g << 4;
 		b |= b << 4;
 
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 
-	DrvPalette[0x0800] = BurnHighCol(0xff, 0xff, 0xff, 0); // white
+	DrvPalette[0x0800] = HighCol16(0xff, 0xff, 0xff, 0); // white
 }
 
 static INT32 DrvDraw()

@@ -5,22 +5,13 @@
  #define __fastcall
 #endif
 
-//#define EMU_M68K								// Use Musashi 68000 emulator
-#define EMU_C68K								// Use Dave's Cyclone  68000 
-
-//#define SEK_MAX	(4)								// Maximum number of CPUs supported
 #define SEK_MAX	(4)								// Maximum number of CPUs supported
 
-#if defined EMU_M68K
- #include "m68k.h"
-#endif
+#include "m68k.h"
 
-#if defined EMU_C68K
 #include "cyclone.h"
 extern struct Cyclone PicoCpu[SEK_MAX];
-#define	m68k_ICount PicoCpu[nSekActive].cycles
-#endif
-
+//#define	m68k_ICount PicoCpu[nSekActive].cycles
 
 // Number of bits used for each page in the fast memory map
 #define SEK_BITS		(10)					// 10 = 0x0400 page size
@@ -37,11 +28,9 @@ extern struct Cyclone PicoCpu[SEK_MAX];
 #endif
 
 
-#ifdef EMU_M68K
  extern "C" INT32 nSekM68KContextSize[SEK_MAX];
  extern "C" INT8* SekM68KContext[SEK_MAX];
  extern "C" INT32 m68k_ICount;
-#endif
 
 typedef UINT8 (__fastcall *pSekReadByteHandler)(UINT32 a);
 typedef void (__fastcall *pSekWriteByteHandler)(UINT32 a, UINT8 d);
@@ -125,12 +114,6 @@ INT32 SekRun(const INT32 nCycles);
 
 inline static INT32 SekIdle(INT32 nCycles)
 {
-#if defined FBA_DEBUG
-	extern UINT8 DebugCPU_SekInitted;
-	if (!DebugCPU_SekInitted) bprintf(PRINT_ERROR, (TCHAR*)_T("SekIdle called without init\n"));
-	if (nSekActive == -1) bprintf(PRINT_ERROR, (TCHAR*)_T("SekIdle called when no CPU open\n"));
-#endif
-
 	nSekCyclesTotal += nCycles;
 
 	return nCycles;
@@ -138,46 +121,16 @@ inline static INT32 SekIdle(INT32 nCycles)
 
 inline static INT32 SekSegmentCycles()
 {
-#if defined FBA_DEBUG
-	extern UINT8 DebugCPU_SekInitted;
-	if (!DebugCPU_SekInitted) bprintf(PRINT_ERROR, (TCHAR*)_T("SekSegmentCycles called without init\n"));
-	if (nSekActive == -1) bprintf(PRINT_ERROR, (TCHAR*)_T("SekSegmentCycles called when no CPU open\n"));
-#endif
-
-#ifdef EMU_M68K
 	return nSekCyclesDone + nSekCyclesToDo - m68k_ICount;
-#else
-	return nSekCyclesDone + nSekCyclesToDo;
-#endif
 }
 
-#if defined FBA_DEBUG
-static INT32 SekTotalCycles()
-#else
 inline static INT32 SekTotalCycles()
-#endif
 {
-#if defined FBA_DEBUG
-	extern UINT8 DebugCPU_SekInitted;
-	if (!DebugCPU_SekInitted) bprintf(PRINT_ERROR, (TCHAR*)_T("SekTotalCycles called without init\n"));
-	if (nSekActive == -1) bprintf(PRINT_ERROR, (TCHAR*)_T("SekTotalCycles called when no CPU open\n"));
-#endif
-
-#ifdef EMU_M68K
 	return nSekCyclesTotal + nSekCyclesToDo - m68k_ICount;
-#else
-	return nSekCyclesTotal + nSekCyclesToDo;
-#endif
 }
 
 inline static INT32 SekCurrentScanline()
 {
-#if defined FBA_DEBUG
-	extern UINT8 DebugCPU_SekInitted;
-	if (!DebugCPU_SekInitted) bprintf(PRINT_ERROR, (TCHAR*)_T("SekCurrentScanline called without init\n"));
-	if (nSekActive == -1) bprintf(PRINT_ERROR, (TCHAR*)_T("SekCurrentScanline called when no CPU open\n"));
-#endif
-
 	return SekTotalCycles() / nSekCyclesScanline;
 }
 

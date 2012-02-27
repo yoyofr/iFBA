@@ -1490,7 +1490,7 @@ static void DrvCalcPalette()
 		INT32 g = pal4bit(DrvProms[i + 0x100]);
 		INT32 b = pal4bit(DrvProms[i + 0x200]);
 
-		PalLookup[i] = BurnHighCol(r, g, b, 0);
+		PalLookup[i] = HighCol16(r, g, b, 0);
 	}
 
 	for (i = 0; i < 0x10; i++) {

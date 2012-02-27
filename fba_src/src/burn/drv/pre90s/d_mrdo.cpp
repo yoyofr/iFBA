@@ -361,7 +361,7 @@ static void draw_sprites()
 
 							INT32 pxl = Palette[color | *src];
 
-							PutPix(pBurnDraw + ((y * 240) + x) * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
+							PutPix(pBurnDraw + ((y * 240) + x) * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
 						}
 					} else {
 						for (INT32 x = sx; x < sx + 16; x++, src++)
@@ -371,7 +371,7 @@ static void draw_sprites()
 
 							INT32 pxl = Palette[color | *src];
 
-							PutPix(pBurnDraw + ((y * 240) + x) * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
+							PutPix(pBurnDraw + ((y * 240) + x) * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
 						}
 					}
 				}
@@ -387,7 +387,7 @@ static void draw_sprites()
 
 							INT32 pxl = Palette[color | *src];
 
-							PutPix(pBurnDraw + ((y * 240) + x) * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
+							PutPix(pBurnDraw + ((y * 240) + x) * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
 						}
 					} else {
 						for (INT32 x = sx; x < sx + 16; x++, src++)
@@ -397,7 +397,7 @@ static void draw_sprites()
 
 							INT32 pxl = Palette[color | *src];
 
-							PutPix(pBurnDraw + ((y * 240) + x) * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
+							PutPix(pBurnDraw + ((y * 240) + x) * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
 						}
 					}
 				}
@@ -437,7 +437,7 @@ static void draw_8x8_tiles(UINT8 *vram, UINT8 *gfx_base, INT32 scrollx, INT32 sc
 				INT32 pos = y * 240 + x;
 				if (flipscreen) pos = (192 - y) * 240 + (240 - x);
 
-				PutPix(pBurnDraw + pos * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
+				PutPix(pBurnDraw + pos * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
 			}
 		}
 	}

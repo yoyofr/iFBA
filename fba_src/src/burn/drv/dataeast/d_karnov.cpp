@@ -786,7 +786,7 @@ static void DrvPaletteInit()
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
 		Palette[i] = (r << 16) | (g << 8) | b;
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 
@@ -1071,7 +1071,7 @@ static INT32 DrvDraw()
 			g = d >> 8;
 			b = d >> 0;
 
-			DrvPalette[i] = BurnHighCol(r, g, b, 0);
+			DrvPalette[i] = HighCol16(r, g, b, 0);
 		}
 		DrvRecalc = 0;
 	}

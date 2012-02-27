@@ -115,7 +115,7 @@ static INT32 DrvDraw()
 	dirty = 0;
 
 	for (x = 0; x < 320 * 200; x++) {
-		PutPix(pBurnDraw + x * nBurnBpp, BurnHighCol(src[x]>>16, src[x]>>8, src[x], 0));
+		PutPix(pBurnDraw + x * nBurnBpp, HighCol16(src[x]>>16, src[x]>>8, src[x], 0));
 	}
 
 	return 0;

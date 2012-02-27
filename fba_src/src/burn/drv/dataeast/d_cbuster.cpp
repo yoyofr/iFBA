@@ -460,7 +460,7 @@ static void DrvPaletteRecalc()
 		INT32 g = ((p0[i] >>  8 ) * 175) / 100;
 		INT32 b = ((p1[i] & 0xff) * 175) / 100;
 
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 

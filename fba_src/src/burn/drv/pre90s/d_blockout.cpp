@@ -189,7 +189,7 @@ static void palette_write(INT32 offset)
 	bit3 = (rgb >> 11) & 0x01;
 	b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-	DrvPalette[offset/2] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset/2] = HighCol16(r, g, b, 0);
 }
 
 static void update_pixels(INT32 offset)

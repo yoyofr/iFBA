@@ -280,16 +280,16 @@ inline static void CalcCol(INT32 index, UINT16 nColour)
 	RamPal[index] = nColour;
 	
 	// Normal Color
-	MegadriveCurPal[index + 0x00] = BurnHighCol(r, g, b, 0);
+	MegadriveCurPal[index + 0x00] = HighCol16(r, g, b, 0);
 	
 	// Shadow Color
-	MegadriveCurPal[index + 0x40] = MegadriveCurPal[index + 0xc0] = BurnHighCol(r>>1, g>>1, b>>1, 0);
+	MegadriveCurPal[index + 0x40] = MegadriveCurPal[index + 0xc0] = HighCol16(r>>1, g>>1, b>>1, 0);
 	
 	// Highlight Color
 	r += 0x80; if (r > 0xFF) r = 0xFF;
 	g += 0x80; if (g > 0xFF) g = 0xFF;
 	b += 0x80; if (b > 0xFF) b = 0xFF;
-	MegadriveCurPal[index + 0x80] = BurnHighCol(r, g, b, 0);
+	MegadriveCurPal[index + 0x80] = HighCol16(r, g, b, 0);
 }
 
 static INT32 MemIndex()
@@ -802,7 +802,11 @@ UINT16 __fastcall MegadriveVideoReadWord(UINT32 sekAddress)
 		//if(PicoOpt&0x10) d|=0x0020; 							// sprite collision (Shadow of the Beast)
 		if(RamMisc->Rotate++&8) res |= 0x0100; else res |= 0x0200;	// Toggle fifo full empty (who uses that stuff?)
 		if(!(RamVReg->reg[1] & 0x40)) res |= 0x0008;			// set V-Blank if display is disabled
-		if(m68k_ICount < 84+4) res |= 0x0004;					// H-Blank (Sonic3 vs)
+            if (bBurnUseASMCPUEmulation) {                    
+                if(PicoCpu[nSekActive].cycles < 84+4) res |= 0x0004;					// H-Blank (Sonic3 vs)
+            } else {
+                if(m68k_ICount < 84+4) res |= 0x0004;					// H-Blank (Sonic3 vs)
+            }		
 		RamVReg->pending = 0;		// ctrl port reads clear write-pending flag (Charles MacDonald)		
 		break;
 	

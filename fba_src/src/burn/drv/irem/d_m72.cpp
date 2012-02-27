@@ -1003,7 +1003,7 @@ static void palette_write(INT32 offset, INT32 offset2)
 	INT32 g = BURN_ENDIAN_SWAP_INT16(pal[offset + 0x200]) & 0x1f;
 	INT32 b = BURN_ENDIAN_SWAP_INT16(pal[offset + 0x400]) & 0x1f;
 
-	DrvPalette[offset3] = BurnHighCol((r << 3) | (r >> 2), (g << 3) | (g >> 2), (b << 3) | (b >> 2), 0);
+	DrvPalette[offset3] = HighCol16(((r << 3) | (r >> 2)), ((g << 3) | (g >> 2)), ((b << 3) | (b >> 2)), 0);
 }
 
 UINT8 __fastcall m72_main_read(UINT32 address)

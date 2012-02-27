@@ -119,7 +119,7 @@ static void palette_write(INT32 offset, UINT16 pal)
 	g = (g << 3) | (g >> 2);
 	b = (b << 3) | (b >> 2);
 
-	DrvPalette[offset] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset] = HighCol16(r, g, b, 0);
 }
 
 UINT8 __fastcall silkroad_read_byte(UINT32 address)
@@ -506,7 +506,7 @@ static INT32 DrvDraw()
 			palette_write(i/2, pal[i]);
 		}
 
-		DrvPalette[0x1000] = BurnHighCol(0xff, 0x00, 0xff, 0);
+		DrvPalette[0x1000] = HighCol16(0xff, 0x00, 0xff, 0);
 		DrvRecalc = nBurnBpp;
 	}
 

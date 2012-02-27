@@ -7429,13 +7429,10 @@ static void TaitoF2SoundInit()
 
 static void SwitchToMusashi()
 {
-	if (bBurnUseASMCPUEmulation) {
-#if 1 && defined FBA_DEBUG
-		bprintf(PRINT_NORMAL, _T("Switching to Musashi 68000 core\n"));
-#endif
+/*	if (bBurnUseASMCPUEmulation) {
 		bUseAsm68KCoreOldValue = bBurnUseASMCPUEmulation;
 		bBurnUseASMCPUEmulation = false;
-	}
+	}*/
 }
 
 static void TaitoF2Init()
@@ -9363,7 +9360,7 @@ inline static INT32 CalcCol(UINT16 nColour)
 	g = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  8);
 	b = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  4);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 inline static INT32 QzquestCalcCol(UINT16 nColour)
@@ -9374,7 +9371,7 @@ inline static INT32 QzquestCalcCol(UINT16 nColour)
 	g = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  5);
 	b = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  0);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void TaitoF2CalcPalette()

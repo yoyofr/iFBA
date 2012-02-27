@@ -757,7 +757,7 @@ static void DrvRecalcPal()
 		b = (b << 3) | (b >> 2);
 
 		Palette[i] = (r << 16) | (g << 8) | b;
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 

@@ -419,7 +419,7 @@ static inline void write_palette(UINT16 data, INT32 offset)
 	b |= b << 4;
 
 	Palette[offset] = (r << 16) | (g << 8) | b;
-	DrvPalette[offset] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset] = HighCol16(r, g, b, 0);
 }
 
 void __fastcall sf_write_word(UINT32 address, UINT16 data)
@@ -1149,7 +1149,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x401; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 

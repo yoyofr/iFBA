@@ -477,12 +477,18 @@ static INT32 MemIndex()
 	
 	RamStart	= Next;
 	
-	RomGame 	= Next; Next += 0x1000000;
-	RomGame_D 	= Next; Next += 0x1000000;
+	RomGame 	= Next; Next += 0x1000000;    
+    //hack to reduce mem usage and allow sfiii3 to boot on ipad
+    if (!cps3_isSpecial) RomGame_D=RomGame;
+    else {
+        RomGame_D 	= Next; Next += 0x1000000;
+    }
 	
 	RamC000		= Next; Next += 0x0000400;
+    if (!cps3_isSpecial) RamC000_D=RamC000;
+    else {
 	RamC000_D	= Next; Next += 0x0000400;
-
+    }
 	RamMain		= Next; Next += 0x0080000;
 
 	RamPal		= (UINT16 *) Next; Next += 0x0020000 * sizeof(UINT16);
@@ -687,7 +693,7 @@ void __fastcall cps3WriteWord(UINT32 addr, UINT16 data)
 				b = b << 3;
 
 				RamPal[(paldma_dest + i) ^ 1] = coldata;
-				Cps3CurPal[(paldma_dest + i) ] = BurnHighCol(r, g, b, 0);
+				Cps3CurPal[(paldma_dest + i) ] = HighCol16(r, g, b, 0);
 			}
 			Sh2SetIRQLine(10, SH2_IRQSTATUS_AUTO);
 		}
@@ -949,7 +955,7 @@ void __fastcall cps3VidWriteWord(UINT32 addr, UINT16 data)
 		g |= g >> 5;
 		b |= b >> 5;
 			
-		Cps3CurPal[palindex] = BurnHighCol(r, g, b, 0);
+		Cps3CurPal[palindex] = HighCol16(r, g, b, 0);
 	
 	} else
 	bprintf(PRINT_NORMAL, _T("Video Attempt to write word value %4x to location %8x\n"), data, addr);
@@ -1094,10 +1100,10 @@ INT32 cps3Init()
 	
 	// CHD games 
 	if (cps3_data_rom_size == 0) cps3_data_rom_size = 0x5000000;	
-	
 	Mem = NULL;
 	MemIndex();
 	INT32 nLen = MemEnd - (UINT8 *)0;
+    
 	if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) return 1;
 	memset(Mem, 0, nLen);										// blank all memory
 	MemIndex();	
@@ -1860,7 +1866,7 @@ if (Cps3But2[9]) {
 	// iq_132 - layer disable
 	else
 	{
-		Cps3CurPal[0x20000] = BurnHighCol(0xff, 0x00, 0xff, 0); // ma-fucking-genta
+		Cps3CurPal[0x20000] = HighCol16(0xff, 0x00, 0xff, 0); // ma-fucking-genta
 
 		INT32 i;
 		for (i = 0; i < 1024 * 448; i++) {
@@ -2135,7 +2141,7 @@ INT32 cps3Frame()
 			r |= r >> 5;
 			g |= g >> 5;
 			b |= b >> 5;
-			Cps3CurPal[i] = BurnHighCol(r, g, b, 0);	
+			Cps3CurPal[i] = HighCol16(r, g, b, 0);	
 		}
 		cps3_palette_change = 0;
 	}

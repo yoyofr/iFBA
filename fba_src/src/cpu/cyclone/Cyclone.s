@@ -12,14 +12,15 @@
 
   .global _CycloneInit
   .global _CycloneRun
-  .global CycloneSetSr
-  .global CycloneGetSr
-  .global CycloneFlushIrq
+  .global _CycloneSetSr
+  .global _CycloneGetSr
+  .global _CycloneFlushIrq
   .global _CyclonePack
   .global _CycloneUnpack
-  .global CycloneVer
+  .global _CycloneVer
+  .global _CycloneSetRealTAS
 
-CycloneVer: .long 0x0088
+_CycloneVer: .long 0x0088
 
 ;@ --------------------------- Framework --------------------------
 _CycloneRun:
@@ -124,7 +125,7 @@ unc_fill4:
   bx lr
   .ltorg
 
-CycloneSetSr:
+_CycloneSetSr:
   mov r2,r1,lsr #8
   and r2,r2,#0xa7 ;@ only defined bits
   strb r2,[r0,#0x44] ;@ set SR high
@@ -138,7 +139,7 @@ CycloneSetSr:
   strb r2,[r0,#0x46] ;@ flags
   bx lr
 
-CycloneGetSr:
+_CycloneGetSr:
   ldrb r1,[r0,#0x46] ;@ flags
   bic r2,r1,#0xf3
   tst r1,#1
@@ -170,7 +171,7 @@ c_pack_loop:
   str r0,[r5],#4
 ;@ 0x44: SR
   mov r0,r4
-  bl CycloneGetSr
+  bl _CycloneGetSr
   strh r0,[r5],#2
 ;@ 0x46: IRQ level
   ldrb r0,[r4,#0x47]
@@ -204,7 +205,7 @@ c_unpack_loop:
 ;@ 0x44: SR
   ldrh r1,[r5],#2
   mov r0,r4
-  bl CycloneSetSr
+  bl _CycloneSetSr
 ;@ 0x46: IRQ level
   ldrb r0,[r5],#2
   strb r0,[r4,#0x47]
@@ -216,7 +217,7 @@ c_unpack_loop:
   str r0,[r4,#0x58]
   ldmfd sp!,{r4,r5,pc}
 
-CycloneFlushIrq:
+_CycloneFlushIrq:
   ldr r1,[r0,#0x44]  ;@ Get SR high T_S__III and irq level
   mov r2,r1,lsr #24 ;@ Get IRQ level
   cmp r2,#6 ;@ irq>6 ?
@@ -244,7 +245,7 @@ CycloneFlushIrqEnd:
   bx lr
 
 
-CycloneSetRealTAS:
+_CycloneSetRealTAS:
   bx lr
 
 ;@ DoInterrupt - r0=IRQ level

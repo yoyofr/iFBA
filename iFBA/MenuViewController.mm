@@ -9,23 +9,26 @@
 #import "MenuViewController.h"
 #import "EmuViewController.h"
 #import "GameBrowserViewController.h"
+#import "OptionsViewController.h"
 
 extern int launchGame;
 extern char gameName[64];
 extern volatile int emuThread_running;
 
 @implementation MenuViewController
-@synthesize emuvc,gamebrowservc;
+@synthesize emuvc,gamebrowservc,optionsvc;
 @synthesize tabView;
 @synthesize btn_backToEmu;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.title=[NSString stringWithFormat:@"iFBA v%@",[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+        
     }
     return self;
 }
-							
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
@@ -33,7 +36,6 @@ extern volatile int emuThread_running;
 
 - (void)dealloc{
     [emuvc dealloc];
-    [gamebrowservc dealloc];
     [super dealloc];
 }
 
@@ -41,8 +43,8 @@ extern volatile int emuThread_running;
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.    
-    emuvc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];
-    gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
+    
+    emuvc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];    
 }
 
 
@@ -58,14 +60,15 @@ extern volatile int emuThread_running;
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
-    }
+    }    
     [tabView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (launchGame) {
-        [self.navigationController pushViewController:emuvc animated:YES];
+        
+        [self.navigationController pushViewController:emuvc animated:NO];
     }
 }
 
@@ -79,24 +82,14 @@ extern volatile int emuThread_running;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-//    [emuvc shouldAutorotateToInterfaceOrientation:interfaceOrientation];
-//    [gamebrowservc shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+    //    [emuvc shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+    //    [gamebrowservc shouldAutorotateToInterfaceOrientation:interfaceOrientation];
     return YES;
 }
 
 #pragma mark - UI Actions
--(IBAction) backToEmu {    
-//    [self pushViewController:vc animated:YES];
-//    [self.navigationController pushViewController:vc animated:YES];
-    //UIWindow *win=[[UIApplication sharedApplication] keyWindow];
-    //[win addSubview:emuvc.view];
-    /*UIView *transView = [self.tabBarController.view.subviews objectAtIndex:0];
-    UIView *tabBar = [self.tabBarController.view.subviews objectAtIndex:1];
-    tabBar.hidden=TRUE;
-    transView.frame=CGRectMake(0,0,320,480);
-    [self.view addSubview:emuvc.view];*/
-    //[[self navigationController] setNavigationBarHidden:NO animated:NO];    
-    [self.navigationController pushViewController:emuvc animated:YES];
+-(IBAction) backToEmu {        
+    [self.navigationController pushViewController:emuvc animated:NO];
 }
 
 #pragma mark - UITableView
@@ -139,9 +132,9 @@ extern volatile int emuThread_running;
             if (indexPath.row==4) cell.textLabel.text=NSLocalizedString(@"About",@"");
             
         } else {
-		if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
-		if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Options",@"");
-		if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"About",@"");
+            if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
+            if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Options",@"");
+            if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"About",@"");
         }
 	}
 	
@@ -156,20 +149,38 @@ int StatedSave(int slot);
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==0) {//Game browser
         if (emuThread_running) {
-            if (indexPath.row==0) { //load state
-                StatedLoad(0);
-                [self backToEmu];
-            }
-            if (indexPath.row==1) { //save state
-                StatedSave(0);
-                [self backToEmu];
-            }
-            if (indexPath.row==2) { //game browser
-                [self.navigationController pushViewController:gamebrowservc animated:YES];
+            switch (indexPath.row) {
+                case 0: //load state
+                    StatedLoad(0);
+                    [self backToEmu];
+                    break;
+                case 1: //save state
+                    StatedSave(0);
+                    [self backToEmu];
+                    break;
+                case 2: //game browser
+                    gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
+                    [self.navigationController pushViewController:gamebrowservc animated:YES];
+                    [gamebrowservc release];
+                    break;
+                case 3: //options
+                    optionsvc=[[OptionsViewController alloc] initWithNibName:@"OptionsViewController" bundle:nil];
+                    [self.navigationController pushViewController:optionsvc animated:YES];
+                    [optionsvc release];
+                    break;
             }
         } else {
-            if (indexPath.row==0) { //game browser
-                [self.navigationController pushViewController:gamebrowservc animated:YES];
+            switch (indexPath.row) {
+                case 0: //game browser
+                    gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
+                    [self.navigationController pushViewController:gamebrowservc animated:YES];
+                    [gamebrowservc release];
+                    break;
+                case 1: //options
+                    optionsvc=[[OptionsViewController alloc] initWithNibName:@"OptionsViewController" bundle:nil];
+                    [self.navigationController pushViewController:optionsvc animated:YES];
+                    [optionsvc release];
+                    break;
             }
         }
     }

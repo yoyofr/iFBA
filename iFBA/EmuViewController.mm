@@ -6,12 +6,32 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#define MAX_JOYSTICKS 4
+
 #include "inp_sdl_keys.h"
-unsigned char joy_state[4][GN_MAX_KEY];
+unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
 
 #import "EmuViewController.h"
 #include "string.h"
+#include "sdl_font.h"
 
+#import "BTstack/BTDevice.h"
+#import "BTstack/btstack.h"
+#import "BTstack/run_loop.h"
+#import "BTstack/hci_cmds.h"
+#import "BTstack/wiimote.h"
+static BTDevice *device;
+static uint16_t wiiMoteConHandle = 0;
+
+int iOS_wiiDeadZoneValue;
+int iOS_inGame;
+int iOS_waysStick=0;
+float joy_analog_x[MAX_JOYSTICKS];
+float joy_analog_y[MAX_JOYSTICKS];
+float joy_analog_l[MAX_JOYSTICKS];
+float joy_analog_r[MAX_JOYSTICKS];
+
+volatile int mNewGLFrame;
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch);
 
 static unsigned short *vbuffer;
@@ -25,24 +45,25 @@ static char pb_msg[256];
 
 
 int device_isIpad;
-unsigned char virtual_stick_buttons_alpha=64;
-unsigned char virtual_stick_buttons_alpha2=128;
+unsigned char virtual_stick_buttons_alpha=100;
+unsigned char virtual_stick_buttons_alpha2=200;
 int virtual_stick_on;
 long virtual_stick_padfinger;
+
 
 int virtual_stick_pad;
 int virtual_stick_posx=70;
 int virtual_stick_posy=320-70;
 int virtual_stick_maxdist=70;
-int virtual_stick_mindist=16;
+int virtual_stick_mindist=10;
 int virtual_stick_maxdist2=70*70;
-int virtual_stick_mindist2=16*16;
+int virtual_stick_mindist2=10*10;
 int vpad_button_nb=4;
 float virtual_stick_angle;
 typedef struct {int button_id,x,y,w,h;unsigned char r,g,b;long finger_id;} t_touch_area;
 t_touch_area virtual_stick_iphone_landscape[VSTICK_NB_BUTTON]={
     {GN_START,      480-48,         0,              48,48,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,480-48,         48,             48,48,0x8F,0x8F,0x8F,0},
+    {GN_SELECT_COIN,480-48,         48,             48,48,0xDF,0xDF,0xDF,0},
     {GN_MENU_KEY,     0,            0,              48,48,0xEF,0xFF,0x7F,0},
     {GN_TURBO,        0,            48,             48,48,0xFF,0x7F,0xFF,0},
     {GN_A,          480-64-10-64,   320-64-6-64,   64,64,0xFF,0x00,0x00,0},  //red
@@ -55,21 +76,21 @@ t_touch_area virtual_stick_iphone_landscape[VSTICK_NB_BUTTON]={
 
 t_touch_area virtual_stick_iphone_portrait[VSTICK_NB_BUTTON]={
     {GN_START,      270,         0,               48,48,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,195,         0,               48,48,0x8F,0x8F,0x8F,0},
+    {GN_SELECT_COIN,195,         0,               48,48,0xDF,0xDF,0xDF,0},
     {GN_MENU_KEY,     0,            0,            48,48,0xEF,0xFF,0x7F,0},
     {GN_TURBO,        75,            0,           48,48,0xFF,0x7F,0xFF,0},
-    {GN_A,          320-64-10-64,   480-2*64-6-20,   64,64,0xFF,0x00,0x00,0},  //red
-    {GN_B,          320-64,         480-2*64-6-30,   64,64,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          320-64-10-64,   480-64-20,         64,64,0x00,0xFF,0x00,0},  //green
-    {GN_D,          320-64,         480-64-30,         64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          320-64,         480-64-30,         64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          320-64,         480-64-30,         64,64,0x00,0x00,0xFF,0}  //blue        
+    {GN_A,          320-64-10-64,   480-2*64-6-0,   64,64,0xFF,0x00,0x00,0},  //red
+    {GN_B,          320-64,         480-2*64-6-10,   64,64,0xFF,0xFF,0x00,0},  //yellow
+    {GN_C,          320-64-10-64,   480-64-0,         64,64,0x00,0xFF,0x00,0},  //green
+    {GN_D,          320-64,         480-64-10,         64,64,0x00,0x00,0xFF,0},  //blue
+    {GN_E,          320-64,         480-64-10,         64,64,0x00,0x00,0xFF,0},  //blue
+    {GN_F,          320-64,         480-64-10,         64,64,0x00,0x00,0xFF,0}  //blue        
 };
 
 
 t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
     {GN_START,      1024-80,        0,              64,64,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,1024-80,        100,            64,64,0x8F,0x8F,0x8F,0},
+    {GN_SELECT_COIN,1024-80,        100,            64,64,0xDF,0xDF,0xDF,0},
     {GN_MENU_KEY,     0,            0,              64,64,0xEF,0xFF,0x7F,0},
     {GN_TURBO,        0,            100,            64,64,0xFF,0x7F,0xFF,0},
     {GN_A,          1024-96*2-10,   768-96*2-6,    96,96,0xFF,0x00,0x00,0},  //red
@@ -82,7 +103,7 @@ t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
 
 t_touch_area virtual_stick_ipad_portrait[VSTICK_NB_BUTTON]={
     {GN_START,      768-80,        600,             64,64,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,768-80-120,    600,             64,64,0x8F,0x8F,0x8F,0},
+    {GN_SELECT_COIN,768-80-120,    600,             64,64,0xDF,0xDF,0xDF,0},
     {GN_MENU_KEY,     0,           600,             64,64,0xEF,0xFF,0x7F,0},
     {GN_TURBO,        120,         600,             64,64,0xFF,0x7F,0xFF,0},
     {GN_A,          768-96*2-20,   1024-96*2-6-60,    96,96,0xFF,0x00,0x00,0},  //red
@@ -106,7 +127,12 @@ volatile int emuThread_running;
 static GLfloat vertices[5][2];  /* Holds Float Info For 4 Sets Of Vertices */
 static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordinates. */
 
+static void *context; //hack to call objective C func from C
+
 @implementation EmuViewController
+
+@synthesize control;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -133,6 +159,9 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 	uint handle;
 	
 	uint8_t* textureData = (uint8_t*)malloc(dataSize);
+    if (!textureData) {
+        NSLog(@"Error: cannot allocate texture");
+    }
     memset(textureData,0,dataSize);
 	CGContext* textureContext = CGBitmapContextCreate(textureData, width, height, 8, width * 4, CGImageGetColorSpace(image), kCGImageAlphaPremultipliedLast);
 	CGContextDrawImage(textureContext, CGRectMake(0.0, 0.0, (CGFloat)width, (CGFloat)height), image);
@@ -162,6 +191,9 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    context=self;
+    
 	// Do any additional setup after loading the view, typically from a nib.
     m_oglView=(OGLView*)(self.view);
     
@@ -217,12 +249,44 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
     
     
     vbuffer=(unsigned short*)malloc(TEXTURE_W*TEXTURE_H*2);
-    visible_area_w=480;
-    visible_area_h=320;
+    if (!vbuffer) {
+        NSLog(@"Critical issue: vbuffer cannot be allocated");
+    }
+    memset(vbuffer,0,TEXTURE_W*TEXTURE_H*2);
     vid_rotated=0;
     vid_aspectX=4;
     vid_aspectY=3;
     virtual_stick_on=1;
+    visible_area_w=480;
+    visible_area_h=320;
+    
+    for (int i=0;i<MAX_JOYSTICKS;i++) {
+        joy_analog_x[i]=0;
+        joy_analog_y[i]=0;
+        joy_analog_l[i]=0;
+        joy_analog_r[i]=0;
+    }
+    
+    
+    //ICADE
+    control = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:control];
+    control.active = YES;
+    control.delegate = self;
+    [control release];    
+    //WIIMOTE
+    // create discovery controller
+	discoveryView = [[BTDiscoveryViewController alloc] init];
+	[discoveryView setDelegate:self];
+    [self.view addSubview:discoveryView.view];
+    discoveryView.view.hidden=TRUE;
+    // BTstack
+	BTstackManager * bt = [BTstackManager sharedInstance];
+    if (bt) {
+        [bt setDelegate:self];
+        [bt addListener:self];
+        [bt addListener:discoveryView];
+    }    
 }
 
 
@@ -236,16 +300,16 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden=YES;    
+    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
     //
     joy_state[0][GN_MENU_KEY]=0;
     
-    //Setup opengl & activate frame update
-	[EAGLContext setCurrentContext:m_oglContext];	
-    [m_oglView bind];
-    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doFrame)];
-    m_displayLink.frameInterval = 1;
-	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {    
+    [super viewDidAppear:animated];
     
     //If resuming
     if (nShouldExit==2) {
@@ -259,7 +323,6 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
             nShouldExit=0;
         }
     }
-    
     //If required launch game / emuthread
     if (launchGame) {    
         nShouldExit=0;    
@@ -269,23 +332,24 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
         [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
         launchGame=0;
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
+    
+    mNewGLFrame=1;
+    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doFrame)];
+    m_displayLink.frameInterval = 1; //60fps
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];    
     if (m_displayLink) [m_displayLink invalidate];
     
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    
     if (nShouldExit==1) {
-    while (emuThread_running) {
-        [NSThread sleepForTimeInterval:0.01]; //10ms        
+        while (emuThread_running) {
+            [NSThread sleepForTimeInterval:0.01]; //10ms        
+        }
     }
-    }
-    self.navigationController.navigationBar.hidden = NO;    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -295,14 +359,345 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     if ((interfaceOrientation==UIInterfaceOrientationPortrait)||(interfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
-        m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);
+        m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);        
     } else {
         m_oglView.frame=CGRectMake(0,0,mDevice_hh,mDevice_ww);
     }
     return YES;
 }
+
+/****************************************************/
+/****************************************************/
+/*        ICADE                                     */
+/****************************************************/
+/****************************************************/
+
+- (void)setState:(BOOL)state forButton:(iCadeState)button {
+    switch (button) {
+        case iCadeButtonA:
+            joy_state[0][GN_A]=state;
+            break;
+        case iCadeButtonB:
+            joy_state[0][GN_B]=state;
+            break;
+        case iCadeButtonC:
+            joy_state[0][GN_C]=state;
+            break;
+        case iCadeButtonD:
+            joy_state[0][GN_D]=state;
+            break;
+        case iCadeButtonE:
+            joy_state[0][GN_E]=state;
+            break;
+        case iCadeButtonF:
+            joy_state[0][GN_F]=state;
+            break;
+        case iCadeButtonG:
+            joy_state[0][GN_START]=state;
+            break;
+        case iCadeButtonH:
+            joy_state[0][GN_SELECT_COIN]=state;
+            break;
+        case iCadeJoystickUp:
+            joy_state[0][GN_UP]=state;
+            break;
+        case iCadeJoystickRight:
+            joy_state[0][GN_RIGHT]=state;
+            break;
+        case iCadeJoystickDown:
+            joy_state[0][GN_DOWN]=state;
+            break;
+        case iCadeJoystickLeft:
+            joy_state[0][GN_LEFT]=state;
+            break;            
+        default:
+            break;
+    }
+}
+
+- (void)buttonDown:(iCadeState)button {
+    [self setState:YES forButton:button];
+}
+
+- (void)buttonUp:(iCadeState)button {
+    [self setState:NO forButton:button];    
+}
+
+/****************************************************/
+/****************************************************/
+/*        BTSTACK / WIIMOTE                         */
+/****************************************************/
+/****************************************************/
+
+void startWiimoteDetection(void) {
+    NSLog(@"Looking for wiimote");
+    
+    BTstackManager * bt = [BTstackManager sharedInstance];
+    if (bt) {BTstackError err = [bt activate];
+        if (err) NSLog(@"activate err 0x%02x!", err);
+    }
+}
+
+void stopWiimoteDetection(void) {
+    NSLog(@"Stop looking for wiimote");
+    BTstackManager * bt = [BTstackManager sharedInstance];
+	if (bt) [bt stopDiscovery];
+}
+
+
+-(void) activatedBTstackManager:(BTstackManager*) manager {
+	NSLog(@"activated!");
+	[[BTstackManager sharedInstance] startDiscovery];
+}
+
+-(void) btstackManager:(BTstackManager*)manager deviceInfo:(BTDevice*)newDevice {
+	NSLog(@"Device Info: addr %@ name %@ COD 0x%06x", [newDevice addressString], [newDevice name], [newDevice classOfDevice] ); 
+	if ([newDevice name] && [[newDevice name] caseInsensitiveCompare:@"Nintendo RVL-CNT-01"] == NSOrderedSame){
+		NSLog(@"WiiMote found with address %@", [newDevice addressString]);
+		device = newDevice;
+		[[BTstackManager sharedInstance] stopDiscovery];
+	}
+}
+
+-(void) discoveryStoppedBTstackManager:(BTstackManager*) manager {
+	NSLog(@"discoveryStopped!");
+	// connect to device
+	if (device) bt_send_cmd(&l2cap_create_channel, [device address], 0x13);
+}
+
+
+// direct access
+-(void) btstackManager:(BTstackManager*) manager
+  handlePacketWithType:(uint8_t) packet_type
+			forChannel:(uint16_t) channel
+			   andData:(uint8_t *)packet
+			   withLen:(uint16_t) size
+{
+	bd_addr_t event_addr;
+	
+    switch (packet_type) {
+            
+        case L2CAP_DATA_PACKET://0x06
+        {
+            struct wiimote_t *wm = NULL; 
+            
+            wm = wiimote_get_by_source_cid(channel);
+            
+            if(wm!=NULL)
+            {
+                
+                byte* msg = packet + 2;
+                byte event = packet[1];
+                
+                switch (event) {
+                    case WM_RPT_BTN:
+                    {
+                        /* button */
+                        wiimote_pressed_buttons(wm, msg);
+                        break;
+                    }
+                    case WM_RPT_READ:
+                    {
+                        /* data read */
+                        
+                        if(WIIMOTE_DBG)printf("WM_RPT_READ data arrive!\n");
+                        
+                        wiimote_pressed_buttons(wm, msg);
+                        
+                        byte err = msg[2] & 0x0F;
+                        
+                        if (err == 0x08)
+                            printf("Unable to read data - address does not exist.\n");
+                        else if (err == 0x07)
+                            printf("Unable to read data - address is for write-only registers.\n");
+                        else if (err)
+                            printf("Unable to read data - unknown error code %x.\n", err);
+                        
+                        unsigned short offset = BIG_ENDIAN_SHORT(*(unsigned short*)(msg + 3));
+                        
+                        byte len = ((msg[2] & 0xF0) >> 4) + 1;
+                        
+                        byte *data = (msg + 5);
+                        
+                        if(WIIMOTE_DBG)
+                        {
+                            int i = 0;
+                            printf("Read: 0x%04x ; ",offset);
+                            for (; i < len; ++i)
+                                printf("%x ", data[i]);
+                            printf("\n");
+                        }
+                        
+                        if(wiimote_handshake(wm,WM_RPT_READ,data,len))
+                        {
+                            //btUsed = 1;                                                    
+                            //                            [inqViewControl showConnected:nil];
+                            //                            [inqViewControl showConnecting:nil];
+                            //Create UIAlertView alert
+                            //                            [inqViewControl showConnecting:nil];
+                            
+                            /*                            UIAlertView* alert = 
+                             [[UIAlertView alloc] initWithTitle:@"Connection detected!"
+                             message: [NSString stringWithFormat:@"%@ '%@' connection sucessfully completed!",
+                             (wm->exp.type != EXP_NONE ? @"Classic Controller" : @"WiiMote"),
+                             [NSNumber numberWithInt:(wm->unid)+1]]        
+                             delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                             [alert show];                                           
+                             //[alert dismissWithClickedButtonIndex:0 animated:TRUE];                                           
+                             [alert release];
+                             */
+                            if(device!=nil)
+                            {
+                                [device setConnectionState:kBluetoothConnectionConnected];
+                                device = nil;
+                            }
+                            [[BTstackManager sharedInstance] startDiscovery];
+                        }										
+                        
+                        return;
+                    }
+                    case WM_RPT_CTRL_STATUS:
+                    {
+                        wiimote_pressed_buttons(wm, msg);
+                        
+                        /* find the battery level and normalize between 0 and 1 */
+                        if(WIIMOTE_DBG)
+                        {
+                            wm->battery_level = (msg[5] / (float)WM_MAX_BATTERY_CODE);
+                            
+                            printf("BATTERY LEVEL %d\n", wm->battery_level);
+                        }
+                        
+                        //handshake stuff!
+                        if(wiimote_handshake(wm,WM_RPT_CTRL_STATUS,msg,-1))
+                        {
+                            //btUsed = 1;                                                    
+                            //                            [inqViewControl showConnected:nil];
+                            //                            [inqViewControl showConnecting:nil];
+                            /*                            UIAlertView* alert = 
+                             [[UIAlertView alloc] initWithTitle:@"Connection detected!"
+                             message: [NSString stringWithFormat:@"WiiMote '%@' connection sucessfully completed!",[NSNumber numberWithInt:(wm->unid)+1]]        
+                             delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                             [alert show];                                           
+                             //[alert dismissWithClickedButtonIndex:0 animated:TRUE];                                           
+                             [alert release];*/
+                            [device setConnectionState:kBluetoothConnectionConnected];
+                            
+                            if(device!=nil)
+                            {
+                                [device setConnectionState:kBluetoothConnectionConnected];
+                                device = nil;
+                            }
+                            [[BTstackManager sharedInstance] startDiscovery];
+                        }
+                        
+                        return;
+                    }
+                    case WM_RPT_BTN_EXP:
+                    {
+                        /* button - expansion */
+                        wiimote_pressed_buttons(wm, msg);
+                        wiimote_handle_expansion(wm, msg+2);
+                        
+                        break;
+                    }
+                    case WM_RPT_WRITE:
+                    {
+                        /* write feedback - safe to skip */
+                        break;
+                    }
+                    default:
+                    {
+                        printf("Unknown event, can not handle it [Code 0x%x].", event);
+                        return;
+                    }
+                }                   
+            }                                                                 
+            break;
+        }
+        case HCI_EVENT_PACKET://0x04
+        {
+            switch (packet[0]){
+                    
+                case L2CAP_EVENT_CHANNEL_OPENED:
+                    
+                    // data: event (8), len(8), status (8), address(48), handle (16), psm (16), local_cid(16), remote_cid (16)                                         
+                    if (packet[2] == 0) {
+                        
+                        // inform about new l2cap connection
+                        bt_flip_addr(event_addr, &packet[3]);
+                        uint16_t psm = READ_BT_16(packet, 11);
+                        uint16_t source_cid = READ_BT_16(packet, 13);
+                        wiiMoteConHandle = READ_BT_16(packet, 9);
+                        NSLog(@"Channel successfully opened: handle 0x%02x, psm 0x%02x, source cid 0x%02x, dest cid 0x%02x",
+                              wiiMoteConHandle, psm, source_cid,  READ_BT_16(packet, 15));
+                        
+                        if (psm == 0x13) {
+                            
+                            // interupt channel openedn succesfully, now open control channel, too.
+                            if(WIIMOTE_DBG)printf("open control channel\n");
+                            bt_send_cmd(&l2cap_create_channel, event_addr, 0x11);
+                            struct wiimote_t *wm = NULL;  
+                            wm = &joys[num_of_joys];
+                            memset(wm, 0, sizeof(struct wiimote_t));
+                            wm->unid = num_of_joys;                                                        
+                            wm->i_source_cid = source_cid;
+                            memcpy(&wm->addr,&event_addr,BD_ADDR_LEN);
+                            if(WIIMOTE_DBG)printf("addr %02x:%02x:%02x:%02x:%02x:%02x\n", wm->addr[0], wm->addr[1], wm->addr[2],wm->addr[3], wm->addr[4], wm->addr[5]);                                                    
+                            if(WIIMOTE_DBG)printf("saved 0x%02x  0x%02x\n",source_cid,wm->i_source_cid);
+                            wm->exp.type = EXP_NONE;
+                            
+                        } else {
+                            
+                            //inicializamos el wiimote!   
+                            struct wiimote_t *wm = NULL;  
+                            wm = &joys[num_of_joys];                                                                                                                                                                  
+                            wm->wiiMoteConHandle = wiiMoteConHandle; 
+                            wm->c_source_cid = source_cid;                                                           
+                            wm->state = WIIMOTE_STATE_CONNECTED;
+                            num_of_joys++;
+                            if(WIIMOTE_DBG)printf("Devices Number: %d\n",num_of_joys);
+                            wiimote_handshake(wm,-1,NULL,-1);                                                                                                                                                                                                                                                                      
+                        }
+                    }
+                    break;
+                case L2CAP_EVENT_CHANNEL_CLOSED:
+                {                                
+                    // data: event (8), len(8), channel (16)                                                                                       
+                    uint16_t  source_cid = READ_BT_16(packet, 2);                                              
+                    NSLog(@"Channel successfully closed: cid 0x%02x",source_cid);
+                    
+                    bd_addr_t addr;
+                    int unid = wiimote_remove(source_cid,&addr);
+                    if(unid!=-1)
+                    {
+                        //                        [inqViewControl removeDeviceForAddress:&addr];
+                        UIAlertView* alert = 
+                        [[UIAlertView alloc] initWithTitle:@"Disconnection!"
+                                                   message:[NSString stringWithFormat:@"WiiMote '%@' disconnection detected.\nIs battery drainned?",[NSNumber numberWithInt:(unid+1)]] 
+                                                  delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                        [alert show];                                           
+                        
+                        [alert release];
+                    }
+                    
+                }
+                    break;                                        
+                    
+                default:
+                    break;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+	
+}
+
 //******************************************
 extern int fba_main( int argc, char **argv );
+extern bool bAppDoFast;
 
 -(void) emuThread {
     emuThread_running=1;
@@ -315,8 +710,14 @@ extern int fba_main( int argc, char **argv );
     int argc=2;
     char *argv[2];
     argv[0]=(char*)malloc(5);
+    if (!argv[0]) {
+        NSLog(@"Error: cannot allocate argv[0]");
+    }
     sprintf(argv[0],"%s","iFBA");
     argv[1]=(char*)malloc(strlen(gameName)+1);
+    if (!argv[1]) {
+        NSLog(@"Error: cannot allocate argv[1]");
+    }
     sprintf(argv[1],"%s",gameName);
     fba_main(argc,(char**)argv);
     
@@ -332,6 +733,7 @@ int vstick_update_status(int rx,int ry) {
     
     
     virtual_stick_pad=0; //Reset pad state
+    joy_analog_x[0]=0;joy_analog_y[0]=0;
     if ((dist>virtual_stick_mindist2)&&(dist<virtual_stick_maxdist2)) {
         //compute angle
         //        float rdist=sqrtf(dist);
@@ -352,9 +754,12 @@ int vstick_update_status(int rx,int ry) {
         } else {
             if (dy>0) angle=M_PI/2;
             else angle=M_PI*3/2;
-        }
-        
+        }        
         virtual_stick_angle=angle;
+        
+        joy_analog_x[0]=dx*2/virtual_stick_maxdist;
+        joy_analog_y[0]=dy*2/virtual_stick_maxdist;
+        
         if ( ((virtual_stick_angle<M_PI*2)&&(virtual_stick_angle>=M_PI*2-M_PI/8))||((virtual_stick_angle<M_PI/8)&&(virtual_stick_angle>=0))) { //Right
             virtual_stick_pad=GN_RIGHT;
         } else if ((virtual_stick_angle>=-M_PI/8+M_PI/4)&&(virtual_stick_angle<M_PI/8+M_PI/4)) { //Up&Right
@@ -404,12 +809,15 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
                     }
                 }       
             }
-
+            
             break;
         case 2: //Moved
             virtual_stick_on=1;
             if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
-                if (vstick_update_status(x,y)==0) virtual_stick_padfinger=0;
+                if (vstick_update_status(x,y)==0) {
+                    virtual_stick_padfinger=0;
+                    joy_analog_x[0]=0;joy_analog_y[0]=0;
+                }
                 joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
                 joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
                 joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
@@ -458,7 +866,8 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
         case 0: //Release
             virtual_stick_on=1;
             if (virtual_stick_padfinger==touch_id) {
-                virtual_stick_pad=0;                    
+                virtual_stick_pad=0;
+                joy_analog_x[0]=0;joy_analog_y[0]=0;
                 joy_state[0][GN_UP]=0;
                 joy_state[0][GN_DOWN]=0;
                 joy_state[0][GN_LEFT]=0;
@@ -480,19 +889,36 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
     }
     
     if (joy_state[0][GN_MENU_KEY]) nShouldExit=2;
+    bAppDoFast=joy_state[0][GN_TURBO];
 }
+
+
 
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nXAspect,int nYAspect) {
     vid_rotated=rotated;
-    visible_area_w=w;
+    visible_area_w=w; 
+    if (visible_area_w>TEXTURE_W) {
+        NSLog(@"ERROR: width is too large (%d/%d)",visible_area_w,TEXTURE_W);
+    }
+    if (visible_area_h>TEXTURE_H) {
+        NSLog(@"ERROR: width is too large (%d/%d)",visible_area_h,TEXTURE_H);
+    }
     visible_area_h=h;
     vid_aspectX=nXAspect;
     vid_aspectY=nYAspect;
     pitch>>=1;
-    for (int y=0;y<h;y++) 
-        for (int x=0;x<w;x++) {
-            vbuffer[y*TEXTURE_W+x]=buff[y*pitch+x];
-        }    
+    unsigned short *src,*dst;
+    src=buff;
+    dst=vbuffer;
+    for (int y=0;y<h;y++) {
+        memcpy(dst,src,w<<1);
+        dst+=TEXTURE_W;
+        src+=pitch;
+        //for (int x=0;x<w;x++) {
+        //vbuffer[y*TEXTURE_W+x]=buff[y*pitch+x];
+        //}    
+    }
+    mNewGLFrame++;
 }
 
 
@@ -508,90 +934,65 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
         else virtual_stick=virtual_stick_iphone_portrait;
     }
     
-        switch (cur_height) {
-            case 320:
-                virtual_stick_posx = virtual_stick_maxdist;
-                virtual_stick_posy = cur_height-virtual_stick_maxdist;
-                virtual_stick_buttons_alpha=64;
-                virtual_stick_buttons_alpha2=128;
-                break;
-            case 480:
-                virtual_stick_posx = virtual_stick_maxdist;
-                virtual_stick_posy = cur_height-virtual_stick_maxdist-20;
-                virtual_stick_buttons_alpha=64;
-                virtual_stick_buttons_alpha2=128;
-                break;    
-            case 768:
-                virtual_stick_posx = virtual_stick_maxdist;
-                virtual_stick_posy = cur_height-virtual_stick_maxdist;
-                virtual_stick_buttons_alpha=64;
-                virtual_stick_buttons_alpha2=128;
-                break;
-            case 1024:
-                virtual_stick_posx = virtual_stick_maxdist;
-                virtual_stick_posy = cur_height-virtual_stick_maxdist-80;
-                virtual_stick_buttons_alpha=64;
-                virtual_stick_buttons_alpha2=128;
-                break;
-            default:
-                virtual_stick_posx = virtual_stick_maxdist;
-                virtual_stick_posy = cur_height-virtual_stick_maxdist;
-                virtual_stick_buttons_alpha=64;
-                virtual_stick_buttons_alpha2=128;
-                break;
-        }    
-        virtual_stick_maxdist2=virtual_stick_maxdist*virtual_stick_maxdist;
-        virtual_stick_mindist2=virtual_stick_mindist*virtual_stick_mindist;
+    switch (cur_height) {
+        case 320:
+            virtual_stick_posx = virtual_stick_maxdist;
+            virtual_stick_posy = cur_height-virtual_stick_maxdist;
+            //virtual_stick_buttons_alpha=64;
+            //virtual_stick_buttons_alpha2=128;
+            break;
+        case 480:
+            virtual_stick_posx = virtual_stick_maxdist;
+            virtual_stick_posy = cur_height-virtual_stick_maxdist-0;
+            //virtual_stick_buttons_alpha=64;
+            //virtual_stick_buttons_alpha2=128;
+            break;    
+        case 768:
+            virtual_stick_posx = virtual_stick_maxdist;
+            virtual_stick_posy = cur_height-virtual_stick_maxdist;
+            //virtual_stick_buttons_alpha=64;
+            //virtual_stick_buttons_alpha2=128;
+            break;
+        case 1024:
+            virtual_stick_posx = virtual_stick_maxdist;
+            virtual_stick_posy = cur_height-virtual_stick_maxdist-80;
+            //virtual_stick_buttons_alpha=64;
+            //virtual_stick_buttons_alpha2=128;
+            break;
+        default:
+            virtual_stick_posx = virtual_stick_maxdist;
+            virtual_stick_posy = cur_height-virtual_stick_maxdist;
+            //virtual_stick_buttons_alpha=64;
+            //virtual_stick_buttons_alpha2=128;
+            break;
+    }    
+    virtual_stick_maxdist2=virtual_stick_maxdist*virtual_stick_maxdist;
+    virtual_stick_mindist2=virtual_stick_mindist*virtual_stick_mindist;
+    
+    //update viewport to match real device screen
+    
+    glViewport(0, 0, cur_width, cur_height);                        
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);            
+    /* Enable Vertex Pointer */
+    texcoords[0][0]=0; texcoords[0][1]=0;
+    texcoords[1][0]=1; texcoords[1][1]=0;
+    texcoords[2][0]=0; texcoords[2][1]=1;
+    texcoords[3][0]=1; texcoords[3][1]=1;
+    
+    glBindTexture(GL_TEXTURE_2D, vpad_button_texture);    /* Bind The Texture */    
+    for (int i=0;i<vpad_button_nb;i++) {            
+        vertices[0][0]=(float)(virtual_stick[i].x)/cur_width;
+        vertices[0][1]=(float)(virtual_stick[i].y)/cur_height;
         
-        //update viewport to match real device screen
+        vertices[1][0]=vertices[0][0]+(float)(virtual_stick[i].w)/cur_width;
+        vertices[1][1]=(float)(virtual_stick[i].y)/cur_height;
         
-        glViewport(0, 0, cur_width, cur_height);                        
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);            
-        /* Enable Vertex Pointer */
-        texcoords[0][0]=0; texcoords[0][1]=0;
-        texcoords[1][0]=1; texcoords[1][1]=0;
-        texcoords[2][0]=0; texcoords[2][1]=1;
-        texcoords[3][0]=1; texcoords[3][1]=1;
+        vertices[2][0]=(float)(virtual_stick[i].x)/cur_width;
+        vertices[2][1]=vertices[0][1]+(float)(virtual_stick[i].h)/cur_height;
         
-        glBindTexture(GL_TEXTURE_2D, vpad_button_texture);    /* Bind The Texture */    
-        for (int i=0;i<vpad_button_nb;i++) {            
-            vertices[0][0]=(float)(virtual_stick[i].x)/cur_width;
-            vertices[0][1]=(float)(virtual_stick[i].y)/cur_height;
-            
-            vertices[1][0]=vertices[0][0]+(float)(virtual_stick[i].w)/cur_width;
-            vertices[1][1]=(float)(virtual_stick[i].y)/cur_height;
-            
-            vertices[2][0]=(float)(virtual_stick[i].x)/cur_width;
-            vertices[2][1]=vertices[0][1]+(float)(virtual_stick[i].h)/cur_height;
-            
-            vertices[3][0]=vertices[0][0]+(float)(virtual_stick[i].w)/cur_width;
-            vertices[3][1]=vertices[0][1]+(float)(virtual_stick[i].h)/cur_height;
-            
-            vertices[0][0]=vertices[0][0]*2-1;
-            vertices[1][0]=vertices[1][0]*2-1;
-            vertices[2][0]=vertices[2][0]*2-1;
-            vertices[3][0]=vertices[3][0]*2-1;
-            vertices[0][1]=-vertices[0][1]*2+1;
-            vertices[1][1]=-vertices[1][1]*2+1;
-            vertices[2][1]=-vertices[2][1]*2+1;
-            vertices[3][1]=-vertices[3][1]*2+1;
-            
-            if (virtual_stick[i].finger_id) glColor4ub(virtual_stick[i].r,virtual_stick[i].g,virtual_stick[i].b,virtual_stick_buttons_alpha2);
-            else glColor4ub(virtual_stick[i].r,virtual_stick[i].g,virtual_stick[i].b,virtual_stick_buttons_alpha);
-            
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        }
-        //now the stick
-        glBindTexture(GL_TEXTURE_2D, vpad_dpad_texture);    /* Bind The Texture */
-        vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist)/cur_width;
-        vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist)/cur_height;            
-        vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist)/cur_width;;
-        vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist)/cur_height;            
-        vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist)/cur_width;
-        vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist)/cur_height;            
-        vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist)/cur_width;
-        vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist)/cur_height;
+        vertices[3][0]=vertices[0][0]+(float)(virtual_stick[i].w)/cur_width;
+        vertices[3][1]=vertices[0][1]+(float)(virtual_stick[i].h)/cur_height;
         
         vertices[0][0]=vertices[0][0]*2-1;
         vertices[1][0]=vertices[1][0]*2-1;
@@ -601,66 +1002,138 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
         vertices[1][1]=-vertices[1][1]*2+1;
         vertices[2][1]=-vertices[2][1]*2+1;
         vertices[3][1]=-vertices[3][1]*2+1;
-        glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
-        glDisable(GL_TEXTURE_2D);
-        for (int i=0;i<4;i++) {
-            vertices[0][0]=(float)(virtual_stick_posx+0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
-            vertices[0][1]=(float)(virtual_stick_posy-0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
-            
-            vertices[1][0]=(float)(virtual_stick_posx+0.6f*virtual_stick_maxdist*cosf(i*M_PI/2+M_PI/8))/cur_width;
-            vertices[1][1]=(float)(virtual_stick_posy-0.6f*virtual_stick_maxdist*sinf(i*M_PI/2+M_PI/8))/cur_height;
-            
-            vertices[2][0]=(float)(virtual_stick_posx+0.6f*virtual_stick_maxdist*cosf(i*M_PI/2-M_PI/8))/cur_width;
-            vertices[2][1]=(float)(virtual_stick_posy-0.6f*virtual_stick_maxdist*sinf(i*M_PI/2-M_PI/8))/cur_height;
-            
-            vertices[0][0]=vertices[0][0]*2-1;
-            vertices[1][0]=vertices[1][0]*2-1;
-            vertices[2][0]=vertices[2][0]*2-1;
-            vertices[0][1]=-vertices[0][1]*2+1;
-            vertices[1][1]=-vertices[1][1]*2+1;
-            vertices[2][1]=-vertices[2][1]*2+1;
-            
-            
-            if (virtual_stick_pad) {
-                if (((virtual_stick_pad-1)>>1==i)||((((virtual_stick_pad)>>1)&3)==i)) glColor4ub(250,245,255,virtual_stick_buttons_alpha2);
-                else glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-            } else glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-            
-            
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
-        }                
-        glDisable(GL_BLEND);        
+        if (virtual_stick[i].finger_id) glColor4ub(virtual_stick[i].r,virtual_stick[i].g,virtual_stick[i].b,virtual_stick_buttons_alpha2);
+        else glColor4ub(virtual_stick[i].r,virtual_stick[i].g,virtual_stick[i].b,virtual_stick_buttons_alpha);
+        
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
+    //now the stick
+    glBindTexture(GL_TEXTURE_2D, vpad_dpad_texture);    /* Bind The Texture */
+    vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist)/cur_width;
+    vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist)/cur_height;            
+    vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist)/cur_width;;
+    vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist)/cur_height;            
+    vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist)/cur_width;
+    vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist)/cur_height;            
+    vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist)/cur_width;
+    vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist)/cur_height;
+    
+    vertices[0][0]=vertices[0][0]*2-1;
+    vertices[1][0]=vertices[1][0]*2-1;
+    vertices[2][0]=vertices[2][0]*2-1;
+    vertices[3][0]=vertices[3][0]*2-1;
+    vertices[0][1]=-vertices[0][1]*2+1;
+    vertices[1][1]=-vertices[1][1]*2+1;
+    vertices[2][1]=-vertices[2][1]*2+1;
+    vertices[3][1]=-vertices[3][1]*2+1;
+    glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+    glDisable(GL_TEXTURE_2D);
+    for (int i=0;i<4;i++) {
+        vertices[0][0]=(float)(virtual_stick_posx+0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
+        vertices[0][1]=(float)(virtual_stick_posy-0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
+        
+        vertices[1][0]=(float)(virtual_stick_posx+0.6f*virtual_stick_maxdist*cosf(i*M_PI/2+M_PI/8))/cur_width;
+        vertices[1][1]=(float)(virtual_stick_posy-0.6f*virtual_stick_maxdist*sinf(i*M_PI/2+M_PI/8))/cur_height;
+        
+        vertices[2][0]=(float)(virtual_stick_posx+0.6f*virtual_stick_maxdist*cosf(i*M_PI/2-M_PI/8))/cur_width;
+        vertices[2][1]=(float)(virtual_stick_posy-0.6f*virtual_stick_maxdist*sinf(i*M_PI/2-M_PI/8))/cur_height;
+        
+        vertices[0][0]=vertices[0][0]*2-1;
+        vertices[1][0]=vertices[1][0]*2-1;
+        vertices[2][0]=vertices[2][0]*2-1;
+        vertices[0][1]=-vertices[0][1]*2+1;
+        vertices[1][1]=-vertices[1][1]*2+1;
+        vertices[2][1]=-vertices[2][1]*2+1;
+        
+        
+        if (virtual_stick_pad) {
+            if (((virtual_stick_pad-1)>>1==i)||((((virtual_stick_pad)>>1)&3)==i)) glColor4ub(250,245,255,virtual_stick_buttons_alpha2);
+            else glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+        } else glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+        
+        
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+    }                
+    glDisable(GL_BLEND);        
+}
+
+int ErrorWhileLoading(const char* pszText) {
+    int strHeight=1;
+    int i=0;
+    while (pszText[i]) {
+        if (pszText[i]<32) strHeight++;
+        i++;
+    }
+    DrawRect((uint16 *) vbuffer, 20, 20, visible_area_w-40, 9*strHeight+10, 0x00FFA0A0, TEXTURE_W,vid_rotated);
+    DrawRect((uint16 *) vbuffer, 21, 21, visible_area_w-42, 9*strHeight+8, 0x00EF2020, TEXTURE_W,vid_rotated);
+	
+	DrawString (pszText, (uint16 *) vbuffer, 22, 24, TEXTURE_W,vid_rotated);
+    
+    mNewGLFrame++;
+    usleep(3000000); //3s
 }
 
 int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
     
     pb_total+=nLen;
-    if (totalLen) pb_value=(float)pb_total/(float)totalLen;
-    else pb_value=1;
-    strcpy(pb_msg,pszText);
+    if (totalLen) {
+        if (pb_total>totalLen) pb_total=totalLen;
+        pb_value=(float)pb_total/(float)totalLen;
+    } else {
+        pb_total=0;
+        pb_value=1;
+    }
+    //strcpy(pb_msg,pszText);
     
-    //printf("%f %d %d %d %s",pb_value,pb_total,nLen,totalLen,pszText);
+	DrawRect((uint16 *) vbuffer, 20, 120, visible_area_w-40, 20, 0x00A0A0FF, TEXTURE_W,vid_rotated);
+    DrawRect((uint16 *) vbuffer, 21, 121, visible_area_w-42, 18, 0x002020EF, TEXTURE_W,vid_rotated);
+	
+	if (pszText)
+		DrawString (pszText, (uint16 *) vbuffer, 22, 124, TEXTURE_W,vid_rotated);
+	
+	if (totalLen == 0) {
+		DrawRect((uint16 *) vbuffer, 20, 140, visible_area_w-40, 12, 0x00FFFFFF, TEXTURE_W,vid_rotated);
+		DrawRect((uint16 *) vbuffer, 21, 141, visible_area_w-42, 10, 0x00808080, TEXTURE_W,vid_rotated);
+	} else {
+        DrawRect((uint16 *) vbuffer, 20, 140, visible_area_w-40, 12, 0x00A0A0FF, TEXTURE_W,vid_rotated);
+        DrawRect((uint16 *) vbuffer, 21, 141, visible_area_w-42, 10, 0x002020EF, TEXTURE_W,vid_rotated);
+		DrawRect((uint16 *) vbuffer, 22, 142, pb_value * (visible_area_w-44), 8, 0x00AFFF3F, TEXTURE_W,vid_rotated);
+	}
+    
+    mNewGLFrame++;
 	return 0;
 }
 
 int StopProgressBar() {
     pb_value=1;
+    mNewGLFrame++;
+}
+
+-(void) loopCheck {
+    
 }
 
 
 - (void)doFrame {
     int width,height,rw,rh;
-    //get ogl context & bind
     
     if (nShouldExit) {
-        [[self navigationController] popViewControllerAnimated:YES];
-        return;
+        self.navigationController.navigationBar.hidden=NO;        
+        [[self navigationController] popViewControllerAnimated:NO];
     }
+    if (!mNewGLFrame) return;
+    //todo: how many was there?
+    mNewGLFrame=0;
     
-	[EAGLContext setCurrentContext:m_oglContext];
+    //get ogl context & bind
+    
+    
+    [EAGLContext setCurrentContext:m_oglContext];
 	[m_oglView bind];
+    
     
     width=m_oglView.frame.size.width;
     height=m_oglView.frame.size.height;
@@ -668,10 +1141,6 @@ int StopProgressBar() {
     /*********************/
     /*Handle input*/
     /*********************/
-    if (m_oglView->m_touchcount) { 
-		m_oglView->currentTouchLocation.x;
-        m_oglView->currentTouchLocation.y;
-    }
     /**********************************/
     /* Redraw */
     /**********************************/
@@ -695,7 +1164,7 @@ int StopProgressBar() {
     
     glColor4ub(255,255,255,255);
     
-    if (vid_rotated) {
+    if (vid_rotated&&(pb_value==1)) {
         texcoords[1][0]=(float)0/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
         texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)0/TEXTURE_H;
         texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)(visible_area_h)/TEXTURE_H;
@@ -744,25 +1213,6 @@ int StopProgressBar() {
     
     if (virtual_stick_on) [self drawVPad];
     
-    if (pb_value<1) {        
-        glViewport(0,0,width,height);
-        glDisable(GL_TEXTURE_2D);
-        
-        glColor4ub(255,255,255,255);
-        vertices[0][0]=-0.5; vertices[0][1]=0.1;
-        vertices[1][0]=-0.5+pb_value; vertices[1][1]=0.1;
-        vertices[2][0]=-0.5; vertices[2][1]=-0.1;
-        vertices[3][0]=-0.5+pb_value; vertices[3][1]=-0.1;
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
-        glColor4ub(255/2,255/2,255/2,255);
-        vertices[0][0]=-0.5+pb_value; vertices[0][1]=0.1;
-        vertices[1][0]=0.5; vertices[1][1]=0.1;
-        vertices[2][0]=-0.5+pb_value; vertices[2][1]=-0.1;
-        vertices[3][0]=0.5; vertices[3][1]=-0.1;
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    }
-	
     [m_oglContext presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
 

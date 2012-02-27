@@ -482,7 +482,7 @@ static INT32 DrvDraw()
 	if (DrvRecalcPal) {
 		for (INT32 i = 0; i < 8; i++) {
 			INT32 col = Palette[i];
-			DrvPalette[i] = BurnHighCol(col >> 16, col >> 8, col, 0);
+			DrvPalette[i] = HighCol16(col >> 16, col >> 8, col, 0);
 		}
 	}
 

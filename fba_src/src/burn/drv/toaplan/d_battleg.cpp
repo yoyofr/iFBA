@@ -17,6 +17,9 @@ static INT32 nSoundCommand;
 // Z80 ROM bank
 static INT32 nCurrentBank;
 
+static int nSpeedHackOffset;
+
+
 // Rom information
 static struct BurnRomInfo bgareggaRomDesc[] = {
 	{ "prg0.bin",     0x080000, 0xF80C2FC2, BRF_ESS | BRF_PRG }, //  0 CPU #0 code (even)
@@ -730,6 +733,11 @@ static INT32 battlegInit()
 	// mar 2 1996 & apr 2 1996 ver:	0x0009AC - 0x0009B8 & 0x001F5E - 0x001F64 & 0x003A1C - 0x003A22
 	// feb 2 1996 ver:				0x0009AC - 0x0009B8 & 0x001F2E - 0x001F34 & 0x0039EC - 0x0039F2
 
+    nSpeedHackOffset = 0;
+	if (strcmp(BurnDrvGetTextA(DRV_NAME), "bgaregga") == 0) {
+		nSpeedHackOffset = 0x30;
+	}
+    
 	DrvDoReset();												// Reset machine
 	return 0;
 }
@@ -767,6 +775,23 @@ static INT32 DrvDraw()
 
 inline static INT32 CheckSleep(INT32)
 {
+#if 1 && defined USE_SPEEDHACKS
+	int nCurrentPC = SekGetPC(-1);
+    
+	if (!nIRQPending && nCurrentPC >= 0x0009AC && nCurrentPC <= 0x0009B8) {
+		return 1;
+	}
+    
+	nCurrentPC += nSpeedHackOffset;
+    
+	if (!nIRQPending &&
+		((nCurrentPC >= 0x001F5E && nCurrentPC <= 0x001F64) ||
+		 (nCurrentPC >= 0x003A1C && nCurrentPC <= 0x003A22)))
+	{
+		return 1;
+	}
+#endif
+
 	return 0;
 }
 

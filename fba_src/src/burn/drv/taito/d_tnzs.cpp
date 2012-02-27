@@ -1627,7 +1627,7 @@ static inline void DrvRecalcPalette()
 			g |= g << 4;
 			b |= b << 4;
 	
-			DrvPalette[i / 2] = BurnHighCol(r, g, b, 0);
+			DrvPalette[i / 2] = HighCol16(r, g, b, 0);
 		}
 	} else {
 		for (INT32 i = 0; i < 0x400; i+=2) {
@@ -1641,7 +1641,7 @@ static inline void DrvRecalcPalette()
 			g = (g << 3) | (g >> 2);
 			b = (b << 3) | (b >> 2);
 	
-			DrvPalette[i / 2] = BurnHighCol(r, g, b, 0);
+			DrvPalette[i / 2] = HighCol16(r, g, b, 0);
 		}
 	}
 }

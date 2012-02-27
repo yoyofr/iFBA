@@ -113,7 +113,7 @@ static inline void set_palette(UINT16 pal, INT32 offset)
 	    b = (b << 3) | (b >> 2);
 
 	Palette[offset] = (r << 16) | (g << 8) | b;
-	DrvPalette[offset] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset] = HighCol16(r, g, b, 0);
 }
 
 UINT8 __fastcall drtomy_read_byte(UINT32 address)
@@ -372,7 +372,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x300; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 

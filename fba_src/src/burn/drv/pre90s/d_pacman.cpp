@@ -1794,7 +1794,7 @@ void __fastcall pacman_write(UINT16 a, UINT8 d)
 			if (a == 0x5001) {
 				for (INT32 i = 0; i < 0x100; i++) {
 					if (DrvColPROM[0x100 + i] == 0) {
-						Palette[i] = (d & 1) ? BurnHighCol(0xaa, 0xaa, 0xaa, 0) : 0;
+						Palette[i] = (d & 1) ? HighCol16(0xaa, 0xaa, 0xaa, 0) : 0;
 					}
 				}
 				return;
@@ -2139,7 +2139,7 @@ static void pacman_palette_init()
 		bit1 = (DrvColPROM[i] >> 7) & 0x01;
 		UINT8 b = (bit0 * 81) + (bit1 * 174);
 
-		t_pal[i] = BurnHighCol(r, g, b, 0);
+		t_pal[i] = HighCol16(r, g, b, 0);
 	}
 
 	for (INT32 i = 0; i < 256; i++)

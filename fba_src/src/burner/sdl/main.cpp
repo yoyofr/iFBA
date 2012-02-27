@@ -15,10 +15,15 @@ int nAppVirtualFps = 6000;			// App fps * 100
 bool bRunPause=0;
 bool bAlwaysProcessKeyboardInput=0;
 
+extern bool bBurnUseASMCPUEmulation;
 
 void init_emu(int gamenum)
 {
-	bBurnUseASMCPUEmulation=0;
+#if TARGET_IPHONE_SIMULATOR
+    bBurnUseASMCPUEmulation=0;
+#else
+	bBurnUseASMCPUEmulation=1;
+#endif    
  	bCheatsAllowed=false;
 	ConfigAppLoad();
 	ConfigAppSave();
@@ -65,6 +70,10 @@ int fba_main(int argc, char *argv[])
 			return 1;
 		}
 	}
+    
+#if TARGET_IPHONE_SIMULATOR    
+    bBurnUseASMCPUEmulation = false;
+#endif
 
 	InputInit();
 	init_emu(i);

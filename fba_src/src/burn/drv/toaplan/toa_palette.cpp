@@ -30,7 +30,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	b = (BURN_ENDIAN_SWAP_INT16(nColour) & 0x7C00) >> 7;	// Blue
 	b |= b >> 5;
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 INT32 ToaPalUpdate()

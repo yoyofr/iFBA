@@ -4850,7 +4850,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  5);
 	b = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 10);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 inline static UINT32 OpwolfCalcCol(UINT16 nColour)
@@ -4861,7 +4861,7 @@ inline static UINT32 OpwolfCalcCol(UINT16 nColour)
 	g = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 4);
 	b = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 0);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 inline static UINT32 JumpingCalcCol(UINT16 nColour)
@@ -4872,7 +4872,7 @@ inline static UINT32 JumpingCalcCol(UINT16 nColour)
 	g = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 4);
 	b = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 8);
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void TaitoMiscCalcPalette()

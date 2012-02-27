@@ -105,6 +105,8 @@ struct NeoMediaInfo {
 #include "bitswap.h"
 #include "neocdlist.h"
 
+extern bool bSoundOn;
+
 // #undef USE_SPEEDHACKS
 
 // #define LOG_IRQ
@@ -4092,9 +4094,9 @@ INT32 NeoInit()
 			BurnLoadRom(NeoTextROMBIOS,	0x00080 + 28, 1);
 			BurnLoadRom(NeoZoomROM,		0x00080 + 29, 1);
 		} else {
-			BurnLoadRom(NeoZ80BIOS,		0x00080 + 27, 1);
-			BurnLoadRom(NeoTextROMBIOS,	0x00080 + 28, 1);
-			BurnLoadRom(NeoZoomROM,		0x00080 + 29, 1);
+			if (BurnLoadRom(NeoZ80BIOS,		0x00080 + 27, 1)) return 1;
+			if (BurnLoadRom(NeoTextROMBIOS,	0x00080 + 28, 1)) return 1;
+			if (BurnLoadRom(NeoZoomROM,		0x00080 + 29, 1)) return 1;
 		}
 	}
 	BurnUpdateProgress(0.0, _T("Preprocessing text layer graphics...")/*, BST_PROCESS_TXT*/, 0);
@@ -4828,7 +4830,7 @@ INT32 NeoFrame()
 	
 	nCycles68KSync = SekTotalCycles();
 	BurnTimerEndFrame(nCyclesTotal[1]);
-	BurnYM2610Update(pBurnSoundOut, nBurnSoundLen);
+	if (bSoundOn) BurnYM2610Update(pBurnSoundOut, nBurnSoundLen);
 	
 	// Update the uPD4990 until the end of the frame
 	uPD4990AUpdate(SekTotalCycles() - nuPD4990ATicks);
@@ -4855,7 +4857,7 @@ INT32 NeoFrame()
 		}
 	}
 
-	CDEmuGetSoundBuffer(pBurnSoundOut, nBurnSoundLen);
+	if (bSoundOn) CDEmuGetSoundBuffer(pBurnSoundOut, nBurnSoundLen);
 
 	return 0;
 }

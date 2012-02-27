@@ -4,7 +4,6 @@
 #import <OpenGLES/EAGLDrawable.h>
 #import <OpenGLES/ES1/glext.h>
 
-
 void FrameBufferUtils::Create(FrameBuffer& buffer, int width, int height)
 {
 	buffer.m_width = width;

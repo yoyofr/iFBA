@@ -57,7 +57,7 @@ inline static void CalcCol(INT32 idx)
 	INT32 r = ((wordValue >> 8) & 0xF0 ) | ((wordValue << 0) & 0x08) | ((wordValue >> 13) & 0x07 );
 	INT32 g = ((wordValue >> 4) & 0xF0 ) | ((wordValue << 1) & 0x08) | ((wordValue >>  9) & 0x07 );
 	INT32 b = ((wordValue >> 0) & 0xF0 ) | ((wordValue << 2) & 0x08) | ((wordValue >>  5) & 0x07 );
-	RamCurPal[idx] = BurnHighCol(r, g, b, 0);
+	RamCurPal[idx] = HighCol16(r, g, b, 0);
 }
 
 static struct BurnInputInfo powerinsInputList[] = {

@@ -165,7 +165,7 @@ static void DrvPaletteInit()
 		bit2 = (DrvColPROM[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		DrvPalette[((i & 7) << 2) | ((i >> 3) & 3)] = BurnHighCol(r, g, b, 0);
+		DrvPalette[((i & 7) << 2) | ((i >> 3) & 3)] = HighCol16(r, g, b, 0);
 	}
 }
 

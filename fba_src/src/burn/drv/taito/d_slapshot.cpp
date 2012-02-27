@@ -478,13 +478,10 @@ static INT32 Opwolf3SpritePlaneOffsets[6] = { 0x2000000, 0x2000001, 0, 1, 2, 3 }
 
 static void SwitchToMusashi()
 {
-	if (bBurnUseASMCPUEmulation) {
-#if 1 && defined FBA_DEBUG
-		bprintf(PRINT_NORMAL, _T("Switching to Musashi 68000 core\n"));
-#endif
+/*	if (bBurnUseASMCPUEmulation) {
 		bUseAsm68KCoreOldValue = bBurnUseASMCPUEmulation;
 		bBurnUseASMCPUEmulation = false;
-	}
+	}*/
 }
 
 static INT32 MachineInit()
@@ -716,7 +713,7 @@ inline static INT32 CalcCol(INT32 nColour)
 	g = (BURN_ENDIAN_SWAP_INT32(nColour) & 0xff000000) >> 24;
 	b = (BURN_ENDIAN_SWAP_INT32(nColour) & 0x00ff0000) >> 16;
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void SlapshotCalcPalette()

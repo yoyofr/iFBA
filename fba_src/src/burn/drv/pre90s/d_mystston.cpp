@@ -367,7 +367,7 @@ static inline void mystston_putpix(INT32 x, INT32 y, UINT8 src, INT32 color, INT
 
 	pxl = Palette[color | src];
 
-	PutPix(pBurnDraw + pos * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
+	PutPix(pBurnDraw + pos * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
 }
 
 static void draw_16x16(INT32 sx, INT32 sy, UINT8 *gfx_base, INT32 code, INT32 color, INT32 flipx, INT32 flipy, INT32 transp)
@@ -460,7 +460,7 @@ static INT32 DrvDraw()
 
 				INT32 pxl = Palette[color | *src];
 
-				PutPix(pBurnDraw + pos * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
+				PutPix(pBurnDraw + pos * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
 			}
 		}
 	}

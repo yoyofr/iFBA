@@ -68,7 +68,7 @@ inline static UINT32 CalcCol(INT32 offs)
 	b = (nColour & 0x0F00) >> 4;	// Blue
 	b |= b >> 4;
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static struct BurnInputInfo raidenInputList[] = {

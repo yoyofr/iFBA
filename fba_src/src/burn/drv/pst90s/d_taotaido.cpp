@@ -354,7 +354,7 @@ static void palette_write(INT32 offset)
 	b = (data >>  0) & 0x1f;
 	b = (b << 3) | (b >> 2);
 
-	DrvPalette[offset/2] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset/2] = HighCol16(r, g, b, 0);
 }
 
 UINT8 __fastcall taotaido_read_byte(UINT32 address)

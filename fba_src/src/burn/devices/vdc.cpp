@@ -196,8 +196,8 @@ void vce_palette_init(UINT32 *Palette)
 
 		int y = ((66 * r + 129 * g +  25 * b + 128) >> 8) +  16;
 
-		Palette[0x000 + i] = BurnHighCol(r, g, b, 0);
-		Palette[0x200 + i] = BurnHighCol(y, y, y, 0);
+		Palette[0x000 + i] = HighCol16(r, g, b, 0);
+		Palette[0x200 + i] = HighCol16(y, y, y, 0);
 	}
 }
 

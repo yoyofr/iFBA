@@ -134,8 +134,8 @@ static INT32 DrvExit()
 static INT32 DrvDraw()
 {
 	if (DrvRecalc) {
-		DrvPalette[0] = BurnHighCol((*nColor & 0x08) ? 0xff : 0, (*nColor & 0x10) ? 0xff : 0, (*nColor & 0x20) ? 0xff : 0, 0);
-		DrvPalette[1] = BurnHighCol((*nColor & 0x01) ? 0xff : 0, (*nColor & 0x02) ? 0xff : 0, (*nColor & 0x04) ? 0xff : 0, 0);
+		DrvPalette[0] = HighCol16((*nColor & 0x08) ? 0xff : 0, (*nColor & 0x10) ? 0xff : 0, (*nColor & 0x20) ? 0xff : 0, 0);
+		DrvPalette[1] = HighCol16((*nColor & 0x01) ? 0xff : 0, (*nColor & 0x02) ? 0xff : 0, (*nColor & 0x04) ? 0xff : 0, 0);
 	}
 
 	for (INT32 offs = 0; offs < 0x0600; offs++)

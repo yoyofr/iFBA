@@ -446,7 +446,7 @@ static inline void palette_write(INT32 offset)
 	g |= g << 4;
 	b |= b << 4;
 
-	DrvPalette[offset >> 1] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset >> 1] = HighCol16(r, g, b, 0);
 }
 
 void __fastcall rygar_main_write(UINT16 address, UINT8 data)

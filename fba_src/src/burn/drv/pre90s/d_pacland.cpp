@@ -416,7 +416,7 @@ static void DrvPaletteInit() // Palette banks + Color tables
 		bit3 = (DrvColPROM[j+0x400] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		tpal[j] = BurnHighCol(r, g, b, 0);
+		tpal[j] = HighCol16(r, g, b, 0);
 	}
 
 	for (INT32 i = 0; i < 4; i++)

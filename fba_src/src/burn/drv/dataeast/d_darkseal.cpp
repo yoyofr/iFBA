@@ -139,7 +139,7 @@ static inline void palette_write(INT32 offset)
 	g = (data[0x0000/2] >> 8) & 0xff;
 	b = (data[0x1000/2] >> 0) & 0xff;
 
-	DrvPalette[offset/2] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset/2] = HighCol16(r, g, b, 0);
 }
 
 void __fastcall darkseal_write_byte(UINT32 address, UINT8 data)

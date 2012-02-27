@@ -3769,7 +3769,7 @@ static void DrvCalcPalette()
 		g = (PaletteRam[i] >> 8) & 0xff;
 		b = (Palette2Ram[i] >> 0) & 0xff;
 		
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 
@@ -3784,7 +3784,7 @@ static void Dec1CalcPalette()
 		g = pal4bit(PaletteRam[i] >> 4);
 		b = pal4bit(PaletteRam[i] >> 8);
 		
-		DrvPalette[i] = BurnHighCol(r, g, b, 0);
+		DrvPalette[i] = HighCol16(r, g, b, 0);
 	}
 }
 

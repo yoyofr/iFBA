@@ -1106,7 +1106,7 @@ static void DrvCalcPalette()
 		Bit1 = (DrvPromPalette[i] >> 7) & 0x01;
 		b = Combine2Weights(bWeights, Bit0, Bit1);
 
-		Palette[i] = BurnHighCol(r, g, b, 0);
+		Palette[i] = HighCol16(r, g, b, 0);
 	}
 	
 	for (i = 0; i < 256; i++) {

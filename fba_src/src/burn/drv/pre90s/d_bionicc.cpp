@@ -155,7 +155,7 @@ static void bionicc_palette_write(INT32 offset)
 	}
 
 	Palette[offset] = (r << 16) | (g << 8) | b;
-	DrvPalette[offset] = BurnHighCol(r, g, b, 0);
+	DrvPalette[offset] = HighCol16(r, g, b, 0);
 }
 
 void __fastcall bionicc_write_byte(UINT32 address, UINT8 data)
@@ -522,7 +522,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x400; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 

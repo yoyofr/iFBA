@@ -20,7 +20,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	b = (nColour & 0x001F) << 3;	// Blue
 	b |= b >> 5;
 
-	return BurnHighCol(r, g, b, 0);
+	return HighCol16(r, g, b, 0);
 }
 
 static void pgm_prepare_sprite(INT32 wide, INT32 high, INT32 palt, INT32 boffset)
@@ -630,7 +630,7 @@ INT32 pgmDraw()
 
 	{
 		// black / magenta
-		RamCurPal[0x1200/2] = (nBurnLayer & 1) ? 0 : BurnHighCol(0xff, 0, 0xff, 0);
+		RamCurPal[0x1200/2] = (nBurnLayer & 1) ? 0 : HighCol16(0xff, 0, 0xff, 0);
 	}
 
 	// Fill in background color (0x1200/2)

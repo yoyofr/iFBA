@@ -12,16 +12,13 @@ INT32 (__cdecl *bprintf)(INT32 nStatus, TCHAR* szFormat, ...) = BurnbprintfFille
 
 INT32 nBurnVer = BURN_VERSION;		// Version number of the library
 
-UINT32 nBurnDrvCount = 0;		// Count of game drivers
+UINT32 nBurnDrvCount = sizeof(pDriver) / sizeof(pDriver[0]);		// Count of game drivers
 UINT32 nBurnDrvActive = ~0U;	// Which game driver is selected
 UINT32 nBurnDrvSelect[8] = { ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U }; // Which games are selected (i.e. loaded but not necessarily active)
 									
 bool bBurnUseMMX;
-#if defined BUILD_A68K
 bool bBurnUseASMCPUEmulation = true;
-#else
-bool bBurnUseASMCPUEmulation = false;
-#endif
+bool bBurnUseASMZ80CPUEmulation = false; //not implemented yet => zet.cpp
 
 #if defined (FBA_DEBUG)
  clock_t starttime = 0;
@@ -820,7 +817,7 @@ INT32 (__cdecl *BurnExtLoadRom)(UINT8 *Dest, INT32 *pnWrote, INT32 i) = NULL;
 
 // Application-defined colour conversion function
 static UINT32 __cdecl BurnHighColFiller(INT32, INT32, INT32, INT32) { return (UINT32)(~0); }
-UINT32 (__cdecl *BurnHighCol) (INT32 r, INT32 g, INT32 b, INT32 i) = BurnHighColFiller;
+//UINT32 (__cdecl *HighCol16) (INT32 r, INT32 g, INT32 b, INT32 i) = BurnHighColFiller;
 
 // ----------------------------------------------------------------------------
 // Colour-depth independant image transfer

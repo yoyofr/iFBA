@@ -74,7 +74,7 @@ STDDIPINFO(Livequiz)
 
 inline static void palette_write(INT32 offs)
 {
-	DrvPalette[offs/4] = BurnHighCol(DrvPalRAM[offs + 0], DrvPalRAM[offs + 3], DrvPalRAM[offs + 2], 0);
+	DrvPalette[offs/4] = HighCol16(DrvPalRAM[offs + 0], DrvPalRAM[offs + 3], DrvPalRAM[offs + 2], 0);
 }
 
 void __fastcall midas_write_byte(UINT32 address, UINT8 data)

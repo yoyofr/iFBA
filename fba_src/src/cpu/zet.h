@@ -7,6 +7,11 @@
 
 #include "z80.h"
 
+#include "DrZ80.h"
+
+#define MAX_Z80		8
+extern struct DrZ80 Doze[MAX_Z80];
+
 extern INT32 nHasZet;
 void ZetWriteByte(UINT16 address, UINT8 data);
 UINT8 ZetReadByte(UINT16 address);
@@ -36,9 +41,10 @@ INT32 ZetIdle(INT32 nCycles);
 INT32 ZetSegmentCycles();
 INT32 ZetTotalCycles();
 
-#define ZET_IRQSTATUS_NONE 0
-#define ZET_IRQSTATUS_ACK  1
-#define ZET_IRQSTATUS_AUTO 2
+#define ZET_IRQSTATUS_NONE (bBurnUseASMZ80CPUEmulation?0x8000:0)
+#define ZET_IRQSTATUS_ACK  (bBurnUseASMZ80CPUEmulation?0x1000:1)
+#define ZET_IRQSTATUS_AUTO (bBurnUseASMZ80CPUEmulation?0x2000:2)
+
 
 #define ZetRaiseIrq(n) ZetSetIRQLine(n, ZET_IRQSTATUS_AUTO)
 #define ZetLowerIrq() ZetSetIRQLine(0, Z80_CLEAR_LINE)

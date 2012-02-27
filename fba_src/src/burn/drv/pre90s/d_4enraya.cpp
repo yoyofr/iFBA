@@ -254,7 +254,7 @@ static INT32 MemIndex()
 static void DrvPaletteInit()
 {
 	for (INT32 i = 0; i < 8; i++) {
-		DrvPalette[i] = BurnHighCol((i & 1) * 0xff, ((i & 2)/2) * 0xff, ((i & 4)/4) * 0xff, 0);
+		DrvPalette[i] = HighCol16((i & 1) * 0xff, ((i & 2)/2) * 0xff, ((i & 4)/4) * 0xff, 0);
 	}
 }
 

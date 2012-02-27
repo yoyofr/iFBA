@@ -1115,6 +1115,9 @@ static INT32 System16LoadRoms(bool bLoad)
 		// Tile Roms
 		Offset = 0;
 		System16TempGfx = (UINT8*)BurnMalloc(System16TileRomSize);
+        if (!System16TempGfx) {
+            printf("Major issue: not enough ram for System16TempGfx\n");
+        }
 		for (i = System16RomNum + System16Rom2Num + System16Rom3Num; i < System16RomNum + System16Rom2Num + System16Rom3Num + System16TileRomNum; i++) {
 			nRet = BurnLoadRom(System16TempGfx + Offset, i, 1); if (nRet) return 1;
 			
