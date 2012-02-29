@@ -11,6 +11,10 @@
 #import "GameBrowserViewController.h"
 #import "OptionsViewController.h"
 
+#ifdef TESTFLIGHT
+#import "TestFlight.h"
+#endif
+
 extern int launchGame;
 extern char gameName[64];
 extern volatile int emuThread_running;
@@ -103,8 +107,13 @@ extern volatile int emuThread_running;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
     if (section==0) {
-        if (emuThread_running) return 5;
-        else return 3;
+        int nbRows;
+        if (emuThread_running) nbRows=5;
+        else nbRows=3;
+#ifdef TESTFLIGHT
+        nbRows++;
+#endif
+        return nbRows;
     }
 	return 0;
 }
@@ -130,11 +139,18 @@ extern volatile int emuThread_running;
             if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
             if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"Options",@"");
             if (indexPath.row==4) cell.textLabel.text=NSLocalizedString(@"About",@"");
+#ifdef TESTFLIGHT
+            if (indexPath.row==5) cell.textLabel.text=NSLocalizedString(@"Feedback",@"");
+#endif
             
         } else {
             if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
             if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Options",@"");
             if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"About",@"");
+#ifdef TESTFLIGHT
+            if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"Feedback",@"");
+#endif
+
         }
 	}
 	
@@ -168,6 +184,13 @@ int StatedSave(int slot);
                     [self.navigationController pushViewController:optionsvc animated:YES];
                     [optionsvc release];
                     break;
+                case 4: //about
+                    break;
+                case 5: //beta test-feedback
+#ifdef TESTFLIGHT
+                    [TestFlight openFeedbackView];
+#endif
+                    break;
             }
         } else {
             switch (indexPath.row) {
@@ -181,6 +204,14 @@ int StatedSave(int slot);
                     [self.navigationController pushViewController:optionsvc animated:YES];
                     [optionsvc release];
                     break;
+                case 2: //about
+                    break;
+                case 3: //beta test-feedback
+#ifdef TESTFLIGHT
+                    [TestFlight openFeedbackView];
+#endif
+                    break;
+
             }
         }
     }

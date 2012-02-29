@@ -11,12 +11,24 @@
 
 #import "MenuViewController.h"
 
+#ifdef TESTFLIGHT
+#import "TestFlight.h"
+#endif
+
 extern int device_isIpad;
 
 @implementation AppDelegate
 
 @synthesize window = _window;
 @synthesize navController = _navController;
+
+void tstfl_log(char *str) {
+    TFLog(@"%s",str);
+}
+
+void tstfl_validateloadgame(char *name) {
+    [TestFlight passCheckpoint:[NSString stringWithFormat:@"LOADGAME-%s",name]];
+}
 
 - (void)dealloc
 {
@@ -27,6 +39,10 @@ extern int device_isIpad;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#ifdef TESTFLIGHT
+    [TestFlight takeOff:@"2ffa7d1a4e9cbc814d66901ca319816a_NjYzOTkyMDEyLTAyLTI4IDAxOjM1OjE2LjcyOTEwMA"];
+#endif
+    
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
     // Override point for customization after application launch.

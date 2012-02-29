@@ -11,6 +11,7 @@
 "Load game"="Load game";
 "Options"="Options";
 "About"="About";
+"Feedback"="Feedback";
 
 "Select a game"="Select a game";
 
@@ -18,3 +19,8 @@
 "Audio"="Audio";
 "Controllers"="Controllers";
 "Emulation"="Emulation";
+
+"Aspect Ratio"="Aspect Ratio";
+"Screen mode"="Screen mode";
+"Filtering"="Filtering";
+

@@ -11,10 +11,15 @@
 "Load game"="Lancer jeu";
 "Options"="Options";
 "About"="A Propos";
+"Feedback"="Feedback";
 
 "Select a game"="Select. un jeu";
 
 "Video"="Video";
 "Audio"="Audio";
-"Controllers"="Controles";
+"Controllers"="Contrôles";
 "Emulation"="Emulation";
+
+"Aspect Ratio"="Aspect Ratio";
+"Screen mode"="Mode écran";
+"Filtering"="Filtrage";

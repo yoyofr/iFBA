@@ -7,6 +7,7 @@
 //
 
 #define MAX_JOYSTICKS 4
+#define min(a,b) (a<b?a:b)
 
 #include "inp_sdl_keys.h"
 unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
@@ -14,6 +15,8 @@ unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
 #import "EmuViewController.h"
 #include "string.h"
 #include "sdl_font.h"
+#import "fbaconf.h"
+ifba_conf_t ifba_conf={1,3,1};
 
 #import "BTstack/BTDevice.h"
 #import "BTstack/btstack.h"
@@ -175,8 +178,8 @@ static void *context; //hack to call objective C func from C
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 	
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST) );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST));
 	
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -212,7 +215,8 @@ static void *context; //hack to call objective C func from C
 		if ([mainscr respondsToSelector:@selector(currentMode)]) {
 			if (mainscr.currentMode.size.width>480) {  //iphone 4
 				mDeviceType=2;
-				mScaleFactor=(float)mainscr.currentMode.size.width/480.0f;
+				mScaleFactor=1;//(float)mainscr.currentMode.size.width/480.0f;
+                
 				// mDevice_ww = mainscr.currentMode.size.width;
 				// mDevice_hh = mainscr.currentMode.size.height;
 			}
@@ -228,14 +232,9 @@ static void *context; //hack to call objective C func from C
     glGenTextures(1, &txt_vbuffer);               /* Create 1 Texture */
     glBindTexture(GL_TEXTURE_2D, txt_vbuffer);    /* Bind The Texture */
 	
-    if (1) {
-        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	} else {
-        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	    
-    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST) );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST));
+
 	glBindTexture(GL_TEXTURE_2D, 0);
     
     /************************************/
@@ -372,7 +371,8 @@ static void *context; //hack to call objective C func from C
 /****************************************************/
 /****************************************************/
 
-- (void)setState:(BOOL)state forButton:(iCadeState)button {
+- (void)setICadeState:(BOOL)state forButton:(iCadeState)button {
+    virtual_stick_on=0;
     switch (button) {
         case iCadeButtonA:
             joy_state[0][GN_A]=state;
@@ -416,11 +416,11 @@ static void *context; //hack to call objective C func from C
 }
 
 - (void)buttonDown:(iCadeState)button {
-    [self setState:YES forButton:button];
+    [self setICadeState:YES forButton:button];
 }
 
 - (void)buttonUp:(iCadeState)button {
-    [self setState:NO forButton:button];    
+    [self setICadeState:NO forButton:button];    
 }
 
 /****************************************************/
@@ -1150,6 +1150,9 @@ int StopProgressBar() {
     
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, txt_vbuffer);    /* Bind The Texture */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST) );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST));
+
     
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, TEXTURE_W, TEXTURE_H, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, vbuffer);
     
@@ -1193,16 +1196,60 @@ int StopProgressBar() {
         texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
         texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
         float ios_aspect=(float)width/(float)height;
-        float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        
-        if (ios_aspect>game_aspect) {
-            rh=height;
-            rw=rh*vid_aspectX/vid_aspectY;
-            glViewport((width-rw)>>1, 0, rw, rh);
-        } else {
-            rw=width;
-            rh=rw*vid_aspectY/vid_aspectX;
-            glViewport(0, height-rh, rw, rh);
-        }            
+        float game_aspect=(float)vid_aspectX/(float)vid_aspectY;
+        
+        switch (ifba_conf.screen_mode) {
+            case 0://org
+                if (ios_aspect>game_aspect) {
+                    rh=min(height,visible_area_h);
+                    rw=rh*vid_aspectX/vid_aspectY;
+                    
+                } else {
+                    rw=min(width,visible_area_w);
+                    rh=rw*vid_aspectY/vid_aspectX;
+                    
+                }
+                break;
+            case 1://fixed
+                if (ios_aspect>game_aspect) {
+                    rh=height/visible_area_h;
+                    rh*=visible_area_h;
+                    if (!rh) rh=height;
+                    rw=rh*vid_aspectX/vid_aspectY;
+
+                } else {
+                    rw=width/visible_area_w;
+                    rw*=visible_area_w;
+                    if (!rw) rw=width;
+                    rh=rw*vid_aspectY/vid_aspectX;
+
+                }
+                break;
+            case 2://max with room for vpad
+                if (ios_aspect>game_aspect) {
+                    rh=height;
+                    rw=rh*vid_aspectX/vid_aspectY;
+
+                } else {
+                    rw=width;
+                    rh=rw*vid_aspectY/vid_aspectX;
+
+                }
+                break;
+            case 3://full
+                if (ios_aspect>game_aspect) {
+                    rh=height;
+                    rw=rh*vid_aspectX/vid_aspectY;
+
+                } else {
+                    rw=width;
+                    rh=rw*vid_aspectY/vid_aspectX;
+
+                }
+                break;
+        }
+        glViewport((width-rw)>>1, height-rh, rw, rh);
+                    
         
         vertices[0][0]=-1; vertices[0][1]=1;
         vertices[1][0]=1; vertices[1][1]=1;

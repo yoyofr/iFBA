@@ -17,6 +17,11 @@
 		334F5FC314FC282E00ED3CDB /* DrZ80.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 334F5FBD14FC282E00ED3CDB /* DrZ80.o */; };
 		334F5FCE14FC31B800ED3CDB /* OptionsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */; };
 		334F5FCF14FC31B800ED3CDB /* OptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */; };
+		334F5FE214FCAD7000ED3CDB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 334F5FDE14FCAD7000ED3CDB /* libTestFlight.a */; };
+		334F5FF314FCC55B00ED3CDB /* OptVideoViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 334F5FF114FCC55900ED3CDB /* OptVideoViewController.mm */; };
+		334F5FF414FCC55B00ED3CDB /* OptVideoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 334F5FF214FCC55A00ED3CDB /* OptVideoViewController.xib */; };
+		334F5FF814FD8E5C00ED3CDB /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 334F5FF614FD8E5C00ED3CDB /* background.png */; };
+		334F5FF914FD8E5C00ED3CDB /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 334F5FF714FD8E5C00ED3CDB /* background@2x.png */; };
 		3354E92A14F90A0E001DAF9D /* MenuViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */; };
 		3354E92C14F90A19001DAF9D /* MenuViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */; };
 		3354E93414F90ADE001DAF9D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3354E93614F90ADE001DAF9D /* Localizable.strings */; };
@@ -577,6 +582,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		331F348F14FD96D7004668BC /* fbaconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fbaconf.h; sourceTree = "<group>"; };
 		33231BE714FBA67A00AD7823 /* BTDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDevice.h; sourceTree = "<group>"; };
 		33231BE814FBA67A00AD7823 /* BTDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTDevice.m; sourceTree = "<group>"; };
 		33231BE914FBA67A00AD7823 /* BTDiscoveryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDiscoveryViewController.h; sourceTree = "<group>"; };
@@ -612,6 +618,15 @@
 		334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsViewController.h; sourceTree = "<group>"; };
 		334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptionsViewController.mm; sourceTree = "<group>"; };
 		334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptionsViewController.xib; sourceTree = "<group>"; };
+		334F5FDE14FCAD7000ED3CDB /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		334F5FDF14FCAD7000ED3CDB /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		334F5FE014FCAD7000ED3CDB /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
+		334F5FE114FCAD7000ED3CDB /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		334F5FF014FCC55900ED3CDB /* OptVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptVideoViewController.h; sourceTree = "<group>"; };
+		334F5FF114FCC55900ED3CDB /* OptVideoViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptVideoViewController.mm; sourceTree = "<group>"; };
+		334F5FF214FCC55A00ED3CDB /* OptVideoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptVideoViewController.xib; sourceTree = "<group>"; };
+		334F5FF614FD8E5C00ED3CDB /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
+		334F5FF714FD8E5C00ED3CDB /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
 		3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuViewController_iPhone.xib; sourceTree = "<group>"; };
 		3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuViewController_iPad.xib; sourceTree = "<group>"; };
 		3354E93014F90A3C001DAF9D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = /Users/ymagnien/Desktop/dev/iphone/new/iFBA/iFBA/fr.lproj/InfoPlist.strings; sourceTree = "<absolute>"; };
@@ -1418,6 +1433,7 @@
 				33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */,
 				334F5FB614FC000900ED3CDB /* libBTstack.dylib in Frameworks */,
 				334F5FC314FC282E00ED3CDB /* DrZ80.o in Frameworks */,
+				334F5FE214FCAD7000ED3CDB /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1482,6 +1498,27 @@
 				334F5FC214FC282E00ED3CDB /* gpl.txt */,
 			);
 			path = drz80;
+			sourceTree = "<group>";
+		};
+		334F5FDD14FCAD7000ED3CDB /* TestFlightSDK0.8.3 */ = {
+			isa = PBXGroup;
+			children = (
+				334F5FDE14FCAD7000ED3CDB /* libTestFlight.a */,
+				334F5FDF14FCAD7000ED3CDB /* README.txt */,
+				334F5FE014FCAD7000ED3CDB /* release_notes.txt */,
+				334F5FE114FCAD7000ED3CDB /* TestFlight.h */,
+			);
+			path = TestFlightSDK0.8.3;
+			sourceTree = "<group>";
+		};
+		334F5FF514FD8E5C00ED3CDB /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				334F5FF614FD8E5C00ED3CDB /* background.png */,
+				334F5FF714FD8E5C00ED3CDB /* background@2x.png */,
+			);
+			name = Images;
+			path = Resources/Images;
 			sourceTree = "<group>";
 		};
 		3354E97014F9573D001DAF9D /* Textures */ = {
@@ -2654,6 +2691,7 @@
 		339E5FA314F1851D006FB970 = {
 			isa = PBXGroup;
 			children = (
+				334F5FDD14FCAD7000ED3CDB /* TestFlightSDK0.8.3 */,
 				336B4FAC14F4439A00CE9A63 /* fbasrc */,
 				339A94E514F2390D00225183 /* Default-Landscape~ipad.png */,
 				339A94E314F2390800225183 /* Default-Portrait~ipad.png */,
@@ -2701,11 +2739,15 @@
 				33231BE614FBA67A00AD7823 /* BTstack */,
 				33231BFC14FBA67A00AD7823 /* iCade */,
 				339E5FC214F1851E006FB970 /* AppDelegate.mm */,
+				331F348F14FD96D7004668BC /* fbaconf.h */,
 				339E636714F1B8C8006FB970 /* OGLView.h */,
 				339E636814F1B8C8006FB970 /* OGLView.mm */,
 				339E636314F1B8BC006FB970 /* FrameBuffer.h */,
 				339E636414F1B8BC006FB970 /* FrameBuffer.mm */,
 				339E636514F1B8BC006FB970 /* GlErrors.h */,
+				334F5FF014FCC55900ED3CDB /* OptVideoViewController.h */,
+				334F5FF114FCC55900ED3CDB /* OptVideoViewController.mm */,
+				334F5FF214FCC55A00ED3CDB /* OptVideoViewController.xib */,
 				33F444D814F5685100BA36E1 /* EmuViewController.h */,
 				33F444D914F5685100BA36E1 /* EmuViewController.mm */,
 				33F444D614F567DC00BA36E1 /* EmuViewController.xib */,
@@ -2738,6 +2780,7 @@
 		339E62D814F18ACA006FB970 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				334F5FF514FD8E5C00ED3CDB /* Images */,
 				3354E97014F9573D001DAF9D /* Textures */,
 				339E62D914F18B35006FB970 /* FBA */,
 				3354E93614F90ADE001DAF9D /* Localizable.strings */,
@@ -2842,6 +2885,9 @@
 				3354E97314F9573D001DAF9D /* button.png in Resources */,
 				3354E97414F9573D001DAF9D /* dpad.png in Resources */,
 				334F5FCF14FC31B800ED3CDB /* OptionsViewController.xib in Resources */,
+				334F5FF414FCC55B00ED3CDB /* OptVideoViewController.xib in Resources */,
+				334F5FF814FD8E5C00ED3CDB /* background.png in Resources */,
+				334F5FF914FD8E5C00ED3CDB /* background@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3386,6 +3432,7 @@
 				33231C0414FBA67A00AD7823 /* wiimote.c in Sources */,
 				33231C0514FBA67A00AD7823 /* iCadeReaderView.m in Sources */,
 				334F5FCE14FC31B800ED3CDB /* OptionsViewController.mm in Sources */,
+				334F5FF314FCC55B00ED3CDB /* OptVideoViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3414,6 +3461,53 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		334F5FEE14FCB09800ED3CDB /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LLVM_LTO = NO;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = armv7;
+			};
+			name = Distribution;
+		};
+		334F5FEF14FCB09800ED3CDB /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iFBA/iFBA-Prefix.pch";
+				INFOPLIST_FILE = "iFBA/iFBA-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/fba-gp2x\"",
+					"\"$(SRCROOT)/Lib\"",
+					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
+		};
 		339E5FDE14F1851E006FB970 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3479,6 +3573,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/fba-gp2x\"",
 					"\"$(SRCROOT)/Lib\"",
+					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -3497,6 +3592,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/fba-gp2x\"",
 					"\"$(SRCROOT)/Lib\"",
+					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -3511,6 +3607,7 @@
 			buildConfigurations = (
 				339E5FDE14F1851E006FB970 /* Debug */,
 				339E5FDF14F1851E006FB970 /* Release */,
+				334F5FEE14FCB09800ED3CDB /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3520,6 +3617,7 @@
 			buildConfigurations = (
 				339E5FE114F1851E006FB970 /* Debug */,
 				339E5FE214F1851E006FB970 /* Release */,
+				334F5FEF14FCB09800ED3CDB /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

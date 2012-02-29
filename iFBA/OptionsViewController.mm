@@ -7,15 +7,21 @@
 //
 
 #import "OptionsViewController.h"
+#import "OptVideoViewController.h"
+#import "fbaconf.h"
+#import "string.h"
+
 
 @implementation OptionsViewController
+@synthesize optVideo,optSound,optControl,optEmulation;
+@synthesize tabView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-//        self.title=NSLocalizedString(@"Options",@"");
+        self.title=NSLocalizedString(@"Options",@"");
     }
     return self;
 }
@@ -33,9 +39,14 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [tabView reloadData];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 #pragma mark - UITableView
@@ -82,8 +93,19 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    switch (indexPath.row) {
+        case 0://video
+            optVideo=[[OptVideoViewController alloc] initWithNibName:@"OptVideoViewController" bundle:nil];
+            [self.navigationController pushViewController:optVideo animated:YES];
+            [optVideo release];
+            break;
+        case 1://audio
+            break;
+        case 2://controllers
+            break;
+        case 3://emulation
+            break;
+    }
 }
-
-
 
 @end
