@@ -658,8 +658,11 @@ extern "C" INT32 BurnDrvExit()
 	nBurnCPUSpeedAdjust = 0x0100;
 	
 	pBurnDrvPalette = NULL;	
+    
+    INT32 nRet=0;
+    if (nBurnDrvSelect[0]) nRet = pDriver[nBurnDrvSelect[0]]->Exit();			// Forward to drivers function
 	
-	INT32 nRet = pDriver[nBurnDrvActive]->Exit();			// Forward to drivers function
+	
 	
 	BurnExitMemoryManager();
 #if defined FBA_DEBUG

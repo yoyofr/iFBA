@@ -186,21 +186,21 @@ INT32 write_datfile(INT32 bType, FILE* fDat)
 			INT32 Length;
 			if (sgName[0]) {
 				Length = strlen(sgName);
-				memset(Temp, 0, 35);
+				/*memset(Temp, 0, 35);
 				strcpy(Temp, sgName);
 				memset(sgName, 0, 32);
 				for (INT32 pos = 0; pos < Length; pos++) {
 					sgName[pos] = Temp[pos + 3];
-				}
+				}*/
 			}
 			if (spName[0]) {
 				Length = strlen(spName);
-				memset(Temp, 0, 35);
+				/*memset(Temp, 0, 35);
 				strcpy(Temp, spName);
 				memset(spName, 0, 32);
 				for (INT32 pos = 0; pos < Length; pos++) {
 					spName[pos] = Temp[pos + 3];
-				}
+				}*/
 			}
 		}
 		
@@ -212,21 +212,21 @@ INT32 write_datfile(INT32 bType, FILE* fDat)
 			INT32 Length;
 			if (sgName[0]) {
 				Length = strlen(sgName);
-				memset(Temp, 0, 36);
+				/*memset(Temp, 0, 36);
 				strcpy(Temp, sgName);
 				memset(sgName, 0, 32);
 				for (INT32 pos = 0; pos < Length; pos++) {
 					sgName[pos] = Temp[pos + 4];
-				}
+				}*/
 			}
 			if (spName[0]) {
 				Length = strlen(spName);
-				memset(Temp, 0, 36);
+				/*memset(Temp, 0, 36);
 				strcpy(Temp, spName);
 				memset(spName, 0, 32);
 				for (INT32 pos = 0; pos < Length; pos++) {
 					spName[pos] = Temp[pos + 4];
-				}
+				}*/
 			}
 		}
 

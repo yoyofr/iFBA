@@ -10,6 +10,8 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "MenuViewController.h"
+#import "fbaconf.h"
+
 
 #ifdef TESTFLIGHT
 #import "TestFlight.h"
@@ -30,6 +32,102 @@ void tstfl_validateloadgame(char *name) {
     [TestFlight passCheckpoint:[NSString stringWithFormat:@"LOADGAME-%s",name]];
 }
 
+- (void)loadSettings {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSNumber *valNb;
+    
+    memset(&ifba_conf,0,sizeof(ifba_conf_t));
+	
+//    valNb=[prefs objectForKey:@"VERSION_MAJOR"];
+//    valNb=[prefs objectForKey:@"VERSION_MINOR"];
+    
+    valNb=[prefs objectForKey:@"aspect_ratio"];
+	if (valNb == nil) ifba_conf.aspect_ratio=1;
+	else ifba_conf.aspect_ratio = [valNb intValue];
+    valNb=[prefs objectForKey:@"screen_mode"];
+	if (valNb == nil) ifba_conf.screen_mode=3;
+	else ifba_conf.screen_mode = [valNb intValue];
+    valNb=[prefs objectForKey:@"filtering"];
+	if (valNb == nil) ifba_conf.filtering=1;
+	else ifba_conf.filtering = [valNb intValue];
+    
+    valNb=[prefs objectForKey:@"aspect_ratio"];
+	if (valNb == nil) ifba_conf.aspect_ratio=1;
+	else ifba_conf.aspect_ratio = [valNb intValue];
+    valNb=[prefs objectForKey:@"screen_mode"];
+	if (valNb == nil) ifba_conf.screen_mode=3;
+	else ifba_conf.screen_mode = [valNb intValue];
+    valNb=[prefs objectForKey:@"filtering"];
+	if (valNb == nil) ifba_conf.filtering=1;
+	else ifba_conf.filtering = [valNb intValue];
+    
+    valNb=[prefs objectForKey:@"sound_on"];
+	if (valNb == nil) ifba_conf.sound_on=1;
+	else ifba_conf.sound_on = [valNb intValue];
+    valNb=[prefs objectForKey:@"sound_freq"];
+	if (valNb == nil) ifba_conf.sound_freq=22050;
+	else ifba_conf.sound_freq = [valNb intValue];
+    
+    valNb=[prefs objectForKey:@"btstack_on"];
+	if (valNb == nil) ifba_conf.btstack_on=1;
+	else ifba_conf.btstack_on = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_alpha"];
+	if (valNb == nil) ifba_conf.vpad_alpha=150;
+	else ifba_conf.vpad_alpha = [valNb intValue];
+    
+    valNb=[prefs objectForKey:@"asm_68k"];
+	if (valNb == nil) ifba_conf.asm_68k=1;
+	else ifba_conf.asm_68k = [valNb intValue];
+    valNb=[prefs objectForKey:@"asm_z80"];
+	if (valNb == nil) ifba_conf.asm_z80=1;
+	else ifba_conf.asm_z80 = [valNb intValue];
+    valNb=[prefs objectForKey:@"asm_nec"];
+	if (valNb == nil) ifba_conf.asm_nec=1;
+	else ifba_conf.asm_nec = [valNb intValue];
+    valNb=[prefs objectForKey:@"asm_sh2"];
+	if (valNb == nil) ifba_conf.asm_sh2=1;
+	else ifba_conf.asm_sh2 = [valNb intValue];
+	
+}
+
+- (void)saveSettings {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+	NSNumber *valNb;
+    
+    
+    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.aspect_ratio ];
+	[prefs setObject:valNb forKey:@"aspect_ratio"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.screen_mode ];
+	[prefs setObject:valNb forKey:@"screen_mode"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filtering ];
+	[prefs setObject:valNb forKey:@"filtering"];[valNb autorelease];
+    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_on ];
+	[prefs setObject:valNb forKey:@"sound_on"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_freq ];
+	[prefs setObject:valNb forKey:@"sound_freq"];[valNb autorelease];
+    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_alpha ];
+	[prefs setObject:valNb forKey:@"vpad_alpha"];[valNb autorelease];    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.btstack_on ];
+	[prefs setObject:valNb forKey:@"btstack_on"];[valNb autorelease];
+    //joymaps
+    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_68k];
+	[prefs setObject:valNb forKey:@"asm_68k"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_z80];
+	[prefs setObject:valNb forKey:@"asm_z80"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_nec];
+	[prefs setObject:valNb forKey:@"asm_nec"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_sh2];
+	[prefs setObject:valNb forKey:@"asm_sh2"];[valNb autorelease];
+    
+	
+	
+    [prefs synchronize];
+}
+
 - (void)dealloc
 {
     [_window release];
@@ -42,6 +140,13 @@ void tstfl_validateloadgame(char *name) {
 #ifdef TESTFLIGHT
     [TestFlight takeOff:@"2ffa7d1a4e9cbc814d66901ca319816a_NjYzOTkyMDEyLTAyLTI4IDAxOjM1OjE2LjcyOTEwMA"];
 #endif
+
+    [self loadSettings];
+    
+    /* Set working directory to resource path */
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+
+    [[NSFileManager defaultManager] changeCurrentDirectoryPath: documentsDirectory];
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
@@ -105,6 +210,7 @@ void tstfl_validateloadgame(char *name) {
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
+    [self saveSettings];
 }
 
 /*

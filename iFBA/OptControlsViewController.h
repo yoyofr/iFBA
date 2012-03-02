@@ -1,5 +1,5 @@
 //
-//  OptionsViewController.h
+//  OptControlsViewController.h
 //  iFBA
 //
 //  Created by Yohann Magnien on 27/02/12.
@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OptionsViewController : UIViewController {
+@interface OptControlsViewController : UIViewController {
     IBOutlet UITableView *tabView;
-    UIViewController *optVideo,*optAudio,*optControl,*optEmulation;
+    UIViewController *optWiimote,*optiCade,*optVPad;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
-@property (nonatomic, retain) UIViewController *optVideo,*optAudio,*optControl,*optEmulation;
+@property (nonatomic, retain) UIViewController *optWiimote,*optiCade,*optVPad;
 
 @end

@@ -16,7 +16,7 @@ unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
 #include "string.h"
 #include "sdl_font.h"
 #import "fbaconf.h"
-ifba_conf_t ifba_conf={1,3,1};
+ifba_conf_t ifba_conf;
 
 #import "BTstack/BTDevice.h"
 #import "BTstack/btstack.h"
@@ -48,8 +48,8 @@ static char pb_msg[256];
 
 
 int device_isIpad;
-unsigned char virtual_stick_buttons_alpha=100;
-unsigned char virtual_stick_buttons_alpha2=200;
+unsigned char virtual_stick_buttons_alpha=75;
+unsigned char virtual_stick_buttons_alpha2=150;
 int virtual_stick_on;
 long virtual_stick_padfinger;
 
@@ -234,7 +234,7 @@ static void *context; //hack to call objective C func from C
 	
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST) );
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST));
-
+    
 	glBindTexture(GL_TEXTURE_2D, 0);
     
     /************************************/
@@ -318,6 +318,7 @@ static void *context; //hack to call objective C func from C
             while (emuThread_running) {
                 [NSThread sleepForTimeInterval:0.01]; //10ms        
             }
+            [NSThread sleepForTimeInterval:0.1]; //100ms        
         } else {//no, only resume
             nShouldExit=0;
         }
@@ -702,10 +703,6 @@ extern bool bAppDoFast;
 -(void) emuThread {
     emuThread_running=1;
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    
-    /* Set working directory to resource path */
-    [[NSFileManager defaultManager] changeCurrentDirectoryPath: documentsDirectory];
     
     int argc=2;
     char *argv[2];
@@ -720,6 +717,8 @@ extern bool bAppDoFast;
     }
     sprintf(argv[1],"%s",gameName);
     fba_main(argc,(char**)argv);
+    free (argv[0]);
+    free (argv[1]);
     
     [pool release];
     emuThread_running=0;
@@ -1086,21 +1085,20 @@ int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
         pb_total=0;
         pb_value=1;
     }
-    //strcpy(pb_msg,pszText);
     
-	DrawRect((uint16 *) vbuffer, 20, 120, visible_area_w-40, 20, 0x00A0A0FF, TEXTURE_W,vid_rotated);
-    DrawRect((uint16 *) vbuffer, 21, 121, visible_area_w-42, 18, 0x002020EF, TEXTURE_W,vid_rotated);
+	DrawRect((uint16 *) vbuffer, 20, 100, visible_area_w-40, 20, 0x00A0A0FF, TEXTURE_W,vid_rotated);
+    DrawRect((uint16 *) vbuffer, 21, 101, visible_area_w-42, 18, 0x002020EF, TEXTURE_W,vid_rotated);
 	
 	if (pszText)
-		DrawString (pszText, (uint16 *) vbuffer, 22, 124, TEXTURE_W,vid_rotated);
+		DrawString (pszText, (uint16 *) vbuffer, 22, 104, TEXTURE_W,vid_rotated);
 	
 	if (totalLen == 0) {
-		DrawRect((uint16 *) vbuffer, 20, 140, visible_area_w-40, 12, 0x00FFFFFF, TEXTURE_W,vid_rotated);
-		DrawRect((uint16 *) vbuffer, 21, 141, visible_area_w-42, 10, 0x00808080, TEXTURE_W,vid_rotated);
+		DrawRect((uint16 *) vbuffer, 20, 120, visible_area_w-40, 12, 0x00FFFFFF, TEXTURE_W,vid_rotated);
+		DrawRect((uint16 *) vbuffer, 21, 121, visible_area_w-42, 10, 0x00808080, TEXTURE_W,vid_rotated);
 	} else {
-        DrawRect((uint16 *) vbuffer, 20, 140, visible_area_w-40, 12, 0x00A0A0FF, TEXTURE_W,vid_rotated);
-        DrawRect((uint16 *) vbuffer, 21, 141, visible_area_w-42, 10, 0x002020EF, TEXTURE_W,vid_rotated);
-		DrawRect((uint16 *) vbuffer, 22, 142, pb_value * (visible_area_w-44), 8, 0x00AFFF3F, TEXTURE_W,vid_rotated);
+        DrawRect((uint16 *) vbuffer, 20, 120, visible_area_w-40, 12, 0x00A0A0FF, TEXTURE_W,vid_rotated);
+        DrawRect((uint16 *) vbuffer, 21, 121, visible_area_w-42, 10, 0x002020EF, TEXTURE_W,vid_rotated);
+		DrawRect((uint16 *) vbuffer, 22, 122, pb_value * (visible_area_w-44), 8, 0x00AFFF3F, TEXTURE_W,vid_rotated);
 	}
     
     mNewGLFrame++;
@@ -1152,7 +1150,7 @@ int StopProgressBar() {
     glBindTexture(GL_TEXTURE_2D, txt_vbuffer);    /* Bind The Texture */
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST) );
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST));
-
+    
     
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, TEXTURE_W, TEXTURE_H, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, vbuffer);
     
@@ -1174,15 +1172,59 @@ int StopProgressBar() {
         texcoords[2][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
         float ios_aspect=(float)width/(float)height;
         float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        
-        if (ios_aspect>game_aspect) {
-            rh=height;
-            rw=rh*vid_aspectX/vid_aspectY;
-            glViewport((width-rw)>>1, 0, rw, rh);
-        } else {
-            rw=width;
-            rh=rw*vid_aspectY/vid_aspectX;
-            glViewport(0, height-rh, rw, rh);
-        }            
+        
+        switch (ifba_conf.screen_mode) {
+            case 0://org
+                if (ios_aspect>game_aspect) {
+                    rh=min(height,visible_area_h);
+                    rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                    
+                } else {
+                    rw=min(width,visible_area_w);
+                    rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                    
+                }
+                break;
+            case 1://fixed
+                if (ios_aspect>game_aspect) {
+                    rh=height/visible_area_h;
+                    rh*=visible_area_h;
+                    if (!rh) rh=height;
+                    rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                    
+                } else {
+                    rw=width/visible_area_w;
+                    rw*=visible_area_w;
+                    if (!rw) rw=width;
+                    rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                    
+                }
+                break;
+            case 2://max with room for vpad
+                if (ios_aspect>game_aspect) {
+                    rh=height-virtual_stick_maxdist*2;
+                    rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                    
+                } else {
+                    rw=width-virtual_stick_maxdist*vid_aspectX/vid_aspectY;
+                    rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                    
+                }
+                break;
+            case 3://full
+                if (ios_aspect>game_aspect) {
+                    rh=height;
+                    rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                    
+                } else {
+                    rw=width;
+                    rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                    
+                }
+                break;
+        }
+        
+        glViewport((width-rw)>>1, height-rh, rw, rh);            
         
         
         vertices[0][0]=1; vertices[0][1]=-1;
@@ -1216,40 +1258,40 @@ int StopProgressBar() {
                     rh*=visible_area_h;
                     if (!rh) rh=height;
                     rw=rh*vid_aspectX/vid_aspectY;
-
+                    
                 } else {
                     rw=width/visible_area_w;
                     rw*=visible_area_w;
                     if (!rw) rw=width;
                     rh=rw*vid_aspectY/vid_aspectX;
-
+                    
                 }
                 break;
             case 2://max with room for vpad
                 if (ios_aspect>game_aspect) {
                     rh=height;
                     rw=rh*vid_aspectX/vid_aspectY;
-
+                    
                 } else {
                     rw=width;
                     rh=rw*vid_aspectY/vid_aspectX;
-
+                    
                 }
                 break;
             case 3://full
                 if (ios_aspect>game_aspect) {
                     rh=height;
                     rw=rh*vid_aspectX/vid_aspectY;
-
+                    
                 } else {
                     rw=width;
                     rh=rw*vid_aspectY/vid_aspectX;
-
+                    
                 }
                 break;
         }
         glViewport((width-rw)>>1, height-rh, rw, rh);
-                    
+        
         
         vertices[0][0]=-1; vertices[0][1]=1;
         vertices[1][0]=1; vertices[1][1]=1;

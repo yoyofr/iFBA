@@ -222,21 +222,21 @@ static INT32 VidDoFrame(bool bRedraw)
 {
 	INT32 nRet;
 	
-	if (pVidTransImage) {
+	if (0&&pVidTransImage) {
 		UINT16* pSrc = (UINT16*)pVidTransImage;
 		UINT8* pDest = pVidImage;
 
-		if (bVidRecalcPalette) {
+		/*if (bVidRecalcPalette) {
 			for (INT32 r = 0; r < 256; r += 8) {
 				for (INT32 g = 0; g < 256; g += 8) {
 					for (INT32 b = 0; b < 256; b += 8) {
-						pVidTransPalette[(r << 7) | (g << 2) | (b >> 3)] = VidHighCol(r | (r >> 5), g | (g >> 5), b | (b >> 5), 0);
+						pVidTransPalette[(r << 7) | (g << 2) | (b >> 3)] = HighCol16(r | (r >> 5), g | (g >> 5), b | (b >> 5), 0);
 					}
 				}
 			}
 
 			bVidRecalcPalette = false;
-		}
+		}*/
 
 		pBurnDraw = pVidTransImage;
 		nBurnPitch = nVidImageWidth * 2;

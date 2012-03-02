@@ -62,8 +62,8 @@ extern volatile int emuThread_running;
     [super viewWillAppear:animated];
     
     if (emuThread_running) {
-        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
-        self.navigationItem.rightBarButtonItem = btn_backToEmu;
+        //        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
+        //        self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }    
     [tabView reloadData];
 }
@@ -100,22 +100,29 @@ extern volatile int emuThread_running;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 1;
+	return 3;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    if (section==0) {
-        int nbRows;
-        if (emuThread_running) nbRows=5;
-        else nbRows=3;
+    int nbRows=0;
+    switch (section) {
+        case 0:
+            if (emuThread_running) nbRows=4;
+            else nbRows=1;
+            break;
+        case 1:
+            nbRows=1;
+            break;
+        case 2:
+            nbRows=1;
 #ifdef TESTFLIGHT
-        nbRows++;
+            nbRows++;
 #endif
-        return nbRows;
+            break;
     }
-	return 0;
+	return nbRows;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -132,26 +139,27 @@ extern volatile int emuThread_running;
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-	if (indexPath.section==0) {
-        if (emuThread_running) {
-            if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load State",@"");
-            if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
-            if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
-            if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"Options",@"");
-            if (indexPath.row==4) cell.textLabel.text=NSLocalizedString(@"About",@"");
+	switch (indexPath.section) {
+        case 0:
+            if (emuThread_running) {
+                if (indexPath.row==0) cell.textLabel.text=[NSString stringWithFormat:NSLocalizedString(@"Back to %s",@""),gameName];
+                if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Load State",@"");
+                if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
+                if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"Load game",@"");            
+            } else {
+                if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");            
+            }
+            break;
+        case 1:
+            if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Options",@"");
+            break;
+        case 2:
+            if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"About",@"");
 #ifdef TESTFLIGHT
-            if (indexPath.row==5) cell.textLabel.text=NSLocalizedString(@"Feedback",@"");
+            if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Feedback",@"");
 #endif
             
-        } else {
-            if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");
-            if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Options",@"");
-            if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"About",@"");
-#ifdef TESTFLIGHT
-            if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"Feedback",@"");
-#endif
-
-        }
+            break;
 	}
 	
 	cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
@@ -166,30 +174,21 @@ int StatedSave(int slot);
     if (indexPath.section==0) {//Game browser
         if (emuThread_running) {
             switch (indexPath.row) {
-                case 0: //load state
+                case 0:
+                    [self.navigationController pushViewController:emuvc animated:NO];
+                    break;
+                case 1: //load state
                     StatedLoad(0);
                     [self backToEmu];
                     break;
-                case 1: //save state
+                case 2: //save state
                     StatedSave(0);
                     [self backToEmu];
                     break;
-                case 2: //game browser
+                case 3: //game browser
                     gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];
-                    break;
-                case 3: //options
-                    optionsvc=[[OptionsViewController alloc] initWithNibName:@"OptionsViewController" bundle:nil];
-                    [self.navigationController pushViewController:optionsvc animated:YES];
-                    [optionsvc release];
-                    break;
-                case 4: //about
-                    break;
-                case 5: //beta test-feedback
-#ifdef TESTFLIGHT
-                    [TestFlight openFeedbackView];
-#endif
                     break;
             }
         } else {
@@ -199,22 +198,23 @@ int StatedSave(int slot);
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];
                     break;
-                case 1: //options
-                    optionsvc=[[OptionsViewController alloc] initWithNibName:@"OptionsViewController" bundle:nil];
-                    [self.navigationController pushViewController:optionsvc animated:YES];
-                    [optionsvc release];
-                    break;
-                case 2: //about
-                    break;
-                case 3: //beta test-feedback
-#ifdef TESTFLIGHT
-                    [TestFlight openFeedbackView];
-#endif
-                    break;
-
             }
+        }
+    } else if (indexPath.section==1) { //options
+        optionsvc=[[OptionsViewController alloc] initWithNibName:@"OptionsViewController" bundle:nil];
+        [self.navigationController pushViewController:optionsvc animated:YES];
+        [optionsvc release];
+    } else if (indexPath.section==2) { //about & feedback        
+        if (indexPath.row==0) {//about
+            UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:[NSString stringWithFormat:NSLocalizedString(@"About_Msg",@""),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+            [aboutMsg show];
+        } else if (indexPath.row==1) {//beta test-feedback
+#ifdef TESTFLIGHT
+            [TestFlight openFeedbackView];
+#endif
         }
     }
 }
+
 
 @end

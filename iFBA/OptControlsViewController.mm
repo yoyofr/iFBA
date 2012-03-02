@@ -1,23 +1,21 @@
 //
-//  OptionsViewController.m
+//  OptControlsViewController.m
 //  iFBA
 //
 //  Created by Yohann Magnien on 27/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "OptionsViewController.h"
-#import "OptVideoViewController.h"
 #import "OptControlsViewController.h"
-#import "OptEmuViewController.h"
-#import "OptAudioViewController.h"
-
+#import "OptWiimoteViewController.h"
+#import "OptiCadeViewController.h"
+#import "OptVPadViewController.h"
 #import "fbaconf.h"
 #import "string.h"
 
 
-@implementation OptionsViewController
-@synthesize optVideo,optAudio,optControl,optEmulation;
+@implementation OptControlsViewController
+@synthesize optWiimote,optiCade,optVPad;
 @synthesize tabView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -25,7 +23,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title=NSLocalizedString(@"Options",@"");
+        self.title=NSLocalizedString(@"Controllers",@"");
     }
     return self;
 }
@@ -63,7 +61,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 4;
+    return 3;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -80,13 +78,11 @@
     }
 
     switch (indexPath.row) {
-        case 0:cell.textLabel.text=NSLocalizedString(@"Video",@"");
+        case 0:cell.textLabel.text=NSLocalizedString(@"Wiimote",@"");
             break;
-        case 1:cell.textLabel.text=NSLocalizedString(@"Audio",@"");
+        case 1:cell.textLabel.text=NSLocalizedString(@"iCade",@"");
             break;
-        case 2:cell.textLabel.text=NSLocalizedString(@"Controllers",@"");
-            break;
-        case 3:cell.textLabel.text=NSLocalizedString(@"Emulation",@"");
+        case 2:cell.textLabel.text=NSLocalizedString(@"Virtual pad",@"");
             break;
     }
     	
@@ -98,25 +94,20 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.row) {
-        case 0://video
-            optVideo=[[OptVideoViewController alloc] initWithNibName:@"OptVideoViewController" bundle:nil];
-            [self.navigationController pushViewController:optVideo animated:YES];
-            [optVideo release];
+        case 0://Wiimote
+            optWiimote=[[OptWiimoteViewController alloc] initWithNibName:@"OptWiimoteViewController" bundle:nil];
+            [self.navigationController pushViewController:optWiimote animated:YES];
+            [optWiimote release];
             break;
-        case 1://audio
-            optAudio=[[OptAudioViewController alloc] initWithNibName:@"OptAudioViewController" bundle:nil];
-            [self.navigationController pushViewController:optAudio animated:YES];
-            [optAudio release];
+        case 1://iCade
+            optiCade =[[OptiCadeViewController alloc] initWithNibName:@"OptiCadeViewController" bundle:nil];
+            [self.navigationController pushViewController:optiCade animated:YES];
+            [optiCade release];
             break;
-        case 2://controllers
-            optControl=[[OptControlsViewController alloc] initWithNibName:@"OptControlsViewController" bundle:nil];
-            [self.navigationController pushViewController:optControl animated:YES];
-            [optControl release];
-            break;
-        case 3://emulation
-            optEmulation=[[OptEmuViewController alloc] initWithNibName:@"OptEmuViewController" bundle:nil];
-            [self.navigationController pushViewController:optEmulation animated:YES];
-            [optEmulation release];
+        case 2://Virtual pad
+            optVPad =[[OptVPadViewController alloc] initWithNibName:@"OptVPadViewController" bundle:nil];
+            [self.navigationController pushViewController:optVPad animated:YES];
+            [optVPad release];
             break;
     }
 }

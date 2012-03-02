@@ -6,12 +6,12 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "OptVideoViewController.h"
+#import "OptAudioViewController.h"
 
 #import "fbaconf.h"
 
 
-@implementation OptVideoViewController
+@implementation OptAudioViewController
 @synthesize tabView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -19,7 +19,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title=NSLocalizedString(@"Video",@"");
+        self.title=NSLocalizedString(@"Audio",@"");
     }
     return self;
 }

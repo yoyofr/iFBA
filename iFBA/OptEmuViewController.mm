@@ -1,17 +1,17 @@
 //
-//  OptVideoViewController.m
+//  OptEmuViewController.m
 //  iFBA
 //
 //  Created by Yohann Magnien on 28/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "OptVideoViewController.h"
+#import "OptEmuViewController.h"
 
 #import "fbaconf.h"
 
 
-@implementation OptVideoViewController
+@implementation OptEmuViewController
 @synthesize tabView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -19,7 +19,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title=NSLocalizedString(@"Video",@"");
+        self.title=NSLocalizedString(@"Emulation",@"");
     }
     return self;
 }

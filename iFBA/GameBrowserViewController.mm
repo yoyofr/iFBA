@@ -35,18 +35,20 @@ extern int launchGame;
 
 - (void)dealloc{
     [super dealloc];
-    [burn_supportedRoms release];
+    [indexTitles release];
 }
 
 - (void)buildFilters {
     char *szName;
-    NSMutableArray *burn_supportedRoms=[[NSMutableArray alloc] initWithCapacity:nBurnDrvCount];
+    burn_supportedRoms=[[NSMutableArray alloc] initWithCapacity:nBurnDrvCount];
     //szName=(char*)malloc(256);
+    int saveActiveDrv=nBurnDrvActive;
     for (int i=0;i<nBurnDrvCount;i++) {
         nBurnDrvActive=i;
         BurnDrvGetZipName(&szName,0);
         [burn_supportedRoms addObject:[[NSString stringWithFormat:@"%s",szName] lowercaseString]];
     }
+    nBurnDrvActive=saveActiveDrv;
     //free(szName);
 }
 

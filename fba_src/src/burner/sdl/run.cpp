@@ -32,18 +32,18 @@ static int GetInput(bool bCopy)
 {
 	static int i = 0;
 	InputMake(bCopy); 						// get input
-
+    
 	// Update Input dialog ever 3 frames
 	if (i == 0) {
 		//InpdUpdate();
 	}
-
+    
 	i++;
-
+    
 	if (i >= 3) {
 		i = 0;
 	}
-
+    
 	// Update Input Set dialog
 	//InpsUpdate();
 	return 0;
@@ -53,13 +53,13 @@ static void DisplayFPS()
 {
 	static time_t fpstimer;
 	static unsigned int nPreviousFrames;
-
+    
 	char fpsstring[8];
 	time_t temptime = clock();
 	float fps = static_cast<float>(nFramesRendered - nPreviousFrames) * CLOCKS_PER_SEC / (temptime - fpstimer);
 	sprintf(fpsstring, "%2.1f", fps);
 	VidSNewShortMsg(fpsstring, 0xDFDFFF, 480, 0);
-
+    
 	fpstimer = temptime;
 	nPreviousFrames = nFramesRendered;
 }
@@ -78,15 +78,15 @@ static int RunFrame(int bDraw, int bPause)
 {
 	static int bPrevPause = 0;
 	static int bPrevDraw = 0;
-
+    
 	if (bPrevDraw && !bPause) {
 		VidPaint(0);							// paint the screen (no need to validate)
 	}
-
+    
 	if (!bDrvOkay) {
 		return 1;
 	}
-
+    
 	if (bPause) 
 	{
 		GetInput(false);						// Update burner inputs, but not game inputs
@@ -113,7 +113,7 @@ static int RunFrame(int bDraw, int bPause)
 	}
 	bPrevPause = bPause;
 	bPrevDraw = bDraw;
-
+    
 	return 0;
 }
 
@@ -141,7 +141,7 @@ static int RunGetNextSound(int bDraw) {
 	if (nAudNextSound == NULL) {
 		return 1;
 	}
-
+    
 	if (bRunPause) {
 		if (bAppDoStep) {
 			RunFrame(bDraw, 0);
@@ -149,11 +149,11 @@ static int RunGetNextSound(int bDraw) {
 		} else {
 			RunFrame(bDraw, 1);
 		}
-
+        
 		bAppDoStep = 0;									// done one step
 		return 0;
 	}
-
+    
 	if (bAppDoFast) {									// do more frames
 		for (int i = 0; i < nFastSpeed; i++) {
 			RunFrame(0, 0);
@@ -171,7 +171,7 @@ static int RunGetNextSound(int bDraw) {
             //printf("fps:%d\n",fps);
         }        
     }
-
+    
 	// Render frame with sound
 	pBurnSoundOut = nAudNextSound;
     //YOYOFR
@@ -180,7 +180,7 @@ static int RunGetNextSound(int bDraw) {
 		memset(nAudNextSound, 0, nAudSegLen << 2);		// Write silence into the buffer
 	}
 	bAppDoStep = 0;										// done one step
-
+    
 	return 0;
 }
 
@@ -190,14 +190,13 @@ static int RunGetNextSound(int bDraw) {
 int RunIdle() {
 	int nTime, nCount;
     float frame_limit = (float)nBurnFPS/100.0f, frametime = 100000.0f/(float)nBurnFPS;
-
-
+    
 	if (bAudPlaying) {
 		// Run with sound
 		AudSoundCheck();
 		return 0;
 	}
-
+    
     
 #ifdef BENCH
     timer = SDL_GetTicks();
@@ -232,7 +231,7 @@ int RunIdle() {
     RunFrame(1,0);
     
     done = now;
-
+    
     return 0;
 }
 
@@ -251,14 +250,14 @@ static int RunInit()
 {
 	// Try to run with sound
     if (bSoundOn) {
-	AudSetCallback(RunGetNextSound);
-	AudSoundPlay();
+        AudSetCallback(RunGetNextSound);
+        AudSoundPlay();
     } else {
         bAudOkay=0;
         AudSetCallback(NULL);
     }
 	RunReset();
-
+    
 	return 0;
 }
 
@@ -280,23 +279,23 @@ int RunMessageLoop()
     
 	do {
 		bRestartVideo = 0;
-
+        
 		//MediaInit();
-
+        
 		if (!bVidOkay) {
-
+            
 			// Reinit the video plugin
 			VidInit();
 			if (!bVidOkay && nVidFullscreen) {
-
+                
 				nVidFullscreen = 0;
 				VidInit();
 			}
-
-	}
-
+            
+        }
+        
 		RunInit();
-
+        
 		GameInpCheckMouse();															// Hide the cursor
         
         done=0;timer = 0;ticks=0;tick=0;sdl_fps = 0;
@@ -310,9 +309,9 @@ int RunMessageLoop()
                 usleep(10000); //10ms
             }
 		}
-		RunExit();
+		RunExit();        
 	} while (bRestartVideo);
-
+    
 	return 0;
 }
 

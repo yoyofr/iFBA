@@ -23,3 +23,11 @@
 "Aspect Ratio"="Aspect Ratio";
 "Screen mode"="Mode écran";
 "Filtering"="Filtrage";
+
+"Back to %s"="Retour à %s";
+"About"="A Propos";
+"About_Msg"="iFBA v%@- YoyoFR\n\nBasé sur FBA v0.2.97.21";
+
+"Wiimote"="Wiimote";
+"iCade"="iCade";
+"Virtual pad"="Pad virtuel";

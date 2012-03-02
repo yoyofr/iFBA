@@ -572,6 +572,18 @@
 		339E632214F199EF006FB970 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E632114F199EF006FB970 /* GLKit.framework */; };
 		339E636614F1B8BD006FB970 /* FrameBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E636414F1B8BC006FB970 /* FrameBuffer.mm */; };
 		339E636914F1B8C8006FB970 /* OGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E636814F1B8C8006FB970 /* OGLView.mm */; };
+		339F69771500994C00C1B5EF /* OptControlsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339F696B15002D2F00C1B5EF /* OptControlsViewController.mm */; };
+		339F69781500995500C1B5EF /* OptiCadeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339F697515002F5F00C1B5EF /* OptiCadeViewController.mm */; };
+		339F69791500995A00C1B5EF /* OptWiimoteViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339F697215002F5300C1B5EF /* OptWiimoteViewController.mm */; };
+		339F697A1500995E00C1B5EF /* OptVPadViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339F696F15002F5300C1B5EF /* OptVPadViewController.mm */; };
+		339F697B15009CEE00C1B5EF /* OptControlsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339F696C15002D2F00C1B5EF /* OptControlsViewController.xib */; };
+		339F697C15009CF300C1B5EF /* OptiCadeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339F697615002F5F00C1B5EF /* OptiCadeViewController.xib */; };
+		339F697D15009CF800C1B5EF /* OptWiimoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339F697315002F5400C1B5EF /* OptWiimoteViewController.xib */; };
+		339F697E15009CFB00C1B5EF /* OptVPadViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339F697015002F5300C1B5EF /* OptVPadViewController.xib */; };
+		339F69821500A00F00C1B5EF /* OptEmuViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339F69801500A00D00C1B5EF /* OptEmuViewController.mm */; };
+		339F69831500A00F00C1B5EF /* OptEmuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339F69811500A00E00C1B5EF /* OptEmuViewController.xib */; };
+		339F69871500A01A00C1B5EF /* OptAudioViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339F69851500A01800C1B5EF /* OptAudioViewController.mm */; };
+		339F69881500A01A00C1B5EF /* OptAudioViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339F69861500A01900C1B5EF /* OptAudioViewController.xib */; };
 		33A7E73F14FA97E5007B42B9 /* sdl_font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */; };
 		33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33A7E74314FABEDB007B42B9 /* fastarm_memfunc.o */; };
 		33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AD897B14F85A4D00239FB6 /* Cyclone.o */; };
@@ -1387,6 +1399,24 @@
 		339E636514F1B8BC006FB970 /* GlErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlErrors.h; sourceTree = "<group>"; };
 		339E636714F1B8C8006FB970 /* OGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGLView.h; sourceTree = "<group>"; };
 		339E636814F1B8C8006FB970 /* OGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OGLView.mm; sourceTree = "<group>"; };
+		339F696A15002D2E00C1B5EF /* OptControlsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptControlsViewController.h; sourceTree = "<group>"; };
+		339F696B15002D2F00C1B5EF /* OptControlsViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OptControlsViewController.mm; sourceTree = "<group>"; };
+		339F696C15002D2F00C1B5EF /* OptControlsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptControlsViewController.xib; sourceTree = "<group>"; };
+		339F696E15002F5200C1B5EF /* OptVPadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptVPadViewController.h; sourceTree = "<group>"; };
+		339F696F15002F5300C1B5EF /* OptVPadViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OptVPadViewController.mm; sourceTree = "<group>"; };
+		339F697015002F5300C1B5EF /* OptVPadViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptVPadViewController.xib; sourceTree = "<group>"; };
+		339F697115002F5300C1B5EF /* OptWiimoteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptWiimoteViewController.h; sourceTree = "<group>"; };
+		339F697215002F5300C1B5EF /* OptWiimoteViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OptWiimoteViewController.mm; sourceTree = "<group>"; };
+		339F697315002F5400C1B5EF /* OptWiimoteViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptWiimoteViewController.xib; sourceTree = "<group>"; };
+		339F697415002F5F00C1B5EF /* OptiCadeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptiCadeViewController.h; sourceTree = "<group>"; };
+		339F697515002F5F00C1B5EF /* OptiCadeViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OptiCadeViewController.mm; sourceTree = "<group>"; };
+		339F697615002F5F00C1B5EF /* OptiCadeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptiCadeViewController.xib; sourceTree = "<group>"; };
+		339F697F1500A00D00C1B5EF /* OptEmuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptEmuViewController.h; sourceTree = "<group>"; };
+		339F69801500A00D00C1B5EF /* OptEmuViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptEmuViewController.mm; sourceTree = "<group>"; };
+		339F69811500A00E00C1B5EF /* OptEmuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptEmuViewController.xib; sourceTree = "<group>"; };
+		339F69841500A01800C1B5EF /* OptAudioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptAudioViewController.h; sourceTree = "<group>"; };
+		339F69851500A01800C1B5EF /* OptAudioViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptAudioViewController.mm; sourceTree = "<group>"; };
+		339F69861500A01900C1B5EF /* OptAudioViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptAudioViewController.xib; sourceTree = "<group>"; };
 		33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sdl_font.cpp; sourceTree = "<group>"; };
 		33A7E73E14FA97D7007B42B9 /* sdl_font.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sdl_font.h; sourceTree = "<group>"; };
 		33A7E74014FAB881007B42B9 /* fastarm_memfunc.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = fastarm_memfunc.s; sourceTree = "<group>"; };
@@ -2748,9 +2778,27 @@
 				334F5FF014FCC55900ED3CDB /* OptVideoViewController.h */,
 				334F5FF114FCC55900ED3CDB /* OptVideoViewController.mm */,
 				334F5FF214FCC55A00ED3CDB /* OptVideoViewController.xib */,
+				339F69841500A01800C1B5EF /* OptAudioViewController.h */,
+				339F69851500A01800C1B5EF /* OptAudioViewController.mm */,
+				339F69861500A01900C1B5EF /* OptAudioViewController.xib */,
+				339F697F1500A00D00C1B5EF /* OptEmuViewController.h */,
+				339F69801500A00D00C1B5EF /* OptEmuViewController.mm */,
+				339F69811500A00E00C1B5EF /* OptEmuViewController.xib */,
 				33F444D814F5685100BA36E1 /* EmuViewController.h */,
 				33F444D914F5685100BA36E1 /* EmuViewController.mm */,
 				33F444D614F567DC00BA36E1 /* EmuViewController.xib */,
+				339F696E15002F5200C1B5EF /* OptVPadViewController.h */,
+				339F696F15002F5300C1B5EF /* OptVPadViewController.mm */,
+				339F697015002F5300C1B5EF /* OptVPadViewController.xib */,
+				339F697115002F5300C1B5EF /* OptWiimoteViewController.h */,
+				339F697215002F5300C1B5EF /* OptWiimoteViewController.mm */,
+				339F697315002F5400C1B5EF /* OptWiimoteViewController.xib */,
+				339F697415002F5F00C1B5EF /* OptiCadeViewController.h */,
+				339F697515002F5F00C1B5EF /* OptiCadeViewController.mm */,
+				339F697615002F5F00C1B5EF /* OptiCadeViewController.xib */,
+				339F696A15002D2E00C1B5EF /* OptControlsViewController.h */,
+				339F696B15002D2F00C1B5EF /* OptControlsViewController.mm */,
+				339F696C15002D2F00C1B5EF /* OptControlsViewController.xib */,
 				334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */,
 				334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */,
 				334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */,
@@ -2888,6 +2936,12 @@
 				334F5FF414FCC55B00ED3CDB /* OptVideoViewController.xib in Resources */,
 				334F5FF814FD8E5C00ED3CDB /* background.png in Resources */,
 				334F5FF914FD8E5C00ED3CDB /* background@2x.png in Resources */,
+				339F697B15009CEE00C1B5EF /* OptControlsViewController.xib in Resources */,
+				339F697C15009CF300C1B5EF /* OptiCadeViewController.xib in Resources */,
+				339F697D15009CF800C1B5EF /* OptWiimoteViewController.xib in Resources */,
+				339F697E15009CFB00C1B5EF /* OptVPadViewController.xib in Resources */,
+				339F69831500A00F00C1B5EF /* OptEmuViewController.xib in Resources */,
+				339F69881500A01A00C1B5EF /* OptAudioViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3433,6 +3487,12 @@
 				33231C0514FBA67A00AD7823 /* iCadeReaderView.m in Sources */,
 				334F5FCE14FC31B800ED3CDB /* OptionsViewController.mm in Sources */,
 				334F5FF314FCC55B00ED3CDB /* OptVideoViewController.mm in Sources */,
+				339F69771500994C00C1B5EF /* OptControlsViewController.mm in Sources */,
+				339F69781500995500C1B5EF /* OptiCadeViewController.mm in Sources */,
+				339F69791500995A00C1B5EF /* OptWiimoteViewController.mm in Sources */,
+				339F697A1500995E00C1B5EF /* OptVPadViewController.mm in Sources */,
+				339F69821500A00F00C1B5EF /* OptEmuViewController.mm in Sources */,
+				339F69871500A01A00C1B5EF /* OptAudioViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

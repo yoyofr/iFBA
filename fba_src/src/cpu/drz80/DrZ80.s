@@ -11,7 +11,8 @@
 ;@ OopsWare   2007.2
 ;@ http://oopsware.googlepages.com
 
-      .global _DrZ80Run
+.align 4
+    .global _DrZ80Run
       .global _DrZ80Ver
                   
 _DrZ80Ver: .long 0x0001

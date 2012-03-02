@@ -4,7 +4,7 @@
 int bDrvOkay = 0;						// 1 if the Driver has been initted okay, and it's okay to use the BurnDrv functions
 extern bool bSoundOn;
 
-char szAppRomPaths[DIRS_MAX][MAX_PATH] = {{"/usr/local/share/roms/"},{"roms/"}, };
+char szAppRomPaths[DIRS_MAX][MAX_PATH] = {{"/var/mobile/Library/iFBA"},{"/var/mobile/Library/ROMS"}, };
 
 static bool bSaveRAM = false;
 
@@ -68,6 +68,8 @@ int DrvInit(int nDrvNum, bool bRestore)
 		nBurnSoundLen = nAudSegLen;
 	}
 	nBurnDrvSelect[0] = nDrvNum;		// Set the driver number
+    
+    printf("Driver nb: %d\n",nDrvNum);
 
 	// Define nMaxPlayers early; GameInpInit() needs it (normally defined in DoLibInit()).
 	nMaxPlayers = BurnDrvGetMaxPlayers();

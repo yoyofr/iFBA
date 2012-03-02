@@ -1,5 +1,5 @@
 //
-//  OptVideoViewController.h
+//  OptVPadViewController.h
 //  iFBA
 //
 //  Created by Yohann Magnien on 28/02/12.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OptVideoViewController : UIViewController {
+@interface OptVPadViewController : UIViewController {
     IBOutlet UITableView *tabView;
 }
 

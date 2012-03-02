@@ -118,10 +118,6 @@ void interruptionListenerCallback (void *inUserData,UInt32 interruptionState ) {
     //	ModizMusicPlayer *mplayer=(ModizMusicPlayer*)inUserData;
 	if (interruptionState == kAudioSessionBeginInterruption) {
 		mInterruptShoudlRestart=0;
-        /*		if ([mplayer isPlaying] && (mplayer.bGlobalAudioPause==0)) {
-         [mplayer Pause:YES];
-         mInterruptShoudlRestart=1;
-         }*/
 	}
     else if (interruptionState == kAudioSessionEndInterruption) {
 		// if the interruption was removed, and the app had been playing, resume playback
@@ -130,11 +126,11 @@ void interruptionListenerCallback (void *inUserData,UInt32 interruptionState ) {
             CFStringRef newRoute;
             UInt32 size = sizeof(CFStringRef);
             AudioSessionGetProperty(kAudioSessionProperty_AudioRoute,&size,&newRoute);
-            if (newRoute) {
+/*            if (newRoute) {
                 if (CFStringCompare(newRoute,CFSTR("Headphone"),NULL)==kCFCompareEqualTo) {  //
                     mInterruptShoudlRestart=0;
                 }                
-            }
+            }*/
             
 //			if (mInterruptShoudlRestart) [mplayer Pause:NO];
 			mInterruptShoudlRestart=0;
@@ -322,7 +318,7 @@ static int SDLSoundStop()
 //	dprintf(_T("SDLSoundStop\n"));
 	bAudPlaying = 0;    
     AudioQueueStop( mAudioQueue, TRUE );
-	AudioQueueReset( mAudioQueue );	
+	//AudioQueueReset( mAudioQueue );	
     
 	return 0;
 }
