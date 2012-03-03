@@ -979,36 +979,31 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
         else virtual_stick=virtual_stick_iphone_portrait;
     }
     
+    virtual_stick_buttons_alpha=32*ifba_conf.vpad_alpha;
+    virtual_stick_buttons_alpha2=64*virtual_stick_buttons_alpha;
+    if (virtual_stick_buttons_alpha>255) virtual_stick_buttons_alpha=255;
+    if (virtual_stick_buttons_alpha2>255) virtual_stick_buttons_alpha2=255;
+    
     switch (cur_height) {
         case 320:
             virtual_stick_posx = virtual_stick_maxdist;
             virtual_stick_posy = cur_height-virtual_stick_maxdist;
-            //virtual_stick_buttons_alpha=64;
-            //virtual_stick_buttons_alpha2=128;
             break;
         case 480:
             virtual_stick_posx = virtual_stick_maxdist;
             virtual_stick_posy = cur_height-virtual_stick_maxdist-0;
-            //virtual_stick_buttons_alpha=64;
-            //virtual_stick_buttons_alpha2=128;
             break;    
         case 768:
             virtual_stick_posx = virtual_stick_maxdist;
             virtual_stick_posy = cur_height-virtual_stick_maxdist;
-            //virtual_stick_buttons_alpha=64;
-            //virtual_stick_buttons_alpha2=128;
             break;
         case 1024:
             virtual_stick_posx = virtual_stick_maxdist;
             virtual_stick_posy = cur_height-virtual_stick_maxdist-80;
-            //virtual_stick_buttons_alpha=64;
-            //virtual_stick_buttons_alpha2=128;
             break;
         default:
             virtual_stick_posx = virtual_stick_maxdist;
             virtual_stick_posy = cur_height-virtual_stick_maxdist;
-            //virtual_stick_buttons_alpha=64;
-            //virtual_stick_buttons_alpha2=128;
             break;
     }    
     virtual_stick_maxdist2=virtual_stick_maxdist*virtual_stick_maxdist;
@@ -1240,29 +1235,16 @@ int StopProgressBar() {
                 
             }
             break;
-        case 1://fixed
-            if (ios_aspect>game_aspect) {
-                rh=height/visible_area_h;
-                rh*=visible_area_h;
-                if (!rh) rh=height;
-                rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-            } else {
-                rw=width/visible_area_w;
-                rw*=visible_area_w;
-                if (!rw) rw=width;
-                rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-            }
-            break;
-        case 2://max with room for vpad
+        case 1://max with room for vpad
             if (ios_aspect>game_aspect) {                    
-                rh=height-virtual_stick_maxdist;
+                rh=height-virtual_stick_maxdist*1.5f;
                 rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);                    
             } else {
-                rw=width-virtual_stick_maxdist*vid_aspectX/vid_aspectY;
+                rw=width-virtual_stick_maxdist*1.5f*vid_aspectX/vid_aspectY;
                 rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
             }
             break;
-        case 3://full
+        case 2://full
             if (ios_aspect>game_aspect) {
                 rh=height;
                 rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);

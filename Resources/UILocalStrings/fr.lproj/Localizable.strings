@@ -47,6 +47,11 @@
 "Wiimote"="Wiimote";
 "iCade"="iCade";
 "Virtual pad"="Pad virtuel";
+"Opacity"="Opacité";
+"Invisible"="Invisible";
+"Low"="Faible";
+"Med"="Moyenne";
+"Opaque"="Opaque";
 
 //Wiimote options
 "Bluetooth"="Bluetooth";

@@ -52,7 +52,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 3;
+	return 1;
 }
 
 
@@ -64,62 +64,34 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
     switch (section) {
-        case 0:title=NSLocalizedString(@"Aspect Ratio",@"");
-            break;
-        case 1:title=NSLocalizedString(@"Screen mode",@"");
-            break;
-        case 2:title=NSLocalizedString(@"Filtering",@"");
+        case 0:title=NSLocalizedString(@"Opacity",@"");
             break;
     }
     return title;
 }
 
-- (void)segActionVideoMode:(id)sender {
-    ifba_conf.screen_mode=[sender selectedSegmentIndex];
+- (void)segActionOpacity:(id)sender {
+    ifba_conf.vpad_alpha =[sender selectedSegmentIndex];
     [tabView reloadData];
 }
-- (void)switchAspectRatio:(id)sender {
-    ifba_conf.aspect_ratio =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
-- (void)switchFiltering:(id)sender {
-    ifba_conf.filtering =((UISwitch*)sender).on;
+
+- (void)segActionLayout:(id)sender {
+    ifba_conf.vpad_alpha =[sender selectedSegmentIndex];
     [tabView reloadData];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
-        case 0://Aspect Ratio
-            if (ifba_conf.aspect_ratio) {
-                footer=@"Respect original game's aspect ratio";
-            } else {
-                footer=@"Don't respect original game's aspect ratio";
-            }
-            break;
-        case 1://Screen mode
-            switch (ifba_conf.screen_mode) {
-                case 0:
-                    footer=@"Original resolution";
+        case 0://Opacity
+            switch (ifba_conf.vpad_alpha) {
+                case 0:footer=NSLocalizedString(@"Invisible",@"");
                     break;
-                case 1:
-                    footer=@"Fixed scaled resolution";
+                case 1:footer=NSLocalizedString(@"Low",@"");
                     break;
-                case 2:
-                    footer=@"Scaled resolution";
+                case 2:footer=NSLocalizedString(@"Med",@"");
                     break;
-                case 3:
-                    footer=@"Fullscreen";
-                    break;
-            }
-            break;
-        case 2://Filtering
-            switch (ifba_conf.filtering) {
-                case 0:
-                    footer=@"No filtering";
-                    break;
-                case 1:
-                    footer=@"Linear filtering";
+                case 3:footer=NSLocalizedString(@"Opaque",@"");
                     break;
             }
             break;
@@ -138,30 +110,14 @@
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
-        case 0://Aspect Ratio
-            cell.textLabel.text=NSLocalizedString(@"Aspect Ratio",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchAspectRatio:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=ifba_conf.aspect_ratio;
-            break;
-        case 1://Screen mode
-            cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"1", @"2",@"3",@"4",nil]];
+        case 0://Opacity
+            cell.textLabel.text=NSLocalizedString(@"Opacity",@"");
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",@"3",nil]];
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
-            [segconview addTarget:self action:@selector(segActionVideoMode:) forControlEvents:UIControlEventValueChanged];            
+            [segconview addTarget:self action:@selector(segActionOpacity:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;
             [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.screen_mode;
-            break;
-        case 2://Filtering
-            cell.textLabel.text=NSLocalizedString(@"Filtering",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchFiltering:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=ifba_conf.filtering;
+            segconview.selectedSegmentIndex=ifba_conf.vpad_alpha;
             break;
     }
     

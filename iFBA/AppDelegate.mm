@@ -80,7 +80,7 @@ void tstfl_validateloadgame(char *name) {
 	if (valNb == nil) ifba_conf.btstack_on=1;
 	else ifba_conf.btstack_on = [valNb intValue];
     valNb=[prefs objectForKey:@"vpad_alpha"];
-	if (valNb == nil) ifba_conf.vpad_alpha=150;
+	if (valNb == nil) ifba_conf.vpad_alpha=1;
 	else ifba_conf.vpad_alpha = [valNb intValue];
     
     valNb=[prefs objectForKey:@"asm_68k"];

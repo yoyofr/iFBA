@@ -108,11 +108,9 @@
             [aboutMsg show];            
             break;
         case 2://Virtual pad
-            //optVPad =[[OptVPadViewController alloc] initWithNibName:@"OptVPadViewController" bundle:nil];
-            //[self.navigationController pushViewController:optVPad animated:YES];
-            //[optVPad release];
-            aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:@"Not developped yet" delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
-            [aboutMsg show];            
+            optVPad =[[OptVPadViewController alloc] initWithNibName:@"OptVPadViewController" bundle:nil];
+            [self.navigationController pushViewController:optVPad animated:YES];
+            [optVPad release];
             break;
     }
 }

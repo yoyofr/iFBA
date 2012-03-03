@@ -20,16 +20,18 @@ bool bAlwaysProcessKeyboardInput=0;
 
 extern bool bBurnUseASMCPUEmulation;
 
-void init_emu(int gamenum)
-{
-#if TARGET_IPHONE_SIMULATOR
-    bBurnUseASMCPUEmulation=0;
-#else
-	bBurnUseASMCPUEmulation=1;
-#endif    
+void init_emu(int gamenum) {
  	bCheatsAllowed=false;
 	ConfigAppLoad();
 	ConfigAppSave();
+    
+#if TARGET_IPHONE_SIMULATOR
+    bBurnUseASMCPUEmulation=0;
+#else
+	bBurnUseASMCPUEmulation=ifba_conf.asm_68k;
+#endif    
+
+    
 	DrvInit(gamenum,0);
 }
 
@@ -77,10 +79,6 @@ int fba_main(int argc, char *argv[])
 		}
 	}
     
-#if TARGET_IPHONE_SIMULATOR    
-    bBurnUseASMCPUEmulation = false;
-#endif
-
 	InputInit();
 	init_emu(i);
     

@@ -103,12 +103,9 @@
                     footer=NSLocalizedString(@"Original resolution",@"");
                     break;
                 case 1:
-                    footer=NSLocalizedString(@"Fixed scaled resolution",@"");
-                    break;
-                case 2:
                     footer=NSLocalizedString(@"Scaled resolution with vpad",@"");
                     break;
-                case 3:
+                case 2:
                     footer=NSLocalizedString(@"Fullscreen",@"");
                     break;
             }
@@ -148,7 +145,7 @@
             break;
         case 1://Screen mode
             cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"1", @"2",@"3",@"4",nil]];
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"1", @"2", @"3", nil]];
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
             [segconview addTarget:self action:@selector(segActionVideoMode:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;

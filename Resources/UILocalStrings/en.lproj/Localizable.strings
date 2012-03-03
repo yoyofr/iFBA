@@ -45,6 +45,11 @@
 "Wiimote"="Wiimote";
 "iCade"="iCade";
 "Virtual pad"="Virtual pad";
+"Opacity"="Opacity";
+"Invisible"="Invisible";
+"Low"="Low";
+"Med"="Medium";
+"Opaque"="Opaque";
 
 //Audio options
 "Sound Output"="Sound Output";

@@ -1742,8 +1742,8 @@ Main Driver Init function
 INT32 System16Init()
 {
 	INT32 nRet = 0, nLen;
-	
-	// Allocate and Blank all required memory
+    
+    // Allocate and Blank all required memory
 	Mem = NULL;
 	System16LoadRoms(0); // Get required rom sizes
 	System16MemIndex();
@@ -1771,9 +1771,7 @@ INT32 System16Init()
 	if ((BurnDrvGetHardwareCode() & HARDWARE_SEGA_FD1094_ENC) || (BurnDrvGetHardwareCode() & HARDWARE_SEGA_FD1094_ENC_CPU2)) {
 		// Make sure we use Musashi
 		if (bBurnUseASMCPUEmulation) {
-#if 1 && defined FBA_DEBUG
-			bprintf(PRINT_NORMAL, _T("Switching to Musashi 68000 core\n"));
-#endif
+			//printf("Switching to Musashi 68000 core\n");
 			bUseAsm68KCoreOldValue = bBurnUseASMCPUEmulation;
 			bBurnUseASMCPUEmulation = false;
 		}
@@ -2505,9 +2503,7 @@ INT32 System16Exit()
 		
 		// Switch back CPU core if needed
 		if (bUseAsm68KCoreOldValue) {
-#if 1 && defined FBA_DEBUG
-			bprintf(PRINT_NORMAL, _T("Switching back to A68K core\n"));
-#endif
+			//printf("Switching back to C68K core\n");
 			bUseAsm68KCoreOldValue = false;
 			bBurnUseASMCPUEmulation = true;
 		}

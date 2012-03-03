@@ -446,8 +446,6 @@ INT32 SekInit(INT32 nCount, INT32 nCPUType)
 	
 	struct SekExt* ps = NULL;
     
-	//bBurnUseASMCPUEmulation = false;
-    
 	if (nSekActive >= 0) {
 		SekClose();
 		nSekActive = -1;
@@ -622,7 +620,7 @@ INT32 SekExit()
 	for (INT32 i = 0; i <= nSekCount; i++) {
         
         
-        if (bBurnUseASMCPUEmulation==0) SekCPUExitM68K(i);
+        if (!bBurnUseASMCPUEmulation) SekCPUExitM68K(i);
         
 		// Deallocate other context data
 		if (SekExt[i]) {
@@ -652,11 +650,8 @@ void SekReset() {
 // Open a CPU
 void SekOpen(const INT32 i) {
 	if (i != nSekActive) {
-		nSekActive = i;
-        
-		pSekExt = SekExt[nSekActive];						// Point to cpu context
-        
-        
+		nSekActive = i;        
+		pSekExt = SekExt[nSekActive];						// Point to cpu context                
         if (!bBurnUseASMCPUEmulation) m68k_set_context(SekM68KContext[nSekActive]);
         else nSekCyclesTotal = nSekCycles[nSekActive];
 	}
@@ -689,15 +684,12 @@ void SekSetIRQLine(const INT32 line, const INT32 status) {
             nSekCyclesDone += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
             PicoCpu[nSekActive].irq = line;
             PicoCpu[nSekActive].cycles=m68k_ICount = nSekCyclesToDo = -1;
-        }
-        
-        
+        }                
 		return;
 	}
     
 	nSekIRQPending[nSekActive] = 0;
-    
-    
+        
     if (!bBurnUseASMCPUEmulation) m68k_set_irq(0);
     else PicoCpu[nSekActive].irq = 0;
 }
@@ -761,6 +753,7 @@ INT32 SekRun(const INT32 nCycles) {
                 nSekCyclesTotal += nSekCyclesSegment;
             } else {
                 CycloneRun(&PicoCpu[nSekActive]);
+                m68k_ICount=PicoCpu[nSekActive].cycles;
                 nSekCyclesDone += nSekCyclesToDo - m68k_ICount;
                 nSekCyclesTotal += nSekCyclesToDo - m68k_ICount;
             }
@@ -936,7 +929,7 @@ INT32 SekSetWriteLongHandler(INT32 i, pSekWriteLongHandler pHandler)
 
 INT32 SekGetPC(INT32) {
     if (!bBurnUseASMCPUEmulation) return m68k_get_reg(NULL, M68K_REG_PC);
-    else return PicoCpu[nSekActive].pc-PicoCpu[nSekActive].membase;;
+    else return PicoCpu[nSekActive].pc-PicoCpu[nSekActive].membase;
 }
 
 INT32 SekDbgGetCPUType() {
