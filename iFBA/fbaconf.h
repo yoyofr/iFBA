@@ -18,6 +18,7 @@ typedef struct {
     //Audio
     unsigned char sound_on;
     unsigned int sound_freq;
+    unsigned char sound_latency;
     
     //Controls
     unsigned char vpad_alpha;

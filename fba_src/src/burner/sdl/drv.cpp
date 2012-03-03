@@ -1,8 +1,12 @@
 // Driver Init module
 #include "burner.h"
 
+extern INT32 nAudSampleRate;
+
+
 int bDrvOkay = 0;						// 1 if the Driver has been initted okay, and it's okay to use the BurnDrv functions
 extern bool bSoundOn;
+extern int sdl_frequency;
 
 char szAppRomPaths[DIRS_MAX][MAX_PATH] = {{"/var/mobile/Library/iFBA"},{"/var/mobile/Library/ROMS"}, };
 
@@ -64,7 +68,7 @@ int DrvInit(int nDrvNum, bool bRestore)
 	nBurnSoundRate = 0;					// Assume no sound
 	pBurnSoundOut = NULL;
 	if (bAudOkay) {
-		nBurnSoundRate = nAudSampleRate[0];
+		nBurnSoundRate = nAudSampleRate;//nAudSampleRate[0];
 		nBurnSoundLen = nAudSegLen;
 	}
 	nBurnDrvSelect[0] = nDrvNum;		// Set the driver number

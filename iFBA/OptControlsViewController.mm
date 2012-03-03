@@ -93,6 +93,7 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIAlertView *aboutMsg;
     switch (indexPath.row) {
         case 0://Wiimote
             optWiimote=[[OptWiimoteViewController alloc] initWithNibName:@"OptWiimoteViewController" bundle:nil];
@@ -100,14 +101,18 @@
             [optWiimote release];
             break;
         case 1://iCade
-            optiCade =[[OptiCadeViewController alloc] initWithNibName:@"OptiCadeViewController" bundle:nil];
-            [self.navigationController pushViewController:optiCade animated:YES];
-            [optiCade release];
+            //optiCade =[[OptiCadeViewController alloc] initWithNibName:@"OptiCadeViewController" bundle:nil];
+            //[self.navigationController pushViewController:optiCade animated:YES];
+            //[optiCade release];
+            aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:@"Not developped yet" delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+            [aboutMsg show];            
             break;
         case 2://Virtual pad
-            optVPad =[[OptVPadViewController alloc] initWithNibName:@"OptVPadViewController" bundle:nil];
-            [self.navigationController pushViewController:optVPad animated:YES];
-            [optVPad release];
+            //optVPad =[[OptVPadViewController alloc] initWithNibName:@"OptVPadViewController" bundle:nil];
+            //[self.navigationController pushViewController:optVPad animated:YES];
+            //[optVPad release];
+            aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:@"Not developped yet" delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+            [aboutMsg show];            
             break;
     }
 }

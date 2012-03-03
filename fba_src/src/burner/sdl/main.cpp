@@ -10,6 +10,9 @@ There are lots of problems with the opengl renderer
 probably many other things.
 ------------------*/
 #include "burner.h"
+#include "fbaconf.h"
+
+extern bool bSoundOn;
 
 int nAppVirtualFps = 6000;			// App fps * 100
 bool bRunPause=0;
@@ -43,6 +46,9 @@ void ProcessCommandLine(int argc, char *argv[])
 int fba_main(int argc, char *argv[]) 
 {
 	UINT32 i=0;
+    
+    
+    bSoundOn=ifba_conf.sound_on;
 	
 	ConfigAppLoad(); 
 	

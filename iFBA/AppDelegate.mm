@@ -17,6 +17,8 @@
 #import "TestFlight.h"
 #endif
 
+extern char gameName[64];
+
 extern int device_isIpad;
 
 @implementation AppDelegate
@@ -35,6 +37,9 @@ void tstfl_validateloadgame(char *name) {
 - (void)loadSettings {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSNumber *valNb;
+    
+    
+    gameName[0]=0;
     
     memset(&ifba_conf,0,sizeof(ifba_conf_t));
 	
@@ -65,8 +70,11 @@ void tstfl_validateloadgame(char *name) {
 	if (valNb == nil) ifba_conf.sound_on=1;
 	else ifba_conf.sound_on = [valNb intValue];
     valNb=[prefs objectForKey:@"sound_freq"];
-	if (valNb == nil) ifba_conf.sound_freq=22050;
+	if (valNb == nil) ifba_conf.sound_freq=0;
 	else ifba_conf.sound_freq = [valNb intValue];
+    valNb=[prefs objectForKey:@"sound_latency"];
+	if (valNb == nil) ifba_conf.sound_latency=1;
+	else ifba_conf.sound_latency = [valNb intValue];
     
     valNb=[prefs objectForKey:@"btstack_on"];
 	if (valNb == nil) ifba_conf.btstack_on=1;
@@ -79,13 +87,13 @@ void tstfl_validateloadgame(char *name) {
 	if (valNb == nil) ifba_conf.asm_68k=1;
 	else ifba_conf.asm_68k = [valNb intValue];
     valNb=[prefs objectForKey:@"asm_z80"];
-	if (valNb == nil) ifba_conf.asm_z80=1;
+	if (valNb == nil) ifba_conf.asm_z80=0;
 	else ifba_conf.asm_z80 = [valNb intValue];
     valNb=[prefs objectForKey:@"asm_nec"];
-	if (valNb == nil) ifba_conf.asm_nec=1;
+	if (valNb == nil) ifba_conf.asm_nec=0;
 	else ifba_conf.asm_nec = [valNb intValue];
     valNb=[prefs objectForKey:@"asm_sh2"];
-	if (valNb == nil) ifba_conf.asm_sh2=1;
+	if (valNb == nil) ifba_conf.asm_sh2=0;
 	else ifba_conf.asm_sh2 = [valNb intValue];
 	
 }
@@ -107,6 +115,8 @@ void tstfl_validateloadgame(char *name) {
 	[prefs setObject:valNb forKey:@"sound_on"];[valNb autorelease];
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_freq ];
 	[prefs setObject:valNb forKey:@"sound_freq"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_latency ];
+	[prefs setObject:valNb forKey:@"sound_latency"];[valNb autorelease];
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_alpha ];
 	[prefs setObject:valNb forKey:@"vpad_alpha"];[valNb autorelease];    
@@ -163,10 +173,8 @@ void tstfl_validateloadgame(char *name) {
     }
     self.navController = [[[UINavigationController alloc] init] autorelease];
     [[self.navController navigationBar] setBarStyle:UIBarStyleDefault];
-//    [[self.navController navigationBar] setTranslucent:YES];
-    
-    [self.navController pushViewController:menuvc animated:YES];
-    
+//    [[self.navController navigationBar] setTranslucent:YES];    
+    [self.navController pushViewController:menuvc animated:YES];    
     self.window.rootViewController = self.navController;
     
     [self.window makeKeyAndVisible];

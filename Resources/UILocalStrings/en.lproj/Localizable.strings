@@ -6,28 +6,64 @@
   Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 */
 
+//Main menu
 "Load State"="Load State";
 "Save State"="Save State";
 "Load game"="Load game";
 "Options"="Options";
 "About"="About";
 "Feedback"="Feedback";
-
 "Select a game"="Select a game";
+"Back to %s"="Back to %s";
 
+//About
+"About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.21";
+
+//Options
 "Video"="Video";
 "Audio"="Audio";
 "Controllers"="Controllers";
 "Emulation"="Emulation";
 
+
+//Video options
 "Aspect Ratio"="Aspect Ratio";
+"Respect original game's aspect ratio"="Respect original game's aspect ratio";
+"Don't respect original game's aspect ratio"="Don't respect original game's aspect ratio";
+
 "Screen mode"="Screen mode";
+"Original resolution"="Original resolution";
+"Fixed scaled resolution"="Fixed scaled resolution";
+"Scaled resolution with vpad"="Scaled resolution adapted to virtual pad";
+"Fullscreen"="Fullscreen";
+
 "Filtering"="Filtering";
+"No filtering"="No filtering";
+"Linear filtering"="Linear filtering";
 
-"Back to %s"="Back to %s";
-"About"="About";
-"About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.21";
-
+//Controllers options
 "Wiimote"="Wiimote";
 "iCade"="iCade";
 "Virtual pad"="Virtual pad";
+
+//Audio options
+"Sound Output"="Sound Output";
+"Sound Output on"="Sound output activated. Changes are applied at next game launch";
+"Sound Output off"="Sound output deactivated. Changes are applied at next game launch";
+
+"Sound Frequency"="Sound Frequency";
+"Sound Freq22"="22Khz output. Changes are applied at next game launch";
+"Sound Freq44"="44Khz output. Changes are applied at next game launch";
+
+"Sound Latency"="Sound Latency";
+"Sound Latency0"="Low latency, might generate sound issue. Changes are applied at next game launch";
+"Sound Latency1"="Mid latency, reduce potential sound issue. Changes are applied at next game launch";
+"Sound Latency2"="High latency, reduce even more potential sound issue. Changes are applied at next game launch";
+
+//Emulation options
+"68k_core"="68k core";
+"z80_core"="z80 core";
+"sh2_core"="sh2 core";
+"nec_core"="nec core";
+"asm cpu core, faster but less compatible"="asm cpu core, faster but less compatible";
+"asm cpu core, faster but less compatible"="asm cpu core, faster but less compatible";

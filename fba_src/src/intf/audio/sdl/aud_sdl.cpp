@@ -4,7 +4,7 @@
 #include "burner.h"
 #include "aud_dsp.h"
 #include <math.h>
-
+#include "fbaconf.h"
 #include <AudioToolbox/AudioToolbox.h>
 
 static unsigned int nSoundFps;	
@@ -13,8 +13,10 @@ int (*GetNextSound)(int);				// Callback used to request more sound
 
 //static SDL_AudioSpec audiospec;
 
-#define PLAYBACK_FREQ 22050
-#define SOUND_BUFFER_NB 6
+//#define PLAYBACK_FREQ 22050
+extern INT32 nAudSampleRate;
+extern INT32 nAudSegCount;
+//#define SOUND_BUFFER_NB 6
 
 
 static int mInterruptShoudlRestart;
@@ -47,7 +49,7 @@ static int SDLSoundBlankSound()
 		dprintf (_T("blanking nAudNextSound\n"));
 		memset(nAudNextSound, 0, nAudSegLen << 2);
 	}
-
+    
 	return 0;
 }
 
@@ -70,14 +72,14 @@ static int SDLSoundCheck() {
     
     //		dprintf(_T("Filling seg %i at %i\n"), nSDLFillSeg, nSDLFillSeg * (nAudSegLen << 2));
     int diff_buf=buffer_ana_gen_ofs-buffer_ana_play_ofs;
-    if (diff_buf<0) diff_buf+=SOUND_BUFFER_NB;
-    if (diff_buf>=SOUND_BUFFER_NB/2) drawframe=1;
+    if (diff_buf<0) diff_buf+=nAudSegCount;
+    if (diff_buf>=nAudSegCount/2) drawframe=1;
     GetNextSound(drawframe);    
-//    if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
+    //    if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
     memcpy(buffer_ana[buffer_ana_gen_ofs], nAudNextSound, nAudSegLen << 2);
     buffer_ana_flag[buffer_ana_gen_ofs]=1;
     buffer_ana_gen_ofs++;
-    if (buffer_ana_gen_ofs==SOUND_BUFFER_NB) buffer_ana_gen_ofs=0;
+    if (buffer_ana_gen_ofs==nAudSegCount) buffer_ana_gen_ofs=0;
     
 	return 0;
 }
@@ -88,19 +90,19 @@ static int SDLSoundExit() {
     free(nAudNextSound);
 	nAudNextSound = NULL;
     
-    for (int i=0;i<SOUND_BUFFER_NB;i++) {
+    for (int i=0;i<nAudSegCount;i++) {
         free(buffer_ana[i]);
     }    
     free((void*)buffer_ana_flag);
     free(buffer_ana);
     
     
-    for (int i=0; i<SOUND_BUFFER_NB; i++) {
+    for (int i=0; i<nAudSegCount; i++) {
 		AudioQueueFreeBuffer( mAudioQueue, mBuffers[i] );		
     }
     free(mBuffers);
     
-
+    
 	return 0;
 }
 
@@ -126,13 +128,13 @@ void interruptionListenerCallback (void *inUserData,UInt32 interruptionState ) {
             CFStringRef newRoute;
             UInt32 size = sizeof(CFStringRef);
             AudioSessionGetProperty(kAudioSessionProperty_AudioRoute,&size,&newRoute);
-/*            if (newRoute) {
-                if (CFStringCompare(newRoute,CFSTR("Headphone"),NULL)==kCFCompareEqualTo) {  //
-                    mInterruptShoudlRestart=0;
-                }                
-            }*/
+            /*            if (newRoute) {
+             if (CFStringCompare(newRoute,CFSTR("Headphone"),NULL)==kCFCompareEqualTo) {  //
+             mInterruptShoudlRestart=0;
+             }                
+             }*/
             
-//			if (mInterruptShoudlRestart) [mplayer Pause:NO];
+            //			if (mInterruptShoudlRestart) [mplayer Pause:NO];
 			mInterruptShoudlRestart=0;
 		}
 		
@@ -153,19 +155,19 @@ void propertyListenerCallback (void                   *inUserData,              
 							   UInt32                 inPropertyValueSize,                         // 3
 							   const void             *inPropertyValue ) {
 	if (inPropertyID==kAudioSessionProperty_AudioRouteChange ) {
-//		ModizMusicPlayer *mplayer = (ModizMusicPlayer *) inUserData; // 6
-/*		if ([mplayer isPlaying]) {
-			CFDictionaryRef routeChangeDictionary = (CFDictionaryRef)inPropertyValue;        // 8
-			//CFStringRef 
-			NSString *oldroute = (NSString*)CFDictionaryGetValue (
-																  routeChangeDictionary,
-																  CFSTR (kAudioSession_AudioRouteChangeKey_OldRoute)
-																  );
-			//NSLog(@"Audio route changed : %@",oldroute);
-			if ([oldroute compare:@"Headphone"]==NSOrderedSame) {  // 9				
-				[mplayer Pause:YES];
-			}
-		}*/
+        //		ModizMusicPlayer *mplayer = (ModizMusicPlayer *) inUserData; // 6
+        /*		if ([mplayer isPlaying]) {
+         CFDictionaryRef routeChangeDictionary = (CFDictionaryRef)inPropertyValue;        // 8
+         //CFStringRef 
+         NSString *oldroute = (NSString*)CFDictionaryGetValue (
+         routeChangeDictionary,
+         CFSTR (kAudioSession_AudioRouteChangeKey_OldRoute)
+         );
+         //NSLog(@"Audio route changed : %@",oldroute);
+         if ([oldroute compare:@"Headphone"]==NSOrderedSame) {  // 9				
+         [mplayer Pause:YES];
+         }
+         }*/
 	}
 }
 
@@ -181,7 +183,7 @@ void emu_AudioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBu
 			
 			buffer_ana_flag[buffer_ana_play_ofs]=0;
 			buffer_ana_play_ofs++;
-			if (buffer_ana_play_ofs==SOUND_BUFFER_NB) buffer_ana_play_ofs=0;
+			if (buffer_ana_play_ofs==nAudSegCount) buffer_ana_play_ofs=0;
 		} else {
 			memset((char*)mBuffer->mAudioData,0,nAudLoopLen);  //WARNING : not fast enough!!
 		}                
@@ -198,8 +200,29 @@ static int SDLSoundInit()
     AudioStreamBasicDescription mDataFormat;
     UInt32 err;
     
+    switch (ifba_conf.sound_freq) {
+        case 0:
+            nAudSampleRate=22050;
+            break;
+        default:
+        case 1:
+            nAudSampleRate=44100;
+            break;
+    }    
+    switch (ifba_conf.sound_latency) {  //TODO: maybe should depend how sound_frequency
+        case 0:
+            nAudSegCount=4;
+            break;
+        case 1:
+            nAudSegCount=6;
+            break;
+        case 2:
+            nAudSegCount=8;
+            break;
+    }
+    
     nSoundFps = nAppVirtualFps;
-	nAudSegLen = (PLAYBACK_FREQ * 100 + (nSoundFps >> 1)) / nSoundFps;
+	nAudSegLen = (nAudSampleRate * 100 + (nSoundFps >> 1)) / nSoundFps;
 	nAudLoopLen = (nAudSegLen * 1/*nAudSegCount*/) << 2;	    
     
     AudioSessionInitialize (
@@ -216,12 +239,12 @@ static int SDLSoundInit()
                              );
     
     //Check if still required or not 
-    Float32 preferredBufferDuration = nAudSegLen*1.0f/PLAYBACK_FREQ;                      // 1
-     AudioSessionSetProperty (                                     // 2
-     kAudioSessionProperty_PreferredHardwareIOBufferDuration,
-     sizeof (preferredBufferDuration),
-     &preferredBufferDuration
-     );
+    Float32 preferredBufferDuration = nAudSegLen*1.0f/nAudSampleRate;                      // 1
+    AudioSessionSetProperty (                                     // 2
+                             kAudioSessionProperty_PreferredHardwareIOBufferDuration,
+                             sizeof (preferredBufferDuration),
+                             &preferredBufferDuration
+                             );
     AudioSessionPropertyID routeChangeID = kAudioSessionProperty_AudioRouteChange;    // 1
     AudioSessionAddPropertyListener (                                 // 2
                                      routeChangeID,                                                 // 3
@@ -231,9 +254,9 @@ static int SDLSoundInit()
     AudioSessionSetActive (true);	
     
     
-    buffer_ana_flag=(int*)malloc(SOUND_BUFFER_NB*sizeof(int));
-    buffer_ana=(short int**)malloc(SOUND_BUFFER_NB*sizeof(unsigned short int *));
-    for (int i=0;i<SOUND_BUFFER_NB;i++) {
+    buffer_ana_flag=(int*)malloc(nAudSegCount*sizeof(int));
+    buffer_ana=(short int**)malloc(nAudSegCount*sizeof(unsigned short int *));
+    for (int i=0;i<nAudSegCount;i++) {
         buffer_ana[i]=(short int *)malloc(nAudLoopLen);
         buffer_ana_flag[i]=0;
     }
@@ -241,7 +264,7 @@ static int SDLSoundInit()
     mDataFormat.mFormatID = kAudioFormatLinearPCM;
     mDataFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
 	
-	mDataFormat.mSampleRate = PLAYBACK_FREQ;
+	mDataFormat.mSampleRate = nAudSampleRate;
     
 	mDataFormat.mBitsPerChannel = 16;
     
@@ -262,8 +285,8 @@ static int SDLSoundInit()
 							  &mAudioQueue );
     
     /* ... and its associated buffers */
-    mBuffers = (AudioQueueBufferRef*)malloc( sizeof(AudioQueueBufferRef) * SOUND_BUFFER_NB );
-    for (int i=0; i<SOUND_BUFFER_NB; i++) {
+    mBuffers = (AudioQueueBufferRef*)malloc( sizeof(AudioQueueBufferRef) * nAudSegCount );
+    for (int i=0; i<nAudSegCount; i++) {
 		AudioQueueBufferRef mBuffer;
 		err = AudioQueueAllocateBuffer( mAudioQueue, nAudLoopLen, &mBuffer );		
 		mBuffers[i]=mBuffer;
@@ -277,14 +300,14 @@ static int SDLSoundInit()
 		return 1;
 	}
     memset(nAudNextSound,0,nAudSegLen<<2);
-
+    
     
     return 0;
 }
 
 static int SDLSoundPlay()
 {
-//	dprintf(_T("SDLSoundPlay\n"));
+    //	dprintf(_T("SDLSoundPlay\n"));
     
     UInt32 err;
     UInt32 i;
@@ -297,7 +320,7 @@ static int SDLSoundPlay()
      */
     
     buffer_ana_gen_ofs=buffer_ana_play_ofs=0;
-    for (i=0; i<SOUND_BUFFER_NB; i++) {
+    for (i=0; i<nAudSegCount; i++) {
         memset(buffer_ana[i],0,nAudLoopLen);
         memset(mBuffers[i]->mAudioData,0,nAudLoopLen);
         mBuffers[i]->mAudioDataByteSize = nAudLoopLen;
@@ -315,7 +338,7 @@ static int SDLSoundPlay()
 
 static int SDLSoundStop()
 {
-//	dprintf(_T("SDLSoundStop\n"));
+    //	dprintf(_T("SDLSoundStop\n"));
 	bAudPlaying = 0;    
     AudioQueueStop( mAudioQueue, TRUE );
 	//AudioQueueReset( mAudioQueue );	

@@ -48,7 +48,9 @@ extern volatile int emuThread_running;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.    
     
-    emuvc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];    
+    emuvc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];
+    
+    
 }
 
 

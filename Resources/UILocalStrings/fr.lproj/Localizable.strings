@@ -6,28 +6,73 @@
   Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 */
 
+//Main menu
 "Load State"="Charger état";
 "Save State"="Sauver état";
 "Load game"="Lancer jeu";
 "Options"="Options";
 "About"="A Propos";
 "Feedback"="Feedback";
-
 "Select a game"="Select. un jeu";
+"Back to %s"="Retour à %s";
 
+//About
+"About_Msg"="iFBA v%@- YoyoFR\n\nBasé sur FBA v0.2.97.21";
+
+//Options
 "Video"="Video";
 "Audio"="Audio";
 "Controllers"="Contrôles";
 "Emulation"="Emulation";
 
+
+//Video options
 "Aspect Ratio"="Aspect Ratio";
+"Respect original game's aspect ratio"="Respecter le ratio écran original";
+"Don't respect original game's aspect ratio"="Ne pas respecter le ratio écran original";
+
 "Screen mode"="Mode écran";
+"Original resolution"="Résolution originale";
+"Fixed scaled resolution"="Mise à échelle fixe";
+"Scaled resolution with vpad"="Mise à échelle adaptée au pad virtuel";
+"Fullscreen"="Pleine écran";
+
+
 "Filtering"="Filtrage";
+"No filtering"="No filtering";
+"Linear filtering"="Linear filtering";
 
-"Back to %s"="Retour à %s";
-"About"="A Propos";
-"About_Msg"="iFBA v%@- YoyoFR\n\nBasé sur FBA v0.2.97.21";
 
+//Controllers options
 "Wiimote"="Wiimote";
 "iCade"="iCade";
 "Virtual pad"="Pad virtuel";
+
+//Wiimote options
+"Bluetooth"="Bluetooth";
+"BTStack"="BTStack";
+"BTStack on"="BTStack on";
+"BTStack off"="BTStack off";
+"Devices"="Appareils";
+
+//Audio options
+"Sound Output"="Audio";
+"Sound Output on"="Audio activé. Changement pris en compte au prochain lancement d'un jeu";
+"Sound Output off"="Audio désactivé. Changement pris en compte au prochain lancement d'un jeu";
+
+"Sound Frequency"="Fréquence audio";
+"Sound Freq22"="22Khz. Changement pris en compte au prochain lancement d'un jeu";
+"Sound Freq44"="44Khz. Changement pris en compte au prochain lancement d'un jeu";
+
+"Sound Latency"="Latence audio";
+"Sound Latency0"="Faible latence, peut induire des coupures sonores. Changement pris en compte au prochain lancement d'un jeu";
+"Sound Latency1"="Latence moyenne, réduit les coupures sononres. Changement pris en compte au prochain lancement d'un jeu";
+"Sound Latency2"="Latence haute, réduit encore mieux les coupures sononres. Changement pris en compte au prochain lancement d'un jeu";
+
+//Emulation options
+"68k_core"="68k core";
+"z80_core"="z80 core";
+"sh2_core"="sh2 core";
+"nec_core"="nec core";
+"asm cpu core, faster but less compatible"="asm cpu core, plus rapide mais moins compatible";
+"C cpu core, slower but more compatible"="C cpu core, plus lent mais plus compatible";

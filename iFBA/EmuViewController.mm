@@ -25,6 +25,8 @@ ifba_conf_t ifba_conf;
 #import "BTstack/wiimote.h"
 static BTDevice *device;
 static uint16_t wiiMoteConHandle = 0;
+void startWiimoteDetection(void);
+void stopWiimoteDetection(void);
 
 int iOS_wiiDeadZoneValue;
 int iOS_inGame;
@@ -33,6 +35,14 @@ float joy_analog_x[MAX_JOYSTICKS];
 float joy_analog_y[MAX_JOYSTICKS];
 float joy_analog_l[MAX_JOYSTICKS];
 float joy_analog_r[MAX_JOYSTICKS];
+int wm_joy_pl[MAX_JOYSTICKS];
+int wm_prev_joy_pl[MAX_JOYSTICKS];
+
+extern int fba_main( int argc, char **argv );
+extern bool bAppDoFast;
+
+
+
 
 volatile int mNewGLFrame;
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch);
@@ -143,6 +153,23 @@ static void *context; //hack to call objective C func from C
         self.title = NSLocalizedString(@"Emu", @"Emu");
         //self.tabBarItem.image = [UIImage imageNamed:@"Emu"];
         launchGame=0;        
+        
+        //WIIMOTE
+        // create discovery controller
+        //discoveryView = [[BTDiscoveryViewController alloc] init];
+        //[discoveryView setDelegate:self];
+        //[self.view addSubview:discoveryView.view];
+        //    discoveryView.view.hidden=TRUE;
+        // BTstack
+        bt = [BTstackManager sharedInstance];
+        if (bt) {
+            [bt setDelegate:self];
+            [bt addListener:self];
+            //[bt addListener:discoveryView];
+            if (ifba_conf.btstack_on) [bt activate];
+        }
+        
+        
     }
     return self;
 }
@@ -273,19 +300,6 @@ static void *context; //hack to call objective C func from C
     control.active = YES;
     control.delegate = self;
     [control release];    
-    //WIIMOTE
-    // create discovery controller
-	discoveryView = [[BTDiscoveryViewController alloc] init];
-	[discoveryView setDelegate:self];
-    [self.view addSubview:discoveryView.view];
-    discoveryView.view.hidden=TRUE;
-    // BTstack
-	BTstackManager * bt = [BTstackManager sharedInstance];
-    if (bt) {
-        [bt setDelegate:self];
-        [bt addListener:self];
-        [bt addListener:discoveryView];
-    }    
 }
 
 
@@ -301,10 +315,15 @@ static void *context; //hack to call objective C func from C
     self.navigationController.navigationBar.hidden=YES;    
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
+    if (bt&&ifba_conf.btstack_on) {
+        stopWiimoteDetection();
+    }
+    
     //
-    joy_state[0][GN_MENU_KEY]=0;
-    
-    
+    for (int i=0;i<num_of_joys;i++) {
+        wm_joy_pl[i]=wm_prev_joy_pl[i]=0;
+    }
+    joy_state[0][GN_MENU_KEY]=0;    
 }
 
 - (void)viewDidAppear:(BOOL)animated {    
@@ -349,6 +368,9 @@ static void *context; //hack to call objective C func from C
         while (emuThread_running) {
             [NSThread sleepForTimeInterval:0.01]; //10ms        
         }
+    }
+    if (bt&&ifba_conf.btstack_on) {
+        startWiimoteDetection();        
     }
 }
 
@@ -429,6 +451,32 @@ static void *context; //hack to call objective C func from C
 /*        BTSTACK / WIIMOTE                         */
 /****************************************************/
 /****************************************************/
+
+void updateWiimotes(void) {
+    //Wiimotes update
+    for (int i=0;i<num_of_joys;i++) {
+        if (wm_joy_pl[i]=iOS_wiimote_check(&(joys[i]))) virtual_stick_on=0;
+        if (wm_joy_pl[i]!=wm_prev_joy_pl[i]) {
+            wm_prev_joy_pl[i]=wm_joy_pl[i];
+            
+            joy_state[i][GN_UP]=(wm_joy_pl[i]&WII_JOY_UP?1:0);
+            joy_state[i][GN_DOWN]=(wm_joy_pl[i]&WII_JOY_DOWN?1:0);
+            joy_state[i][GN_LEFT]=(wm_joy_pl[i]&WII_JOY_LEFT?1:0);
+            joy_state[i][GN_RIGHT]=(wm_joy_pl[i]&WII_JOY_RIGHT?1:0);
+            joy_state[i][GN_A]=(wm_joy_pl[i]&WII_JOY_A?1:0);
+            joy_state[i][GN_B]=(wm_joy_pl[i]&WII_JOY_B?1:0);
+            joy_state[i][GN_C]=(wm_joy_pl[i]&WII_JOY_C?1:0);
+            joy_state[i][GN_D]=(wm_joy_pl[i]&WII_JOY_D?1:0);
+            joy_state[i][GN_SELECT_COIN]=(wm_joy_pl[i]&WII_JOY_SELECT?1:0);
+            joy_state[i][GN_START]=(wm_joy_pl[i]&WII_JOY_START?1:0);
+            joy_state[i][GN_MENU_KEY]=(wm_joy_pl[i]&WII_JOY_HOME?1:0);
+            joy_state[i][GN_TURBO]=(wm_joy_pl[i]&WII_JOY_E?1:0);
+        }
+    }
+    
+    if (joy_state[0][GN_MENU_KEY]) nShouldExit=2;
+    bAppDoFast=joy_state[0][GN_TURBO];
+}
 
 void startWiimoteDetection(void) {
     NSLog(@"Looking for wiimote");
@@ -697,8 +745,6 @@ void stopWiimoteDetection(void) {
 }
 
 //******************************************
-extern int fba_main( int argc, char **argv );
-extern bool bAppDoFast;
 
 -(void) emuThread {
     emuThread_running=1;
@@ -1122,6 +1168,8 @@ int StopProgressBar() {
         self.navigationController.navigationBar.hidden=NO;        
         [[self navigationController] popViewControllerAnimated:NO];
     }
+    
+    //New frame to draw?
     if (!mNewGLFrame) return;
     //todo: how many was there?
     mNewGLFrame=0;
@@ -1170,135 +1218,75 @@ int StopProgressBar() {
         texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)0/TEXTURE_H;
         texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)(visible_area_h)/TEXTURE_H;
         texcoords[2][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
-        float ios_aspect=(float)width/(float)height;
-        float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        
-        
-        switch (ifba_conf.screen_mode) {
-            case 0://org
-                if (ios_aspect>game_aspect) {
-                    rh=min(height,visible_area_h);
-                    rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-                    
-                } else {
-                    rw=min(width,visible_area_w);
-                    rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-                    
-                }
-                break;
-            case 1://fixed
-                if (ios_aspect>game_aspect) {
-                    rh=height/visible_area_h;
-                    rh*=visible_area_h;
-                    if (!rh) rh=height;
-                    rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-                    
-                } else {
-                    rw=width/visible_area_w;
-                    rw*=visible_area_w;
-                    if (!rw) rw=width;
-                    rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-                    
-                }
-                break;
-            case 2://max with room for vpad
-                if (ios_aspect>game_aspect) {
-                    rh=height-virtual_stick_maxdist*2;
-                    rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-                    
-                } else {
-                    rw=width-virtual_stick_maxdist*vid_aspectX/vid_aspectY;
-                    rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-                    
-                }
-                break;
-            case 3://full
-                if (ios_aspect>game_aspect) {
-                    rh=height;
-                    rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-                    
-                } else {
-                    rw=width;
-                    rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
-                    
-                }
-                break;
-        }
-        
-        glViewport((width-rw)>>1, height-rh, rw, rh);            
-        
-        
-        vertices[0][0]=1; vertices[0][1]=-1;
-        vertices[1][0]=-1; vertices[1][1]=-1;
-        vertices[2][0]=1; vertices[2][1]=1;
-        vertices[3][0]=-1; vertices[3][1]=1;
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     } else {
         texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)0/TEXTURE_H;
         texcoords[1][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
         texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
         texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
-        float ios_aspect=(float)width/(float)height;
-        float game_aspect=(float)vid_aspectX/(float)vid_aspectY;
         
-        switch (ifba_conf.screen_mode) {
-            case 0://org
-                if (ios_aspect>game_aspect) {
-                    rh=min(height,visible_area_h);
-                    rw=rh*vid_aspectX/vid_aspectY;
-                    
-                } else {
-                    rw=min(width,visible_area_w);
-                    rh=rw*vid_aspectY/vid_aspectX;
-                    
-                }
-                break;
-            case 1://fixed
-                if (ios_aspect>game_aspect) {
-                    rh=height/visible_area_h;
-                    rh*=visible_area_h;
-                    if (!rh) rh=height;
-                    rw=rh*vid_aspectX/vid_aspectY;
-                    
-                } else {
-                    rw=width/visible_area_w;
-                    rw*=visible_area_w;
-                    if (!rw) rw=width;
-                    rh=rw*vid_aspectY/vid_aspectX;
-                    
-                }
-                break;
-            case 2://max with room for vpad
-                if (ios_aspect>game_aspect) {
-                    rh=height;
-                    rw=rh*vid_aspectX/vid_aspectY;
-                    
-                } else {
-                    rw=width;
-                    rh=rw*vid_aspectY/vid_aspectX;
-                    
-                }
-                break;
-            case 3://full
-                if (ios_aspect>game_aspect) {
-                    rh=height;
-                    rw=rh*vid_aspectX/vid_aspectY;
-                    
-                } else {
-                    rw=width;
-                    rh=rw*vid_aspectY/vid_aspectX;
-                    
-                }
-                break;
-        }
-        glViewport((width-rw)>>1, height-rh, rw, rh);
-        
-        
+    }
+    float ios_aspect=(float)width/(float)height;
+    float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        
+    
+    switch (ifba_conf.screen_mode) {
+        case 0://org
+            if (ios_aspect>game_aspect) {
+                rh=min(height,visible_area_h);
+                rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                
+            } else {
+                rw=min(width,visible_area_w);
+                rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                
+            }
+            break;
+        case 1://fixed
+            if (ios_aspect>game_aspect) {
+                rh=height/visible_area_h;
+                rh*=visible_area_h;
+                if (!rh) rh=height;
+                rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+            } else {
+                rw=width/visible_area_w;
+                rw*=visible_area_w;
+                if (!rw) rw=width;
+                rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+            }
+            break;
+        case 2://max with room for vpad
+            if (ios_aspect>game_aspect) {                    
+                rh=height-virtual_stick_maxdist;
+                rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);                    
+            } else {
+                rw=width-virtual_stick_maxdist*vid_aspectX/vid_aspectY;
+                rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+            }
+            break;
+        case 3://full
+            if (ios_aspect>game_aspect) {
+                rh=height;
+                rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                
+            } else {
+                rw=width;
+                rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+            }
+            break;
+    }
+    
+    glViewport((width-rw)>>1, height-rh, rw, rh);                    
+    if (vid_rotated&&(pb_value==1)) {
+        vertices[0][0]=1; vertices[0][1]=-1;
+        vertices[1][0]=-1; vertices[1][1]=-1;
+        vertices[2][0]=1; vertices[2][1]=1;
+        vertices[3][0]=-1; vertices[3][1]=1;
+    } else {
         vertices[0][0]=-1; vertices[0][1]=1;
         vertices[1][0]=1; vertices[1][1]=1;
         vertices[2][0]=-1; vertices[2][1]=-1;
-        vertices[3][0]=1; vertices[3][1]=-1;
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        vertices[3][0]=1; vertices[3][1]=-1;    
     }
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     if (virtual_stick_on) [self drawVPad];
     

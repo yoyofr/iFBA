@@ -14,6 +14,7 @@
 
 extern char gameName[64];
 extern int launchGame;
+static int cur_game_section,cur_game_row;
 
 @implementation GameBrowserViewController
 @synthesize tabView;
@@ -109,6 +110,8 @@ extern int launchGame;
         romlist[i]=[[NSMutableArray alloc] initWithCapacity:0];
     }
     
+    cur_game_section=cur_game_row=-1;
+    
     dirContent=[mFileMngr subpathsOfDirectoryAtPath:cpath error:&error];
     for (file in dirContent) {
         NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
@@ -121,6 +124,12 @@ extern int launchGame;
                 else if ((i>='A')&&(i<='Z')) i+=1-'A';
                 else i=0;
                 [romlist[i] addObject:file];
+                if (gameName[0]&&(cur_game_section<0)) {
+                    if (strcmp(gameName,[[[file lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
+                        cur_game_section=i;
+                        cur_game_row=[romlist[i] count]-1;
+                    }
+                }
             }
         }
     }
@@ -133,6 +142,7 @@ extern int launchGame;
     [super viewWillAppear:animated];
     [self scanRomsDir];
     [[self tabView] reloadData];
+    if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
 }
 
 - (void)viewDidAppear:(BOOL)animated

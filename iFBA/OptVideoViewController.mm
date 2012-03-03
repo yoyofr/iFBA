@@ -92,34 +92,34 @@
     switch (section) {
         case 0://Aspect Ratio
             if (ifba_conf.aspect_ratio) {
-                footer=@"Respect original game's aspect ratio";
+                footer=NSLocalizedString(@"Respect original game's aspect ratio",@"");
             } else {
-                footer=@"Don't respect original game's aspect ratio";
+                footer=NSLocalizedString(@"Don't respect original game's aspect ratio",@"");
             }
             break;
         case 1://Screen mode
             switch (ifba_conf.screen_mode) {
                 case 0:
-                    footer=@"Original resolution";
+                    footer=NSLocalizedString(@"Original resolution",@"");
                     break;
                 case 1:
-                    footer=@"Fixed scaled resolution";
+                    footer=NSLocalizedString(@"Fixed scaled resolution",@"");
                     break;
                 case 2:
-                    footer=@"Scaled resolution";
+                    footer=NSLocalizedString(@"Scaled resolution with vpad",@"");
                     break;
                 case 3:
-                    footer=@"Fullscreen";
+                    footer=NSLocalizedString(@"Fullscreen",@"");
                     break;
             }
             break;
         case 2://Filtering
             switch (ifba_conf.filtering) {
                 case 0:
-                    footer=@"No filtering";
+                    footer=NSLocalizedString(@"No filtering",@"");
                     break;
                 case 1:
-                    footer=@"Linear filtering";
+                    footer=NSLocalizedString(@"Linear filtering",@"");
                     break;
             }
             break;

@@ -3,7 +3,8 @@
 
 extern bool bSoundOn;
 
-INT32 nAudSampleRate[8] = { 22050,22050,22050,22050,22050,22050,22050,22050 };			// sample rate
+//INT32 nAudSampleRate[8] = { 22050,22050,22050,22050,22050,22050,22050,22050 };			// sample rate
+INT32 nAudSampleRate;
 INT32 nAudVolume = 10000;				// Sound volume (% * 100)
 INT32 nAudSegCount = 6;				// Segs in the pdsbLoop buffer
 INT32 nAudSegLen = 0;					// Seg length in samples (calculated from Rate/Fps)
@@ -156,7 +157,7 @@ InterfaceInfo* AudGetInfo()
 
 		AudInfo.pszModuleName = pAudOut[nAudActive]->szModuleName;
 
-		_sntprintf(szString, MAX_PATH, _T("Playback at %iHz, %i%% volume"), nAudSampleRate[nAudActive], nAudVolume / 100);
+		_sntprintf(szString, MAX_PATH, _T("Playback at %iHz, %i%% volume"), nAudSampleRate/*nAudSampleRate[nAudActive]*/, nAudVolume / 100);
 		IntInfoAddStringInterface(&AudInfo, szString);
 
 		if (nAudDSPModule[nAudActive]) {

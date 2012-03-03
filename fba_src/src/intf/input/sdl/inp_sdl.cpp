@@ -14,6 +14,8 @@ extern float joy_analog_y[MAX_JOYSTICKS];
 extern float joy_analog_l[MAX_JOYSTICKS];
 extern float joy_analog_r[MAX_JOYSTICKS];
 
+extern void updateWiimotes(void);
+
 // Sets up one Joystick (for example the range of the joystick's axes)
 static int SDLinpJoystickInit(int i)
 {
@@ -96,7 +98,7 @@ static int ReadJoystick()
 {
 	if (bJoystickRead) {
 		return 0;
-	}
+	}        
     
 	// All joysticks have been Read this frame
 	bJoystickRead = 1;
@@ -141,6 +143,8 @@ static int ReadKeyboard() {
 		return 0;
 	}
     
+    updateWiimotes();
+    
 	// The keyboard has been successfully Read this frame
 	bKeyboardRead = 1;
     
@@ -181,6 +185,8 @@ int SDLinpState(int code) {
     if (code < 0) {
         return 0;
     }
+    
+    ReadKeyboard();
     
     if (code < 256) {
         switch(code) {

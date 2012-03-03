@@ -64,62 +64,59 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
     switch (section) {
-        case 0:title=NSLocalizedString(@"Aspect Ratio",@"");
+        case 0:title=NSLocalizedString(@"Output",@"");
             break;
-        case 1:title=NSLocalizedString(@"Screen mode",@"");
+        case 1:title=NSLocalizedString(@"Frequency",@"");
             break;
-        case 2:title=NSLocalizedString(@"Filtering",@"");
+        case 2:title=NSLocalizedString(@"Latency",@"");
             break;
     }
     return title;
 }
 
-- (void)segActionVideoMode:(id)sender {
-    ifba_conf.screen_mode=[sender selectedSegmentIndex];
+- (void)segActionLatency:(id)sender {
+    ifba_conf.sound_latency=[sender selectedSegmentIndex];
     [tabView reloadData];
 }
-- (void)switchAspectRatio:(id)sender {
-    ifba_conf.aspect_ratio =((UISwitch*)sender).on;
+- (void)switchSoundOutput:(id)sender {
+    ifba_conf.sound_on =((UISwitch*)sender).on;
     [tabView reloadData];
 }
-- (void)switchFiltering:(id)sender {
-    ifba_conf.filtering =((UISwitch*)sender).on;
+- (void)segActionFrequency:(id)sender {
+    ifba_conf.sound_freq =[sender selectedSegmentIndex];
     [tabView reloadData];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
-        case 0://Aspect Ratio
-            if (ifba_conf.aspect_ratio) {
-                footer=@"Respect original game's aspect ratio";
+        case 0://Output
+            if (ifba_conf.sound_on) {
+                footer=NSLocalizedString(@"Sound Output on",@"");
             } else {
-                footer=@"Don't respect original game's aspect ratio";
+                footer=NSLocalizedString(@"Sound Output off",@"");
             }
             break;
-        case 1://Screen mode
-            switch (ifba_conf.screen_mode) {
+        case 1://Frequency
+            switch (ifba_conf.sound_freq) {
                 case 0:
-                    footer=@"Original resolution";
+                    footer=NSLocalizedString(@"Sound Freq22",@"");
                     break;
                 case 1:
-                    footer=@"Fixed scaled resolution";
+                    footer=NSLocalizedString(@"Sound Freq44",@"");
+                    break;
+            }
+            break;
+        case 2://Latency
+            switch (ifba_conf.sound_latency) {
+                case 0:
+                    footer=NSLocalizedString(@"Sound Latency0",@"");
+                    break;
+                case 1:
+                    footer=NSLocalizedString(@"Sound Latency1",@"");
                     break;
                 case 2:
-                    footer=@"Scaled resolution";
-                    break;
-                case 3:
-                    footer=@"Fullscreen";
-                    break;
-            }
-            break;
-        case 2://Filtering
-            switch (ifba_conf.filtering) {
-                case 0:
-                    footer=@"No filtering";
-                    break;
-                case 1:
-                    footer=@"Linear filtering";
+                    footer=NSLocalizedString(@"Sound Latency2",@"");
                     break;
             }
             break;
@@ -138,30 +135,31 @@
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
-        case 0://Aspect Ratio
-            cell.textLabel.text=NSLocalizedString(@"Aspect Ratio",@"");
+        case 0://Sound output
+            cell.textLabel.text=NSLocalizedString(@"Sound Output",@"");
             switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchAspectRatio:) forControlEvents:UIControlEventValueChanged];
+            [switchview addTarget:self action:@selector(switchSoundOutput:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.aspect_ratio;
+            switchview.on=ifba_conf.sound_on;
             break;
-        case 1://Screen mode
-            cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"1", @"2",@"3",@"4",nil]];
+        case 1://Sound Frequency
+            cell.textLabel.text=NSLocalizedString(@"Sound Frequency",@"");
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"22Khz", @"44Khz",nil]];
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
-            [segconview addTarget:self action:@selector(segActionVideoMode:) forControlEvents:UIControlEventValueChanged];            
+            [segconview addTarget:self action:@selector(segActionFrequency:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;
             [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.screen_mode;
+            segconview.selectedSegmentIndex=ifba_conf.sound_freq;
             break;
-        case 2://Filtering
-            cell.textLabel.text=NSLocalizedString(@"Filtering",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchFiltering:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=ifba_conf.filtering;
+        case 2://Sound Latency
+            cell.textLabel.text=NSLocalizedString(@"Sound Latency",@"");
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",nil]];
+            segconview.segmentedControlStyle = UISegmentedControlStylePlain;
+            [segconview addTarget:self action:@selector(segActionLatency:) forControlEvents:UIControlEventValueChanged];            
+            cell.accessoryView = segconview;
+            [segconview release];
+            segconview.selectedSegmentIndex=ifba_conf.sound_latency;
             break;
     }
     

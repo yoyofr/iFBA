@@ -52,7 +52,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 3;
+	return 2;//4;
 }
 
 
@@ -64,63 +64,64 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
     switch (section) {
-        case 0:title=NSLocalizedString(@"Aspect Ratio",@"");
+        case 0:title=NSLocalizedString(@"68000 core",@"");
             break;
-        case 1:title=NSLocalizedString(@"Screen mode",@"");
+        case 1:title=NSLocalizedString(@"z80 core",@"");
             break;
-        case 2:title=NSLocalizedString(@"Filtering",@"");
+        case 2:title=NSLocalizedString(@"nec core",@"");
+            break;
+        case 3:title=NSLocalizedString(@"sh2 core",@"");
             break;
     }
     return title;
 }
 
-- (void)segActionVideoMode:(id)sender {
-    ifba_conf.screen_mode=[sender selectedSegmentIndex];
+- (void)switch68k:(id)sender {
+    ifba_conf.asm_68k =((UISwitch*)sender).on;
     [tabView reloadData];
 }
-- (void)switchAspectRatio:(id)sender {
-    ifba_conf.aspect_ratio =((UISwitch*)sender).on;
+- (void)switchz80:(id)sender {
+    ifba_conf.asm_z80 =((UISwitch*)sender).on;
     [tabView reloadData];
 }
-- (void)switchFiltering:(id)sender {
-    ifba_conf.filtering =((UISwitch*)sender).on;
+- (void)switchsh2:(id)sender {
+    ifba_conf.asm_sh2 =((UISwitch*)sender).on;
+    [tabView reloadData];
+}
+- (void)switchnec:(id)sender {
+    ifba_conf.asm_nec =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
-        case 0://Aspect Ratio
-            if (ifba_conf.aspect_ratio) {
-                footer=@"Respect original game's aspect ratio";
+        case 0://68k
+            if (ifba_conf.asm_68k) {
+                footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
             } else {
-                footer=@"Don't respect original game's aspect ratio";
+                footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
             }
             break;
-        case 1://Screen mode
-            switch (ifba_conf.screen_mode) {
-                case 0:
-                    footer=@"Original resolution";
-                    break;
-                case 1:
-                    footer=@"Fixed scaled resolution";
-                    break;
-                case 2:
-                    footer=@"Scaled resolution";
-                    break;
-                case 3:
-                    footer=@"Fullscreen";
-                    break;
+        case 1://z80
+            if (ifba_conf.asm_z80) {
+                footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
+            } else {
+                footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
             }
             break;
-        case 2://Filtering
-            switch (ifba_conf.filtering) {
-                case 0:
-                    footer=@"No filtering";
-                    break;
-                case 1:
-                    footer=@"Linear filtering";
-                    break;
+        case 2://sh2
+            if (ifba_conf.asm_sh2) {
+                footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
+            } else {
+                footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
+            }
+            break;
+        case 3://nec
+            if (ifba_conf.asm_nec) {
+                footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
+            } else {
+                footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
             }
             break;
     }
@@ -138,35 +139,39 @@
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
-        case 0://Aspect Ratio
-            cell.textLabel.text=NSLocalizedString(@"Aspect Ratio",@"");
+        case 0://68k
+            cell.textLabel.text=NSLocalizedString(@"68k_core",@"");
             switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchAspectRatio:) forControlEvents:UIControlEventValueChanged];
+            [switchview addTarget:self action:@selector(switch68k:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.aspect_ratio;
+            switchview.on=ifba_conf.asm_68k;
             break;
-        case 1://Screen mode
-            cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"1", @"2",@"3",@"4",nil]];
-            segconview.segmentedControlStyle = UISegmentedControlStylePlain;
-            [segconview addTarget:self action:@selector(segActionVideoMode:) forControlEvents:UIControlEventValueChanged];            
-            cell.accessoryView = segconview;
-            [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.screen_mode;
-            break;
-        case 2://Filtering
-            cell.textLabel.text=NSLocalizedString(@"Filtering",@"");
+        case 1://z80
+            cell.textLabel.text=NSLocalizedString(@"z80_core",@"");
             switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchFiltering:) forControlEvents:UIControlEventValueChanged];
+            [switchview addTarget:self action:@selector(switchz80:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.filtering;
+            switchview.on=ifba_conf.asm_z80;
+            break;
+        case 2://sh2
+            cell.textLabel.text=NSLocalizedString(@"sh2_core",@"");
+            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+            [switchview addTarget:self action:@selector(switchsh2:) forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = switchview;
+            [switchview release];
+            switchview.on=ifba_conf.asm_sh2;
+            break;
+        case 3://nec
+            cell.textLabel.text=NSLocalizedString(@"nec_core",@"");
+            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+            [switchview addTarget:self action:@selector(switchnec:) forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = switchview;
+            [switchview release];
+            switchview.on=ifba_conf.asm_nec;
             break;
     }
-    
-	
-    
     return cell;
 }
 
