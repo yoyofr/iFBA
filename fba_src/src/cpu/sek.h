@@ -121,11 +121,13 @@ inline static INT32 SekIdle(INT32 nCycles)
 
 inline static INT32 SekSegmentCycles()
 {
+    if (bBurnUseASMCPUEmulation) m68k_ICount=PicoCpu[nSekActive].cycles;
 	return nSekCyclesDone + nSekCyclesToDo - m68k_ICount;
 }
 
 inline static INT32 SekTotalCycles()
 {
+    if (bBurnUseASMCPUEmulation) m68k_ICount=PicoCpu[nSekActive].cycles;
 	return nSekCyclesTotal + nSekCyclesToDo - m68k_ICount;
 }
 

@@ -557,6 +557,10 @@
 		339A94E214F238FA00225183 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94E114F238FA00225183 /* Icon-72.png */; };
 		339A94E414F2390800225183 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94E314F2390800225183 /* Default-Portrait~ipad.png */; };
 		339A94E614F2390D00225183 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94E514F2390D00225183 /* Default-Landscape~ipad.png */; };
+		339D14B31503F05800B9FA5C /* OptConGetiCadeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 339D14B11503F05500B9FA5C /* OptConGetiCadeViewController.m */; };
+		339D14B41503F05800B9FA5C /* OptConGetiCadeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 339D14B21503F05700B9FA5C /* OptConGetiCadeViewController.xib */; };
+		339D14BA1504051500B9FA5C /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 339D14B71504050800B9FA5C /* TDSemiModalViewController.m */; };
+		339D14BB1504051500B9FA5C /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 339D14B91504051200B9FA5C /* UIViewController+TDSemiModalExtension.m */; };
 		339E5FB314F1851E006FB970 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E5FB214F1851E006FB970 /* UIKit.framework */; };
 		339E5FB514F1851E006FB970 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E5FB414F1851E006FB970 /* Foundation.framework */; };
 		339E5FB714F1851E006FB970 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E5FB614F1851E006FB970 /* CoreGraphics.framework */; };
@@ -1376,6 +1380,14 @@
 		339A94E114F238FA00225183 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		339A94E314F2390800225183 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		339A94E514F2390D00225183 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		339D14B01503F05300B9FA5C /* OptConGetiCadeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptConGetiCadeViewController.h; sourceTree = "<group>"; };
+		339D14B11503F05500B9FA5C /* OptConGetiCadeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptConGetiCadeViewController.m; sourceTree = "<group>"; };
+		339D14B21503F05700B9FA5C /* OptConGetiCadeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptConGetiCadeViewController.xib; sourceTree = "<group>"; };
+		339D14B51504050300B9FA5C /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDSemiModal.h; sourceTree = "<group>"; };
+		339D14B61504050400B9FA5C /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDSemiModalViewController.h; sourceTree = "<group>"; };
+		339D14B71504050800B9FA5C /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDSemiModalViewController.m; sourceTree = "<group>"; };
+		339D14B81504050A00B9FA5C /* UIViewController+TDSemiModalExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+TDSemiModalExtension.h"; sourceTree = "<group>"; };
+		339D14B91504051200B9FA5C /* UIViewController+TDSemiModalExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+TDSemiModalExtension.m"; sourceTree = "<group>"; };
 		339E5FAE14F1851E006FB970 /* iFBA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iFBA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		339E5FB214F1851E006FB970 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		339E5FB414F1851E006FB970 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -2775,6 +2787,24 @@
 				339E636314F1B8BC006FB970 /* FrameBuffer.h */,
 				339E636414F1B8BC006FB970 /* FrameBuffer.mm */,
 				339E636514F1B8BC006FB970 /* GlErrors.h */,
+				339D14B51504050300B9FA5C /* TDSemiModal.h */,
+				339D14B61504050400B9FA5C /* TDSemiModalViewController.h */,
+				339D14B71504050800B9FA5C /* TDSemiModalViewController.m */,
+				339D14B81504050A00B9FA5C /* UIViewController+TDSemiModalExtension.h */,
+				339D14B91504051200B9FA5C /* UIViewController+TDSemiModalExtension.m */,
+				33F444D814F5685100BA36E1 /* EmuViewController.h */,
+				33F444D914F5685100BA36E1 /* EmuViewController.mm */,
+				33F444D614F567DC00BA36E1 /* EmuViewController.xib */,
+				3354E93A14F9152B001DAF9D /* GameBrowserViewController.h */,
+				3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */,
+				3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */,
+				339E5FC414F1851E006FB970 /* MenuViewController.h */,
+				339E5FC514F1851E006FB970 /* MenuViewController.mm */,
+				3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */,
+				3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */,
+				334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */,
+				334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */,
+				334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */,
 				334F5FF014FCC55900ED3CDB /* OptVideoViewController.h */,
 				334F5FF114FCC55900ED3CDB /* OptVideoViewController.mm */,
 				334F5FF214FCC55A00ED3CDB /* OptVideoViewController.xib */,
@@ -2784,9 +2814,9 @@
 				339F697F1500A00D00C1B5EF /* OptEmuViewController.h */,
 				339F69801500A00D00C1B5EF /* OptEmuViewController.mm */,
 				339F69811500A00E00C1B5EF /* OptEmuViewController.xib */,
-				33F444D814F5685100BA36E1 /* EmuViewController.h */,
-				33F444D914F5685100BA36E1 /* EmuViewController.mm */,
-				33F444D614F567DC00BA36E1 /* EmuViewController.xib */,
+				339F696A15002D2E00C1B5EF /* OptControlsViewController.h */,
+				339F696B15002D2F00C1B5EF /* OptControlsViewController.mm */,
+				339F696C15002D2F00C1B5EF /* OptControlsViewController.xib */,
 				339F696E15002F5200C1B5EF /* OptVPadViewController.h */,
 				339F696F15002F5300C1B5EF /* OptVPadViewController.mm */,
 				339F697015002F5300C1B5EF /* OptVPadViewController.xib */,
@@ -2796,19 +2826,9 @@
 				339F697415002F5F00C1B5EF /* OptiCadeViewController.h */,
 				339F697515002F5F00C1B5EF /* OptiCadeViewController.mm */,
 				339F697615002F5F00C1B5EF /* OptiCadeViewController.xib */,
-				339F696A15002D2E00C1B5EF /* OptControlsViewController.h */,
-				339F696B15002D2F00C1B5EF /* OptControlsViewController.mm */,
-				339F696C15002D2F00C1B5EF /* OptControlsViewController.xib */,
-				334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */,
-				334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */,
-				334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */,
-				3354E93A14F9152B001DAF9D /* GameBrowserViewController.h */,
-				3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */,
-				3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */,
-				339E5FC414F1851E006FB970 /* MenuViewController.h */,
-				339E5FC514F1851E006FB970 /* MenuViewController.mm */,
-				3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */,
-				3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */,
+				339D14B01503F05300B9FA5C /* OptConGetiCadeViewController.h */,
+				339D14B11503F05500B9FA5C /* OptConGetiCadeViewController.m */,
+				339D14B21503F05700B9FA5C /* OptConGetiCadeViewController.xib */,
 				339E5FB914F1851E006FB970 /* Supporting Files */,
 			);
 			path = iFBA;
@@ -2942,6 +2962,7 @@
 				339F697E15009CFB00C1B5EF /* OptVPadViewController.xib in Resources */,
 				339F69831500A00F00C1B5EF /* OptEmuViewController.xib in Resources */,
 				339F69881500A01A00C1B5EF /* OptAudioViewController.xib in Resources */,
+				339D14B41503F05800B9FA5C /* OptConGetiCadeViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3493,6 +3514,9 @@
 				339F697A1500995E00C1B5EF /* OptVPadViewController.mm in Sources */,
 				339F69821500A00F00C1B5EF /* OptEmuViewController.mm in Sources */,
 				339F69871500A01A00C1B5EF /* OptAudioViewController.mm in Sources */,
+				339D14B31503F05800B9FA5C /* OptConGetiCadeViewController.m in Sources */,
+				339D14BA1504051500B9FA5C /* TDSemiModalViewController.m in Sources */,
+				339D14BB1504051500B9FA5C /* UIViewController+TDSemiModalExtension.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

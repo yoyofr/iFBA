@@ -23,14 +23,12 @@
         eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
 											[NSNumber numberWithBool:NO], 
 											kEAGLDrawablePropertyRetainedBacking, 
-											kEAGLColorFormatRGBA8, 
+											kEAGLColorFormatRGB565, 
 											kEAGLDrawablePropertyColorFormat, 
 											nil];  
-		
+		self.autoresizingMask=0;
 		
     }
-	m_touchcount=0;
-	m_poptrigger=FALSE;
     return self;
 }
 
@@ -42,11 +40,16 @@
 	FrameBufferUtils::Create(m_frameBuffer, oglContext, (CAEAGLLayer*)self.layer);
 }
 
+// Send a resized event when the orientation changes.
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    FrameBufferUtils::UpdateFrame(m_frameBuffer, m_oglContext, (CAEAGLLayer*)self.layer);
+}
+
 - (void)layoutSubviews {
     //NSLog(@"layout");
-    //[EAGLContext setCurrentContext:m_oglContext];
-    FrameBufferUtils::Destroy(m_frameBuffer);
-	FrameBufferUtils::Create(m_frameBuffer, m_oglContext, (CAEAGLLayer*)self.layer);
+    [EAGLContext setCurrentContext:m_oglContext];
+    //FrameBufferUtils::Destroy(m_frameBuffer);
+	//FrameBufferUtils::Create(m_frameBuffer, m_oglContext, (CAEAGLLayer*)self.layer);
 }
 
 - (void)dealloc {
@@ -94,7 +97,6 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y);
         touch = (UITouch*)[enumerator nextObject];
     }
 }
-
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     NSEnumerator *enumerator = [touches objectEnumerator];

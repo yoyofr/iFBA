@@ -21,6 +21,7 @@ namespace FrameBufferUtils
 	void Create(FrameBuffer& buffer, EAGLContext* eaglContext, id<EAGLDrawable> drawable);
 	void Destroy(FrameBuffer& buffer);
 	void Set(const FrameBuffer& buffer);
+    void UpdateFrame(FrameBuffer& buffer, EAGLContext* oglContext, id<EAGLDrawable> drawable);
 	
 	UIImage* CreateImageFromFramebuffer(int width, int height);
 }

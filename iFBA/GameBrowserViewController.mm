@@ -40,14 +40,17 @@ static int cur_game_section,cur_game_row;
 }
 
 - (void)buildFilters {
-    char *szName;
+    char *szName,*szLname;
     burn_supportedRoms=[[NSMutableArray alloc] initWithCapacity:nBurnDrvCount];
+    //burn_supportedRomsNames=[[NSMutableArray alloc] initWithCapacity:nBurnDrvCount];
     //szName=(char*)malloc(256);
     int saveActiveDrv=nBurnDrvActive;
     for (int i=0;i<nBurnDrvCount;i++) {
         nBurnDrvActive=i;
         BurnDrvGetZipName(&szName,0);
         [burn_supportedRoms addObject:[[NSString stringWithFormat:@"%s",szName] lowercaseString]];
+        //[burn_supportedRomsNames addObject:[[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] lowercaseString]];
+        //NSLog(@"%s;%s;%s",szName,BurnDrvGetTextA(DRV_FULLNAME),BurnDrvGetTextA(DRV_SYSTEM));
     }
     nBurnDrvActive=saveActiveDrv;
     //free(szName);
@@ -108,22 +111,29 @@ static int cur_game_section,cur_game_row;
     
     for (int i=0;i<28;i++) {
         romlist[i]=[[NSMutableArray alloc] initWithCapacity:0];
+        romlistLbl[i]=[[NSMutableArray alloc] initWithCapacity:0];
     }
     
     cur_game_section=cur_game_row=-1;
+    
+    int saveActiveDrv=nBurnDrvActive;
     
     dirContent=[mFileMngr subpathsOfDirectoryAtPath:cpath error:&error];
     for (file in dirContent) {
         NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
         if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
+            NSUInteger ind;
             //NSLog(@"file; %@",[file lastPathComponent]);
-            if ([burn_supportedRoms indexOfObject:[[file lastPathComponent] lowercaseString]]!=NSNotFound) {
+            ind=[burn_supportedRoms indexOfObject:[[file lastPathComponent] lowercaseString]];
+            if (ind!=NSNotFound) {
                 char i;
                 i=[[file lastPathComponent] UTF8String][0];
                 if ((i>='a')&&(i<='z')) i+=1-'a';
                 else if ((i>='A')&&(i<='Z')) i+=1-'A';
                 else i=0;
                 [romlist[i] addObject:file];
+                nBurnDrvActive=ind;
+                [romlistLbl[i] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] ];
                 if (gameName[0]&&(cur_game_section<0)) {
                     if (strcmp(gameName,[[[file lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
                         cur_game_section=i;
@@ -135,7 +145,10 @@ static int cur_game_section,cur_game_row;
     }
     [mFileMngr release];
     
-    [burn_supportedRoms release];    
+    [burn_supportedRoms release];   
+    //[burn_supportedRomsNames release];
+    
+    nBurnDrvActive=saveActiveDrv;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -152,7 +165,10 @@ static int cur_game_section,cur_game_row;
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-    for (int i=0;i<28;i++) [romlist[i] release];
+    for (int i=0;i<28;i++) {
+        [romlist[i] release];
+        [romlistLbl[i] release];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -200,8 +216,7 @@ static int cur_game_section,cur_game_row;
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-        cell.textLabel.text=[romlist[indexPath.section] objectAtIndex:indexPath.row];
-	
+    cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
 	cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
     
     return cell;

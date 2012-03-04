@@ -7,6 +7,11 @@
 //#define NO_SOUND
 //#define BENCH
 
+#ifdef TESTFLIGHT
+void tstfl_validateloadgame(char *name);
+extern char gameName[64];
+#endif
+
 bool bAltPause = 0;
 bool bSoundOn=1;
 
@@ -308,6 +313,9 @@ int RunMessageLoop()
 		RunInit();
         
 		GameInpCheckMouse();															// Hide the cursor
+        
+        
+        tstfl_validateloadgame(gameName);
         
         done=0;timer = 0;ticks=0;tick=0;sdl_fps = 0;
 		while (!finished) {

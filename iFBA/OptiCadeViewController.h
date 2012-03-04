@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TDSemiModal.h"
 
 @interface OptiCadeViewController : UIViewController {
     IBOutlet UITableView *tabView;
+    TDSemiModalViewController *optgetButton;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
-
+@property (nonatomic, retain) UIViewController *optgetButton;
 @end

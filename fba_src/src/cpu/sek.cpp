@@ -415,8 +415,9 @@ unsigned int PicoCheckPc(unsigned int pc) {
 static int PicoIrqCallback(int int_level) {
 	if (nSekIRQPending[nSekActive] & SEK_IRQSTATUS_AUTO) {
 		PicoCpu[nSekActive].irq = 0;    
-        nSekIRQPending[nSekActive] = 0;
+        
     }
+    nSekIRQPending[nSekActive] = 0;
     
     if (pSekExt->IrqCallback) {
 		return pSekExt->IrqCallback(int_level);

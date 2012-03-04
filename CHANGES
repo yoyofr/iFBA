@@ -1,3 +1,11 @@
+v0.2
+---------------
+TODO
+- controllers buttons mapping
+- roms long name in browser
+DONE
+- BTStack is now deactivated by default (if first launch).
+
 v0.1 - 04/03/2012
 -----------------
 - First beta version

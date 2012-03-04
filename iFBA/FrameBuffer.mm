@@ -11,15 +11,10 @@ void FrameBufferUtils::Create(FrameBuffer& buffer, int width, int height)
 	
 	glGenFramebuffersOES(1, &buffer.m_frameBufferHandle);
     glGenRenderbuffersOES(1, &buffer.m_colorBufferHandle);
-	glGenRenderbuffersOES(1, &buffer.m_depthBufferHandle);
 	CHECK_GL_ERRORS();
 	
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
     glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_RGB5_A1_OES, buffer.m_width, buffer.m_height);
-	CHECK_GL_ERRORS();
-	
-	glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_depthBufferHandle);
-    glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, buffer.m_width, buffer.m_height);
 	CHECK_GL_ERRORS();
 	
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
@@ -35,39 +30,35 @@ void FrameBufferUtils::Create(FrameBuffer& buffer, EAGLContext* oglContext, id<E
 {
 	glGenFramebuffersOES(1, &buffer.m_frameBufferHandle);
     glGenRenderbuffersOES(1, &buffer.m_colorBufferHandle);
-	glGenRenderbuffersOES(1, &buffer.m_depthBufferHandle);
-	CHECK_GL_ERRORS();
-	
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
-    [oglContext renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:drawable];
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &buffer.m_width);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &buffer.m_height);
-	CHECK_GL_ERRORS();
-    
-    if ((buffer.m_width==0) || (buffer.m_height == 0)) {
-        glDeleteFramebuffersOES(1, &buffer.m_frameBufferHandle);
-        glDeleteRenderbuffersOES(1, &buffer.m_colorBufferHandle);
-        glDeleteRenderbuffersOES(1, &buffer.m_depthBufferHandle);
-        return;
-    }
-	//NSLog(@"Bind: %d %d %d", drawable, backingWidth, backingHeight);
-	assert(buffer.m_width > 0 && buffer.m_height > 0);
-	
-	glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_depthBufferHandle);
-    glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, buffer.m_width, buffer.m_height);
-	CHECK_GL_ERRORS();
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
 	
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, buffer.m_frameBufferHandle);
-    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);  
-	glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, buffer.m_depthBufferHandle);
-	CHECK_GL_ERRORS();
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
+    [oglContext renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:drawable];
+    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);  	
+    
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &buffer.m_width);    
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &buffer.m_height);
 	
     if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES) 
 	{
 		NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
 		assert(0);
     }	
+}
+
+void FrameBufferUtils::UpdateFrame(FrameBuffer& buffer, EAGLContext* oglContext, id<EAGLDrawable> drawable) {
+        glBindFramebufferOES(GL_FRAMEBUFFER_OES, buffer.m_frameBufferHandle);
+        glBindRenderbufferOES(GL_RENDERBUFFER_OES, 0);
+        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, 0);
+        glDeleteRenderbuffersOES(1, &buffer.m_colorBufferHandle);
+        
+        glGenRenderbuffersOES(1, &buffer.m_colorBufferHandle);
+        glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
+        [oglContext renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:drawable];
+        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
+        
+        glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &buffer.m_width);
+        glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &buffer.m_height);        
 }
 
 

@@ -31,7 +31,7 @@ void tstfl_log(char *str) {
 }
 
 void tstfl_validateloadgame(char *name) {
-    [TestFlight passCheckpoint:[NSString stringWithFormat:@"LOADGAME-%s",name]];
+    [TestFlight passCheckpoint:[NSString stringWithFormat:@"STARTEDGAME-%s",name]];
 }
 
 - (void)loadSettings {
@@ -83,7 +83,7 @@ void tstfl_validateloadgame(char *name) {
 	else ifba_conf.sound_latency = [valNb intValue];
     
     valNb=[prefs objectForKey:@"btstack_on"];
-	if (valNb == nil) ifba_conf.btstack_on=1;
+	if (valNb == nil) ifba_conf.btstack_on=0;
 	else ifba_conf.btstack_on = [valNb intValue];
     valNb=[prefs objectForKey:@"vpad_alpha"];
 	if (valNb == nil) ifba_conf.vpad_alpha=1;

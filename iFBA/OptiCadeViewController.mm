@@ -7,12 +7,35 @@
 //
 
 #import "OptiCadeViewController.h"
-
+#import "BTstack/BTstackManager.h"
+#import "BTstack/BTDiscoveryViewController.h"
+#import "BTstackManager.h"
+#import "OptConGetiCadeViewController.h"
 #import "fbaconf.h"
 
+extern int iCadePress;
+static int mButtonSelected;
+
+typedef struct {
+    char btn_name[16];
+    unsigned char dev_btn;
+} t_button_map;
+t_button_map iCade[10]={
+    {"Start",4},
+    {"Select/Coin",8},
+    {"Menu",0},
+    {"Turbo",0},
+    {"Fire 1",1},
+    {"Fire 2",2},
+    {"Fire 3",3},
+    {"Fire 4",5},
+    {"Fire 5",6},
+    {"Fire 6",7},    
+};
 
 @implementation OptiCadeViewController
 @synthesize tabView;
+@synthesize optgetButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,14 +56,25 @@
     // in interface builder instead).
     //
     //self.tabView.style=UITableViewStyleGrouped;
-    
+    optgetButton=[[OptConGetiCadeViewController alloc] initWithNibName:@"OptConGetiCadeViewController" bundle:nil];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [optgetButton release];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    BTstackManager *bt = [BTstackManager sharedInstance];
+    if (ifba_conf.btstack_on&&bt) {
+        UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Warning iCade BTStack",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+        [aboutMsg show];
+    }
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -48,80 +82,42 @@
     return YES;
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (iCadePress) {
+        iCadePress=0;
+    }
+}
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 3;
+	return 1;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 1;
+    if (section==0) return 10;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
     switch (section) {
-        case 0:title=NSLocalizedString(@"Aspect Ratio",@"");
-            break;
-        case 1:title=NSLocalizedString(@"Screen mode",@"");
-            break;
-        case 2:title=NSLocalizedString(@"Filtering",@"");
+        case 0:title=@"";
             break;
     }
     return title;
 }
 
-- (void)segActionVideoMode:(id)sender {
-    ifba_conf.screen_mode=[sender selectedSegmentIndex];
-    [tabView reloadData];
-}
-- (void)switchAspectRatio:(id)sender {
-    ifba_conf.aspect_ratio =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
-- (void)switchFiltering:(id)sender {
-    ifba_conf.filtering =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
-        case 0://Aspect Ratio
-            if (ifba_conf.aspect_ratio) {
-                footer=@"Respect original game's aspect ratio";
-            } else {
-                footer=@"Don't respect original game's aspect ratio";
-            }
-            break;
-        case 1://Screen mode
-            switch (ifba_conf.screen_mode) {
-                case 0:
-                    footer=@"Original resolution";
-                    break;
-                case 1:
-                    footer=@"Fixed scaled resolution";
-                    break;
-                case 2:
-                    footer=@"Scaled resolution";
-                    break;
-                case 3:
-                    footer=@"Fullscreen";
-                    break;
-            }
-            break;
-        case 2://Filtering
-            switch (ifba_conf.filtering) {
-                case 0:
-                    footer=@"No filtering";
-                    break;
-                case 1:
-                    footer=@"Linear filtering";
-                    break;
-            }
+        case 0://Mapping
+            footer=NSLocalizedString(@"Mapping info",@"");
             break;
     }
     return footer;
@@ -129,8 +125,7 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UISwitch *switchview;
-    UISegmentedControl *segconview;
+    UILabel *lblview;
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -138,30 +133,13 @@
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
-        case 0://Aspect Ratio
-            cell.textLabel.text=NSLocalizedString(@"Aspect Ratio",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchAspectRatio:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=ifba_conf.aspect_ratio;
-            break;
-        case 1://Screen mode
-            cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"1", @"2",@"3",@"4",nil]];
-            segconview.segmentedControlStyle = UISegmentedControlStylePlain;
-            [segconview addTarget:self action:@selector(segActionVideoMode:) forControlEvents:UIControlEventValueChanged];            
-            cell.accessoryView = segconview;
-            [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.screen_mode;
-            break;
-        case 2://Filtering
-            cell.textLabel.text=NSLocalizedString(@"Filtering",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchFiltering:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=ifba_conf.filtering;
+        case 0://Mapping
+            cell.textLabel.text=[NSString stringWithFormat:@"%s",iCade[indexPath.row].btn_name];
+            lblview=[[UILabel alloc] initWithFrame:CGRectMake(0,0,100,30)];
+            lblview.text=[NSString stringWithFormat:@"Button %d",iCade[indexPath.row].dev_btn];
+            lblview.backgroundColor=[UIColor clearColor];
+            cell.accessoryView=lblview;
+            [lblview release];
             break;
     }
     
@@ -172,6 +150,13 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    switch (indexPath.section) {
+        case 0:
+            mButtonSelected=indexPath.row;
+            [self presentSemiModalViewController:optgetButton];
+            [tabView reloadData];            
+            break;
+    }
 }
 
 

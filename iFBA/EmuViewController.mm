@@ -10,6 +10,10 @@
 #define MAX_JOYSTICKS 4
 #define min(a,b) (a<b?a:b)
 
+#ifdef TESTFLIGHT
+#import "TestFlight.h"
+#endif
+
 #include "inp_sdl_keys.h"
 unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
 
@@ -459,7 +463,7 @@ static void *context; //hack to call objective C func from C
     //If resuming
     if (nShouldExit==2) {
         //launch new game ?
-        if (launchGame) {//yes, exit current one
+        if (launchGame) {//yes, exit current one                                    
             nShouldExit=1;
             while (emuThread_running) {
                 [NSThread sleepForTimeInterval:0.01]; //10ms        
@@ -475,6 +479,7 @@ static void *context; //hack to call objective C func from C
         pb_value=0;
         pb_total=0;
         pb_msg[0]=0;
+        [TestFlight passCheckpoint:[NSString stringWithFormat:@"LOADGAME-%s",gameName]];
         [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
         launchGame=0;
     }
@@ -531,6 +536,10 @@ static void *context; //hack to call objective C func from C
 */ 
     }
     return YES;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [m_oglView didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 
 /****************************************************/
