@@ -15,6 +15,7 @@
 #import "TestFlight.h"
 #endif
 
+extern unsigned int nBurnDrvCount;
 extern int launchGame;
 extern char gameName[64];
 extern volatile int emuThread_running;
@@ -140,11 +141,15 @@ extern volatile int emuThread_running;
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
+    cell.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
     
 	switch (indexPath.section) {
         case 0:
             if (emuThread_running) {
-                if (indexPath.row==0) cell.textLabel.text=[NSString stringWithFormat:NSLocalizedString(@"Back to %s",@""),gameName];
+                if (indexPath.row==0) {
+                    cell.textLabel.text=[NSString stringWithFormat:NSLocalizedString(@"Back to %s",@""),gameName];
+                    cell.backgroundColor=[UIColor colorWithRed:0.95f green:1.0f blue:0.9f alpha:1.0f];
+                }
                 if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Load State",@"");
                 if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
                 if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"Load game",@"");            
@@ -156,7 +161,9 @@ extern volatile int emuThread_running;
             if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Options",@"");
             break;
         case 2:
-            if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"About",@"");
+            if (indexPath.row==0) {
+                cell.textLabel.text=NSLocalizedString(@"About",@"");                
+            }
 #ifdef TESTFLIGHT
             if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Feedback",@"");
 #endif
@@ -208,7 +215,8 @@ int StatedSave(int slot);
         [optionsvc release];
     } else if (indexPath.section==2) { //about & feedback        
         if (indexPath.row==0) {//about
-            UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:[NSString stringWithFormat:NSLocalizedString(@"About_Msg",@""),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+            NSString *msgString=[NSString stringWithFormat:NSLocalizedString(@"About_Msg",@""),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],nBurnDrvCount];
+            UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
             [aboutMsg show];
         } else if (indexPath.row==1) {//beta test-feedback
 #ifdef TESTFLIGHT

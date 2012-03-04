@@ -43,21 +43,18 @@
 }
 
 - (void)layoutSubviews {
+    //NSLog(@"layout");
     //[EAGLContext setCurrentContext:m_oglContext];
     FrameBufferUtils::Destroy(m_frameBuffer);
 	FrameBufferUtils::Create(m_frameBuffer, m_oglContext, (CAEAGLLayer*)self.layer);
 }
 
-- (void)dealloc 
-{
-
+- (void)dealloc {
 	FrameBufferUtils::Destroy(m_frameBuffer);
     [super dealloc];
 }
 
-
-- (void)bind
-{
+- (void)bind {
 	FrameBufferUtils::Set(m_frameBuffer);
 }
 

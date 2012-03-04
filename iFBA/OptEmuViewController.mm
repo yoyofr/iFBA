@@ -64,13 +64,13 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
     switch (section) {
-        case 0:title=NSLocalizedString(@"68000 core",@"");
+        case 0:title=@"";//NSLocalizedString(@"68000 core",@"");
             break;
-        case 1:title=NSLocalizedString(@"z80 core",@"");
+        case 1:title=@"";//NSLocalizedString(@"z80 core",@"");
             break;
-        case 2:title=NSLocalizedString(@"nec core",@"");
+        case 2:title=@"";//NSLocalizedString(@"nec core",@"");
             break;
-        case 3:title=NSLocalizedString(@"sh2 core",@"");
+        case 3:title=@"";//NSLocalizedString(@"sh2 core",@"");
             break;
     }
     return title;

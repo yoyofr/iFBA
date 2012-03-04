@@ -17,7 +17,7 @@
 "Back to %s"="Back to %s";
 
 //About
-"About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.21";
+"About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.21\n\nCurrently supporting %d drivers";
 
 //Options
 "Video"="Video";
@@ -41,15 +41,20 @@
 "No filtering"="No filtering";
 "Linear filtering"="Linear filtering";
 
+"Show FPS"="Show FPS";
+"Display fps"="Display fps";
+"Do not display fps"="Do not display fps";
+
+"Brightness"="Brightness";
+
 //Controllers options
 "Wiimote"="Wiimote";
 "iCade"="iCade";
 "Virtual pad"="Virtual pad";
+"Display"="Display";
 "Opacity"="Opacity";
-"Invisible"="Invisible";
-"Low"="Low";
-"Med"="Medium";
-"Opaque"="Opaque";
+"Display vpad"="Change display settings. Specials are the specials buttons: menu, turbo, coin, start";
+"Display specials"="Display specials";
 
 //Audio options
 "Sound Output"="Sound Output";
@@ -70,5 +75,5 @@
 "z80_core"="z80 core";
 "sh2_core"="sh2 core";
 "nec_core"="nec core";
-"asm cpu core, faster but less compatible"="asm cpu core, faster but less compatible";
-"asm cpu core, faster but less compatible"="asm cpu core, faster but less compatible";
+"asm cpu core, faster but less compatible"="asm cpu core, faster. Use C core if you encounter issues";
+"C cpu core, slower but more compatible"="C cpu core, slower but (usually) more compatible";

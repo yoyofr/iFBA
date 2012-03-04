@@ -2,6 +2,7 @@
 #include "burner.h"
 #include "unistd.h"
 #include <sys/time.h>
+#include "fbaconf.h"
 
 //#define NO_SOUND
 //#define BENCH
@@ -11,7 +12,7 @@ bool bSoundOn=1;
 
 int bAlwaysDrawFrames = 0;
 
-bool bShowFPS = true;
+//bool bShowFPS = true;
 int sdl_fps;
 
 int counter;								// General purpose variable used when debugging
@@ -164,7 +165,7 @@ static int RunGetNextSound(int bDraw) {
 	} else {
         
         timer = SDL_GetTicks()/frametime;
-        if(timer-tick>frame_limit && bShowFPS) {
+        if(timer-tick>frame_limit && ifba_conf.show_fps) {
             sdl_fps = nFramesRendered;
             nFramesRendered = 0;
             tick = timer;
@@ -200,7 +201,7 @@ int RunIdle() {
     
 #ifdef BENCH
     timer = SDL_GetTicks();
-    if(timer-tick>1000 && bShowFPS) {
+    if(timer-tick>1000 && ifba_conf.show_fps) {
         sdl_fps = nFramesRendered;
         nFramesRendered = 0;
         tick = timer;
@@ -209,8 +210,9 @@ int RunIdle() {
     now = timer;
     ticks=now-done;
 #else
+    if (!bAppDoFast) {
     timer = SDL_GetTicks()/frametime;
-    if(timer-tick>frame_limit && bShowFPS) {
+    if(timer-tick>frame_limit && ifba_conf.show_fps) {
         sdl_fps = nFramesRendered;
         nFramesRendered = 0;
         tick = timer;
@@ -227,6 +229,15 @@ int RunIdle() {
     for (int i=0; i<ticks-1; i++) {
         RunFrame(0,0);	
     } 
+    } else {
+        for (int i=0;i<10;i++) RunFrame(0,0);
+        timer = SDL_GetTicks()/frametime;
+        sdl_fps = 0;
+        nFramesRendered=0;
+        tick = timer;
+        now = timer;
+        ticks=now-done;
+    }
 #endif        
     RunFrame(1,0);
     

@@ -14,6 +14,8 @@ typedef struct {
     unsigned char aspect_ratio;
     unsigned char screen_mode;
     unsigned char filtering;
+    unsigned char show_fps;
+    float brightness;
     
     //Audio
     unsigned char sound_on;
@@ -22,6 +24,7 @@ typedef struct {
     
     //Controls
     unsigned char vpad_alpha;
+    unsigned char vpad_showSpecial;
     unsigned char btstack_on;
     unsigned char joymaps_wiimotes[4][16];
     unsigned char joymaps_icade[8];    

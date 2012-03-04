@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#define VPAD_SPECIALS_BUTTON_NB 4
 #define MAX_JOYSTICKS 4
 #define min(a,b) (a<b?a:b)
 
@@ -58,8 +59,8 @@ static char pb_msg[256];
 
 
 int device_isIpad;
-unsigned char virtual_stick_buttons_alpha=75;
-unsigned char virtual_stick_buttons_alpha2=150;
+unsigned int virtual_stick_buttons_alpha=75;
+unsigned int virtual_stick_buttons_alpha2=150;
 int virtual_stick_on;
 long virtual_stick_padfinger;
 
@@ -71,63 +72,162 @@ int virtual_stick_maxdist=70;
 int virtual_stick_mindist=10;
 int virtual_stick_maxdist2=70*70;
 int virtual_stick_mindist2=10*10;
-int vpad_button_nb=4;
+int vpad_button_nb=VPAD_SPECIALS_BUTTON_NB;
 float virtual_stick_angle;
-typedef struct {int button_id,x,y,w,h;unsigned char r,g,b;long finger_id;} t_touch_area;
+typedef struct {int button_id,x,y,w,h,sw,sh;unsigned char r,g,b;long finger_id;} t_touch_area;
+t_touch_area *virtual_stick;
+
+void computeButtonLayout(int btnsize,int nb_button,int width,int height);
+
+void computeButtonLayout(int btnsize,int nb_button,int width,int height){
+    int w=width;
+    int h=height;
+    if (device_isIpad) h-=40;
+    for (int i=0;i<nb_button;i++) {
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].r=0xDF;
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].g=0xDF;
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].b=0xDF;
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].w=btnsize;
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].sw=btnsize;
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].h=btnsize;
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].sh=btnsize;
+    }
+    if (width>height) {//horizontal        
+        switch (nb_button) {
+            case 0:
+                break;
+            case 1:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
+                break;
+            case 2:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
+                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
+                break;
+            case 3:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
+                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
+                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize;
+                break;
+            case 4:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
+                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
+                virtual_stick[6].x=w-btnsize*2.1f; virtual_stick[6].y=h-btnsize;
+                virtual_stick[7].x=w-btnsize;      virtual_stick[7].y=h-btnsize;
+                break;
+            case 5:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*3.15f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
+                virtual_stick[5].x=w-btnsize*2.1f; virtual_stick[5].y=h-btnsize*2.1f;
+                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize*2.1f;
+                virtual_stick[7].x=w-btnsize*2.1f; virtual_stick[7].y=h-btnsize;
+                virtual_stick[8].x=w-btnsize;      virtual_stick[8].y=h-btnsize;
+                break;
+            case 6:
+            default:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*3.15f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
+                virtual_stick[5].x=w-btnsize*2.1f; virtual_stick[5].y=h-btnsize*2.1f;
+                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize*2.1f;
+                virtual_stick[7].x=w-btnsize*3.15f; virtual_stick[7].y=h-btnsize;
+                virtual_stick[8].x=w-btnsize*2.1f; virtual_stick[8].y=h-btnsize;
+                virtual_stick[9].x=w-btnsize;      virtual_stick[9].y=h-btnsize;            
+                break;
+        }
+    } else {//vertical
+        switch (nb_button) {
+            case 0:
+                break;
+            case 1:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
+                break;
+            case 2:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
+                virtual_stick[5].x=w-btnsize; virtual_stick[5].y=h-btnsize*1.5f;
+                break;
+            case 3:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
+                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*1.5f;
+                virtual_stick[6].x=w-btnsize*2.1f; virtual_stick[6].y=h-btnsize*2.6f;
+                break;
+            case 4:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
+                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*1.5f;
+                virtual_stick[6].x=w-btnsize*2.1f; virtual_stick[6].y=h-btnsize*2.6f;
+                virtual_stick[7].x=w-btnsize*2.1f; virtual_stick[7].y=h-btnsize*1.5f;
+                break;
+            case 5:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*3.15f;
+                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
+                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize;
+                virtual_stick[7].x=w-btnsize*2.1f; virtual_stick[7].y=h-btnsize*3.15f;
+                virtual_stick[8].x=w-btnsize*2.1f; virtual_stick[8].y=h-btnsize*2.1f;
+                break;
+            case 6:
+            default:
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*3.15f;
+                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
+                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize;
+                virtual_stick[7].x=w-btnsize*2.1f; virtual_stick[7].y=h-btnsize*3.15f;
+                virtual_stick[8].x=w-btnsize*2.1f; virtual_stick[8].y=h-btnsize*2.1f;
+                virtual_stick[9].x=w-btnsize*2.1f; virtual_stick[9].y=h-btnsize;            
+                break;
+        }
+        
+    }
+}
+
 t_touch_area virtual_stick_iphone_landscape[VSTICK_NB_BUTTON]={
-    {GN_START,      480-48,         0,              48,48,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,480-48,         48,             48,48,0xDF,0xDF,0xDF,0},
-    {GN_MENU_KEY,     0,            0,              48,48,0xEF,0xFF,0x7F,0},
-    {GN_TURBO,        0,            48,             48,48,0xFF,0x7F,0xFF,0},
-    {GN_A,          480-64-10-64,   320-64-6-64,   64,64,0xFF,0x00,0x00,0},  //red
-    {GN_B,          480-64,         320-64-6-64-10,   64,64,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          480-64-10-64,   320-64,         64,64,0x00,0xFF,0x00,0},  //green
-    {GN_D,          480-64,         320-64-10,         64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          480-64,         320-64-10,         64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          480-64,         320-64-10,         64,64,0x00,0x00,0xFF,0}  //blue    
+    {GN_START,      480-48,         0,              48,48,32,32,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,480-48,         48,             48,48,32,32,0xDF,0xDF,0x3F,0},
+    {GN_MENU_KEY,     0,            0,              48,48,32,32,0x4F,0xFF,0x1F,0},
+    {GN_TURBO,        0,            48,             48,48,32,32,0xFF,0xFF,0x2F,0},
+    {GN_A,          480-64-10-64,   320-64-6-64,   64,64,64,64,0xCF,0xCF,0xCF,0},
+    {GN_B,          480-64,         320-64-6-64-10,   64,64,64,64,0xFF,0xFF,0x00,0},  //yellow
+    {GN_C,          480-64-10-64,   320-64,         64,64,64,64,0x00,0xFF,0x00,0},  //green
+    {GN_D,          480-64,         320-64-10,         64,64,64,64,0x00,0x00,0xFF,0},  //blue
+    {GN_E,          480-64,         320-64-10,         64,64,64,64,0x00,0x00,0xFF,0},  //blue
+    {GN_F,          480-64,         320-64-10,         64,64,64,64,0x00,0x00,0xFF,0}  //blue    
 };
 
 t_touch_area virtual_stick_iphone_portrait[VSTICK_NB_BUTTON]={
-    {GN_START,      270,         0,               48,48,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,195,         0,               48,48,0xDF,0xDF,0xDF,0},
-    {GN_MENU_KEY,     0,            0,            48,48,0xEF,0xFF,0x7F,0},
-    {GN_TURBO,        75,            0,           48,48,0xFF,0x7F,0xFF,0},
-    {GN_A,          320-64-10-64,   480-2*64-6-0,   64,64,0xFF,0x00,0x00,0},  //red
-    {GN_B,          320-64,         480-2*64-6-10,   64,64,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          320-64-10-64,   480-64-0,         64,64,0x00,0xFF,0x00,0},  //green
-    {GN_D,          320-64,         480-64-10,         64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          320-64,         480-64-10,         64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          320-64,         480-64-10,         64,64,0x00,0x00,0xFF,0}  //blue        
+    {GN_START,      270,         0,               48,48,32,32,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,195,         0,               48,48,32,32,0xDF,0xDF,0x3F,0},
+    {GN_MENU_KEY,     0,            0,            48,48,32,32,0x4F,0xFF,0x1F,0},
+    {GN_TURBO,        75,            0,           48,48,32,32,0xFF,0xFF,0x2F,0},
+    {GN_A,          320-64-10-64,   480-2*64-6-0,   64,64,64,64,0xFF,0x00,0x00,0},  //red
+    {GN_B,          320-64,         480-2*64-6-10,   64,64,64,64,0xFF,0xFF,0x00,0},  //yellow
+    {GN_C,          320-64-10-64,   480-64-0,         64,64,64,64,0x00,0xFF,0x00,0},  //green
+    {GN_D,          320-64,         480-64-10,         64,64,64,64,0x00,0x00,0xFF,0},  //blue
+    {GN_E,          320-64,         480-64-10,         64,64,64,64,0x00,0x00,0xFF,0},  //blue
+    {GN_F,          320-64,         480-64-10,         64,64,64,64,0x00,0x00,0xFF,0}  //blue        
 };
 
 
 t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
-    {GN_START,      1024-80,        0,              64,64,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,1024-80,        100,            64,64,0xDF,0xDF,0xDF,0},
-    {GN_MENU_KEY,     0,            0,              64,64,0xEF,0xFF,0x7F,0},
-    {GN_TURBO,        0,            100,            64,64,0xFF,0x7F,0xFF,0},
-    {GN_A,          1024-96*2-10,   768-96*2-6,    96,96,0xFF,0x00,0x00,0},  //red
-    {GN_B,          1024-96,        768-96*2-6-20,    96,96,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          1024-96*2-10,   768-96,         96,96,0x00,0xFF,0x00,0},  //green
-    {GN_D,          1024-96,        768-96-20,         96,96,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          1024-96,        768-96-20,         96,96,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          1024-96,        768-96-20,         96,96,0x00,0x00,0xFF,0}  //blue
+    {GN_START,      1024-80,        0,              64,64,64,64,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,1024-80,        100,            64,64,64,64,0xDF,0xDF,0xDF,0},
+    {GN_MENU_KEY,     0,            0,              64,64,64,64,0xEF,0xFF,0x7F,0},
+    {GN_TURBO,        0,            100,            64,64,64,64,0xFF,0x7F,0xFF,0},
+    {GN_A,          1024-96*2-10,   768-96*2-6,    96,96,96,96,0xFF,0x00,0x00,0},  //red
+    {GN_B,          1024-96,        768-96*2-6-20,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
+    {GN_C,          1024-96*2-10,   768-96,         96,96,96,96,0x00,0xFF,0x00,0},  //green
+    {GN_D,          1024-96,        768-96-20,         96,96,96,96,0x00,0x00,0xFF,0},  //blue
+    {GN_E,          1024-96,        768-96-20,         96,96,96,96,0x00,0x00,0xFF,0},  //blue
+    {GN_F,          1024-96,        768-96-20,         96,96,96,96,0x00,0x00,0xFF,0}  //blue
 };
 
 t_touch_area virtual_stick_ipad_portrait[VSTICK_NB_BUTTON]={
-    {GN_START,      768-80,        600,             64,64,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,768-80-120,    600,             64,64,0xDF,0xDF,0xDF,0},
-    {GN_MENU_KEY,     0,           600,             64,64,0xEF,0xFF,0x7F,0},
-    {GN_TURBO,        120,         600,             64,64,0xFF,0x7F,0xFF,0},
-    {GN_A,          768-96*2-20,   1024-96*2-6-60,    96,96,0xFF,0x00,0x00,0},  //red
-    {GN_B,          768-96,        1024-96*2-6-20-60,    96,96,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          768-96*2-20,   1024-96-60,         96,96,0x00,0xFF,0x00,0},  //green
-    {GN_D,          768-96,        1024-96-20-60,         96,96,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          768-96,        1024-96-20-60,         96,96,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          768-96,        1024-96-20-60,         96,96,0x00,0x00,0xFF,0}  //blue
+    {GN_START,      768-80,        0,             64,64,64,64,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,768-80-120,    0,             64,64,64,64,0xDF,0xDF,0xDF,0},
+    {GN_MENU_KEY,     0,           0,             64,64,64,64,0xEF,0xFF,0x7F,0},
+    {GN_TURBO,        120,         0,             64,64,64,64,0xFF,0x7F,0xFF,0},
+    {GN_A,          768-96*2-20,   1024-96*2-6-60,    96,96,96,96,0xFF,0x00,0x00,0},  //red
+    {GN_B,          768-96,        1024-96*2-6-20-60,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
+    {GN_C,          768-96*2-20,   1024-96-60,         96,96,96,96,0x00,0xFF,0x00,0},  //green
+    {GN_D,          768-96,        1024-96-20-60,         96,96,96,96,0x00,0x00,0xFF,0},  //blue
+    {GN_E,          768-96,        1024-96-20-60,         96,96,96,96,0x00,0x00,0xFF,0},  //blue
+    {GN_F,          768-96,        1024-96-20-60,         96,96,96,96,0x00,0x00,0xFF,0}  //blue
 };
 
-t_touch_area *virtual_stick=virtual_stick_iphone_portrait;
+
 int gTurboMode;
 
 static uint vpad_button_texture,vpad_dpad_texture;
@@ -270,7 +370,7 @@ static void *context; //hack to call objective C func from C
     // a,b,c,d buttons
     vpad_dpad_texture=[self loadTexture:[UIImage imageNamed:@"dpad.png"]];
     vpad_button_texture=[self loadTexture:[UIImage imageNamed:@"button.png"]];
-    vpad_button_nb=4; //0button by default. Activated when scanned by emu
+    vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
     /**************************************/
     
     
@@ -323,7 +423,34 @@ static void *context; //hack to call objective C func from C
     for (int i=0;i<num_of_joys;i++) {
         wm_joy_pl[i]=wm_prev_joy_pl[i]=0;
     }
-    joy_state[0][GN_MENU_KEY]=0;    
+    joy_state[0][GN_MENU_KEY]=0;
+    
+    
+    int cur_width=m_oglView.frame.size.width;
+    int cur_height=m_oglView.frame.size.height;
+    
+    if (device_isIpad) {
+        virtual_stick=(cur_width>cur_height?virtual_stick_ipad_landscape:virtual_stick_ipad_portrait);
+        computeButtonLayout(64,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
+    } else {
+        virtual_stick=(cur_width>cur_height?virtual_stick_iphone_landscape:virtual_stick_iphone_portrait);
+        computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
+    }
+    virtual_stick_pad=0;
+        joy_analog_x[0]=0;joy_analog_y[0]=0;
+        joy_state[0][GN_UP]=0;
+        joy_state[0][GN_DOWN]=0;
+        joy_state[0][GN_LEFT]=0;
+        joy_state[0][GN_RIGHT]=0;
+        joy_state[0][GN_UPRIGHT]=0;
+        joy_state[0][GN_DOWNRIGHT]=0;
+        joy_state[0][GN_UPLEFT]=0;
+        joy_state[0][GN_DOWNLEFT]=0;
+    for (int i=0;i<VSTICK_NB_BUTTON;i++)  {
+            virtual_stick[i].finger_id=0;
+            joy_state[0][virtual_stick[i].button_id]=0;
+        }
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {    
@@ -382,8 +509,26 @@ static void *context; //hack to call objective C func from C
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     if ((interfaceOrientation==UIInterfaceOrientationPortrait)||(interfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
         m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);        
+        
+/*        if (device_isIpad) {
+            virtual_stick=virtual_stick_ipad_portrait;
+            computeButtonLayout(96,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_ww,mDevice_hh);            
+        } else {
+            virtual_stick=virtual_stick_iphone_portrait;
+            computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_ww,mDevice_hh);
+        }
+*/
     } else {
         m_oglView.frame=CGRectMake(0,0,mDevice_hh,mDevice_ww);
+        
+/*        if (device_isIpad) {
+            virtual_stick=virtual_stick_ipad_landscape;
+            computeButtonLayout(96,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_hh,mDevice_ww);                
+        } else {
+            virtual_stick=virtual_stick_iphone_landscape;
+            computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_hh,mDevice_ww);            
+        }
+*/ 
     }
     return YES;
 }
@@ -479,7 +624,7 @@ void updateWiimotes(void) {
 }
 
 void startWiimoteDetection(void) {
-    NSLog(@"Looking for wiimote");
+//    NSLog(@"Looking for wiimote");
     
     BTstackManager * bt = [BTstackManager sharedInstance];
     if (bt) {BTstackError err = [bt activate];
@@ -488,28 +633,28 @@ void startWiimoteDetection(void) {
 }
 
 void stopWiimoteDetection(void) {
-    NSLog(@"Stop looking for wiimote");
+   // NSLog(@"Stop looking for wiimote");
     BTstackManager * bt = [BTstackManager sharedInstance];
 	if (bt) [bt stopDiscovery];
 }
 
 
 -(void) activatedBTstackManager:(BTstackManager*) manager {
-	NSLog(@"activated!");
+//	NSLog(@"activated!");
 	[[BTstackManager sharedInstance] startDiscovery];
 }
 
 -(void) btstackManager:(BTstackManager*)manager deviceInfo:(BTDevice*)newDevice {
-	NSLog(@"Device Info: addr %@ name %@ COD 0x%06x", [newDevice addressString], [newDevice name], [newDevice classOfDevice] ); 
+//	NSLog(@"Device Info: addr %@ name %@ COD 0x%06x", [newDevice addressString], [newDevice name], [newDevice classOfDevice] ); 
 	if ([newDevice name] && [[newDevice name] caseInsensitiveCompare:@"Nintendo RVL-CNT-01"] == NSOrderedSame){
-		NSLog(@"WiiMote found with address %@", [newDevice addressString]);
+//		NSLog(@"WiiMote found with address %@", [newDevice addressString]);
 		device = newDevice;
 		[[BTstackManager sharedInstance] stopDiscovery];
 	}
 }
 
 -(void) discoveryStoppedBTstackManager:(BTstackManager*) manager {
-	NSLog(@"discoveryStopped!");
+//	NSLog(@"discoveryStopped!");
 	// connect to device
 	if (device) bt_send_cmd(&l2cap_create_channel, [device address], 0x13);
 }
@@ -678,8 +823,7 @@ void stopWiimoteDetection(void) {
                         uint16_t psm = READ_BT_16(packet, 11);
                         uint16_t source_cid = READ_BT_16(packet, 13);
                         wiiMoteConHandle = READ_BT_16(packet, 9);
-                        NSLog(@"Channel successfully opened: handle 0x%02x, psm 0x%02x, source cid 0x%02x, dest cid 0x%02x",
-                              wiiMoteConHandle, psm, source_cid,  READ_BT_16(packet, 15));
+//                        NSLog(@"Channel successfully opened: handle 0x%02x, psm 0x%02x, source cid 0x%02x, dest cid 0x%02x", wiiMoteConHandle, psm, source_cid,  READ_BT_16(packet, 15));
                         
                         if (psm == 0x13) {
                             
@@ -714,7 +858,7 @@ void stopWiimoteDetection(void) {
                 {                                
                     // data: event (8), len(8), channel (16)                                                                                       
                     uint16_t  source_cid = READ_BT_16(packet, 2);                                              
-                    NSLog(@"Channel successfully closed: cid 0x%02x",source_cid);
+                    //NSLog(@"Channel successfully closed: cid 0x%02x",source_cid);
                     
                     bd_addr_t addr;
                     int unid = wiimote_remove(source_cid,&addr);
@@ -972,15 +1116,16 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     int cur_height=m_oglView.frame.size.height;
     
     if (device_isIpad) {
-        if (cur_width>cur_height) virtual_stick=virtual_stick_ipad_landscape;
-        else virtual_stick=virtual_stick_ipad_portrait;
+        virtual_stick=(cur_width>cur_height?virtual_stick_ipad_landscape:virtual_stick_ipad_portrait);
+        computeButtonLayout(64,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
     } else {
-        if (cur_width>cur_height) virtual_stick=virtual_stick_iphone_landscape;
-        else virtual_stick=virtual_stick_iphone_portrait;
+        virtual_stick=(cur_width>cur_height?virtual_stick_iphone_landscape:virtual_stick_iphone_portrait);
+        computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
     }
     
+    
     virtual_stick_buttons_alpha=32*ifba_conf.vpad_alpha;
-    virtual_stick_buttons_alpha2=64*virtual_stick_buttons_alpha;
+    virtual_stick_buttons_alpha2=64*ifba_conf.vpad_alpha;
     if (virtual_stick_buttons_alpha>255) virtual_stick_buttons_alpha=255;
     if (virtual_stick_buttons_alpha2>255) virtual_stick_buttons_alpha2=255;
     
@@ -994,8 +1139,8 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
             virtual_stick_posy = cur_height-virtual_stick_maxdist-0;
             break;    
         case 768:
-            virtual_stick_posx = virtual_stick_maxdist;
-            virtual_stick_posy = cur_height-virtual_stick_maxdist;
+            virtual_stick_posx = virtual_stick_maxdist+40;
+            virtual_stick_posy = cur_height-virtual_stick_maxdist-40;
             break;
         case 1024:
             virtual_stick_posx = virtual_stick_maxdist;
@@ -1021,18 +1166,18 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     texcoords[3][0]=1; texcoords[3][1]=1;
     
     glBindTexture(GL_TEXTURE_2D, vpad_button_texture);    /* Bind The Texture */    
-    for (int i=0;i<vpad_button_nb;i++) {            
-        vertices[0][0]=(float)(virtual_stick[i].x)/cur_width;
-        vertices[0][1]=(float)(virtual_stick[i].y)/cur_height;
+    for (int i=(ifba_conf.vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {            
+        vertices[0][0]=(float)(virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
+        vertices[0][1]=(float)(virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
         
-        vertices[1][0]=vertices[0][0]+(float)(virtual_stick[i].w)/cur_width;
-        vertices[1][1]=(float)(virtual_stick[i].y)/cur_height;
+        vertices[1][0]=vertices[0][0]+(float)(virtual_stick[i].sw)/cur_width;
+        vertices[1][1]=(float)(virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
         
-        vertices[2][0]=(float)(virtual_stick[i].x)/cur_width;
-        vertices[2][1]=vertices[0][1]+(float)(virtual_stick[i].h)/cur_height;
+        vertices[2][0]=(float)(virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
+        vertices[2][1]=vertices[0][1]+(float)(virtual_stick[i].sh)/cur_height;
         
-        vertices[3][0]=vertices[0][0]+(float)(virtual_stick[i].w)/cur_width;
-        vertices[3][1]=vertices[0][1]+(float)(virtual_stick[i].h)/cur_height;
+        vertices[3][0]=vertices[0][0]+(float)(virtual_stick[i].sw)/cur_width;
+        vertices[3][1]=vertices[0][1]+(float)(virtual_stick[i].sh)/cur_height;
         
         vertices[0][0]=vertices[0][0]*2-1;
         vertices[1][0]=vertices[1][0]*2-1;
@@ -1237,10 +1382,10 @@ int StopProgressBar() {
             break;
         case 1://max with room for vpad
             if (ios_aspect>game_aspect) {                    
-                rh=height-virtual_stick_maxdist*1.5f;
+                rh=height-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f);
                 rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);                    
             } else {
-                rw=width-virtual_stick_maxdist*1.5f*vid_aspectX/vid_aspectY;
+                rw=width-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f)*vid_aspectX/vid_aspectY;
                 rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
             }
             break;

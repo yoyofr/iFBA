@@ -55,6 +55,9 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"filtering"];
 	if (valNb == nil) ifba_conf.filtering=1;
 	else ifba_conf.filtering = [valNb intValue];
+    valNb=[prefs objectForKey:@"brightness"];
+	if (valNb == nil) ifba_conf.brightness=[[UIScreen mainScreen] brightness];
+	else ifba_conf.brightness = [valNb floatValue];    
     
     valNb=[prefs objectForKey:@"aspect_ratio"];
 	if (valNb == nil) ifba_conf.aspect_ratio=1;
@@ -65,6 +68,9 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"filtering"];
 	if (valNb == nil) ifba_conf.filtering=1;
 	else ifba_conf.filtering = [valNb intValue];
+    valNb=[prefs objectForKey:@"show_fps"];
+	if (valNb == nil) ifba_conf.show_fps=0;
+	else ifba_conf.show_fps = [valNb intValue];
     
     valNb=[prefs objectForKey:@"sound_on"];
 	if (valNb == nil) ifba_conf.sound_on=1;
@@ -82,6 +88,9 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"vpad_alpha"];
 	if (valNb == nil) ifba_conf.vpad_alpha=1;
 	else ifba_conf.vpad_alpha = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_showSpecial"];
+	if (valNb == nil) ifba_conf.vpad_showSpecial=1;
+	else ifba_conf.vpad_showSpecial = [valNb intValue];
     
     valNb=[prefs objectForKey:@"asm_68k"];
 	if (valNb == nil) ifba_conf.asm_68k=1;
@@ -110,6 +119,10 @@ void tstfl_validateloadgame(char *name) {
 	[prefs setObject:valNb forKey:@"screen_mode"];[valNb autorelease];
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.filtering ];
 	[prefs setObject:valNb forKey:@"filtering"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.show_fps ];
+	[prefs setObject:valNb forKey:@"show_fps"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.brightness ];
+	[prefs setObject:valNb forKey:@"brightness"];[valNb autorelease];
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_on ];
 	[prefs setObject:valNb forKey:@"sound_on"];[valNb autorelease];
@@ -120,6 +133,8 @@ void tstfl_validateloadgame(char *name) {
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_alpha ];
 	[prefs setObject:valNb forKey:@"vpad_alpha"];[valNb autorelease];    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_showSpecial ];
+	[prefs setObject:valNb forKey:@"vpad_showSpecial"];[valNb autorelease];    
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.btstack_on ];
 	[prefs setObject:valNb forKey:@"btstack_on"];[valNb autorelease];
     //joymaps
@@ -152,6 +167,8 @@ void tstfl_validateloadgame(char *name) {
 #endif
 
     [self loadSettings];
+    
+    [[UIScreen mainScreen]setBrightness:ifba_conf.brightness];
     
     /* Set working directory to resource path */
     NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];

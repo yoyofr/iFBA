@@ -43,6 +43,13 @@ void FrameBufferUtils::Create(FrameBuffer& buffer, EAGLContext* oglContext, id<E
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &buffer.m_width);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &buffer.m_height);
 	CHECK_GL_ERRORS();
+    
+    if ((buffer.m_width==0) || (buffer.m_height == 0)) {
+        glDeleteFramebuffersOES(1, &buffer.m_frameBufferHandle);
+        glDeleteRenderbuffersOES(1, &buffer.m_colorBufferHandle);
+        glDeleteRenderbuffersOES(1, &buffer.m_depthBufferHandle);
+        return;
+    }
 	//NSLog(@"Bind: %d %d %d", drawable, backingWidth, backingHeight);
 	assert(buffer.m_width > 0 && buffer.m_height > 0);
 	

@@ -85,7 +85,7 @@ static int SDLSoundCheck() {
 }
 
 static int SDLSoundExit() {
-	dprintf(_T("SDLSoundExit\n"));
+	//dprintf(_T("SDLSoundExit\n"));
     
     free(nAudNextSound);
 	nAudNextSound = NULL;

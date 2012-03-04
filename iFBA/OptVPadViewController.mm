@@ -58,13 +58,16 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 1;
+    switch (section) {
+        case 0:return 2;            
+    }
+    return 0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
     switch (section) {
-        case 0:title=NSLocalizedString(@"Opacity",@"");
+        case 0:title=NSLocalizedString(@"Display",@"");
             break;
     }
     return title;
@@ -75,25 +78,16 @@
     [tabView reloadData];
 }
 
-- (void)segActionLayout:(id)sender {
-    ifba_conf.vpad_alpha =[sender selectedSegmentIndex];
+- (void)switchDisplaySpecial:(id)sender {
+    ifba_conf.vpad_showSpecial =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
-        case 0://Opacity
-            switch (ifba_conf.vpad_alpha) {
-                case 0:footer=NSLocalizedString(@"Invisible",@"");
-                    break;
-                case 1:footer=NSLocalizedString(@"Low",@"");
-                    break;
-                case 2:footer=NSLocalizedString(@"Med",@"");
-                    break;
-                case 3:footer=NSLocalizedString(@"Opaque",@"");
-                    break;
-            }
+        case 0://Display
+            footer=NSLocalizedString(@"Display vpad",@"");
             break;
     }
     return footer;
@@ -110,7 +104,8 @@
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
-        case 0://Opacity
+        case 0://Display
+            if (indexPath.row==0) {//Opacity
             cell.textLabel.text=NSLocalizedString(@"Opacity",@"");
             segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",@"3",nil]];
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
@@ -118,6 +113,15 @@
             cell.accessoryView = segconview;
             [segconview release];
             segconview.selectedSegmentIndex=ifba_conf.vpad_alpha;
+            } else if (indexPath.row==1) {//Display specials
+                cell.textLabel.text=NSLocalizedString(@"Display specials",@"");
+                switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+                [switchview addTarget:self action:@selector(switchDisplaySpecial:) forControlEvents:UIControlEventValueChanged];
+                cell.accessoryView = switchview;
+                [switchview release];
+                switchview.on=ifba_conf.vpad_showSpecial;
+
+            }
             break;
     }
     

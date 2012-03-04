@@ -73,7 +73,7 @@ int DrvInit(int nDrvNum, bool bRestore)
 	}
 	nBurnDrvSelect[0] = nDrvNum;		// Set the driver number
     
-    printf("Driver nb: %d\n",nDrvNum);
+    //printf("Driver nb: %d\n",nDrvNum);
 
 	// Define nMaxPlayers early; GameInpInit() needs it (normally defined in DoLibInit()).
 	nMaxPlayers = BurnDrvGetMaxPlayers();

@@ -17,7 +17,7 @@
 "Back to %s"="Retour à %s";
 
 //About
-"About_Msg"="iFBA v%@- YoyoFR\n\nBasé sur FBA v0.2.97.21";
+"About_Msg"="iFBA v%@- YoyoFR\n\nBasé sur FBA v0.2.97.21\n\nSupporte actuellement %d drivers";
 
 //Options
 "Video"="Video";
@@ -42,16 +42,20 @@
 "No filtering"="No filtering";
 "Linear filtering"="Linear filtering";
 
+"Show FPS"="Affiche FPS";
+"Display fps"="Les FPS (Frames par seconde) sont affichées";
+"Do not display fps"="Les FPS (Frame par seconde) ne sont pas affichées";
+"Brightness"="Luminosité";
+
 
 //Controllers options
 "Wiimote"="Wiimote";
 "iCade"="iCade";
 "Virtual pad"="Pad virtuel";
+"Display"="Affichage";
 "Opacity"="Opacité";
-"Invisible"="Invisible";
-"Low"="Faible";
-"Med"="Moyenne";
-"Opaque"="Opaque";
+"Display vpad"="Change l'affichage du pad virtuel. Boutons spéciaux: menu, turbo, coin, start";
+"Display specials"="Spéciaux affichés";
 
 //Wiimote options
 "Bluetooth"="Bluetooth";
@@ -79,5 +83,5 @@
 "z80_core"="z80 core";
 "sh2_core"="sh2 core";
 "nec_core"="nec core";
-"asm cpu core, faster but less compatible"="asm cpu core, plus rapide mais moins compatible";
-"C cpu core, slower but more compatible"="C cpu core, plus lent mais plus compatible";
+"asm cpu core, faster but less compatible"="asm cpu core, plus rapide. Utilisez le C core si vous rencontrez des problèmes";
+"C cpu core, slower but more compatible"="C cpu core, plus lent mais (habituellement) plus compatible";

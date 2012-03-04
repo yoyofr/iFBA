@@ -4,7 +4,9 @@
 #include "vid_softfx.h"
 
 #include "sdl_font.h"
-extern bool bShowFPS;
+
+#include "fbaconf.h"
+//extern bool bShowFPS;
 extern int sdl_fps;
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nXAspect,int nYAspect);
 
@@ -198,7 +200,7 @@ static int vidScale(RECT* , int, int)
 
 static int MemToSurf()
 {
-    if (bShowFPS) {
+    if (ifba_conf.show_fps) {
         char buf[10];
         int x;
         sprintf(buf, "FPS:%2d", sdl_fps);
