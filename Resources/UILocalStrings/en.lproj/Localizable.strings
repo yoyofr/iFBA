@@ -55,6 +55,10 @@
 "Opacity"="Opacity";
 "Display vpad"="Change display settings. Specials are the specials buttons: menu, turbo, coin, start";
 "Display specials"="Display specials";
+"Size"="Size";
+"Change size"="Change buttons & pad size";
+"Buttons"="Buttons";
+"Pad"="Pad";
 
 //Audio options
 "Sound Output"="Sound Output";

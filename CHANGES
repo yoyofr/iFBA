@@ -1,0 +1,13 @@
+v0.1 - 04/03/2012
+-----------------
+- First beta version
+- Not 100% stable
+- Basic virtual pad implemented. iCade & wiimotes supported (currently buttons are hardcoded).
+- Cyclone 68000 cpu core implemented
+- Sound (22/44Khz)
+- Blitter is using OpenGL (ES v1.0, unoptimized)
+
+Usage:
+------
+
+- Put ROMS & Bios file (neogeo.zip) in iFBA's Documents folder, using iTunes file sharing.

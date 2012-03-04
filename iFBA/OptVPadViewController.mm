@@ -52,14 +52,15 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 1;
+	return 2;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
     switch (section) {
-        case 0:return 2;            
+        case 0:return 2;
+        case 1:return 2;
     }
     return 0;
 }
@@ -68,6 +69,8 @@
     NSString *title=nil;
     switch (section) {
         case 0:title=NSLocalizedString(@"Display",@"");
+            break;
+        case 1:title=NSLocalizedString(@"Size",@"");
             break;
     }
     return title;
@@ -83,11 +86,23 @@
     [tabView reloadData];
 }
 
+- (void)segActionBtnSize:(id)sender {
+    ifba_conf.vpad_btnsize =[sender selectedSegmentIndex];
+    [tabView reloadData];
+}
+- (void)segActionPadSize:(id)sender {
+    ifba_conf.vpad_padsize =[sender selectedSegmentIndex];
+    [tabView reloadData];
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
         case 0://Display
             footer=NSLocalizedString(@"Display vpad",@"");
+            break;
+        case 1://Size
+            footer=NSLocalizedString(@"Change size",@"");
             break;
     }
     return footer;
@@ -121,6 +136,25 @@
                 [switchview release];
                 switchview.on=ifba_conf.vpad_showSpecial;
 
+            }
+            break;
+        case 1://Size
+            if (indexPath.row==0) {//Buttons
+                cell.textLabel.text=NSLocalizedString(@"Buttons",@"");
+                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",nil]];
+                segconview.segmentedControlStyle = UISegmentedControlStylePlain;
+                [segconview addTarget:self action:@selector(segActionBtnSize:) forControlEvents:UIControlEventValueChanged];            
+                cell.accessoryView = segconview;
+                [segconview release];
+                segconview.selectedSegmentIndex=ifba_conf.vpad_btnsize;
+            } else if (indexPath.row==1) {//Pad
+                cell.textLabel.text=NSLocalizedString(@"Pad",@"");
+                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",nil]];
+                segconview.segmentedControlStyle = UISegmentedControlStylePlain;
+                [segconview addTarget:self action:@selector(segActionPadSize:) forControlEvents:UIControlEventValueChanged];            
+                cell.accessoryView = segconview;
+                [segconview release];
+                segconview.selectedSegmentIndex=ifba_conf.vpad_padsize;                
             }
             break;
     }

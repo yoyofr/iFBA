@@ -56,6 +56,10 @@
 "Opacity"="Opacité";
 "Display vpad"="Change l'affichage du pad virtuel. Boutons spéciaux: menu, turbo, coin, start";
 "Display specials"="Spéciaux affichés";
+"Size"="Taille";
+"Change size"="Changer la taille des boutons & du pad";
+"Buttons"="Boutons";
+"Pad"="Pad";
 
 //Wiimote options
 "Bluetooth"="Bluetooth";

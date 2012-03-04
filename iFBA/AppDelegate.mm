@@ -91,6 +91,12 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"vpad_showSpecial"];
 	if (valNb == nil) ifba_conf.vpad_showSpecial=1;
 	else ifba_conf.vpad_showSpecial = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_btnsize"];
+	if (valNb == nil) ifba_conf.vpad_btnsize=1;
+	else ifba_conf.vpad_btnsize = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_padsize"];
+	if (valNb == nil) ifba_conf.vpad_padsize=1;
+	else ifba_conf.vpad_padsize = [valNb intValue];
     
     valNb=[prefs objectForKey:@"asm_68k"];
 	if (valNb == nil) ifba_conf.asm_68k=1;
@@ -135,6 +141,10 @@ void tstfl_validateloadgame(char *name) {
 	[prefs setObject:valNb forKey:@"vpad_alpha"];[valNb autorelease];    
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_showSpecial ];
 	[prefs setObject:valNb forKey:@"vpad_showSpecial"];[valNb autorelease];    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_btnsize ];
+	[prefs setObject:valNb forKey:@"vpad_btnsize"];[valNb autorelease];    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_padsize ];
+	[prefs setObject:valNb forKey:@"vpad_padsize"];[valNb autorelease];    
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.btstack_on ];
 	[prefs setObject:valNb forKey:@"btstack_on"];[valNb autorelease];
     //joymaps

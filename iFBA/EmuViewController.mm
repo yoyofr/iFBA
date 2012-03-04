@@ -1116,11 +1116,11 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     int cur_height=m_oglView.frame.size.height;
     
     if (device_isIpad) {
-        virtual_stick=(cur_width>cur_height?virtual_stick_ipad_landscape:virtual_stick_ipad_portrait);
-        computeButtonLayout(64,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
+        virtual_stick=(cur_width>cur_height?virtual_stick_ipad_landscape:virtual_stick_ipad_portrait);        
+        computeButtonLayout(ifba_conf.vpad_btnsize*16+64,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
     } else {
         virtual_stick=(cur_width>cur_height?virtual_stick_iphone_landscape:virtual_stick_iphone_portrait);
-        computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
+        computeButtonLayout(ifba_conf.vpad_btnsize*16+48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
     }
     
     
@@ -1128,6 +1128,10 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     virtual_stick_buttons_alpha2=64*ifba_conf.vpad_alpha;
     if (virtual_stick_buttons_alpha>255) virtual_stick_buttons_alpha=255;
     if (virtual_stick_buttons_alpha2>255) virtual_stick_buttons_alpha2=255;
+    
+    if (ifba_conf.vpad_padsize==0) virtual_stick_maxdist=64;
+    else if (ifba_conf.vpad_padsize==1) virtual_stick_maxdist=80;
+    else if (ifba_conf.vpad_padsize==2) virtual_stick_maxdist=96;
     
     switch (cur_height) {
         case 320:
