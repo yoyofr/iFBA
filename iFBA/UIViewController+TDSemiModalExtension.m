@@ -8,6 +8,8 @@
 
 #import "UIViewController+TDSemiModalExtension.h"
 
+static void* org_vc;
+
 @implementation UIViewController (TDSemiModalExtension)
 
 // Use this to show the modal view (pops-up from the bottom)
@@ -16,27 +18,30 @@
 
 	UIView* modalView = vc.view;
 	UIView* coverView = vc.coverView;
+    
+    org_vc=self;
 
 	//UIWindow* mainWindow = [(id)[[UIApplication sharedApplication] delegate] window];
 
 	CGPoint middleCenter = self.view.center;
 	CGSize offSize = [UIScreen mainScreen].bounds.size;
 
-	UIInterfaceOrientation orientation = [[UIDevice currentDevice] orientation];
+	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
 
 	CGPoint offScreenCenter = CGPointZero;
 
 	if(orientation == UIInterfaceOrientationLandscapeLeft ||
-	   orientation == UIInterfaceOrientationLandscapeRight) {
-		
-		offScreenCenter = CGPointMake(offSize.height / 2.0, offSize.width * 1.2);
-		middleCenter = CGPointMake(middleCenter.y, middleCenter.x);
-		[modalView setBounds:CGRectMake(0, 0, 480, 300)];
+	   orientation == UIInterfaceOrientationLandscapeRight) {		
+		offScreenCenter = CGPointMake(offSize.height / 2.0, offSize.width *1.2);
+		middleCenter = CGPointMake(offSize.height / 2.0, offSize.width / 2.0);
+        //[modalView setBounds:CGRectMake(0, 0,offSize.height, offSize.width)];
+        [coverView setFrame:CGRectMake(0, 0, offSize.height, offSize.width)];
 	}
 	else {
-		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height * 1.2);
-		[modalView setBounds:CGRectMake(0, 0, 320, 460)];
-		[coverView setFrame:CGRectMake(0, 0, 320, 460)];
+		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height *1.2);
+        middleCenter = CGPointMake(offSize.width / 2.0, offSize.height / 2.0);
+	//	[modalView setBounds:CGRectMake(0, 0, offSize.width, offSize.height)];                        
+		[coverView setFrame:CGRectMake(0, 0, offSize.width, offSize.height)];
 	}
 	
 	// we start off-screen
@@ -92,7 +97,7 @@
 - (void) dismissSemiModalViewControllerEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
 	UIView* modalView = (UIView*)context;
 	[modalView removeFromSuperview];
-
+    [(UIViewController*)org_vc viewWillAppear:YES];
 }
 
 @end

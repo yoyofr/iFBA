@@ -43,11 +43,23 @@ float joy_analog_r[MAX_JOYSTICKS];
 int wm_joy_pl[MAX_JOYSTICKS];
 int wm_prev_joy_pl[MAX_JOYSTICKS];
 
+t_button_map joymap_iCade[10]={
+    {"Start",4},
+    {"Select/Coin",8},
+    {"Menu",0},
+    {"Turbo",0},
+    {"Fire 1",1},
+    {"Fire 2",2},
+    {"Fire 3",3},
+    {"Fire 4",5},
+    {"Fire 5",6},
+    {"Fire 6",7},    
+};
+int joymap_dir_iCade[8];
+
+
 extern int fba_main( int argc, char **argv );
 extern bool bAppDoFast;
-
-
-
 
 volatile int mNewGLFrame;
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch);
@@ -398,12 +410,6 @@ static void *context; //hack to call objective C func from C
     }
     
     
-    //ICADE
-    control = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:control];
-    control.active = YES;
-    control.delegate = self;
-    [control release];    
 }
 
 
@@ -429,6 +435,34 @@ static void *context; //hack to call objective C func from C
     }
     joy_state[0][GN_MENU_KEY]=0;
     
+    //icade map
+    memset(joymap_dir_iCade,0,sizeof(joymap_dir_iCade));
+    for (int i=0;i<10;i++) {
+        int j=joymap_iCade[i].dev_btn;
+        if (j) {
+            switch (i) {
+                case 0:joymap_dir_iCade[j-1]=GN_START;break;
+                case 1:joymap_dir_iCade[j-1]=GN_SELECT_COIN;break;
+                case 2:joymap_dir_iCade[j-1]=GN_MENU_KEY;break;
+                case 3:joymap_dir_iCade[j-1]=GN_TURBO;break;
+                case 4:joymap_dir_iCade[j-1]=GN_A;break;
+                case 5:joymap_dir_iCade[j-1]=GN_B;break;
+                case 6:joymap_dir_iCade[j-1]=GN_C;break;
+                case 7:joymap_dir_iCade[j-1]=GN_D;break;
+                case 8:joymap_dir_iCade[j-1]=GN_E;break;
+                case 9:joymap_dir_iCade[j-1]=GN_F;break;                    
+            }
+        }
+    }
+    
+    //ICADE
+    control = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:control];
+    control.active = YES;
+    control.delegate = self;
+    [control release];    
+
+    
     
     int cur_width=m_oglView.frame.size.width;
     int cur_height=m_oglView.frame.size.height;
@@ -441,20 +475,20 @@ static void *context; //hack to call objective C func from C
         computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
     }
     virtual_stick_pad=0;
-        joy_analog_x[0]=0;joy_analog_y[0]=0;
-        joy_state[0][GN_UP]=0;
-        joy_state[0][GN_DOWN]=0;
-        joy_state[0][GN_LEFT]=0;
-        joy_state[0][GN_RIGHT]=0;
-        joy_state[0][GN_UPRIGHT]=0;
-        joy_state[0][GN_DOWNRIGHT]=0;
-        joy_state[0][GN_UPLEFT]=0;
-        joy_state[0][GN_DOWNLEFT]=0;
+    joy_analog_x[0]=0;joy_analog_y[0]=0;
+    joy_state[0][GN_UP]=0;
+    joy_state[0][GN_DOWN]=0;
+    joy_state[0][GN_LEFT]=0;
+    joy_state[0][GN_RIGHT]=0;
+    joy_state[0][GN_UPRIGHT]=0;
+    joy_state[0][GN_DOWNRIGHT]=0;
+    joy_state[0][GN_UPLEFT]=0;
+    joy_state[0][GN_DOWNLEFT]=0;
     for (int i=0;i<VSTICK_NB_BUTTON;i++)  {
-            virtual_stick[i].finger_id=0;
-            joy_state[0][virtual_stick[i].button_id]=0;
-        }
-
+        virtual_stick[i].finger_id=0;
+        joy_state[0][virtual_stick[i].button_id]=0;
+    }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {    
@@ -483,6 +517,9 @@ static void *context; //hack to call objective C func from C
         [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
         launchGame=0;
     }
+    
+    //update ogl framebuffer
+    [m_oglView didRotateFromInterfaceOrientation:UIInterfaceOrientationPortrait];
     
     mNewGLFrame=1;
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doFrame)];
@@ -515,25 +552,25 @@ static void *context; //hack to call objective C func from C
     if ((interfaceOrientation==UIInterfaceOrientationPortrait)||(interfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
         m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);        
         
-/*        if (device_isIpad) {
-            virtual_stick=virtual_stick_ipad_portrait;
-            computeButtonLayout(96,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_ww,mDevice_hh);            
-        } else {
-            virtual_stick=virtual_stick_iphone_portrait;
-            computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_ww,mDevice_hh);
-        }
-*/
+        /*        if (device_isIpad) {
+         virtual_stick=virtual_stick_ipad_portrait;
+         computeButtonLayout(96,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_ww,mDevice_hh);            
+         } else {
+         virtual_stick=virtual_stick_iphone_portrait;
+         computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_ww,mDevice_hh);
+         }
+         */
     } else {
         m_oglView.frame=CGRectMake(0,0,mDevice_hh,mDevice_ww);
         
-/*        if (device_isIpad) {
-            virtual_stick=virtual_stick_ipad_landscape;
-            computeButtonLayout(96,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_hh,mDevice_ww);                
-        } else {
-            virtual_stick=virtual_stick_iphone_landscape;
-            computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_hh,mDevice_ww);            
-        }
-*/ 
+        /*        if (device_isIpad) {
+         virtual_stick=virtual_stick_ipad_landscape;
+         computeButtonLayout(96,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_hh,mDevice_ww);                
+         } else {
+         virtual_stick=virtual_stick_iphone_landscape;
+         computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_hh,mDevice_ww);            
+         }
+         */ 
     }
     return YES;
 }
@@ -552,28 +589,28 @@ static void *context; //hack to call objective C func from C
     virtual_stick_on=0;
     switch (button) {
         case iCadeButtonA:
-            joy_state[0][GN_A]=state;
+            joy_state[0][joymap_dir_iCade[0]]=state;
             break;
         case iCadeButtonB:
-            joy_state[0][GN_B]=state;
+            joy_state[0][joymap_dir_iCade[1]]=state;
             break;
         case iCadeButtonC:
-            joy_state[0][GN_C]=state;
+            joy_state[0][joymap_dir_iCade[2]]=state;
             break;
         case iCadeButtonD:
-            joy_state[0][GN_D]=state;
+            joy_state[0][joymap_dir_iCade[3]]=state;
             break;
         case iCadeButtonE:
-            joy_state[0][GN_E]=state;
+            joy_state[0][joymap_dir_iCade[4]]=state;
             break;
         case iCadeButtonF:
-            joy_state[0][GN_F]=state;
+            joy_state[0][joymap_dir_iCade[5]]=state;
             break;
         case iCadeButtonG:
-            joy_state[0][GN_START]=state;
+            joy_state[0][joymap_dir_iCade[6]]=state;
             break;
         case iCadeButtonH:
-            joy_state[0][GN_SELECT_COIN]=state;
+            joy_state[0][joymap_dir_iCade[7]]=state;
             break;
         case iCadeJoystickUp:
             joy_state[0][GN_UP]=state;
@@ -633,7 +670,7 @@ void updateWiimotes(void) {
 }
 
 void startWiimoteDetection(void) {
-//    NSLog(@"Looking for wiimote");
+    //    NSLog(@"Looking for wiimote");
     
     BTstackManager * bt = [BTstackManager sharedInstance];
     if (bt) {BTstackError err = [bt activate];
@@ -642,28 +679,28 @@ void startWiimoteDetection(void) {
 }
 
 void stopWiimoteDetection(void) {
-   // NSLog(@"Stop looking for wiimote");
+    // NSLog(@"Stop looking for wiimote");
     BTstackManager * bt = [BTstackManager sharedInstance];
 	if (bt) [bt stopDiscovery];
 }
 
 
 -(void) activatedBTstackManager:(BTstackManager*) manager {
-//	NSLog(@"activated!");
+    //	NSLog(@"activated!");
 	[[BTstackManager sharedInstance] startDiscovery];
 }
 
 -(void) btstackManager:(BTstackManager*)manager deviceInfo:(BTDevice*)newDevice {
-//	NSLog(@"Device Info: addr %@ name %@ COD 0x%06x", [newDevice addressString], [newDevice name], [newDevice classOfDevice] ); 
+    //	NSLog(@"Device Info: addr %@ name %@ COD 0x%06x", [newDevice addressString], [newDevice name], [newDevice classOfDevice] ); 
 	if ([newDevice name] && [[newDevice name] caseInsensitiveCompare:@"Nintendo RVL-CNT-01"] == NSOrderedSame){
-//		NSLog(@"WiiMote found with address %@", [newDevice addressString]);
+        //		NSLog(@"WiiMote found with address %@", [newDevice addressString]);
 		device = newDevice;
 		[[BTstackManager sharedInstance] stopDiscovery];
 	}
 }
 
 -(void) discoveryStoppedBTstackManager:(BTstackManager*) manager {
-//	NSLog(@"discoveryStopped!");
+    //	NSLog(@"discoveryStopped!");
 	// connect to device
 	if (device) bt_send_cmd(&l2cap_create_channel, [device address], 0x13);
 }
@@ -832,7 +869,7 @@ void stopWiimoteDetection(void) {
                         uint16_t psm = READ_BT_16(packet, 11);
                         uint16_t source_cid = READ_BT_16(packet, 13);
                         wiiMoteConHandle = READ_BT_16(packet, 9);
-//                        NSLog(@"Channel successfully opened: handle 0x%02x, psm 0x%02x, source cid 0x%02x, dest cid 0x%02x", wiiMoteConHandle, psm, source_cid,  READ_BT_16(packet, 15));
+                        //                        NSLog(@"Channel successfully opened: handle 0x%02x, psm 0x%02x, source cid 0x%02x, dest cid 0x%02x", wiiMoteConHandle, psm, source_cid,  READ_BT_16(packet, 15));
                         
                         if (psm == 0x13) {
                             

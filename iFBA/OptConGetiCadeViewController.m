@@ -8,9 +8,11 @@
 
 #import "OptConGetiCadeViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "fbaconf.h"
 
 int iCadePress;
 static int iCadeAllPress;
+extern int mOptICadeButtonSelected;
 
 @implementation OptConGetiCadeViewController
 @synthesize iCaderv;
@@ -29,12 +31,6 @@ static int iCadeAllPress;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    //ICADE
-    iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:iCaderv];
-    iCaderv.active = YES;
-    iCaderv.delegate = self;
-    [iCaderv release];
     
     [[mnview layer] setCornerRadius:15.0];	
 	[[mnview layer] setBorderWidth:3.0];
@@ -44,6 +40,14 @@ static int iCadeAllPress;
 -(void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     iCadePress=0;
+    iCadeAllPress=0;
+    //ICADE
+    iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:iCaderv];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv release];
+    
 }
 
 - (void)viewDidUnload
@@ -67,27 +71,41 @@ static int iCadeAllPress;
 - (void)setICadeState:(BOOL)state forButton:(iCadeState)button {    
     switch (button) {
         case iCadeButtonA:
-            case iCadeButtonB:
-            case iCadeButtonC:
-            case iCadeButtonD:
-            case iCadeButtonE:
-            case iCadeButtonF:
-            case iCadeButtonG:
-            case iCadeButtonH:            
-            iCadePress|=state;
+            iCadePress=1;
             break;
-/*        case iCadeJoystickUp:
-            joy_state[0][GN_UP]=state;
+        case iCadeButtonB:
+            iCadePress=2;
             break;
-        case iCadeJoystickRight:
-            joy_state[0][GN_RIGHT]=state;
+        case iCadeButtonC:
+            iCadePress=3;
             break;
-        case iCadeJoystickDown:
-            joy_state[0][GN_DOWN]=state;
+        case iCadeButtonD:
+            iCadePress=4;
             break;
-        case iCadeJoystickLeft:
-            joy_state[0][GN_LEFT]=state;
-            break;            */
+        case iCadeButtonE:
+            iCadePress=5;
+            break;
+        case iCadeButtonF:
+            iCadePress=6;
+            break;
+        case iCadeButtonG:
+            iCadePress=7;
+            break;
+        case iCadeButtonH:            
+            iCadePress=8;
+            break;
+            /*        case iCadeJoystickUp:
+             joy_state[0][GN_UP]=state;
+             break;
+             case iCadeJoystickRight:
+             joy_state[0][GN_RIGHT]=state;
+             break;
+             case iCadeJoystickDown:
+             joy_state[0][GN_DOWN]=state;
+             break;
+             case iCadeJoystickLeft:
+             joy_state[0][GN_LEFT]=state;
+             break;            */
         default:
             break;
     }
@@ -99,9 +117,15 @@ static int iCadeAllPress;
 }
 
 - (void)buttonUp:(iCadeState)button {
-    iCadeAllPress&=~button;
+    iCadeAllPress^=button;
     [self setICadeState:NO forButton:button];    
     if (iCadePress&& (iCadeAllPress==0)) {
+        joymap_iCade[mOptICadeButtonSelected].dev_btn=iCadePress;
+        //remove older assignment (if exist)
+        for (int i=0;i<10;i++) {
+            if ((i!=mOptICadeButtonSelected)&&(joymap_iCade[i].dev_btn==iCadePress)) joymap_iCade[i].dev_btn=0;
+        }
+        iCadePress=0;
         [self dismissSemiModalViewController:self];
     }
 }
@@ -109,6 +133,12 @@ static int iCadeAllPress;
 
 #pragma mark UI action
 -(IBAction) cancelInput {
+    iCadePress=0;
+    [self dismissSemiModalViewController:self];
+}
+-(IBAction) clearInput {
+    joymap_iCade[mOptICadeButtonSelected].dev_btn=0;
+    iCadePress=0;
     [self dismissSemiModalViewController:self];
 }
 

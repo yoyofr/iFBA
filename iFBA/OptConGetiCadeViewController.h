@@ -19,5 +19,6 @@
 @property (nonatomic,retain) IBOutlet UIView *mnview;
 
 -(IBAction) cancelInput;
+-(IBAction) clearInput;
 
 @end

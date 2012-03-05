@@ -43,5 +43,11 @@ typedef struct {
 
 extern ifba_conf_t ifba_conf;
 
+typedef struct {
+    char btn_name[16];
+    unsigned char dev_btn;
+} t_button_map;
+
+extern t_button_map joymap_iCade[10];
 
 #endif

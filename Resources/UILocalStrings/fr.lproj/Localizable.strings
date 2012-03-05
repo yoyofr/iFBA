@@ -64,6 +64,7 @@
 "Mapping info"="Change le mapping des boutons. Les boutons sont listés de gauche à droite, de haut en bas. 1 en haut à gauche, 8 en bas à droite.";
 "Warning"="Attention";
 "Warning iCade BTStack"="BTStack est activé, connection à l'iCade impossible. Il désactiver BTStack dans le menu 'Wiimote'(iFBA) et activer le bluetooth 'iOS' dans les réglages systèmes (BTStack)";
+"Reset to default"="Valeurs par défaut";
 
 //Wiimote options
 "Bluetooth"="Bluetooth";

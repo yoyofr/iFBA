@@ -13,7 +13,7 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-	self.coverView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
+	self.coverView = [[[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame] autorelease];
 	//self.coverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
 	coverView.backgroundColor = UIColor.blackColor;
 

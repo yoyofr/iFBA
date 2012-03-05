@@ -148,6 +148,9 @@ void tstfl_validateloadgame(char *name) {
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.btstack_on ];
 	[prefs setObject:valNb forKey:@"btstack_on"];[valNb autorelease];
     //joymaps
+    for (int i=0;i<10;i++) {
+        
+    }
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_68k];
 	[prefs setObject:valNb forKey:@"asm_68k"];[valNb autorelease];

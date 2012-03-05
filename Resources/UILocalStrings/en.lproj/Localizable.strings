@@ -63,6 +63,7 @@
 "Mapping info"="Change button mapping. Buttons are listed from left to right, top to bottom. 1 is top left, 8 is bottom right.";
 "Warning"="Warning";
 "Warning iCade BTStack"="BTStack active, cannot connect to iCade. Please deactivate BTStack in 'Wiimote' menu(iFBA) and activate 'iOS' bluetooth in system settings(BTStack).";
+"Reset to default"="Reset to default";
 
 //Audio options
 "Sound Output"="Sound Output";
