@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		331D16AA15053B5C00327F74 /* OptDIPSWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D16A815053B5B00327F74 /* OptDIPSWViewController.mm */; };
+		331D16AB15053B5C00327F74 /* OptDIPSWViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D16A915053B5B00327F74 /* OptDIPSWViewController.xib */; };
+		331D16AF1505F57000327F74 /* OptDIPSWValueViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D16AD1505F56F00327F74 /* OptDIPSWValueViewController.mm */; };
+		331D16B01505F57000327F74 /* OptDIPSWValueViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D16AE1505F56F00327F74 /* OptDIPSWValueViewController.xib */; };
 		33231C0014FBA67A00AD7823 /* BTDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BE814FBA67A00AD7823 /* BTDevice.m */; };
 		33231C0114FBA67A00AD7823 /* BTDiscoveryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEA14FBA67A00AD7823 /* BTDiscoveryViewController.m */; };
 		33231C0214FBA67A00AD7823 /* BTInquiryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEC14FBA67A00AD7823 /* BTInquiryViewController.m */; };
@@ -598,6 +602,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		331D16A715053B5B00327F74 /* OptDIPSWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptDIPSWViewController.h; sourceTree = "<group>"; };
+		331D16A815053B5B00327F74 /* OptDIPSWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptDIPSWViewController.mm; sourceTree = "<group>"; };
+		331D16A915053B5B00327F74 /* OptDIPSWViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptDIPSWViewController.xib; sourceTree = "<group>"; };
+		331D16AC1505F56F00327F74 /* OptDIPSWValueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptDIPSWValueViewController.h; sourceTree = "<group>"; };
+		331D16AD1505F56F00327F74 /* OptDIPSWValueViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptDIPSWValueViewController.mm; sourceTree = "<group>"; };
+		331D16AE1505F56F00327F74 /* OptDIPSWValueViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptDIPSWValueViewController.xib; sourceTree = "<group>"; };
 		331F348F14FD96D7004668BC /* fbaconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fbaconf.h; sourceTree = "<group>"; };
 		33231BE714FBA67A00AD7823 /* BTDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDevice.h; sourceTree = "<group>"; };
 		33231BE814FBA67A00AD7823 /* BTDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTDevice.m; sourceTree = "<group>"; };
@@ -2802,6 +2812,12 @@
 				339E5FC514F1851E006FB970 /* MenuViewController.mm */,
 				3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */,
 				3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */,
+				331D16A715053B5B00327F74 /* OptDIPSWViewController.h */,
+				331D16A815053B5B00327F74 /* OptDIPSWViewController.mm */,
+				331D16A915053B5B00327F74 /* OptDIPSWViewController.xib */,
+				331D16AC1505F56F00327F74 /* OptDIPSWValueViewController.h */,
+				331D16AD1505F56F00327F74 /* OptDIPSWValueViewController.mm */,
+				331D16AE1505F56F00327F74 /* OptDIPSWValueViewController.xib */,
 				334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */,
 				334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */,
 				334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */,
@@ -2963,6 +2979,8 @@
 				339F69831500A00F00C1B5EF /* OptEmuViewController.xib in Resources */,
 				339F69881500A01A00C1B5EF /* OptAudioViewController.xib in Resources */,
 				339D14B41503F05800B9FA5C /* OptConGetiCadeViewController.xib in Resources */,
+				331D16AB15053B5C00327F74 /* OptDIPSWViewController.xib in Resources */,
+				331D16B01505F57000327F74 /* OptDIPSWValueViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3517,6 +3535,8 @@
 				339D14B31503F05800B9FA5C /* OptConGetiCadeViewController.m in Sources */,
 				339D14BA1504051500B9FA5C /* TDSemiModalViewController.m in Sources */,
 				339D14BB1504051500B9FA5C /* UIViewController+TDSemiModalExtension.m in Sources */,
+				331D16AA15053B5C00327F74 /* OptDIPSWViewController.mm in Sources */,
+				331D16AF1505F57000327F74 /* OptDIPSWValueViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3561,6 +3581,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Lib\"",
+					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
+				);
 				LLVM_LTO = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
@@ -3583,7 +3608,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/fba-gp2x\"",
 					"\"$(SRCROOT)/Lib\"",
 					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
 				);
@@ -3612,6 +3636,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Lib\"",
+					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
+				);
 				LLVM_LTO = NO;
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -3635,6 +3664,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Lib\"",
+					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
+				);
 				LLVM_LTO = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
@@ -3655,7 +3689,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/fba-gp2x\"",
 					"\"$(SRCROOT)/Lib\"",
 					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
 				);
@@ -3674,7 +3707,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/fba-gp2x\"",
 					"\"$(SRCROOT)/Lib\"",
 					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
 				);

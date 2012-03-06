@@ -1,9 +1,13 @@
 v0.2
 ---------------
 TODO
-- controllers buttons mapping
-- roms long name in browser
+- controllers buttons mapping Wiimote
+- pad restrictor: 2ways, 4ways, 8ways
+- implement dip switches
 DONE
+- increase alpha for vpad
+- controllers buttons mapping iCade
+- roms long name in browser
 - BTStack is now deactivated by default (if first launch).
 
 v0.1 - 04/03/2012

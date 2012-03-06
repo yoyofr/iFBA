@@ -53,7 +53,23 @@
 #define WII_JOY_D       0x0200
 #define WII_JOY_E       0x0400
 #define WII_JOY_F       0x0800
-#define WII_JOY_HOME    0x1000
+#define WII_JOY_G       0x1000
+#define WII_JOY_H       0x2000
+#define WII_JOY_HOME    0x4000
+
+enum {
+    WII_BUTTON_SELECT=1,
+    WII_BUTTON_START,
+    WII_BUTTON_A,
+    WII_BUTTON_B,
+    WII_BUTTON_C,
+    WII_BUTTON_D,
+    WII_BUTTON_E,
+    WII_BUTTON_F,
+    WII_BUTTON_G,
+    WII_BUTTON_H,
+    WII_BUTTON_HOME
+};
 
 #include "utils.h"
 

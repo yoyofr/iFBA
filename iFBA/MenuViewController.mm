@@ -10,6 +10,7 @@
 #import "EmuViewController.h"
 #import "GameBrowserViewController.h"
 #import "OptionsViewController.h"
+#import "OptDIPSWViewController.h"
 
 #ifdef TESTFLIGHT
 #import "TestFlight.h"
@@ -21,7 +22,7 @@ extern char gameName[64];
 extern volatile int emuThread_running;
 
 @implementation MenuViewController
-@synthesize emuvc,gamebrowservc,optionsvc;
+@synthesize emuvc,gamebrowservc,optionsvc,dipswvc;
 @synthesize tabView;
 @synthesize btn_backToEmu;
 
@@ -112,7 +113,7 @@ extern volatile int emuThread_running;
     int nbRows=0;
     switch (section) {
         case 0:
-            if (emuThread_running) nbRows=4;
+            if (emuThread_running) nbRows=5;
             else nbRows=1;
             break;
         case 1:
@@ -148,11 +149,15 @@ extern volatile int emuThread_running;
             if (emuThread_running) {
                 if (indexPath.row==0) {
                     cell.textLabel.text=[NSString stringWithFormat:NSLocalizedString(@"Back to %s",@""),gameName];
-                    cell.backgroundColor=[UIColor colorWithRed:0.95f green:1.0f blue:0.9f alpha:1.0f];
+                    cell.backgroundColor=[UIColor colorWithRed:0.90f green:1.0f blue:0.85f alpha:1.0f];
                 }
                 if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Load State",@"");
                 if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
-                if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"Load game",@"");            
+                if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"DIPSW",@"");
+                if (indexPath.row==4) {
+                    cell.textLabel.text=NSLocalizedString(@"Load game",@"");
+                    cell.backgroundColor=[UIColor colorWithRed:1.00f green:0.9f blue:0.8f alpha:1.0f];
+                }
             } else {
                 if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");            
             }
@@ -194,7 +199,12 @@ int StatedSave(int slot);
                     StatedSave(0);
                     [self backToEmu];
                     break;
-                case 3: //game browser
+                case 3://DIP Switches
+                    dipswvc = [[OptDIPSWViewController alloc] initWithNibName:@"OptDIPSWViewController" bundle:nil];
+                    [self.navigationController pushViewController:dipswvc animated:YES];
+                    [dipswvc release];
+                    break;
+                case 4: //game browser
                     gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];

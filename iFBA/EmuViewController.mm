@@ -33,9 +33,9 @@ static uint16_t wiiMoteConHandle = 0;
 void startWiimoteDetection(void);
 void stopWiimoteDetection(void);
 
-int iOS_wiiDeadZoneValue;
+int iOS_wiiDeadZoneValue=1;
 int iOS_inGame;
-int iOS_waysStick=0;
+int iOS_waysStick=8;
 float joy_analog_x[MAX_JOYSTICKS];
 float joy_analog_y[MAX_JOYSTICKS];
 float joy_analog_l[MAX_JOYSTICKS];
@@ -56,6 +56,65 @@ t_button_map joymap_iCade[10]={
     {"Fire 6",7},    
 };
 int joymap_dir_iCade[8];
+
+// Wiimote: 1,2,+,-,A,B and home => 6+1 buttons
+// Wiimote classic: A,B,X,Y,LT,RT,L,R,+,- and home => 8+1 buttons
+// Order  Wiimote Classic  Emu
+//  1        +      +      Start
+//  2        -      -      Select/Coin
+//  3      home    home    Menu
+//  4        /      L      Turbo
+//  5        1      Y      Fire 1
+//  6        2      X      Fire 2
+//  7        A      B      Fire 3
+//  8        B      A      Fire 4
+//  9        /      LT     Fire 5
+// 10        /      RT     Fire 6
+
+t_button_map joymap_wiimote[MAX_JOYSTICKS][10]={
+    {{"Start",WII_BUTTON_START},
+    {"Select/Coin",WII_BUTTON_SELECT},
+    {"Menu",WII_BUTTON_HOME},
+    {"Turbo",WII_BUTTON_G},
+    {"Fire 1",WII_BUTTON_A},
+    {"Fire 2",WII_BUTTON_B},
+    {"Fire 3",WII_BUTTON_C},
+    {"Fire 4",WII_BUTTON_D},
+    {"Fire 5",WII_BUTTON_E},
+        {"Fire 6",WII_BUTTON_F}},
+    {{"Start",WII_BUTTON_START},
+        {"Select/Coin",WII_BUTTON_SELECT},
+        {"Menu",WII_BUTTON_HOME},
+        {"Turbo",WII_BUTTON_G},
+        {"Fire 1",WII_BUTTON_A},
+        {"Fire 2",WII_BUTTON_B},
+        {"Fire 3",WII_BUTTON_C},
+        {"Fire 4",WII_BUTTON_D},
+        {"Fire 5",WII_BUTTON_E},
+        {"Fire 6",WII_BUTTON_F}},
+    {{"Start",WII_BUTTON_START},
+        {"Select/Coin",WII_BUTTON_SELECT},
+        {"Menu",WII_BUTTON_HOME},
+        {"Turbo",WII_BUTTON_G},
+        {"Fire 1",WII_BUTTON_A},
+        {"Fire 2",WII_BUTTON_B},
+        {"Fire 3",WII_BUTTON_C},
+        {"Fire 4",WII_BUTTON_D},
+        {"Fire 5",WII_BUTTON_E},
+        {"Fire 6",WII_BUTTON_F}},
+    {{"Start",WII_BUTTON_START},
+        {"Select/Coin",WII_BUTTON_SELECT},
+        {"Menu",WII_BUTTON_HOME},
+        {"Turbo",WII_BUTTON_G},
+        {"Fire 1",WII_BUTTON_A},
+        {"Fire 2",WII_BUTTON_B},
+        {"Fire 3",WII_BUTTON_C},
+        {"Fire 4",WII_BUTTON_D},
+        {"Fire 5",WII_BUTTON_E},
+        {"Fire 6",WII_BUTTON_F}},
+};
+int joymap_dir_wiimote[MAX_JOYSTICKS][11];
+
 
 
 extern int fba_main( int argc, char **argv );
@@ -454,6 +513,26 @@ static void *context; //hack to call objective C func from C
             }
         }
     }
+    //wiimotes map
+    memset(joymap_dir_wiimote,0,sizeof(joymap_dir_wiimote));
+    for (int joy=0;joy<MAX_JOYSTICKS;joy++)
+    for (int i=0;i<10;i++) {
+        int j=joymap_wiimote[joy][i].dev_btn;
+        if (j) {
+            switch (i) {
+                case 0:joymap_dir_wiimote[joy][j-1]=GN_START;break;
+                case 1:joymap_dir_wiimote[joy][j-1]=GN_SELECT_COIN;break;
+                case 2:joymap_dir_wiimote[joy][j-1]=GN_MENU_KEY;break;
+                case 3:joymap_dir_wiimote[joy][j-1]=GN_TURBO;break;
+                case 4:joymap_dir_wiimote[joy][j-1]=GN_A;break;
+                case 5:joymap_dir_wiimote[joy][j-1]=GN_B;break;
+                case 6:joymap_dir_wiimote[joy][j-1]=GN_C;break;
+                case 7:joymap_dir_wiimote[joy][j-1]=GN_D;break;
+                case 8:joymap_dir_wiimote[joy][j-1]=GN_E;break;
+                case 9:joymap_dir_wiimote[joy][j-1]=GN_F;break;                    
+            }
+        }
+    }
     
     //ICADE
     control = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
@@ -645,6 +724,7 @@ static void *context; //hack to call objective C func from C
 
 void updateWiimotes(void) {
     //Wiimotes update
+    int wii_but;
     for (int i=0;i<num_of_joys;i++) {
         if (wm_joy_pl[i]=iOS_wiimote_check(&(joys[i]))) virtual_stick_on=0;
         if (wm_joy_pl[i]!=wm_prev_joy_pl[i]) {
@@ -654,14 +734,29 @@ void updateWiimotes(void) {
             joy_state[i][GN_DOWN]=(wm_joy_pl[i]&WII_JOY_DOWN?1:0);
             joy_state[i][GN_LEFT]=(wm_joy_pl[i]&WII_JOY_LEFT?1:0);
             joy_state[i][GN_RIGHT]=(wm_joy_pl[i]&WII_JOY_RIGHT?1:0);
-            joy_state[i][GN_A]=(wm_joy_pl[i]&WII_JOY_A?1:0);
+            
+
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_A-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_A?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_B-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_B?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_C-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_C?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_D-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_D?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_E-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_E?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_F-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_F?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_G-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_G?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_H-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_H?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_HOME-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_HOME?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_START-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_START?1:0);
+            if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_SELECT-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_SELECT?1:0);
+
+            
+/*            joy_state[i][GN_A]=(wm_joy_pl[i]&WII_JOY_A?1:0);
             joy_state[i][GN_B]=(wm_joy_pl[i]&WII_JOY_B?1:0);
             joy_state[i][GN_C]=(wm_joy_pl[i]&WII_JOY_C?1:0);
             joy_state[i][GN_D]=(wm_joy_pl[i]&WII_JOY_D?1:0);
             joy_state[i][GN_SELECT_COIN]=(wm_joy_pl[i]&WII_JOY_SELECT?1:0);
             joy_state[i][GN_START]=(wm_joy_pl[i]&WII_JOY_START?1:0);
             joy_state[i][GN_MENU_KEY]=(wm_joy_pl[i]&WII_JOY_HOME?1:0);
-            joy_state[i][GN_TURBO]=(wm_joy_pl[i]&WII_JOY_E?1:0);
+            joy_state[i][GN_TURBO]=(wm_joy_pl[i]&WII_JOY_E?1:0);*/
         }
     }
     
@@ -1170,8 +1265,8 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     }
     
     
-    virtual_stick_buttons_alpha=32*ifba_conf.vpad_alpha;
-    virtual_stick_buttons_alpha2=64*ifba_conf.vpad_alpha;
+    virtual_stick_buttons_alpha=64*ifba_conf.vpad_alpha;
+    virtual_stick_buttons_alpha2=96*ifba_conf.vpad_alpha;
     if (virtual_stick_buttons_alpha>255) virtual_stick_buttons_alpha=255;
     if (virtual_stick_buttons_alpha2>255) virtual_stick_buttons_alpha2=255;
     

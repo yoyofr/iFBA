@@ -121,13 +121,17 @@ int mOptICadeButtonSelected;
         case 0://Mapping
             cell.textLabel.text=[NSString stringWithFormat:@"%s",joymap_iCade[indexPath.row].btn_name];
             lblview=[[UILabel alloc] initWithFrame:CGRectMake(0,0,100,30)];
-            lblview.text=[NSString stringWithFormat:@"Button %d",joymap_iCade[indexPath.row].dev_btn];
+            if (joymap_iCade[indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %d",joymap_iCade[indexPath.row].dev_btn];
+            else lblview.text=@"/";
             lblview.backgroundColor=[UIColor clearColor];
             cell.accessoryView=lblview;
             [lblview release];
+            cell.textLabel.textAlignment=UITextAlignmentLeft;
             break;
         case 1://Reset to default
             cell.textLabel.text=NSLocalizedString(@"Reset to default",@"");
+            cell.textLabel.textAlignment=UITextAlignmentCenter;
+            cell.accessoryView=nil;
             break;
     }
     
@@ -152,9 +156,9 @@ int mOptICadeButtonSelected;
             joymap_iCade[4].dev_btn=1;//Fire 1
             joymap_iCade[5].dev_btn=2;//Fire 2
             joymap_iCade[6].dev_btn=3;//...
-            joymap_iCade[7].dev_btn=4;//
-            joymap_iCade[8].dev_btn=5;//
-            joymap_iCade[9].dev_btn=6;//Fire 6
+            joymap_iCade[7].dev_btn=5;//
+            joymap_iCade[8].dev_btn=6;//
+            joymap_iCade[9].dev_btn=7;//Fire 6
             [tabView reloadData];            
             break;
     }
