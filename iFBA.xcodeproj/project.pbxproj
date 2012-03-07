@@ -11,6 +11,10 @@
 		331D16AB15053B5C00327F74 /* OptDIPSWViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D16A915053B5B00327F74 /* OptDIPSWViewController.xib */; };
 		331D16AF1505F57000327F74 /* OptDIPSWValueViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D16AD1505F56F00327F74 /* OptDIPSWValueViewController.mm */; };
 		331D16B01505F57000327F74 /* OptDIPSWValueViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D16AE1505F56F00327F74 /* OptDIPSWValueViewController.xib */; };
+		331D17081506BEC100327F74 /* OptWiimoteBtnViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D17061506BEC000327F74 /* OptWiimoteBtnViewController.mm */; };
+		331D17091506BEC100327F74 /* OptWiimoteBtnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D17071506BEC100327F74 /* OptWiimoteBtnViewController.xib */; };
+		331D170D1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 331D170B1506BF8B00327F74 /* OptConGetWiimoteBtnViewController.m */; };
+		331D170E1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D170C1506BF8C00327F74 /* OptConGetWiimoteBtnViewController.xib */; };
 		33231C0014FBA67A00AD7823 /* BTDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BE814FBA67A00AD7823 /* BTDevice.m */; };
 		33231C0114FBA67A00AD7823 /* BTDiscoveryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEA14FBA67A00AD7823 /* BTDiscoveryViewController.m */; };
 		33231C0214FBA67A00AD7823 /* BTInquiryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEC14FBA67A00AD7823 /* BTInquiryViewController.m */; };
@@ -608,6 +612,12 @@
 		331D16AC1505F56F00327F74 /* OptDIPSWValueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptDIPSWValueViewController.h; sourceTree = "<group>"; };
 		331D16AD1505F56F00327F74 /* OptDIPSWValueViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptDIPSWValueViewController.mm; sourceTree = "<group>"; };
 		331D16AE1505F56F00327F74 /* OptDIPSWValueViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptDIPSWValueViewController.xib; sourceTree = "<group>"; };
+		331D17051506BEBF00327F74 /* OptWiimoteBtnViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptWiimoteBtnViewController.h; sourceTree = "<group>"; };
+		331D17061506BEC000327F74 /* OptWiimoteBtnViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptWiimoteBtnViewController.mm; sourceTree = "<group>"; };
+		331D17071506BEC100327F74 /* OptWiimoteBtnViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptWiimoteBtnViewController.xib; sourceTree = "<group>"; };
+		331D170A1506BF8A00327F74 /* OptConGetWiimoteBtnViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptConGetWiimoteBtnViewController.h; sourceTree = "<group>"; };
+		331D170B1506BF8B00327F74 /* OptConGetWiimoteBtnViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptConGetWiimoteBtnViewController.m; sourceTree = "<group>"; };
+		331D170C1506BF8C00327F74 /* OptConGetWiimoteBtnViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptConGetWiimoteBtnViewController.xib; sourceTree = "<group>"; };
 		331F348F14FD96D7004668BC /* fbaconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fbaconf.h; sourceTree = "<group>"; };
 		33231BE714FBA67A00AD7823 /* BTDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDevice.h; sourceTree = "<group>"; };
 		33231BE814FBA67A00AD7823 /* BTDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTDevice.m; sourceTree = "<group>"; };
@@ -2836,6 +2846,12 @@
 				339F696E15002F5200C1B5EF /* OptVPadViewController.h */,
 				339F696F15002F5300C1B5EF /* OptVPadViewController.mm */,
 				339F697015002F5300C1B5EF /* OptVPadViewController.xib */,
+				331D170A1506BF8A00327F74 /* OptConGetWiimoteBtnViewController.h */,
+				331D170B1506BF8B00327F74 /* OptConGetWiimoteBtnViewController.m */,
+				331D170C1506BF8C00327F74 /* OptConGetWiimoteBtnViewController.xib */,
+				331D17051506BEBF00327F74 /* OptWiimoteBtnViewController.h */,
+				331D17061506BEC000327F74 /* OptWiimoteBtnViewController.mm */,
+				331D17071506BEC100327F74 /* OptWiimoteBtnViewController.xib */,
 				339F697115002F5300C1B5EF /* OptWiimoteViewController.h */,
 				339F697215002F5300C1B5EF /* OptWiimoteViewController.mm */,
 				339F697315002F5400C1B5EF /* OptWiimoteViewController.xib */,
@@ -2981,6 +2997,8 @@
 				339D14B41503F05800B9FA5C /* OptConGetiCadeViewController.xib in Resources */,
 				331D16AB15053B5C00327F74 /* OptDIPSWViewController.xib in Resources */,
 				331D16B01505F57000327F74 /* OptDIPSWValueViewController.xib in Resources */,
+				331D17091506BEC100327F74 /* OptWiimoteBtnViewController.xib in Resources */,
+				331D170E1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3537,6 +3555,8 @@
 				339D14BB1504051500B9FA5C /* UIViewController+TDSemiModalExtension.m in Sources */,
 				331D16AA15053B5C00327F74 /* OptDIPSWViewController.mm in Sources */,
 				331D16AF1505F57000327F74 /* OptDIPSWValueViewController.mm in Sources */,
+				331D17081506BEC100327F74 /* OptWiimoteBtnViewController.mm in Sources */,
+				331D170D1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

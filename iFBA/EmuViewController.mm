@@ -6,13 +6,15 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#define VPAD_SPECIALS_BUTTON_NB 4
-#define MAX_JOYSTICKS 4
 #define min(a,b) (a<b?a:b)
 
 #ifdef TESTFLIGHT
 #import "TestFlight.h"
 #endif
+
+#import "fbaconf.h"
+ifba_conf_t ifba_conf;
+
 
 #include "inp_sdl_keys.h"
 unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
@@ -20,8 +22,6 @@ unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
 #import "EmuViewController.h"
 #include "string.h"
 #include "sdl_font.h"
-#import "fbaconf.h"
-ifba_conf_t ifba_conf;
 
 #import "BTstack/BTDevice.h"
 #import "BTstack/btstack.h"
@@ -576,7 +576,7 @@ static void *context; //hack to call objective C func from C
     //If resuming
     if (nShouldExit==2) {
         //launch new game ?
-        if (launchGame) {//yes, exit current one                                    
+        if (launchGame) {//yes, exit current one
             nShouldExit=1;
             while (emuThread_running) {
                 [NSThread sleepForTimeInterval:0.01]; //10ms        
@@ -592,6 +592,7 @@ static void *context; //hack to call objective C func from C
         pb_value=0;
         pb_total=0;
         pb_msg[0]=0;
+        vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
         [TestFlight passCheckpoint:[NSString stringWithFormat:@"LOADGAME-%s",gameName]];
         [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
         launchGame=0;

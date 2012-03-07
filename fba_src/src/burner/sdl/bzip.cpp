@@ -2,6 +2,7 @@
 #include "burner.h"
 
 int nBzipError = 0;												// non-zero if there is a problem with the opened romset
+int rom_nocheck=0;
 
 static TCHAR* szBzipName[BZIP_MAX] = { NULL, };					// Zip files to search through
 
@@ -392,8 +393,8 @@ int BzipOpen(bool bootApp)
 					nTotalSize += ri.nLen;
 				}
 
-				if (List[nFind].nLen == ri.nLen) {
-					if (ri.nCrc) {								// If we know the CRC
+				if ((List[nFind].nLen == ri.nLen)||(rom_nocheck)) {
+					if (ri.nCrc&&(rom_nocheck==0)) {								// If we know the CRC
 						if (List[nFind].nCrc != ri.nCrc) {		// Length okay, but CRC wrong
 							RomFind[i].nState = 2;
 						}

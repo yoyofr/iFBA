@@ -751,12 +751,12 @@ int iOS_wiimote_check (struct  wiimote_t  *wm){
         
         struct classic_ctrl_t* cc = (classic_ctrl_t*)&wm->exp.classic;
         
-        if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_ZL))			joyExKey |= WII_JOY_E;
+        if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_ZL))			joyExKey |= WII_JOY_G;
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_B))			joyExKey |= WII_JOY_C;
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_Y))			joyExKey |= WII_JOY_A;
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_A))			joyExKey |= WII_JOY_D;
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_X))			joyExKey |= WII_JOY_B;
-        if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_ZR))			joyExKey |= WII_JOY_F;
+        if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_ZR))			joyExKey |= WII_JOY_H;
         
         
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_UP)){
@@ -775,11 +775,11 @@ int iOS_wiimote_check (struct  wiimote_t  *wm){
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_RIGHT))		joyExKey |= WII_JOY_RIGHT;
         
         
-        if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_FULL_L))		joyExKey |= WII_JOY_G;
+        if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_FULL_L))		joyExKey |= WII_JOY_E;
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_MINUS))		joyExKey |= WII_JOY_SELECT;
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_HOME))		joyExKey |= WII_JOY_HOME;
         if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_PLUS))		joyExKey |= WII_JOY_START;
-        if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_FULL_R))		joyExKey |= WII_JOY_H;
+        if (IS_PRESSED(cc, CLASSIC_CTRL_BUTTON_FULL_R))		joyExKey |= WII_JOY_F;
 #ifdef NO_SQRT_MAG
         if(cc->ljs.mag >= deadZone*deadZone)
 #else

@@ -231,7 +231,7 @@ static int SDLSoundInit()
                             interruptionListenerCallback,
                             NULL
                             );
-    UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
+    UInt32 sessionCategory = kAudioSessionCategory_SoloAmbientSound;
     AudioSessionSetProperty (
                              kAudioSessionProperty_AudioCategory,
                              sizeof (sessionCategory),

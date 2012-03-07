@@ -34,6 +34,8 @@
 
 static INT32 cycles_68k, cycles_z80;
 
+extern int rom_nocheck;
+
 typedef void (*MegadriveCb)();
 static MegadriveCb MegadriveCallback;
 
@@ -1351,6 +1353,8 @@ static INT32 MegadriveLoadRoms(bool bLoad)
 	
 	if (bLoad) {
 		INT32 Offset = 0;
+        
+        rom_nocheck=1;
 		
 		for (i = 0; i < RomNum; i++) {
 			BurnDrvGetRomInfo(&ri, i);
@@ -1389,6 +1393,7 @@ static INT32 MegadriveLoadRoms(bool bLoad)
 					break;
 				}
 			}
+            rom_nocheck=0;
 		}
 	}
 	

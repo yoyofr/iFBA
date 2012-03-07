@@ -9,6 +9,10 @@
 #ifndef iFBA_fbaconf_h
 #define iFBA_fbaconf_h
 
+#define MAX_JOYSTICKS 4
+#define VPAD_SPECIALS_BUTTON_NB 4
+
+
 typedef struct {
     //Video
     unsigned char aspect_ratio;
@@ -49,5 +53,7 @@ typedef struct {
 } t_button_map;
 
 extern t_button_map joymap_iCade[10];
+
+extern t_button_map joymap_wiimote[MAX_JOYSTICKS][10];
 
 #endif

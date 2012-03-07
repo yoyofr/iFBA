@@ -16,7 +16,7 @@
 "Select a game"="Select a game";
 "Back to %s"="Back to %s";
 "DIPSW"="DIP Switches";
-"Change DIP Switches"="Change DIP Switches";
+"Change DIP Switches"="Change DIP Switches. A reset is often required to active change(s).";
 
 //About
 "About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.21\n\nCurrently supporting %d drivers";
@@ -61,8 +61,10 @@
 "Change size"="Change buttons & pad size";
 "Buttons"="Buttons";
 "Pad"="Pad";
+"Mapping"="Mapping";
 
 "Mapping info"="Change button mapping. Buttons are listed from left to right, top to bottom. 1 is top left, 8 is bottom right.";
+"Mapping wii info"="Change button mapping.";
 "Warning"="Warning";
 "Warning iCade BTStack"="BTStack active, cannot connect to iCade. Please deactivate BTStack in 'Wiimote' menu(iFBA) and activate 'iOS' bluetooth in system settings(BTStack).";
 "Reset to default"="Reset to default";

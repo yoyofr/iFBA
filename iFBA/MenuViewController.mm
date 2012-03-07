@@ -16,6 +16,7 @@
 #import "TestFlight.h"
 #endif
 
+extern int pendingReset;
 extern unsigned int nBurnDrvCount;
 extern int launchGame;
 extern char gameName[64];
@@ -113,7 +114,7 @@ extern volatile int emuThread_running;
     int nbRows=0;
     switch (section) {
         case 0:
-            if (emuThread_running) nbRows=5;
+            if (emuThread_running) nbRows=6;
             else nbRows=1;
             break;
         case 1:
@@ -143,20 +144,26 @@ extern volatile int emuThread_running;
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     cell.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-    
+    cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
 	switch (indexPath.section) {
         case 0:
             if (emuThread_running) {
                 if (indexPath.row==0) {
                     cell.textLabel.text=[NSString stringWithFormat:NSLocalizedString(@"Back to %s",@""),gameName];
-                    cell.backgroundColor=[UIColor colorWithRed:0.90f green:1.0f blue:0.85f alpha:1.0f];
+//                    cell.backgroundColor=[UIColor colorWithRed:0.95f green:1.0f blue:0.95f alpha:1.0f];
                 }
                 if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Load State",@"");
                 if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
                 if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"DIPSW",@"");
                 if (indexPath.row==4) {
+                    if (pendingReset) cell.accessoryType=UITableViewCellAccessoryCheckmark;
+                    else cell.accessoryType=UITableViewCellAccessoryNone;
+                    cell.textLabel.text=@"Reset";
+//                    cell.backgroundColor=[UIColor colorWithRed:1.0f green:0.7f blue:0.7f alpha:1.0f];
+                }
+                if (indexPath.row==5) {
                     cell.textLabel.text=NSLocalizedString(@"Load game",@"");
-                    cell.backgroundColor=[UIColor colorWithRed:1.00f green:0.9f blue:0.8f alpha:1.0f];
+//                    cell.backgroundColor=[UIColor colorWithRed:0.8f green:1.0f blue:0.8f alpha:1.0f];
                 }
             } else {
                 if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");            
@@ -174,9 +181,7 @@ extern volatile int emuThread_running;
 #endif
             
             break;
-	}
-	
-	cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+	}		
     
     return cell;
 }
@@ -204,7 +209,11 @@ int StatedSave(int slot);
                     [self.navigationController pushViewController:dipswvc animated:YES];
                     [dipswvc release];
                     break;
-                case 4: //game browser
+                case 4: //reset
+                    pendingReset^=1;
+                    [tabView reloadData];
+                    break;
+                case 5: //game browser
                     gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];

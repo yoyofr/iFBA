@@ -11,7 +11,6 @@
 
 #include "burnint.h"
 
-
 extern char gameName[64];
 extern int launchGame;
 static int cur_game_section,cur_game_row;
@@ -24,6 +23,8 @@ static int cur_game_section,cur_game_row;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title=NSLocalizedString(@"Select a game",@"");
+//        self.tabView.sectionHeaderHeight = 0;
+        self.tabView.sectionFooterHeight = 0;
     }
     return self;
 }
@@ -198,14 +199,16 @@ static int cur_game_section,cur_game_row;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if ([romlist[section] count]) return [indexTitles objectAtIndex:section];
-    else return @"";
+    else return nil;
 }
+
+
+
+
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     return indexTitles;    
 }
-
-
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

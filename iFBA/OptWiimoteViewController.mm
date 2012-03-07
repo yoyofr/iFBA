@@ -7,6 +7,7 @@
 //
 
 #import "OptWiimoteViewController.h"
+#import "OptWiimoteBtnViewController.h"
 #import "BTstack/BTDevice.h"
 #import "BTstack/btstack.h"
 #import "BTstack/run_loop.h"
@@ -14,6 +15,8 @@
 #import "BTstack/wiimote.h"
 
 #import "fbaconf.h"
+
+int wiimoteSelected;
 
 
 @implementation OptWiimoteViewController
@@ -87,14 +90,15 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 2;
+	return 3;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
     if (section==0) return 1;
-    if (section==1) return 1 + [bt numberOfDevicesFound];
+    if (section==1) return 4;
+    if (section==2) return 1 + [bt numberOfDevicesFound];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -102,7 +106,9 @@
     switch (section) {
         case 0:title=NSLocalizedString(@"Bluetooth",@"");
             break;
-        case 1:title=NSLocalizedString(@"Devices",@"");
+        case 1:title=NSLocalizedString(@"Mapping",@"");
+            break;
+        case 2:title=NSLocalizedString(@"Devices",@"");
             break;
     }
     return title;
@@ -152,7 +158,12 @@
             [switchview release];
             switchview.on=ifba_conf.btstack_on;
             break;
-        case 1://Bluetooth devices
+        case 1://Mapping
+            cell.textLabel.text=[NSString stringWithFormat:@"Wiimote %d",indexPath.row];
+            cell.accessoryView = nil;
+            cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+            break;
+        case 2://Bluetooth devices
             // Set up the cell...
             NSString *theLabel = nil;
             UIImage *theImage = nil;
@@ -279,6 +290,13 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section==1) {
+        wiimoteSelected=indexPath.row;
+        OptWiimoteBtnViewController *vc=[[OptWiimoteBtnViewController alloc] initWithNibName:@"OptWiimoteBtnViewController" bundle:nil];
+        [self.navigationController pushViewController:vc animated:YES];
+        [vc release];
+        [tabView reloadData];
+    }
 }
 
 -(void) reload{

@@ -13,8 +13,8 @@ extern float joy_analog_x[MAX_JOYSTICKS];
 extern float joy_analog_y[MAX_JOYSTICKS];
 extern float joy_analog_l[MAX_JOYSTICKS];
 extern float joy_analog_r[MAX_JOYSTICKS];
-
 extern void updateWiimotes(void);
+int pendingReset=0;
 
 // Sets up one Joystick (for example the range of the joystick's axes)
 static int SDLinpJoystickInit(int i)
@@ -205,6 +205,10 @@ int SDLinpState(int code) {
             case 0x3c: //f2
                 break;
             case 0x3D: //f3
+                if (pendingReset) {
+                    pendingReset=0;
+                    return 1;
+                }
                 break;
         }
         return 0;
