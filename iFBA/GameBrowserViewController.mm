@@ -8,8 +8,10 @@
 
 #import "GameBrowserViewController.h"
 #include "string.h"
+#include "burner.h"
 
-#include "burnint.h"
+extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
+
 
 extern char gameName[64];
 extern int launchGame;
@@ -23,7 +25,7 @@ static int cur_game_section,cur_game_row;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title=NSLocalizedString(@"Select a game",@"");
-//        self.tabView.sectionHeaderHeight = 0;
+        //        self.tabView.sectionHeaderHeight = 0;
         self.tabView.sectionFooterHeight = 0;
     }
     return self;
@@ -100,11 +102,11 @@ static int cur_game_section,cur_game_row;
     // e.g. self.myOutlet = nil;
 }
 
-- (void)scanRomsDir {
+- (void)scanRomsDirs {
     NSError *error;
     NSArray *dirContent;
     NSFileManager *mFileMngr = [[NSFileManager alloc] init];
-    NSString *cpath=[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents/"];
+    NSString *cpath;
     NSString *file;
     NSArray *filetype_extROMFILE=[@"ZIP,FBA" componentsSeparatedByString:@","];    
     
@@ -119,26 +121,37 @@ static int cur_game_section,cur_game_row;
     
     int saveActiveDrv=nBurnDrvActive;
     
-    dirContent=[mFileMngr subpathsOfDirectoryAtPath:cpath error:&error];
-    for (file in dirContent) {
-        NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
-        if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
-            NSUInteger ind;
-            //NSLog(@"file; %@",[file lastPathComponent]);
-            ind=[burn_supportedRoms indexOfObject:[[file lastPathComponent] lowercaseString]];
-            if (ind!=NSNotFound) {
-                char i;
-                i=[[file lastPathComponent] UTF8String][0];
-                if ((i>='a')&&(i<='z')) i+=1-'a';
-                else if ((i>='A')&&(i<='Z')) i+=1-'A';
-                else i=0;
-                [romlist[i] addObject:file];
-                nBurnDrvActive=ind;
-                [romlistLbl[i] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] ];
-                if (gameName[0]&&(cur_game_section<0)) {
-                    if (strcmp(gameName,[[[file lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
-                        cur_game_section=i;
-                        cur_game_row=[romlist[i] count]-1;
+    for (int i=0;i<DIRS_MAX;i++) {
+        //hack until cydia only release
+/*        if (i==-1) {
+            cpath=[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents/"];
+        } else*/ {
+            if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
+            else cpath=nil;
+        }
+        if (cpath) {
+            dirContent=[mFileMngr subpathsOfDirectoryAtPath:cpath error:&error];
+            for (file in dirContent) {
+                NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
+                if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
+                    NSUInteger ind;
+                    //NSLog(@"file; %@",[file lastPathComponent]);
+                    ind=[burn_supportedRoms indexOfObject:[[file lastPathComponent] lowercaseString]];
+                    if (ind!=NSNotFound) {
+                        char i;
+                        i=[[file lastPathComponent] UTF8String][0];
+                        if ((i>='a')&&(i<='z')) i+=1-'a';
+                        else if ((i>='A')&&(i<='Z')) i+=1-'A';
+                        else i=0;
+                        [romlist[i] addObject:file];
+                        nBurnDrvActive=ind;
+                        [romlistLbl[i] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] ];
+                        if (gameName[0]&&(cur_game_section<0)) {
+                            if (strcmp(gameName,[[[file lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
+                                cur_game_section=i;
+                                cur_game_row=[romlist[i] count]-1;
+                            }
+                        }
                     }
                 }
             }
@@ -154,7 +167,7 @@ static int cur_game_section,cur_game_row;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self scanRomsDir];
+    [self scanRomsDirs];
     [[self tabView] reloadData];
     if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
 }
@@ -194,11 +207,11 @@ static int cur_game_section,cur_game_row;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [romlist[section] count];
+    return [romlistLbl[section] count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if ([romlist[section] count]) return [indexTitles objectAtIndex:section];
+    if ([romlistLbl[section] count]) return [indexTitles objectAtIndex:section];
     else return nil;
 }
 
@@ -227,10 +240,10 @@ static int cur_game_section,cur_game_row;
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-        sprintf(gameName,"%s",[[(NSString *)[romlist[indexPath.section] objectAtIndex:indexPath.row] stringByDeletingPathExtension] UTF8String]);
-        NSLog(@"gamename %s",gameName);
-        launchGame=1;
-        [[self navigationController] popViewControllerAnimated:NO];
+    sprintf(gameName,"%s",[[(NSString *)[romlist[indexPath.section] objectAtIndex:indexPath.row] stringByDeletingPathExtension] UTF8String]);
+    NSLog(@"gamename %s",gameName);
+    launchGame=1;
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 
 @end

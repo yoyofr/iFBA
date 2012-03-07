@@ -15,6 +15,8 @@
 		331D17091506BEC100327F74 /* OptWiimoteBtnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D17071506BEC100327F74 /* OptWiimoteBtnViewController.xib */; };
 		331D170D1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 331D170B1506BF8B00327F74 /* OptConGetWiimoteBtnViewController.m */; };
 		331D170E1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D170C1506BF8C00327F74 /* OptConGetWiimoteBtnViewController.xib */; };
+		331D17121507DC1B00327F74 /* OptROMSPathsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D17101507DC1800327F74 /* OptROMSPathsViewController.mm */; };
+		331D17131507DC1B00327F74 /* OptROMSPathsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D17111507DC1A00327F74 /* OptROMSPathsViewController.xib */; };
 		33231C0014FBA67A00AD7823 /* BTDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BE814FBA67A00AD7823 /* BTDevice.m */; };
 		33231C0114FBA67A00AD7823 /* BTDiscoveryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEA14FBA67A00AD7823 /* BTDiscoveryViewController.m */; };
 		33231C0214FBA67A00AD7823 /* BTInquiryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEC14FBA67A00AD7823 /* BTInquiryViewController.m */; };
@@ -618,6 +620,9 @@
 		331D170A1506BF8A00327F74 /* OptConGetWiimoteBtnViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptConGetWiimoteBtnViewController.h; sourceTree = "<group>"; };
 		331D170B1506BF8B00327F74 /* OptConGetWiimoteBtnViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptConGetWiimoteBtnViewController.m; sourceTree = "<group>"; };
 		331D170C1506BF8C00327F74 /* OptConGetWiimoteBtnViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptConGetWiimoteBtnViewController.xib; sourceTree = "<group>"; };
+		331D170F1507DC1700327F74 /* OptROMSPathsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptROMSPathsViewController.h; sourceTree = "<group>"; };
+		331D17101507DC1800327F74 /* OptROMSPathsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptROMSPathsViewController.mm; sourceTree = "<group>"; };
+		331D17111507DC1A00327F74 /* OptROMSPathsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptROMSPathsViewController.xib; sourceTree = "<group>"; };
 		331F348F14FD96D7004668BC /* fbaconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fbaconf.h; sourceTree = "<group>"; };
 		33231BE714FBA67A00AD7823 /* BTDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDevice.h; sourceTree = "<group>"; };
 		33231BE814FBA67A00AD7823 /* BTDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTDevice.m; sourceTree = "<group>"; };
@@ -2828,6 +2833,9 @@
 				331D16AC1505F56F00327F74 /* OptDIPSWValueViewController.h */,
 				331D16AD1505F56F00327F74 /* OptDIPSWValueViewController.mm */,
 				331D16AE1505F56F00327F74 /* OptDIPSWValueViewController.xib */,
+				331D170F1507DC1700327F74 /* OptROMSPathsViewController.h */,
+				331D17101507DC1800327F74 /* OptROMSPathsViewController.mm */,
+				331D17111507DC1A00327F74 /* OptROMSPathsViewController.xib */,
 				334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */,
 				334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */,
 				334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */,
@@ -2999,6 +3007,7 @@
 				331D16B01505F57000327F74 /* OptDIPSWValueViewController.xib in Resources */,
 				331D17091506BEC100327F74 /* OptWiimoteBtnViewController.xib in Resources */,
 				331D170E1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.xib in Resources */,
+				331D17131507DC1B00327F74 /* OptROMSPathsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3557,6 +3566,7 @@
 				331D16AF1505F57000327F74 /* OptDIPSWValueViewController.mm in Sources */,
 				331D17081506BEC100327F74 /* OptWiimoteBtnViewController.mm in Sources */,
 				331D170D1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.m in Sources */,
+				331D17121507DC1B00327F74 /* OptROMSPathsViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

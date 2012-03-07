@@ -26,6 +26,7 @@
 "Audio"="Audio";
 "Controllers"="Controllers";
 "Emulation"="Emulation";
+"ROMS Paths"="ROMS Paths";
 
 
 //Video options
@@ -68,6 +69,14 @@
 "Warning"="Warning";
 "Warning iCade BTStack"="BTStack active, cannot connect to iCade. Please deactivate BTStack in 'Wiimote' menu(iFBA) and activate 'iOS' bluetooth in system settings(BTStack).";
 "Reset to default"="Reset to default";
+
+//Wiimote options
+"Bluetooth"="Bluetooth";
+"BTStack"="BTStack";
+"BTStack on"="BTStack on";
+"BTStack off"="BTStack off";
+"Devices"="Appareils";
+"Warning wiimote not connected"="Wiimote not connected";
 
 //Audio options
 "Sound Output"="Sound Output";

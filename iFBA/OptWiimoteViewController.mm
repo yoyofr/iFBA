@@ -296,6 +296,38 @@ int wiimoteSelected;
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
         [tabView reloadData];
+    } else if (indexPath.section==2) {
+        int idx = [indexPath indexAtPosition:1];
+        if (idx >= [bt numberOfDevicesFound]) {
+            if (customActivityText) {
+            } else if ([bt isActivating]){
+//                theLabel = @"Activating BTstack...";
+            } else if (![bt isActive]){
+//                theLabel = @"Bluetooth not accessible!";
+            } else {
+                if (connectingIndex >= 0) {
+//                    theLabel = @"Connecting...";
+                } else {
+                    switch (inquiryState){
+                        case kInquiryInactive:
+/*                            if ([bt numberOfDevicesFound] > 0){
+                                theLabel = @"Find more devices...";
+                            } else {
+                                theLabel = @"Find devices...";
+                            }*/
+                            //cell.accessoryView = nil;
+                            if (bt) [bt startDiscovery];
+                            break;
+                        case kInquiryActive:
+//                            theLabel = @"Searching...";
+                            break;
+                        case kInquiryRemoteName:
+//                            theLabel = @"Query device names...";
+                            break;
+                    }
+                }
+            }
+        }
     }
 }
 

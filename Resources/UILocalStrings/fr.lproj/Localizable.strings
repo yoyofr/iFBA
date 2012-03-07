@@ -26,6 +26,9 @@
 "Audio"="Audio";
 "Controllers"="Contrôles";
 "Emulation"="Emulation";
+"ROMS Paths"="Répertoires ROMS";
+
+//ROMS Paths
 
 
 //Video options
@@ -76,6 +79,7 @@
 "BTStack on"="BTStack on";
 "BTStack off"="BTStack off";
 "Devices"="Appareils";
+"Warning wiimote not connected"="Wiimote non connectée";
 
 //Audio options
 "Sound Output"="Audio";

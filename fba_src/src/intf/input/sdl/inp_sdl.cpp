@@ -67,7 +67,7 @@ int SDLinpInit()
 	memset(JoyPrevAxes, 0, nSize);
     
 	// Set up the joysticks
-	nJoystickCount = 1;
+	nJoystickCount = 4;
     
 	return 0;
 }

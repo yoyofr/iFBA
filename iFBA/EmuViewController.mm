@@ -73,14 +73,14 @@ int joymap_dir_iCade[8];
 
 t_button_map joymap_wiimote[MAX_JOYSTICKS][10]={
     {{"Start",WII_BUTTON_START},
-    {"Select/Coin",WII_BUTTON_SELECT},
-    {"Menu",WII_BUTTON_HOME},
-    {"Turbo",WII_BUTTON_G},
-    {"Fire 1",WII_BUTTON_A},
-    {"Fire 2",WII_BUTTON_B},
-    {"Fire 3",WII_BUTTON_C},
-    {"Fire 4",WII_BUTTON_D},
-    {"Fire 5",WII_BUTTON_E},
+        {"Select/Coin",WII_BUTTON_SELECT},
+        {"Menu",WII_BUTTON_HOME},
+        {"Turbo",WII_BUTTON_G},
+        {"Fire 1",WII_BUTTON_A},
+        {"Fire 2",WII_BUTTON_B},
+        {"Fire 3",WII_BUTTON_C},
+        {"Fire 4",WII_BUTTON_D},
+        {"Fire 5",WII_BUTTON_E},
         {"Fire 6",WII_BUTTON_F}},
     {{"Start",WII_BUTTON_START},
         {"Select/Coin",WII_BUTTON_SELECT},
@@ -317,6 +317,12 @@ static GLfloat texcoords[5][2]; /* Holds Float Info For 4 Sets Of Texture coordi
 
 static void *context; //hack to call objective C func from C
 
+static UIProgressView *prgview=nil;
+static UIView *statusview=nil;
+static UILabel *statusMsgview=nil;
+static char statusMsg[512];
+static int statusMsgUpdated=0;
+
 @implementation EmuViewController
 
 @synthesize control;
@@ -516,23 +522,23 @@ static void *context; //hack to call objective C func from C
     //wiimotes map
     memset(joymap_dir_wiimote,0,sizeof(joymap_dir_wiimote));
     for (int joy=0;joy<MAX_JOYSTICKS;joy++)
-    for (int i=0;i<10;i++) {
-        int j=joymap_wiimote[joy][i].dev_btn;
-        if (j) {
-            switch (i) {
-                case 0:joymap_dir_wiimote[joy][j-1]=GN_START;break;
-                case 1:joymap_dir_wiimote[joy][j-1]=GN_SELECT_COIN;break;
-                case 2:joymap_dir_wiimote[joy][j-1]=GN_MENU_KEY;break;
-                case 3:joymap_dir_wiimote[joy][j-1]=GN_TURBO;break;
-                case 4:joymap_dir_wiimote[joy][j-1]=GN_A;break;
-                case 5:joymap_dir_wiimote[joy][j-1]=GN_B;break;
-                case 6:joymap_dir_wiimote[joy][j-1]=GN_C;break;
-                case 7:joymap_dir_wiimote[joy][j-1]=GN_D;break;
-                case 8:joymap_dir_wiimote[joy][j-1]=GN_E;break;
-                case 9:joymap_dir_wiimote[joy][j-1]=GN_F;break;                    
+        for (int i=0;i<10;i++) {
+            int j=joymap_wiimote[joy][i].dev_btn;
+            if (j) {
+                switch (i) {
+                    case 0:joymap_dir_wiimote[joy][j-1]=GN_START;break;
+                    case 1:joymap_dir_wiimote[joy][j-1]=GN_SELECT_COIN;break;
+                    case 2:joymap_dir_wiimote[joy][j-1]=GN_MENU_KEY;break;
+                    case 3:joymap_dir_wiimote[joy][j-1]=GN_TURBO;break;
+                    case 4:joymap_dir_wiimote[joy][j-1]=GN_A;break;
+                    case 5:joymap_dir_wiimote[joy][j-1]=GN_B;break;
+                    case 6:joymap_dir_wiimote[joy][j-1]=GN_C;break;
+                    case 7:joymap_dir_wiimote[joy][j-1]=GN_D;break;
+                    case 8:joymap_dir_wiimote[joy][j-1]=GN_E;break;
+                    case 9:joymap_dir_wiimote[joy][j-1]=GN_F;break;                    
+                }
             }
         }
-    }
     
     //ICADE
     control = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
@@ -540,7 +546,7 @@ static void *context; //hack to call objective C func from C
     control.active = YES;
     control.delegate = self;
     [control release];    
-
+    
     
     
     int cur_width=m_oglView.frame.size.width;
@@ -554,20 +560,21 @@ static void *context; //hack to call objective C func from C
         computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
     }
     virtual_stick_pad=0;
-    joy_analog_x[0]=0;joy_analog_y[0]=0;
-    joy_state[0][GN_UP]=0;
-    joy_state[0][GN_DOWN]=0;
-    joy_state[0][GN_LEFT]=0;
-    joy_state[0][GN_RIGHT]=0;
-    joy_state[0][GN_UPRIGHT]=0;
-    joy_state[0][GN_DOWNRIGHT]=0;
-    joy_state[0][GN_UPLEFT]=0;
-    joy_state[0][GN_DOWNLEFT]=0;
-    for (int i=0;i<VSTICK_NB_BUTTON;i++)  {
-        virtual_stick[i].finger_id=0;
-        joy_state[0][virtual_stick[i].button_id]=0;
+    for (int j=0;j<MAX_JOYSTICKS;j++) {
+        joy_analog_x[j]=0;joy_analog_y[j]=0;
+        joy_state[j][GN_UP]=0;
+        joy_state[j][GN_DOWN]=0;
+        joy_state[j][GN_LEFT]=0;
+        joy_state[j][GN_RIGHT]=0;
+        joy_state[j][GN_UPRIGHT]=0;
+        joy_state[j][GN_DOWNRIGHT]=0;
+        joy_state[j][GN_UPLEFT]=0;
+        joy_state[j][GN_DOWNLEFT]=0;
+        for (int i=0;i<VSTICK_NB_BUTTON;i++)  {
+            virtual_stick[i].finger_id=0;
+            joy_state[j][virtual_stick[i].button_id]=0;
+        }
     }
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {    
@@ -596,6 +603,35 @@ static void *context; //hack to call objective C func from C
         [TestFlight passCheckpoint:[NSString stringWithFormat:@"LOADGAME-%s",gameName]];
         [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
         launchGame=0;
+        prgview=[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
+        prgview.progress=0;
+        [self.view addSubview:prgview];
+        [prgview release];
+        
+        statusview=[[UIView alloc] init];
+        statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-80,m_oglView.frame.size.width-20,80);        
+        [[statusview layer] setCornerRadius:15.0];	
+        [[statusview layer] setBorderWidth:3.0];
+        [[statusview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
+        statusview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
+        
+        statusMsgview=[[UILabel alloc] init];
+        statusMsgview.frame=CGRectMake(10,5,statusview.frame.size.width-20,statusview.frame.size.height-10);
+        statusMsgview.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        statusMsgview.text=@"";
+        statusMsgview.textColor=[UIColor whiteColor];
+        statusMsgview.backgroundColor=[UIColor clearColor];
+        statusMsgview.lineBreakMode=UILineBreakModeWordWrap;
+        statusMsgview.numberOfLines=3;
+        statusMsgview.font=[UIFont boldSystemFontOfSize:16];
+        statusMsgview.textAlignment=UITextAlignmentCenter;
+        
+        [statusview addSubview:statusMsgview];
+        [self.view addSubview:statusview];
+        [statusMsgview release];
+        [statusview release];
+        
     }
     
     //update ogl framebuffer
@@ -621,6 +657,19 @@ static void *context; //hack to call objective C func from C
     if (bt&&ifba_conf.btstack_on) {
         startWiimoteDetection();        
     }
+    
+    if (prgview) {
+        [prgview removeFromSuperview];
+        prgview=nil;
+    }
+    if (statusMsgview) {
+        [statusMsgview removeFromSuperview];
+        statusMsgview=nil;
+    }
+    if (statusview) {
+        [statusview removeFromSuperview];
+        statusview=nil;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -630,7 +679,7 @@ static void *context; //hack to call objective C func from C
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     if ((interfaceOrientation==UIInterfaceOrientationPortrait)||(interfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
-        m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);        
+        m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);
         
         /*        if (device_isIpad) {
          virtual_stick=virtual_stick_ipad_portrait;
@@ -652,6 +701,9 @@ static void *context; //hack to call objective C func from C
          }
          */ 
     }
+    if (prgview) prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
+    if (statusview) statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-30,m_oglView.frame.size.width-20,30);
+    //mNewGLFrame++;
     return YES;
 }
 
@@ -736,7 +788,7 @@ void updateWiimotes(void) {
             joy_state[i][GN_LEFT]=(wm_joy_pl[i]&WII_JOY_LEFT?1:0);
             joy_state[i][GN_RIGHT]=(wm_joy_pl[i]&WII_JOY_RIGHT?1:0);
             
-
+            
             if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_A-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_A?1:0);
             if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_B-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_B?1:0);
             if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_C-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_C?1:0);
@@ -748,21 +800,23 @@ void updateWiimotes(void) {
             if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_HOME-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_HOME?1:0);
             if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_START-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_START?1:0);
             if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_SELECT-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_SELECT?1:0);
-
             
-/*            joy_state[i][GN_A]=(wm_joy_pl[i]&WII_JOY_A?1:0);
-            joy_state[i][GN_B]=(wm_joy_pl[i]&WII_JOY_B?1:0);
-            joy_state[i][GN_C]=(wm_joy_pl[i]&WII_JOY_C?1:0);
-            joy_state[i][GN_D]=(wm_joy_pl[i]&WII_JOY_D?1:0);
-            joy_state[i][GN_SELECT_COIN]=(wm_joy_pl[i]&WII_JOY_SELECT?1:0);
-            joy_state[i][GN_START]=(wm_joy_pl[i]&WII_JOY_START?1:0);
-            joy_state[i][GN_MENU_KEY]=(wm_joy_pl[i]&WII_JOY_HOME?1:0);
-            joy_state[i][GN_TURBO]=(wm_joy_pl[i]&WII_JOY_E?1:0);*/
+            
+            /*            joy_state[i][GN_A]=(wm_joy_pl[i]&WII_JOY_A?1:0);
+             joy_state[i][GN_B]=(wm_joy_pl[i]&WII_JOY_B?1:0);
+             joy_state[i][GN_C]=(wm_joy_pl[i]&WII_JOY_C?1:0);
+             joy_state[i][GN_D]=(wm_joy_pl[i]&WII_JOY_D?1:0);
+             joy_state[i][GN_SELECT_COIN]=(wm_joy_pl[i]&WII_JOY_SELECT?1:0);
+             joy_state[i][GN_START]=(wm_joy_pl[i]&WII_JOY_START?1:0);
+             joy_state[i][GN_MENU_KEY]=(wm_joy_pl[i]&WII_JOY_HOME?1:0);
+             joy_state[i][GN_TURBO]=(wm_joy_pl[i]&WII_JOY_E?1:0);*/
         }
+        
+        if (joy_state[i][GN_MENU_KEY]) nShouldExit=2;
+        bAppDoFast=joy_state[i][GN_TURBO];
     }
     
-    if (joy_state[0][GN_MENU_KEY]) nShouldExit=2;
-    bAppDoFast=joy_state[0][GN_TURBO];
+    
 }
 
 void startWiimoteDetection(void) {
@@ -1398,11 +1452,13 @@ int ErrorWhileLoading(const char* pszText) {
         if (pszText[i]<32) strHeight++;
         i++;
     }
-    DrawRect((uint16 *) vbuffer, 20, 20, visible_area_w-40, 9*strHeight+10, 0x00FFA0A0, TEXTURE_W,vid_rotated);
-    DrawRect((uint16 *) vbuffer, 21, 21, visible_area_w-42, 9*strHeight+8, 0x00EF2020, TEXTURE_W,vid_rotated);
-	
-	DrawString (pszText, (uint16 *) vbuffer, 22, 24, TEXTURE_W,vid_rotated);
-    
+    /*DrawRect((uint16 *) vbuffer, 20, 20, visible_area_w-40, 9*strHeight+10, 0x00FFA0A0, TEXTURE_W,vid_rotated);
+     DrawRect((uint16 *) vbuffer, 21, 21, visible_area_w-42, 9*strHeight+8, 0x00EF2020, TEXTURE_W,vid_rotated);
+     
+     DrawString (pszText, (uint16 *) vbuffer, 22, 24, TEXTURE_W,vid_rotated);
+     */
+    strcpy(statusMsg,pszText);
+    statusMsgUpdated=1;
     mNewGLFrame++;
     usleep(3000000); //3s
 }
@@ -1417,6 +1473,12 @@ int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
         pb_total=0;
         pb_value=1;
     }
+    
+    //mNewGLFrame++;
+    if (pszText) strcpy(statusMsg,pszText);
+    else statusMsg[0]=0;
+    statusMsgUpdated=1;
+    return 0;
     
 	DrawRect((uint16 *) vbuffer, 20, 100, visible_area_w-40, 20, 0x00A0A0FF, TEXTURE_W,vid_rotated);
     DrawRect((uint16 *) vbuffer, 21, 101, visible_area_w-42, 18, 0x002020EF, TEXTURE_W,vid_rotated);
@@ -1439,11 +1501,11 @@ int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
 
 int StopProgressBar() {
     pb_value=1;
-    mNewGLFrame++;
+    
+    //mNewGLFrame++;
 }
 
 -(void) loopCheck {
-    
 }
 
 
@@ -1454,6 +1516,24 @@ int StopProgressBar() {
         self.navigationController.navigationBar.hidden=NO;        
         [[self navigationController] popViewControllerAnimated:NO];
     }
+    
+    if (prgview) {
+        if (pb_value<1) {
+            prgview.progress=pb_value;
+            if (statusMsgUpdated) {
+                statusMsgview.text=[NSString stringWithFormat:@"%s",statusMsg];
+                statusMsgUpdated=0;
+            }
+        } else {
+            [prgview removeFromSuperview];
+            prgview=nil;
+            [statusMsgview removeFromSuperview];
+            statusMsgview=nil;
+            [statusview removeFromSuperview];
+            statusview=nil;
+        }
+    }
+    
     
     //New frame to draw?
     if (!mNewGLFrame) return;

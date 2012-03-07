@@ -11,13 +11,14 @@
 #import "OptControlsViewController.h"
 #import "OptEmuViewController.h"
 #import "OptAudioViewController.h"
+#import "OptROMSPathsViewController.h"
 
 #import "fbaconf.h"
 #import "string.h"
 
 
 @implementation OptionsViewController
-@synthesize optVideo,optAudio,optControl,optEmulation;
+@synthesize optVideo,optAudio,optControl,optEmulation,optROMSpaths;
 @synthesize tabView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -63,7 +64,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 4;
+    return 5;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -87,6 +88,8 @@
         case 2:cell.textLabel.text=NSLocalizedString(@"Controllers",@"");
             break;
         case 3:cell.textLabel.text=NSLocalizedString(@"Emulation",@"");
+            break;
+        case 4:cell.textLabel.text=NSLocalizedString(@"ROMS Paths",@"");
             break;
     }
     	
@@ -117,6 +120,11 @@
             optEmulation=[[OptEmuViewController alloc] initWithNibName:@"OptEmuViewController" bundle:nil];
             [self.navigationController pushViewController:optEmulation animated:YES];
             [optEmulation release];
+            break;
+        case 4://roms paths
+            optROMSpaths=[[OptROMSPathsViewController alloc] initWithNibName:@"OptROMSPathsViewController" bundle:nil];
+            [self.navigationController pushViewController:optROMSpaths animated:YES];
+            [optROMSpaths release];
             break;
     }
 }

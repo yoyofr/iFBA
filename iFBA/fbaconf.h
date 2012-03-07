@@ -32,8 +32,6 @@ typedef struct {
     unsigned char vpad_btnsize;
     unsigned char vpad_padsize;
     unsigned char btstack_on;
-    unsigned char joymaps_wiimotes[4][16];
-    unsigned char joymaps_icade[8];    
     
     //Emulation
     unsigned char asm_68k;

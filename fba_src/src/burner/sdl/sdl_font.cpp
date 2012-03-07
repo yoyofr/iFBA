@@ -203,7 +203,7 @@ void DrawRect ( uint16 *screen, int x, int y, int w, int h, int c , uint16 resW,
             Screen += resW;
             while ( --hh > 0) {
                 *ss = cc;
-                ss ++;
+                ss++;
             }
         }
         
@@ -214,7 +214,7 @@ void DrawRect ( uint16 *screen, int x, int y, int w, int h, int c , uint16 resW,
             Screen += resW;
             while ( --ww > 0) {
                 *ss = cc;
-                ss ++;
+                ss++;
             }
         }
     }

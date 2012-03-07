@@ -122,7 +122,7 @@
         case 0://Display
             if (indexPath.row==0) {//Opacity
             cell.textLabel.text=NSLocalizedString(@"Opacity",@"");
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",@"3",nil]];
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",@" 3 ",nil]];
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
             [segconview addTarget:self action:@selector(segActionOpacity:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;
@@ -141,7 +141,7 @@
         case 1://Size
             if (indexPath.row==0) {//Buttons
                 cell.textLabel.text=NSLocalizedString(@"Buttons",@"");
-                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",nil]];
+                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
                 [segconview addTarget:self action:@selector(segActionBtnSize:) forControlEvents:UIControlEventValueChanged];            
                 cell.accessoryView = segconview;
@@ -149,7 +149,7 @@
                 segconview.selectedSegmentIndex=ifba_conf.vpad_btnsize;
             } else if (indexPath.row==1) {//Pad
                 cell.textLabel.text=NSLocalizedString(@"Pad",@"");
-                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",nil]];
+                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
                 [segconview addTarget:self action:@selector(segActionPadSize:) forControlEvents:UIControlEventValueChanged];            
                 cell.accessoryView = segconview;

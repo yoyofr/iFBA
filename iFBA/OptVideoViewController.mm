@@ -171,7 +171,7 @@
             break;
         case 1://Screen mode
             cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"1", @"2", @"3", nil]];
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 1 ", @" 2 ", @" 3 ", nil]];
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
             [segconview addTarget:self action:@selector(segActionVideoMode:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;

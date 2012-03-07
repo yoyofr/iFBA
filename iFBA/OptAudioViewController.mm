@@ -1,5 +1,5 @@
 //
-//  OptVideoViewController.m
+//  OptAudioViewController.m
 //  iFBA
 //
 //  Created by Yohann Magnien on 28/02/12.
@@ -64,11 +64,11 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
     switch (section) {
-        case 0:title=@"";NSLocalizedString(@"Output",@"");
+        case 0:title=@"";//NSLocalizedString(@"Output",@"");
             break;
-        case 1:title=@"";NSLocalizedString(@"Frequency",@"");
+        case 1:title=@"";//NSLocalizedString(@"Frequency",@"");
             break;
-        case 2:title=@"";NSLocalizedString(@"Latency",@"");
+        case 2:title=@"";//NSLocalizedString(@"Latency",@"");
             break;
     }
     return title;
@@ -154,7 +154,7 @@
             break;
         case 2://Sound Latency
             cell.textLabel.text=NSLocalizedString(@"Sound Latency",@"");
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"0", @"1",@"2",nil]];
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
             [segconview addTarget:self action:@selector(segActionLatency:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;

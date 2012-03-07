@@ -30,7 +30,7 @@ int mOptWiimoteButtonSelected;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title=NSLocalizedString(@"Wiimote",@"");
+        self.title=[NSString stringWithFormat:@"%@ %d",NSLocalizedString(@"Wiimote",@""),wiimoteSelected];
     }
     return self;
 }
@@ -149,9 +149,14 @@ int mOptWiimoteButtonSelected;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.section) {
         case 0:
-            mOptWiimoteButtonSelected=indexPath.row;
-            [self presentSemiModalViewController:optgetButton];
-            [tabView reloadData];            
+            if (num_of_joys>wiimoteSelected) {
+                mOptWiimoteButtonSelected=indexPath.row;
+                [self presentSemiModalViewController:optgetButton];
+                [tabView reloadData];
+            } else {
+                UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Warning wiimote not connected",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+                [aboutMsg show];
+            }
             break;
         case 1:            
             joymap_wiimote[wiimoteSelected][0].dev_btn=WII_BUTTON_START;//Start

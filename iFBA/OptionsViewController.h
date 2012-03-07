@@ -10,10 +10,10 @@
 
 @interface OptionsViewController : UIViewController {
     IBOutlet UITableView *tabView;
-    UIViewController *optVideo,*optAudio,*optControl,*optEmulation;
+    UIViewController *optVideo,*optAudio,*optControl,*optEmulation,*optROMSpaths;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
-@property (nonatomic, retain) UIViewController *optVideo,*optAudio,*optControl,*optEmulation;
+@property (nonatomic, retain) UIViewController *optVideo,*optAudio,*optControl,*optEmulation,*optROMSpaths;
 
 @end
