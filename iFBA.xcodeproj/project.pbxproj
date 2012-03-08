@@ -572,7 +572,6 @@
 		339E5FB314F1851E006FB970 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E5FB214F1851E006FB970 /* UIKit.framework */; };
 		339E5FB514F1851E006FB970 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E5FB414F1851E006FB970 /* Foundation.framework */; };
 		339E5FB714F1851E006FB970 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339E5FB614F1851E006FB970 /* CoreGraphics.framework */; };
-		339E5FBD14F1851E006FB970 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 339E5FBB14F1851E006FB970 /* InfoPlist.strings */; };
 		339E5FBF14F1851E006FB970 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FBE14F1851E006FB970 /* main.m */; };
 		339E5FC314F1851E006FB970 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FC214F1851E006FB970 /* AppDelegate.mm */; };
 		339E5FC614F1851E006FB970 /* MenuViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 339E5FC514F1851E006FB970 /* MenuViewController.mm */; };
@@ -675,7 +674,6 @@
 		334F5FF714FD8E5C00ED3CDB /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
 		3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuViewController_iPhone.xib; sourceTree = "<group>"; };
 		3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuViewController_iPad.xib; sourceTree = "<group>"; };
-		3354E93014F90A3C001DAF9D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = /Users/ymagnien/Desktop/dev/iphone/new/iFBA/iFBA/fr.lproj/InfoPlist.strings; sourceTree = "<absolute>"; };
 		3354E93514F90ADE001DAF9D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3354E93714F90AF4001DAF9D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3354E93814F914AE001DAF9D /* GameBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameBrowserViewController.xib; sourceTree = "<group>"; };
@@ -1422,7 +1420,6 @@
 		339E5FB414F1851E006FB970 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		339E5FB614F1851E006FB970 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		339E5FBA14F1851E006FB970 /* iFBA-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iFBA-Info.plist"; sourceTree = "<group>"; };
-		339E5FBC14F1851E006FB970 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		339E5FBE14F1851E006FB970 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		339E5FC014F1851E006FB970 /* iFBA-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iFBA-Prefix.pch"; sourceTree = "<group>"; };
 		339E5FC114F1851E006FB970 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -2892,7 +2889,6 @@
 			isa = PBXGroup;
 			children = (
 				339E5FBA14F1851E006FB970 /* iFBA-Info.plist */,
-				339E5FBB14F1851E006FB970 /* InfoPlist.strings */,
 				339E5FBE14F1851E006FB970 /* main.m */,
 				339E5FC014F1851E006FB970 /* iFBA-Prefix.pch */,
 			);
@@ -2987,7 +2983,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				339E5FBD14F1851E006FB970 /* InfoPlist.strings in Resources */,
 				3354E92A14F90A0E001DAF9D /* MenuViewController_iPhone.xib in Resources */,
 				3354E92C14F90A19001DAF9D /* MenuViewController_iPad.xib in Resources */,
 				339A94DA14F238E600225183 /* Icon.png in Resources */,
@@ -3599,15 +3594,6 @@
 			path = Resources/UILocalStrings;
 			sourceTree = "<group>";
 		};
-		339E5FBB14F1851E006FB970 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				339E5FBC14F1851E006FB970 /* en */,
-				3354E93014F90A3C001DAF9D /* fr */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -3618,9 +3604,10 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -3637,7 +3624,7 @@
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = armv7;
@@ -3668,9 +3655,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -3689,7 +3677,7 @@
 				);
 				LLVM_LTO = NO;
 				SDKROOT = iphoneos;
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 			};
@@ -3701,9 +3689,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -3718,7 +3707,7 @@
 				LLVM_LTO = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = armv7;

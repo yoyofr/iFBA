@@ -105,7 +105,7 @@ extern volatile int emuThread_running;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 3;
+	return 4;
 }
 
 
@@ -125,6 +125,9 @@ extern volatile int emuThread_running;
 #ifdef TESTFLIGHT
             nbRows++;
 #endif
+            break;
+        case 3:
+            nbRows=1;
             break;
     }
 	return nbRows;
@@ -180,6 +183,9 @@ extern volatile int emuThread_running;
             if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Feedback",@"");
 #endif
             
+            break;
+        case 3:
+            if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Donate",@"");
             break;
 	}		
     
@@ -242,6 +248,8 @@ int StatedSave(int slot);
             [TestFlight openFeedbackView];
 #endif
         }
+    } else if (indexPath.section==3) { //Donate
+         [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GR6NNLLWD62BN"]];
     }
 }
 

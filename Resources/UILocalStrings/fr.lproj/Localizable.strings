@@ -17,6 +17,7 @@
 "Back to %s"="Retour à %s";
 "DIPSW"="DIP Switches";
 "Change DIP Switches"="Changer les DIP switches. Un RESET est souvent nécessaire pour la prise en compte.";
+"Donate"="Faire un don";
 
 //About
 "About_Msg"="iFBA v%@- YoyoFR\n\nBasé sur FBA v0.2.97.21\n\nSupporte actuellement %d drivers";
