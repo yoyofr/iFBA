@@ -28,6 +28,9 @@
 "Emulation"="Emulation";
 "ROMS Paths"="ROMS Paths";
 
+//ROMS Paths
+"Choose ROMS Path"="Choose ROMS Path";
+"Cancel"="Cancel";
 
 //Video options
 "Aspect Ratio"="Aspect Ratio";

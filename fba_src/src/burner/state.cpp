@@ -300,8 +300,10 @@ INT32 BurnStateSave(TCHAR* szName, INT32 bAll)
 		return 0;										// Don't return an error code
 	}
 
+    printf("writing %s\n",szName);
 	FILE* fp = _tfopen(szName, _T("wb"));
 	if (fp == NULL) {
+        printf("error\n");  
 		return 1;
 	}
 

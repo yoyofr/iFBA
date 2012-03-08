@@ -600,7 +600,9 @@ static int statusMsgUpdated=0;
         pb_total=0;
         pb_msg[0]=0;
         vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
+#ifdef TESTFLIGHT
         [TestFlight passCheckpoint:[NSString stringWithFormat:@"LOADGAME-%s",gameName]];
+#endif        
         [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
         launchGame=0;
         prgview=[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];

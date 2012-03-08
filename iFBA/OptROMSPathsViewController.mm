@@ -7,11 +7,12 @@
 //
 
 #import "OptROMSPathsViewController.h"
+#import "OptROMSSetPathsViewController.h"
 #include "burner.h"
 #import "fbaconf.h"
 
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
-
+int szAppRomPathsSelected;
 
 @implementation OptROMSPathsViewController
 @synthesize tabView;
@@ -93,6 +94,10 @@ extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    szAppRomPathsSelected=indexPath.row;
+    OptROMSSetPathsViewController *romsetvc=[[OptROMSSetPathsViewController alloc] initWithNibName:@"OptROMSPathsViewController" bundle:nil];
+    [self.navigationController pushViewController:romsetvc animated:YES];
+    [romsetvc release];
 }
 
 

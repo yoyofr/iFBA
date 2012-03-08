@@ -10,8 +10,8 @@
 #import <UIKit/UIView.h>
 
 @interface GameBrowserViewController : UIViewController {
-    IBOutlet UITableView *tabView;
-    NSMutableArray *romlist[28],*romlistLbl[28];
+    IBOutlet UITableView *tabView;    
+    NSMutableArray *romlist[28],*romlistLbl[28],*rompath[28];
     NSMutableArray *indexTitles;
     NSMutableArray *burn_supportedRoms,*burn_supportedRomsNames;
 }

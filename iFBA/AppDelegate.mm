@@ -30,12 +30,17 @@ extern int device_isIpad;
 @synthesize navController = _navController;
 
 void tstfl_log(char *str) {
+#ifdef TESTFLIGHT    
     TFLog(@"%s",str);
+#endif    
 }
 
 void tstfl_validateloadgame(char *name) {
+#ifdef TESTFLIGHT    
     [TestFlight passCheckpoint:[NSString stringWithFormat:@"STARTEDGAME-%s",name]];
+#endif    
 }
+
 
 - (void)loadSettings {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -54,7 +59,7 @@ void tstfl_validateloadgame(char *name) {
 	if (valNb == nil) ifba_conf.aspect_ratio=1;
 	else ifba_conf.aspect_ratio = [valNb intValue];
     valNb=[prefs objectForKey:@"screen_mode"];
-	if (valNb == nil) ifba_conf.screen_mode=3;
+	if (valNb == nil) ifba_conf.screen_mode=2;
 	else ifba_conf.screen_mode = [valNb intValue];
     valNb=[prefs objectForKey:@"filtering"];
 	if (valNb == nil) ifba_conf.filtering=1;
@@ -211,7 +216,7 @@ void tstfl_validateloadgame(char *name) {
     
     /* Set working directory to resource path */
     //NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *documentsDirectory=@"/var/mobile/Library/iFBA";
+    NSString *documentsDirectory=@"/var/mobile/Documents/iFBA";
     [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory withIntermediateDirectories:TRUE attributes:nil error:nil];
     [[NSFileManager defaultManager] changeCurrentDirectoryPath: documentsDirectory];
     

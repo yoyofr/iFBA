@@ -15,7 +15,7 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#define TESTFLIGHT 1
+//#define TESTFLIGHT 1
 
 #define IOS_BUILD 1
 

@@ -115,6 +115,7 @@ static int cur_game_section,cur_game_row;
     for (int i=0;i<28;i++) {
         romlist[i]=[[NSMutableArray alloc] initWithCapacity:0];
         romlistLbl[i]=[[NSMutableArray alloc] initWithCapacity:0];
+        rompath[i]=[[NSMutableArray alloc] initWithCapacity:0];
     }
     
     cur_game_section=cur_game_row=-1;
@@ -130,7 +131,7 @@ static int cur_game_section,cur_game_row;
             else cpath=nil;
         }
         if (cpath) {
-            dirContent=[mFileMngr subpathsOfDirectoryAtPath:cpath error:&error];
+            dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
             for (file in dirContent) {
                 NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
                 if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
@@ -144,6 +145,7 @@ static int cur_game_section,cur_game_row;
                         else if ((i>='A')&&(i<='Z')) i+=1-'A';
                         else i=0;
                         [romlist[i] addObject:file];
+                        [rompath[i] addObject:cpath];
                         nBurnDrvActive=ind;
                         [romlistLbl[i] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] ];
                         if (gameName[0]&&(cur_game_section<0)) {
@@ -182,6 +184,7 @@ static int cur_game_section,cur_game_row;
     for (int i=0;i<28;i++) {
         [romlist[i] release];
         [romlistLbl[i] release];
+        [rompath[i] release];
     }
 }
 
@@ -243,6 +246,9 @@ static int cur_game_section,cur_game_row;
     sprintf(gameName,"%s",[[(NSString *)[romlist[indexPath.section] objectAtIndex:indexPath.row] stringByDeletingPathExtension] UTF8String]);
     NSLog(@"gamename %s",gameName);
     launchGame=1;
+    //change dir
+    [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath[indexPath.section] objectAtIndex:indexPath.row]];
+    
     [[self navigationController] popViewControllerAnimated:NO];
 }
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33132C36150884FB002F97BB /* OptROMSSetPathsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33132C34150884F9002F97BB /* OptROMSSetPathsViewController.mm */; };
+		33132C37150884FB002F97BB /* OptROMSSetPathsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33132C35150884FA002F97BB /* OptROMSSetPathsViewController.xib */; };
 		331D16AA15053B5C00327F74 /* OptDIPSWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D16A815053B5B00327F74 /* OptDIPSWViewController.mm */; };
 		331D16AB15053B5C00327F74 /* OptDIPSWViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D16A915053B5B00327F74 /* OptDIPSWViewController.xib */; };
 		331D16AF1505F57000327F74 /* OptDIPSWValueViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D16AD1505F56F00327F74 /* OptDIPSWValueViewController.mm */; };
@@ -506,7 +508,6 @@
 		336B559614F4439B00CE9A63 /* vez.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B529F14F4439B00CE9A63 /* vez.cpp */; };
 		336B559714F4439B00CE9A63 /* z80.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B52A214F4439B00CE9A63 /* z80.cpp */; };
 		336B559814F4439B00CE9A63 /* z80daisy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B52A414F4439B00CE9A63 /* z80daisy.cpp */; };
-		336B559A14F4439B00CE9A63 /* fba_libpng_v156.txt in Resources */ = {isa = PBXBuildFile; fileRef = 336B52AE14F4439B00CE9A63 /* fba_libpng_v156.txt */; };
 		336B559B14F4439B00CE9A63 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52AF14F4439B00CE9A63 /* png.c */; };
 		336B559C14F4439B00CE9A63 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52B314F4439B00CE9A63 /* pngerror.c */; };
 		336B559D14F4439B00CE9A63 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52B414F4439B00CE9A63 /* pngget.c */; };
@@ -526,7 +527,6 @@
 		336B55AB14F4439B00CE9A63 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52C714F4439B00CE9A63 /* compress.c */; };
 		336B55AC14F4439B00CE9A63 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52C814F4439B00CE9A63 /* crc32.c */; };
 		336B55AD14F4439B00CE9A63 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52CA14F4439B00CE9A63 /* deflate.c */; };
-		336B55AE14F4439B00CE9A63 /* fba_zlib_v125.txt in Resources */ = {isa = PBXBuildFile; fileRef = 336B52CC14F4439B00CE9A63 /* fba_zlib_v125.txt */; };
 		336B55AF14F4439B00CE9A63 /* gzclose.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52CD14F4439B00CE9A63 /* gzclose.c */; };
 		336B55B014F4439B00CE9A63 /* gzlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52CF14F4439B00CE9A63 /* gzlib.c */; };
 		336B55B114F4439B00CE9A63 /* gzread.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52D014F4439B00CE9A63 /* gzread.c */; };
@@ -537,7 +537,6 @@
 		336B55B614F4439B00CE9A63 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52D814F4439B00CE9A63 /* inftrees.c */; };
 		336B55B714F4439B00CE9A63 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52DA14F4439B00CE9A63 /* trees.c */; };
 		336B55B814F4439B00CE9A63 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52DC14F4439B00CE9A63 /* uncompr.c */; };
-		336B55B914F4439B00CE9A63 /* zconf.h.in in Resources */ = {isa = PBXBuildFile; fileRef = 336B52DE14F4439B00CE9A63 /* zconf.h.in */; };
 		336B55BA14F4439B00CE9A63 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B52E014F4439B00CE9A63 /* zutil.c */; };
 		336B55C814F4439B00CE9A63 /* aud_dsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B530D14F4439B00CE9A63 /* aud_dsp.cpp */; };
 		336B55C914F4439B00CE9A63 /* aud_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B530F14F4439B00CE9A63 /* aud_interface.cpp */; };
@@ -555,7 +554,6 @@
 		336B55ED14F4439B00CE9A63 /* vid_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B535214F4439B00CE9A63 /* vid_interface.cpp */; };
 		336B55EE14F4439B00CE9A63 /* vid_softfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B535314F4439B00CE9A63 /* vid_softfx.cpp */; };
 		336B55EF14F4439B00CE9A63 /* vid_support.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B535514F4439B00CE9A63 /* vid_support.cpp */; };
-		336B55F814F4439B00CE9A63 /* license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 336B536514F4439B00CE9A63 /* license.txt */; };
 		336B55FE14F4459800CE9A63 /* m68kopac.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B55F914F4459800CE9A63 /* m68kopac.c */; };
 		336B55FF14F4459800CE9A63 /* m68kopdm.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B55FA14F4459800CE9A63 /* m68kopdm.c */; };
 		336B560014F4459800CE9A63 /* m68kopnz.c in Sources */ = {isa = PBXBuildFile; fileRef = 336B55FB14F4459800CE9A63 /* m68kopnz.c */; };
@@ -608,6 +606,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		33132C33150884F9002F97BB /* OptROMSSetPathsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptROMSSetPathsViewController.h; sourceTree = "<group>"; };
+		33132C34150884F9002F97BB /* OptROMSSetPathsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptROMSSetPathsViewController.mm; sourceTree = "<group>"; };
+		33132C35150884FA002F97BB /* OptROMSSetPathsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptROMSSetPathsViewController.xib; sourceTree = "<group>"; };
 		331D16A715053B5B00327F74 /* OptDIPSWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptDIPSWViewController.h; sourceTree = "<group>"; };
 		331D16A815053B5B00327F74 /* OptDIPSWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptDIPSWViewController.mm; sourceTree = "<group>"; };
 		331D16A915053B5B00327F74 /* OptDIPSWViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptDIPSWViewController.xib; sourceTree = "<group>"; };
@@ -1360,7 +1361,6 @@
 		336B52DB14F4439B00CE9A63 /* trees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trees.h; sourceTree = "<group>"; };
 		336B52DC14F4439B00CE9A63 /* uncompr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uncompr.c; sourceTree = "<group>"; };
 		336B52DD14F4439B00CE9A63 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zconf.h; sourceTree = "<group>"; };
-		336B52DE14F4439B00CE9A63 /* zconf.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zconf.h.in; sourceTree = "<group>"; };
 		336B52DF14F4439B00CE9A63 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlib.h; sourceTree = "<group>"; };
 		336B52E014F4439B00CE9A63 /* zutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zutil.c; sourceTree = "<group>"; };
 		336B52E114F4439B00CE9A63 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
@@ -2653,7 +2653,6 @@
 				336B52DB14F4439B00CE9A63 /* trees.h */,
 				336B52DC14F4439B00CE9A63 /* uncompr.c */,
 				336B52DD14F4439B00CE9A63 /* zconf.h */,
-				336B52DE14F4439B00CE9A63 /* zconf.h.in */,
 				336B52DF14F4439B00CE9A63 /* zlib.h */,
 				336B52E014F4439B00CE9A63 /* zutil.c */,
 				336B52E114F4439B00CE9A63 /* zutil.h */,
@@ -2836,6 +2835,9 @@
 				331D170F1507DC1700327F74 /* OptROMSPathsViewController.h */,
 				331D17101507DC1800327F74 /* OptROMSPathsViewController.mm */,
 				331D17111507DC1A00327F74 /* OptROMSPathsViewController.xib */,
+				33132C33150884F9002F97BB /* OptROMSSetPathsViewController.h */,
+				33132C34150884F9002F97BB /* OptROMSSetPathsViewController.mm */,
+				33132C35150884FA002F97BB /* OptROMSSetPathsViewController.xib */,
 				334F5FCB14FC31B200ED3CDB /* OptionsViewController.h */,
 				334F5FCC14FC31B300ED3CDB /* OptionsViewController.mm */,
 				334F5FCD14FC31B400ED3CDB /* OptionsViewController.xib */,
@@ -2983,10 +2985,6 @@
 				339A94E214F238FA00225183 /* Icon-72.png in Resources */,
 				339A94E414F2390800225183 /* Default-Portrait~ipad.png in Resources */,
 				339A94E614F2390D00225183 /* Default-Landscape~ipad.png in Resources */,
-				336B559A14F4439B00CE9A63 /* fba_libpng_v156.txt in Resources */,
-				336B55AE14F4439B00CE9A63 /* fba_zlib_v125.txt in Resources */,
-				336B55B914F4439B00CE9A63 /* zconf.h.in in Resources */,
-				336B55F814F4439B00CE9A63 /* license.txt in Resources */,
 				33F444D714F567DC00BA36E1 /* EmuViewController.xib in Resources */,
 				3354E93414F90ADE001DAF9D /* Localizable.strings in Resources */,
 				3354E93914F914AE001DAF9D /* GameBrowserViewController.xib in Resources */,
@@ -3008,6 +3006,7 @@
 				331D17091506BEC100327F74 /* OptWiimoteBtnViewController.xib in Resources */,
 				331D170E1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.xib in Resources */,
 				331D17131507DC1B00327F74 /* OptROMSPathsViewController.xib in Resources */,
+				33132C37150884FB002F97BB /* OptROMSSetPathsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3567,6 +3566,7 @@
 				331D17081506BEC100327F74 /* OptWiimoteBtnViewController.mm in Sources */,
 				331D170D1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.m in Sources */,
 				331D17121507DC1B00327F74 /* OptROMSPathsViewController.mm in Sources */,
+				33132C36150884FB002F97BB /* OptROMSSetPathsViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -46,14 +46,14 @@ int ConfigAppLoad()
 		VAR(bBurnUseASMCPUEmulation); // if you have a poor mans PC
 
 		// Other
-		STR(szAppRomPaths[0]);
+		/*STR(szAppRomPaths[0]);
 		STR(szAppRomPaths[1]);
 		STR(szAppRomPaths[2]);
 		STR(szAppRomPaths[3]);
 		STR(szAppRomPaths[4]);
 		STR(szAppRomPaths[5]);
 		STR(szAppRomPaths[6]);
-		STR(szAppRomPaths[7]);
+		STR(szAppRomPaths[7]);*/
 #undef STR
 #undef FLT
 #undef VAR
@@ -91,14 +91,14 @@ int ConfigAppSave()
 	VAR(bBurnUseASMCPUEmulation);
 
 	fprintf(h,"\n// The paths to search for rom zips. (include trailing backslash)\n");
-	STR(szAppRomPaths[0]);
+/*	STR(szAppRomPaths[0]);
 	STR(szAppRomPaths[1]);
 	STR(szAppRomPaths[2]);
 	STR(szAppRomPaths[3]);
 	STR(szAppRomPaths[4]);
 	STR(szAppRomPaths[5]);
 	STR(szAppRomPaths[6]);
-	STR(szAppRomPaths[7]);
+	STR(szAppRomPaths[7]);*/
 
 	fprintf(h,"\n\n\n");
 

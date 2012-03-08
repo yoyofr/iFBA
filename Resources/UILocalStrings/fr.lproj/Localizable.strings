@@ -29,7 +29,8 @@
 "ROMS Paths"="Répertoires ROMS";
 
 //ROMS Paths
-
+"Choose ROMS Path"="Sel. un chemin";
+"Cancel"="Annuler";
 
 //Video options
 "Aspect Ratio"="Aspect Ratio";
