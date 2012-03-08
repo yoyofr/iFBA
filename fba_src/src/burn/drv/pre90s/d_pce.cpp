@@ -187,9 +187,10 @@ static INT32 PceGetZipName(char** pszName, UINT32 i)
 	}
 
 	// remove the "pce_"
-	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
+/*	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
 		szFilename[j] = pszGameName[j + 4];
-	}
+	}*/
+    strcpy(szFilename,pszGameName);
 	strcat(szFilename, ".zip");
 
 	*pszName = szFilename;
@@ -218,9 +219,10 @@ static INT32 TgGetZipName(char** pszName, UINT32 i)
 	}
 
 	// remove the "tg_"
-	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
+	/*for (UINT32 j = 0; j < strlen(pszGameName); j++) {
 		szFilename[j] = pszGameName[j + 3];
-	}
+	}*/
+    strcpy(szFilename,pszGameName);
 	strcat(szFilename, ".zip");
 
 	*pszName = szFilename;
@@ -249,9 +251,10 @@ static INT32 SgxGetZipName(char** pszName, UINT32 i)
 	}
 
 	// remove the "sgx_"
-	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
+/*	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
 		szFilename[j] = pszGameName[j + 4];
-	}
+	}*/
+    strcpy(szFilename,pszGameName);
 	strcat(szFilename, ".zip");
 
 	*pszName = szFilename;

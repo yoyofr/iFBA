@@ -5,7 +5,7 @@ int nIniVersion = 0;
 static void CreateConfigName(char* szConfig)
 {
 	//memcpy(szConfig, "fba.ini", 8);
-    strcpy(szConfig, "fba.ini");
+    strcpy(szConfig, "/var/mobile/Documents/iFBA/fba.ini");
 	return;
 }
 

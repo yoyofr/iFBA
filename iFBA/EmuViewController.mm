@@ -306,6 +306,7 @@ t_touch_area virtual_stick_ipad_portrait[VSTICK_NB_BUTTON]={
 int gTurboMode;
 
 static uint vpad_button_texture,vpad_dpad_texture;
+static uint filter_crt_texture,filter_scanline_texture;
 
 char gameName[64];
 int launchGame;
@@ -452,6 +453,9 @@ static int statusMsgUpdated=0;
     vpad_dpad_texture=[self loadTexture:[UIImage imageNamed:@"dpad.png"]];
     vpad_button_texture=[self loadTexture:[UIImage imageNamed:@"button.png"]];
     vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
+    
+    filter_crt_texture=[self loadTexture:[UIImage imageNamed:@"crt-1.png"]];
+    filter_scanline_texture=[self loadTexture:[UIImage imageNamed:@"scanline-1.png"]];
     /**************************************/
     
     
@@ -1643,7 +1647,41 @@ int StopProgressBar() {
     }
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
+    switch (ifba_conf.video_filter) {
+        case 0:break;
+        case 1:
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);            
+            /* Enable Vertex Pointer */
+            texcoords[0][0]=0; texcoords[0][1]=0;
+            texcoords[1][0]=1.0f*rw/32.0f; texcoords[1][1]=0;
+            texcoords[2][0]=0; texcoords[2][1]=1.0f*rh/32.0f;
+            texcoords[3][0]=1.0f*rw/32.0f; texcoords[3][1]=1.0f*rh/32.0f;
+            glBindTexture(GL_TEXTURE_2D, filter_scanline_texture);    /* Bind The Texture */    
+            glColor4ub(255,255,255,ifba_conf.video_filter_strength);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            glDisable(GL_BLEND);
+            break;
+        case 2:
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);            
+            /* Enable Vertex Pointer */
+            texcoords[0][0]=0; texcoords[0][1]=0;
+            texcoords[1][0]=1.0f*rw*4/32.0f; texcoords[1][1]=0;
+            texcoords[2][0]=0; texcoords[2][1]=1.0f*rh*4/32.0f;
+            texcoords[3][0]=1.0f*rw*4/32.0f; texcoords[3][1]=1.0f*rh*4/32.0f;
+            glBindTexture(GL_TEXTURE_2D, filter_crt_texture);    /* Bind The Texture */    
+            glColor4ub(255,255,255,ifba_conf.video_filter_strength);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            glDisable(GL_BLEND);
+            break;
+    }
+    
     if (virtual_stick_on) [self drawVPad];
+    
+    
+    
+    
     
     [m_oglContext presentRenderbuffer:GL_RENDERBUFFER_OES];
 }

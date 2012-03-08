@@ -10,7 +10,7 @@ int StatedAuto(int bSave) {
 	static TCHAR szName[32] = "";
 	int nRet;
     
-	sprintf(szName, "%s.fs", BurnDrvGetText(DRV_NAME));
+	sprintf(szName, "/var/mobile/Documents/iFBA/%s.fs", BurnDrvGetText(DRV_NAME));
     
 	if (bSave == 0) {
 		nRet = BurnStateLoad(szName, bDrvSaveAll, NULL);		// Load ram
@@ -25,7 +25,7 @@ int StatedAuto(int bSave) {
 }
 
 static void CreateStateName(int nSlot) {
-	sprintf(szChoice, "%s_%02x.fs", BurnDrvGetText(DRV_NAME), nSlot);
+	sprintf(szChoice, "/var/mobile/Documents/iFBA/%s_%02x.fs", BurnDrvGetText(DRV_NAME), nSlot);
 }
 
 int StatedLoad(int nSlot) {

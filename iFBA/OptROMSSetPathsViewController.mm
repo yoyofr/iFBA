@@ -176,7 +176,9 @@ static NSMutableArray *dirlist;
             NSString *newPath=[NSString stringWithFormat:@"%s",currentPath];
             strcpy(currentPath,[[newPath stringByDeletingLastPathComponent] UTF8String]);
         } else {
-            NSString *newPath=[NSString stringWithFormat:@"%s/%@",currentPath,sel];
+            NSString *newPath;
+            if (strcmp(currentPath,"/")==0) newPath=[NSString stringWithFormat:@"/%@",sel];
+            else newPath=[NSString stringWithFormat:@"%s/%@",currentPath,sel];
             strcpy(currentPath,[newPath UTF8String]);
         }        
         [self scanDirs];

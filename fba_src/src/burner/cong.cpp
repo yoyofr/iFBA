@@ -10,7 +10,7 @@ static TCHAR* GameConfigName()
 	// Return the path of the config file for this game
 	static TCHAR szName[32];
 	//_stprintf(szName, _T("config/games/%s.ini"), BurnDrvGetText(DRV_NAME));
-    _stprintf(szName, _T("%s.ini"), BurnDrvGetText(DRV_NAME));
+    _stprintf(szName, _T("/var/mobile/Documents/iFBA/%s.ini"), BurnDrvGetText(DRV_NAME));
 	return szName;
 }
 

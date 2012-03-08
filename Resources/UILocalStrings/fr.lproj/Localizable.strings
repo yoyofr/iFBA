@@ -43,6 +43,11 @@
 "Scaled resolution with vpad"="Mise à échelle adaptée au pad virtuel";
 "Fullscreen"="Pleine écran";
 
+"Video filter"="Filtre video";
+"No filter"="Pas de filtre";
+"Scanline"="Scanline";
+"CRT"="CRT";
+"Video filter strength"="Intensité Filtre";
 
 "Filtering"="Filtrage";
 "No filtering"="No filtering";

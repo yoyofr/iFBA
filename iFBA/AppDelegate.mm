@@ -70,6 +70,12 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"show_fps"];
 	if (valNb == nil) ifba_conf.show_fps=0;
 	else ifba_conf.show_fps = [valNb intValue];
+    valNb=[prefs objectForKey:@"video_filter"];
+	if (valNb == nil) ifba_conf.video_filter=0;
+	else ifba_conf.video_filter = [valNb intValue];
+    valNb=[prefs objectForKey:@"video_filter_strength"];
+	if (valNb == nil) ifba_conf.video_filter_strength=32;
+	else ifba_conf.video_filter_strength = [valNb intValue];
     
     valNb=[prefs objectForKey:@"sound_on"];
 	if (valNb == nil) ifba_conf.sound_on=1;
@@ -149,6 +155,10 @@ void tstfl_validateloadgame(char *name) {
 	[prefs setObject:valNb forKey:@"show_fps"];[valNb autorelease];
     valNb=[[NSNumber alloc] initWithFloat:ifba_conf.brightness ];
 	[prefs setObject:valNb forKey:@"brightness"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.video_filter ];
+	[prefs setObject:valNb forKey:@"video_filter"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.video_filter_strength ];
+	[prefs setObject:valNb forKey:@"video_filter_strength"];[valNb autorelease];
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_on ];
 	[prefs setObject:valNb forKey:@"sound_on"];[valNb autorelease];

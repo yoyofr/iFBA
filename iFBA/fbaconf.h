@@ -19,6 +19,8 @@ typedef struct {
     unsigned char screen_mode;
     unsigned char filtering;
     unsigned char show_fps;
+    unsigned char video_filter;
+    unsigned char video_filter_strength;
     float brightness;
     
     //Audio

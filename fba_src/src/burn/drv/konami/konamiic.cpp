@@ -164,7 +164,7 @@ void KonamiBlendCopy(UINT32 *palette /* 32-bit color */, UINT32 *drvpalette /* n
 		  			 ((((source & 0x00ff00) * a + (blend & 0x00ff00) * ad) >> 8) & 0x00ff00) |
 		  			 ((((source & 0xff0000) * a + (blend & 0xff0000) * ad) >> 8) & 0xff0000);
 
-			PutPix(dst, HighCol16(p >> 16, p >> 8, p, 0));
+			PutPix(dst, HighCol16(p >> 16, p >> 8, (p&0xFF), 0));
 		}
 		else		// normal
 		{

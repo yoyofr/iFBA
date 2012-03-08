@@ -52,29 +52,18 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 5;
+	return 6;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
+    if (section==2) return 2;
     return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
-    switch (section) {
-        case 0:title=@"";//NSLocalizedString(@"Aspect Ratio",@"");
-            break;
-        case 1:title=@"";//NSLocalizedString(@"Screen mode",@"");
-            break;
-        case 2:title=@"";//NSLocalizedString(@"Filtering",@"");
-            break;
-        case 3:title=@"";//NSLocalizedString(@"Show FPS",@"");
-            break;
-        case 4:title=@"";
-            break;
-    }
     return title;
 }
 
@@ -82,6 +71,11 @@
     ifba_conf.screen_mode=[sender selectedSegmentIndex];
     [tabView reloadData];
 }
+- (void)segActionVideoFilter:(id)sender {
+    ifba_conf.video_filter=[sender selectedSegmentIndex];
+    [tabView reloadData];
+}
+
 - (void)switchAspectRatio:(id)sender {
     ifba_conf.aspect_ratio =((UISwitch*)sender).on;
     [tabView reloadData];
@@ -97,6 +91,11 @@
 -(void)sliderBrightness:(id)sender {
     ifba_conf.brightness=((UISlider*)sender).value;
     [[UIScreen mainScreen] setBrightness:ifba_conf.brightness];
+//    [tabView reloadData];
+}
+-(void)sliderFilterStrength:(id)sender {
+    ifba_conf.video_filter_strength=((UISlider*)sender).value;
+//    [tabView reloadData];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
@@ -122,7 +121,20 @@
                     break;
             }
             break;
-        case 2://Filtering
+        case 2://Video Filter
+            switch (ifba_conf.video_filter) {
+                case 0:
+                    footer=NSLocalizedString(@"No filter",@"");
+                    break;
+                case 1:
+                    footer=NSLocalizedString(@"Scanline",@"");
+                    break;
+                case 2:
+                    footer=NSLocalizedString(@"CRT",@"");
+                    break;
+            }
+            break;
+        case 3://Filtering
             switch (ifba_conf.filtering) {
                 case 0:
                     footer=NSLocalizedString(@"No filtering",@"");
@@ -132,7 +144,7 @@
                     break;
             }
             break;
-        case 3://show fps
+        case 4://show fps
             switch (ifba_conf.show_fps) {
                 case 0:
                     footer=NSLocalizedString(@"Do not display fps",@"");
@@ -142,7 +154,7 @@
                     break;
             }
             break;
-        case 4://brightness
+        case 5://brightness
             footer=nil;
             break;
     }
@@ -178,7 +190,28 @@
             [segconview release];
             segconview.selectedSegmentIndex=ifba_conf.screen_mode;
             break;
-        case 2://Filtering
+        case 2://Video Filters
+            if (indexPath.row==0) {
+            cell.textLabel.text=NSLocalizedString(@"Video filter",@"");
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ", @" 2 ", nil]];
+            segconview.segmentedControlStyle = UISegmentedControlStylePlain;
+            [segconview addTarget:self action:@selector(segActionVideoFilter:) forControlEvents:UIControlEventValueChanged];            
+            cell.accessoryView = segconview;
+            [segconview release];
+            segconview.selectedSegmentIndex=ifba_conf.video_filter;
+            } else { //strength
+                cell.textLabel.text=NSLocalizedString(@"Video filter strength",@"");
+                sliderview = [[UISlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                [sliderview setMaximumValue:255.0f];
+                [sliderview setMinimumValue:0];
+                [sliderview setContinuous:true];
+                [sliderview addTarget:self action:@selector(sliderFilterStrength:) forControlEvents:UIControlEventValueChanged];
+                cell.accessoryView = sliderview;
+                [sliderview release];
+                sliderview.value=ifba_conf.video_filter_strength;
+            }
+            break;
+        case 3://Filtering
             cell.textLabel.text=NSLocalizedString(@"Filtering",@"");
             switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
             [switchview addTarget:self action:@selector(switchFiltering:) forControlEvents:UIControlEventValueChanged];
@@ -186,7 +219,7 @@
             [switchview release];
             switchview.on=ifba_conf.filtering;
             break;
-        case 3://Show FPS
+        case 4://Show FPS
             cell.textLabel.text=NSLocalizedString(@"Show FPS",@"");
             switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
             [switchview addTarget:self action:@selector(switchShowFPS:) forControlEvents:UIControlEventValueChanged];
@@ -194,7 +227,7 @@
             [switchview release];
             switchview.on=ifba_conf.show_fps;
             break;
-        case 4://Brightness
+        case 5://Brightness
             cell.textLabel.text=NSLocalizedString(@"Brightness",@"");
             sliderview = [[UISlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
             [sliderview setMaximumValue:1.0f];
