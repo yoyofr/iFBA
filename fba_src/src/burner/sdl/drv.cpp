@@ -8,7 +8,7 @@ int bDrvOkay = 0;						// 1 if the Driver has been initted okay, and it's okay t
 extern bool bSoundOn;
 extern int sdl_frequency;
 
-char szAppRomPaths[DIRS_MAX][MAX_PATH] = {{"/var/mobile/Documents/iFBA"},{"/var/mobile/Documents/ROMS"}, };
+char szAppRomPaths[DIRS_MAX][MAX_PATH] = {{"/var/mobile/Documents/iFBA/"},{"/var/mobile/Documents/ROMS/"}, };
 
 static bool bSaveRAM = false;
 

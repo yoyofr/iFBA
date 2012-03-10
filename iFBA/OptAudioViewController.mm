@@ -75,16 +75,20 @@
 }
 
 - (void)segActionLatency:(id)sender {
+    int refresh=0;
+    if (ifba_conf.sound_latency!=[sender selectedSegmentIndex]) refresh=1;
     ifba_conf.sound_latency=[sender selectedSegmentIndex];
-    [tabView reloadData];
+    if (refresh) [tabView reloadData];
 }
 - (void)switchSoundOutput:(id)sender {
     ifba_conf.sound_on =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 - (void)segActionFrequency:(id)sender {
-    ifba_conf.sound_freq =[sender selectedSegmentIndex];
-    [tabView reloadData];
+    int refresh=0;
+    if (ifba_conf.sound_freq!=[sender selectedSegmentIndex]) refresh=1;
+    ifba_conf.sound_freq=[sender selectedSegmentIndex];
+    if (refresh) [tabView reloadData];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {

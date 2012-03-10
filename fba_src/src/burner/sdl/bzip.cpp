@@ -94,6 +94,23 @@ static int FindRomByCrc(unsigned int nCrc)
 	return -1;													// couldn't find the rom
 }
 
+//For console (megadrive)
+static int FindRomByLen(unsigned int nLen)
+{
+	struct ZipEntry* pl;
+	int i;
+    
+	// Find the rom named szName in the List
+	for (i = 0, pl = List; i< nListCount; i++, pl++)	{
+		if (nLen == pl->nLen) {
+			return i;
+		}
+	}
+    
+	return -1;													// couldn't find the rom
+}
+
+
 // Find rom number i from the pBzipDriver game
 static int FindRom(int i)
 {
@@ -122,6 +139,13 @@ static int FindRom(int i)
 			break;
 		}
 		nRet = FindRomByName(ANSIToTCHAR(szPossibleName, NULL, 0));
+		if (nRet >= 0) {
+			return nRet;
+		}
+	}
+    
+    if (ri.nLen) {												// Search by crc first
+		nRet = FindRomByLen(ri.nLen);
 		if (nRet >= 0) {
 			return nRet;
 		}
@@ -352,7 +376,7 @@ int BzipOpen(bool bootApp)
 			szBzipName[z] = (TCHAR*)malloc(MAX_PATH * sizeof(TCHAR));
 
 			_stprintf(szBzipName[z], _T("%s%hs"), szAppRomPaths[d], szName);
-            //printf("check: %s\n",szBzipName[z]);
+//            printf("check: %s\n",szBzipName[z]);
 
 			if (ZipOpen(TCHARToANSI(szBzipName[z], NULL, 0)) == 0) {	// Open the rom zip file
 				nZipsFound++;
@@ -364,6 +388,7 @@ int BzipOpen(bool bootApp)
 		if (nCurrentZip >= 0) {
 			if (!bootApp) {
 				BzipText.Add(_T("Found %s;\n"), szBzipName[z]);
+//                printf(_T("Found %s;\n"), szBzipName[z]);
 			}
 			ZipGetList(&List, &nListCount);						// Get the list of entries
 
@@ -429,7 +454,8 @@ int BzipOpen(bool bootApp)
 		} else {
 			if (!bootApp) {
 				BzipText.Add(_T("Couldn't find %hs;\n"), szName);
-			}
+//                printf(_T("Couldn't find %hs;\n"), szName);                
+            }
 		}
 
 		ZipClose();												// Close the last zip file if open
@@ -475,6 +501,8 @@ int BzipOpen(bool bootApp)
 				BzipText.Add(_T("\n"));
 			}
 		}
+        
+        ProgressUpdateBurner(0,-1,BzipText.szText);
 
 		BurnExtLoadRom = BzipBurnLoadRom;						// Okay to call our function to load each rom
 

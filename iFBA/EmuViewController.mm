@@ -43,11 +43,12 @@ float joy_analog_r[MAX_JOYSTICKS];
 int wm_joy_pl[MAX_JOYSTICKS];
 int wm_prev_joy_pl[MAX_JOYSTICKS];
 
-t_button_map joymap_iCade[10]={
+t_button_map joymap_iCade[]={
     {"Start",4},
     {"Select/Coin",8},
     {"Menu",0},
     {"Turbo",0},
+    {"Service",0},
     {"Fire 1",1},
     {"Fire 2",2},
     {"Fire 3",3},
@@ -71,11 +72,12 @@ int joymap_dir_iCade[8];
 //  9        /      LT     Fire 5
 // 10        /      RT     Fire 6
 
-t_button_map joymap_wiimote[MAX_JOYSTICKS][10]={
+t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON]={
     {{"Start",WII_BUTTON_START},
         {"Select/Coin",WII_BUTTON_SELECT},
         {"Menu",WII_BUTTON_HOME},
         {"Turbo",WII_BUTTON_G},
+        {"Service",WII_BUTTON_H},
         {"Fire 1",WII_BUTTON_A},
         {"Fire 2",WII_BUTTON_B},
         {"Fire 3",WII_BUTTON_C},
@@ -86,6 +88,7 @@ t_button_map joymap_wiimote[MAX_JOYSTICKS][10]={
         {"Select/Coin",WII_BUTTON_SELECT},
         {"Menu",WII_BUTTON_HOME},
         {"Turbo",WII_BUTTON_G},
+        {"Service",WII_BUTTON_H},
         {"Fire 1",WII_BUTTON_A},
         {"Fire 2",WII_BUTTON_B},
         {"Fire 3",WII_BUTTON_C},
@@ -96,6 +99,7 @@ t_button_map joymap_wiimote[MAX_JOYSTICKS][10]={
         {"Select/Coin",WII_BUTTON_SELECT},
         {"Menu",WII_BUTTON_HOME},
         {"Turbo",WII_BUTTON_G},
+        {"Service",WII_BUTTON_H},
         {"Fire 1",WII_BUTTON_A},
         {"Fire 2",WII_BUTTON_B},
         {"Fire 3",WII_BUTTON_C},
@@ -106,6 +110,7 @@ t_button_map joymap_wiimote[MAX_JOYSTICKS][10]={
         {"Select/Coin",WII_BUTTON_SELECT},
         {"Menu",WII_BUTTON_HOME},
         {"Turbo",WII_BUTTON_G},
+        {"Service",WII_BUTTON_H},
         {"Fire 1",WII_BUTTON_A},
         {"Fire 2",WII_BUTTON_B},
         {"Fire 3",WII_BUTTON_C},
@@ -113,7 +118,7 @@ t_button_map joymap_wiimote[MAX_JOYSTICKS][10]={
         {"Fire 5",WII_BUTTON_E},
         {"Fire 6",WII_BUTTON_F}},
 };
-int joymap_dir_wiimote[MAX_JOYSTICKS][11];
+int joymap_dir_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
 
 
 
@@ -176,34 +181,34 @@ void computeButtonLayout(int btnsize,int nb_button,int width,int height){
                 break;
             case 2:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
                 break;
             case 3:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
-                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize;
                 break;
             case 4:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
-                virtual_stick[6].x=w-btnsize*2.1f; virtual_stick[6].y=h-btnsize;
-                virtual_stick[7].x=w-btnsize;      virtual_stick[7].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize;
                 break;
             case 5:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*3.15f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[5].x=w-btnsize*2.1f; virtual_stick[5].y=h-btnsize*2.1f;
-                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize*2.1f;
-                virtual_stick[7].x=w-btnsize*2.1f; virtual_stick[7].y=h-btnsize;
-                virtual_stick[8].x=w-btnsize;      virtual_stick[8].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].y=h-btnsize;
                 break;
             case 6:
             default:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*3.15f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[5].x=w-btnsize*2.1f; virtual_stick[5].y=h-btnsize*2.1f;
-                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize*2.1f;
-                virtual_stick[7].x=w-btnsize*3.15f; virtual_stick[7].y=h-btnsize;
-                virtual_stick[8].x=w-btnsize*2.1f; virtual_stick[8].y=h-btnsize;
-                virtual_stick[9].x=w-btnsize;      virtual_stick[9].y=h-btnsize;            
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*3.15f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+5].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+5].y=h-btnsize;            
                 break;
         }
     } else {//vertical
@@ -215,34 +220,34 @@ void computeButtonLayout(int btnsize,int nb_button,int width,int height){
                 break;
             case 2:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
-                virtual_stick[5].x=w-btnsize; virtual_stick[5].y=h-btnsize*1.5f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*1.5f;
                 break;
             case 3:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
-                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*1.5f;
-                virtual_stick[6].x=w-btnsize*2.1f; virtual_stick[6].y=h-btnsize*2.6f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*1.5f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize*2.6f;
                 break;
             case 4:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
-                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*1.5f;
-                virtual_stick[6].x=w-btnsize*2.1f; virtual_stick[6].y=h-btnsize*2.6f;
-                virtual_stick[7].x=w-btnsize*2.1f; virtual_stick[7].y=h-btnsize*1.5f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*1.5f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize*2.6f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize*1.5f;
                 break;
             case 5:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*3.15f;
-                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
-                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize;
-                virtual_stick[7].x=w-btnsize*2.1f; virtual_stick[7].y=h-btnsize*3.15f;
-                virtual_stick[8].x=w-btnsize*2.1f; virtual_stick[8].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize*3.15f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].y=h-btnsize*2.1f;
                 break;
             case 6:
             default:
                 virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*3.15f;
-                virtual_stick[5].x=w-btnsize;      virtual_stick[5].y=h-btnsize*2.1f;
-                virtual_stick[6].x=w-btnsize;      virtual_stick[6].y=h-btnsize;
-                virtual_stick[7].x=w-btnsize*2.1f; virtual_stick[7].y=h-btnsize*3.15f;
-                virtual_stick[8].x=w-btnsize*2.1f; virtual_stick[8].y=h-btnsize*2.1f;
-                virtual_stick[9].x=w-btnsize*2.1f; virtual_stick[9].y=h-btnsize;            
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize*3.15f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].y=h-btnsize*2.1f;
+                virtual_stick[VPAD_SPECIALS_BUTTON_NB+5].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+5].y=h-btnsize;            
                 break;
         }
         
@@ -254,6 +259,7 @@ t_touch_area virtual_stick_iphone_landscape[VSTICK_NB_BUTTON]={
     {GN_SELECT_COIN,480-48,         48,             48,48,32,32,0xDF,0xDF,0x3F,0},
     {GN_MENU_KEY,     0,            0,              48,48,32,32,0x4F,0xFF,0x1F,0},
     {GN_TURBO,        0,            48,             48,48,32,32,0xFF,0xFF,0x2F,0},
+    {GN_SERVICE,      480/2-24,         0,             48,48,32,32,0xAF,0xAF,0xAF,0},
     {GN_A,          480-64-10-64,   320-64-6-64,   64,64,64,64,0xCF,0xCF,0xCF,0},
     {GN_B,          480-64,         320-64-6-64-10,   64,64,64,64,0xFF,0xFF,0x00,0},  //yellow
     {GN_C,          480-64-10-64,   320-64,         64,64,64,64,0x00,0xFF,0x00,0},  //green
@@ -263,10 +269,11 @@ t_touch_area virtual_stick_iphone_landscape[VSTICK_NB_BUTTON]={
 };
 
 t_touch_area virtual_stick_iphone_portrait[VSTICK_NB_BUTTON]={
-    {GN_START,      270,         0,               48,48,32,32,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,195,         0,               48,48,32,32,0xDF,0xDF,0x3F,0},
+    {GN_START,      320-48,         0,               48,48,32,32,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,320-64-48,         0,               48,48,32,32,0xDF,0xDF,0x3F,0},
     {GN_MENU_KEY,     0,            0,            48,48,32,32,0x4F,0xFF,0x1F,0},
-    {GN_TURBO,        75,            0,           48,48,32,32,0xFF,0xFF,0x2F,0},
+    {GN_TURBO,        64,            0,           48,48,32,32,0xFF,0xFF,0x2F,0},
+    {GN_SERVICE,      320/2-24,         0,             48,48,32,32,0xAF,0xAF,0xAF,0},
     {GN_A,          320-64-10-64,   480-2*64-6-0,   64,64,64,64,0xFF,0x00,0x00,0},  //red
     {GN_B,          320-64,         480-2*64-6-10,   64,64,64,64,0xFF,0xFF,0x00,0},  //yellow
     {GN_C,          320-64-10-64,   480-64-0,         64,64,64,64,0x00,0xFF,0x00,0},  //green
@@ -281,6 +288,7 @@ t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
     {GN_SELECT_COIN,1024-80,        100,            64,64,64,64,0xDF,0xDF,0xDF,0},
     {GN_MENU_KEY,     0,            0,              64,64,64,64,0xEF,0xFF,0x7F,0},
     {GN_TURBO,        0,            100,            64,64,64,64,0xFF,0x7F,0xFF,0},
+    {GN_SERVICE,      1024/2-32,         0,             64,64,64,64,0xAF,0xAF,0xAF,0},
     {GN_A,          1024-96*2-10,   768-96*2-6,    96,96,96,96,0xFF,0x00,0x00,0},  //red
     {GN_B,          1024-96,        768-96*2-6-20,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
     {GN_C,          1024-96*2-10,   768-96,         96,96,96,96,0x00,0xFF,0x00,0},  //green
@@ -294,6 +302,7 @@ t_touch_area virtual_stick_ipad_portrait[VSTICK_NB_BUTTON]={
     {GN_SELECT_COIN,768-80-120,    0,             64,64,64,64,0xDF,0xDF,0xDF,0},
     {GN_MENU_KEY,     0,           0,             64,64,64,64,0xEF,0xFF,0x7F,0},
     {GN_TURBO,        120,         0,             64,64,64,64,0xFF,0x7F,0xFF,0},
+    {GN_SERVICE,      768/2-32,         0,             64,64,64,64,0xAF,0xAF,0xAF,0},
     {GN_A,          768-96*2-20,   1024-96*2-6-60,    96,96,96,96,0xFF,0x00,0x00,0},  //red
     {GN_B,          768-96,        1024-96*2-6-20-60,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
     {GN_C,          768-96*2-20,   1024-96-60,         96,96,96,96,0x00,0xFF,0x00,0},  //green
@@ -320,9 +329,13 @@ static void *context; //hack to call objective C func from C
 
 static UIProgressView *prgview=nil;
 static UIView *statusview=nil;
+static UIView *statusDownview=nil;
 static UILabel *statusMsgview=nil;
+static UILabel *statusLoadMsgview=nil;
 static char statusMsg[512];
+static char statusLoadMsg[512];
 static int statusMsgUpdated=0;
+static int statusLoadMsgUpdated=0;
 
 @implementation EmuViewController
 
@@ -514,12 +527,13 @@ static int statusMsgUpdated=0;
                 case 1:joymap_dir_iCade[j-1]=GN_SELECT_COIN;break;
                 case 2:joymap_dir_iCade[j-1]=GN_MENU_KEY;break;
                 case 3:joymap_dir_iCade[j-1]=GN_TURBO;break;
-                case 4:joymap_dir_iCade[j-1]=GN_A;break;
-                case 5:joymap_dir_iCade[j-1]=GN_B;break;
-                case 6:joymap_dir_iCade[j-1]=GN_C;break;
-                case 7:joymap_dir_iCade[j-1]=GN_D;break;
-                case 8:joymap_dir_iCade[j-1]=GN_E;break;
-                case 9:joymap_dir_iCade[j-1]=GN_F;break;                    
+                case 4:joymap_dir_iCade[j-1]=GN_SERVICE;break;
+                case 5:joymap_dir_iCade[j-1]=GN_A;break;
+                case 6:joymap_dir_iCade[j-1]=GN_B;break;
+                case 7:joymap_dir_iCade[j-1]=GN_C;break;
+                case 8:joymap_dir_iCade[j-1]=GN_D;break;
+                case 9:joymap_dir_iCade[j-1]=GN_E;break;
+                case 10:joymap_dir_iCade[j-1]=GN_F;break;                    
             }
         }
     }
@@ -534,12 +548,13 @@ static int statusMsgUpdated=0;
                     case 1:joymap_dir_wiimote[joy][j-1]=GN_SELECT_COIN;break;
                     case 2:joymap_dir_wiimote[joy][j-1]=GN_MENU_KEY;break;
                     case 3:joymap_dir_wiimote[joy][j-1]=GN_TURBO;break;
-                    case 4:joymap_dir_wiimote[joy][j-1]=GN_A;break;
-                    case 5:joymap_dir_wiimote[joy][j-1]=GN_B;break;
-                    case 6:joymap_dir_wiimote[joy][j-1]=GN_C;break;
-                    case 7:joymap_dir_wiimote[joy][j-1]=GN_D;break;
-                    case 8:joymap_dir_wiimote[joy][j-1]=GN_E;break;
-                    case 9:joymap_dir_wiimote[joy][j-1]=GN_F;break;                    
+                    case 4:joymap_dir_wiimote[joy][j-1]=GN_SERVICE;break;
+                    case 5:joymap_dir_wiimote[joy][j-1]=GN_A;break;
+                    case 6:joymap_dir_wiimote[joy][j-1]=GN_B;break;
+                    case 7:joymap_dir_wiimote[joy][j-1]=GN_C;break;
+                    case 8:joymap_dir_wiimote[joy][j-1]=GN_D;break;
+                    case 9:joymap_dir_wiimote[joy][j-1]=GN_E;break;
+                    case 10:joymap_dir_wiimote[joy][j-1]=GN_F;break;                    
                 }
             }
         }
@@ -622,6 +637,13 @@ static int statusMsgUpdated=0;
         [[statusview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
         statusview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
         
+        statusDownview=[[UIView alloc] init];
+        statusDownview.frame=CGRectMake(10,m_oglView.frame.size.height/2+40,m_oglView.frame.size.width-20,80);        
+        [[statusDownview layer] setCornerRadius:15.0];	
+        [[statusDownview layer] setBorderWidth:3.0];
+        [[statusDownview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
+        statusDownview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
+        
         statusMsgview=[[UILabel alloc] init];
         statusMsgview.frame=CGRectMake(10,5,statusview.frame.size.width-20,statusview.frame.size.height-10);
         statusMsgview.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
@@ -632,11 +654,26 @@ static int statusMsgUpdated=0;
         statusMsgview.numberOfLines=3;
         statusMsgview.font=[UIFont boldSystemFontOfSize:16];
         statusMsgview.textAlignment=UITextAlignmentCenter;
-        
         [statusview addSubview:statusMsgview];
         [self.view addSubview:statusview];
         [statusMsgview release];
         [statusview release];
+        
+        statusLoadMsgview=[[UILabel alloc] init];
+        statusLoadMsgview.frame=CGRectMake(10,5,statusview.frame.size.width-20,statusview.frame.size.height-10);
+        statusLoadMsgview.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        statusLoadMsgview.text=@"";
+        statusLoadMsgview.textColor=[UIColor whiteColor];
+        statusLoadMsgview.backgroundColor=[UIColor clearColor];
+        statusLoadMsgview.lineBreakMode=UILineBreakModeWordWrap;
+        statusLoadMsgview.numberOfLines=10;
+        statusLoadMsgview.font=[UIFont boldSystemFontOfSize:10];
+        statusLoadMsgview.textAlignment=UITextAlignmentCenter;
+        [statusDownview addSubview:statusLoadMsgview];
+        [self.view addSubview:statusDownview];
+        [statusLoadMsgview release];
+        [statusDownview release];
+        
         
     }
     
@@ -676,6 +713,14 @@ static int statusMsgUpdated=0;
         [statusview removeFromSuperview];
         statusview=nil;
     }
+    if (statusLoadMsgview) {
+        [statusLoadMsgview removeFromSuperview];
+        statusLoadMsgview=nil;
+    }
+    if (statusDownview) {
+        [statusDownview removeFromSuperview];
+        statusDownview=nil;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -687,25 +732,9 @@ static int statusMsgUpdated=0;
     if ((interfaceOrientation==UIInterfaceOrientationPortrait)||(interfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
         m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);
         
-        /*        if (device_isIpad) {
-         virtual_stick=virtual_stick_ipad_portrait;
-         computeButtonLayout(96,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_ww,mDevice_hh);            
-         } else {
-         virtual_stick=virtual_stick_iphone_portrait;
-         computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_ww,mDevice_hh);
-         }
-         */
     } else {
         m_oglView.frame=CGRectMake(0,0,mDevice_hh,mDevice_ww);
         
-        /*        if (device_isIpad) {
-         virtual_stick=virtual_stick_ipad_landscape;
-         computeButtonLayout(96,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_hh,mDevice_ww);                
-         } else {
-         virtual_stick=virtual_stick_iphone_landscape;
-         computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,mDevice_hh,mDevice_ww);            
-         }
-         */ 
     }
     if (prgview) prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
     if (statusview) statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-30,m_oglView.frame.size.width-20,30);
@@ -807,15 +836,6 @@ void updateWiimotes(void) {
             if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_START-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_START?1:0);
             if ((wii_but=joymap_dir_wiimote[i][WII_BUTTON_SELECT-1])) joy_state[i][wii_but]=(wm_joy_pl[i]&WII_JOY_SELECT?1:0);
             
-            
-            /*            joy_state[i][GN_A]=(wm_joy_pl[i]&WII_JOY_A?1:0);
-             joy_state[i][GN_B]=(wm_joy_pl[i]&WII_JOY_B?1:0);
-             joy_state[i][GN_C]=(wm_joy_pl[i]&WII_JOY_C?1:0);
-             joy_state[i][GN_D]=(wm_joy_pl[i]&WII_JOY_D?1:0);
-             joy_state[i][GN_SELECT_COIN]=(wm_joy_pl[i]&WII_JOY_SELECT?1:0);
-             joy_state[i][GN_START]=(wm_joy_pl[i]&WII_JOY_START?1:0);
-             joy_state[i][GN_MENU_KEY]=(wm_joy_pl[i]&WII_JOY_HOME?1:0);
-             joy_state[i][GN_TURBO]=(wm_joy_pl[i]&WII_JOY_E?1:0);*/
         }
         
         if (joy_state[i][GN_MENU_KEY]) nShouldExit=2;
@@ -1294,6 +1314,7 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     if (visible_area_h>TEXTURE_H) {
         NSLog(@"ERROR: width is too large (%d/%d)",visible_area_h,TEXTURE_H);
     }
+    
     visible_area_h=h;
     vid_aspectX=nXAspect;
     vid_aspectY=nYAspect;
@@ -1458,11 +1479,6 @@ int ErrorWhileLoading(const char* pszText) {
         if (pszText[i]<32) strHeight++;
         i++;
     }
-    /*DrawRect((uint16 *) vbuffer, 20, 20, visible_area_w-40, 9*strHeight+10, 0x00FFA0A0, TEXTURE_W,vid_rotated);
-     DrawRect((uint16 *) vbuffer, 21, 21, visible_area_w-42, 9*strHeight+8, 0x00EF2020, TEXTURE_W,vid_rotated);
-     
-     DrawString (pszText, (uint16 *) vbuffer, 22, 24, TEXTURE_W,vid_rotated);
-     */
     strcpy(statusMsg,pszText);
     statusMsgUpdated=1;
     mNewGLFrame++;
@@ -1470,7 +1486,12 @@ int ErrorWhileLoading(const char* pszText) {
 }
 
 int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
-    
+    if (totalLen<0) {
+        if (pszText) strcpy(statusLoadMsg,pszText);
+        else statusLoadMsg[0]=0;
+        statusLoadMsgUpdated=1;
+        return 0;
+    }
     pb_total+=nLen;
     if (totalLen) {
         if (pb_total>totalLen) pb_total=totalLen;
@@ -1485,24 +1506,6 @@ int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
     else statusMsg[0]=0;
     statusMsgUpdated=1;
     return 0;
-    
-	DrawRect((uint16 *) vbuffer, 20, 100, visible_area_w-40, 20, 0x00A0A0FF, TEXTURE_W,vid_rotated);
-    DrawRect((uint16 *) vbuffer, 21, 101, visible_area_w-42, 18, 0x002020EF, TEXTURE_W,vid_rotated);
-	
-	if (pszText)
-		DrawString (pszText, (uint16 *) vbuffer, 22, 104, TEXTURE_W,vid_rotated);
-	
-	if (totalLen == 0) {
-		DrawRect((uint16 *) vbuffer, 20, 120, visible_area_w-40, 12, 0x00FFFFFF, TEXTURE_W,vid_rotated);
-		DrawRect((uint16 *) vbuffer, 21, 121, visible_area_w-42, 10, 0x00808080, TEXTURE_W,vid_rotated);
-	} else {
-        DrawRect((uint16 *) vbuffer, 20, 120, visible_area_w-40, 12, 0x00A0A0FF, TEXTURE_W,vid_rotated);
-        DrawRect((uint16 *) vbuffer, 21, 121, visible_area_w-42, 10, 0x002020EF, TEXTURE_W,vid_rotated);
-		DrawRect((uint16 *) vbuffer, 22, 122, pb_value * (visible_area_w-44), 8, 0x00AFFF3F, TEXTURE_W,vid_rotated);
-	}
-    
-    mNewGLFrame++;
-	return 0;
 }
 
 int StopProgressBar() {
@@ -1517,6 +1520,7 @@ int StopProgressBar() {
 
 - (void)doFrame {
     int width,height,rw,rh;
+    static int msgCounter=0;
     
     if (nShouldExit) {
         self.navigationController.navigationBar.hidden=NO;        
@@ -1525,18 +1529,37 @@ int StopProgressBar() {
     
     if (prgview) {
         if (pb_value<1) {
+            msgCounter=120; //2seconds
             prgview.progress=pb_value;
             if (statusMsgUpdated) {
                 statusMsgview.text=[NSString stringWithFormat:@"%s",statusMsg];
                 statusMsgUpdated=0;
             }
+            if (statusLoadMsgUpdated) {
+                statusLoadMsgview.text=[NSString stringWithFormat:@"%s",statusLoadMsg];
+                statusLoadMsgUpdated=0;
+            }
         } else {
-            [prgview removeFromSuperview];
-            prgview=nil;
-            [statusMsgview removeFromSuperview];
-            statusMsgview=nil;
-            [statusview removeFromSuperview];
-            statusview=nil;
+            if (msgCounter>0) {
+                msgCounter--;
+                if (msgCounter<60) {
+                    prgview.alpha=msgCounter*1.0f/60.0f;
+                    statusDownview.alpha=msgCounter*1.0f/60.0f;
+                    statusview.alpha=msgCounter*1.0f/60.0f;
+                }
+            }
+            else {
+                [prgview removeFromSuperview];
+                prgview=nil;
+                [statusMsgview removeFromSuperview];
+                statusMsgview=nil;
+                [statusview removeFromSuperview];
+                statusview=nil;
+                [statusLoadMsgview removeFromSuperview];
+                statusLoadMsgview=nil;
+                [statusDownview removeFromSuperview];
+                statusDownview=nil;
+            }
         }
     }
     
@@ -1585,17 +1608,31 @@ int StopProgressBar() {
     
     glColor4ub(255,255,255,255);
     
-    if (vid_rotated&&(pb_value==1)) {
-        texcoords[1][0]=(float)0/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
-        texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)0/TEXTURE_H;
-        texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)(visible_area_h)/TEXTURE_H;
-        texcoords[2][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
-    } else {
-        texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)0/TEXTURE_H;
-        texcoords[1][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
-        texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
-        texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
-        
+    switch (vid_rotated) {
+        case 0:
+            texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)0/TEXTURE_H;
+            texcoords[1][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
+            texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
+            texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
+            break;
+        case 2:
+            texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)0/TEXTURE_H;
+            texcoords[1][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
+            texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
+            texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
+            break;
+        case 1:
+            texcoords[1][0]=(float)0/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
+            texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)0/TEXTURE_H;
+            texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)(visible_area_h)/TEXTURE_H;
+            texcoords[2][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
+            break;
+        case 3:
+            texcoords[0][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[0][1]=(float)0/TEXTURE_H;
+            texcoords[1][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[1][1]=(float)(visible_area_h)/TEXTURE_H;
+            texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)0/TEXTURE_H;            
+            texcoords[3][0]=(float)0/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
+            break;
     }
     float ios_aspect=(float)width/(float)height;
     float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        

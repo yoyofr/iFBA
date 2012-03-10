@@ -10,7 +10,8 @@
 #define iFBA_fbaconf_h
 
 #define MAX_JOYSTICKS 4
-#define VPAD_SPECIALS_BUTTON_NB 4
+#define VPAD_SPECIALS_BUTTON_NB 5
+#define VSTICK_NB_BUTTON 11
 
 
 typedef struct {
@@ -52,8 +53,8 @@ typedef struct {
     unsigned char dev_btn;
 } t_button_map;
 
-extern t_button_map joymap_iCade[10];
+extern t_button_map joymap_iCade[VSTICK_NB_BUTTON];
 
-extern t_button_map joymap_wiimote[MAX_JOYSTICKS][10];
+extern t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
 
 #endif

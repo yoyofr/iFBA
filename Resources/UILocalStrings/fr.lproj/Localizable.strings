@@ -6,6 +6,9 @@
   Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 */
 
+//Loading/Settings
+"Warning_Settings_Reset"="Premier lancement de iFBA v%@\n\nRéglages réinitiliasés avec les valeurs par défaut.";
+
 //Main menu
 "Load State"="Charger état";
 "Save State"="Sauver état";
@@ -32,6 +35,7 @@
 //ROMS Paths
 "Choose ROMS Path"="Sel. un chemin";
 "Cancel"="Annuler";
+"Tap selected dir above to validate"="Touchez la séléction en cours ci-dessus pour valider";
 
 //Video options
 "Aspect Ratio"="Aspect Ratio";
@@ -42,7 +46,7 @@
 "Original resolution"="Résolution originale";
 "Fixed scaled resolution"="Mise à échelle fixe";
 "Scaled resolution with vpad"="Mise à échelle adaptée au pad virtuel";
-"Fullscreen"="Pleine écran";
+"Fullscreen"="Plein écran";
 
 "Video filter"="Filtre video";
 "No filter"="Pas de filtre";

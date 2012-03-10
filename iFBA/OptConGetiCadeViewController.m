@@ -122,7 +122,7 @@ extern int mOptICadeButtonSelected;
     if (iCadePress&& (iCadeAllPress==0)) {
         joymap_iCade[mOptICadeButtonSelected].dev_btn=iCadePress;
         //remove older assignment (if exist)
-        for (int i=0;i<10;i++) {
+        for (int i=0;i<VSTICK_NB_BUTTON;i++) {
             if ((i!=mOptICadeButtonSelected)&&(joymap_iCade[i].dev_btn==iCadePress)) joymap_iCade[i].dev_btn=0;
         }
         iCadePress=0;

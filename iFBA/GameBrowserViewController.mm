@@ -101,17 +101,30 @@ static int cur_game_section,cur_game_row;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
-
+/*
+ int qsort_ComparePlEntries(const void *entryA, const void *entryB) {
+ NSString *strA,*strB;
+ NSComparisonResult res;
+ strA=((t_plPlaylist_entry*)entryA)->mPlaylistFilename;
+ strB=((t_plPlaylist_entry*)entryB)->mPlaylistFilename;
+ res=[strA localizedCaseInsensitiveCompare:strB];
+ if (res==NSOrderedAscending) return -1;
+ if (res==NSOrderedSame) return 0;
+ return 1; //NSOrderedDescending
+ }
+ qsort(mPlaylist,mPlaylist_size,sizeof(t_plPlaylist_entry),qsort_ComparePlEntries);
+ */
 - (void)scanRomsDirs {
     NSError *error;
     NSArray *dirContent;
     NSFileManager *mFileMngr = [[NSFileManager alloc] init];
     NSString *cpath;
     NSString *file;
-    NSArray *filetype_extROMFILE=[@"ZIP,FBA" componentsSeparatedByString:@","];    
+    NSArray *filetype_extROMFILE=[@"ZIP" componentsSeparatedByString:@","];    //,FBA ?
     
     [self buildFilters];    
     
+    //Master unsorted list in [27]
     for (int i=0;i<28;i++) {
         romlist[i]=[[NSMutableArray alloc] initWithCapacity:0];
         romlistLbl[i]=[[NSMutableArray alloc] initWithCapacity:0];
@@ -123,13 +136,8 @@ static int cur_game_section,cur_game_row;
     int saveActiveDrv=nBurnDrvActive;
     
     for (int i=0;i<DIRS_MAX;i++) {
-        //hack until cydia only release
-/*        if (i==-1) {
-            cpath=[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents/"];
-        } else*/ {
-            if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
-            else cpath=nil;
-        }
+        if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
+        else cpath=nil;
         if (cpath) {
             dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
             for (file in dirContent) {
@@ -139,27 +147,40 @@ static int cur_game_section,cur_game_row;
                     //NSLog(@"file; %@",[file lastPathComponent]);
                     ind=[burn_supportedRoms indexOfObject:[[file lastPathComponent] lowercaseString]];
                     if (ind!=NSNotFound) {
-                        char i;
-                        i=[[file lastPathComponent] UTF8String][0];
-                        if ((i>='a')&&(i<='z')) i+=1-'a';
-                        else if ((i>='A')&&(i<='Z')) i+=1-'A';
-                        else i=0;
-                        [romlist[i] addObject:file];
-                        [rompath[i] addObject:cpath];
+                        [romlist[27] addObject:file];
+                        [rompath[27] addObject:cpath];
                         nBurnDrvActive=ind;
-                        [romlistLbl[i] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] ];
-                        if (gameName[0]&&(cur_game_section<0)) {
-                            if (strcmp(gameName,[[[file lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
-                                cur_game_section=i;
-                                cur_game_row=[romlist[i] count]-1;
-                            }
-                        }
+                        [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] ];
                     }
                 }
             }
         }
     }
     [mFileMngr release];
+    
+    //Did we find games? if so, sort them
+    if ([romlist[27] count]) {
+        int total=[romlist[27] count];
+        for (int i=0;i<total;i++) {
+            NSString *tmpStr=[romlistLbl[27] objectAtIndex:i];
+            char j;
+            j=[tmpStr UTF8String][0];
+            if ((j>='a')&&(j<='z')) j+=1-'a';
+            else if ((j>='A')&&(j<='Z')) j+=1-'A';
+            else j=0;
+            [romlistLbl[j] addObject:tmpStr];
+            tmpStr=[romlist[27] objectAtIndex:i];
+            [romlist[j] addObject:tmpStr];
+            [rompath[j] addObject:[rompath[27] objectAtIndex:i]];
+            if (gameName[0]&&(cur_game_section<0)) {
+                if (strcmp(gameName,[[[tmpStr lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
+                    cur_game_section=j;
+                    cur_game_row=[romlist[j] count]-1;
+                }
+            }
+            
+        }
+    }
     
     [burn_supportedRoms release];   
     //[burn_supportedRomsNames release];

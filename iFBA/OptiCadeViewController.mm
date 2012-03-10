@@ -79,7 +79,7 @@ int mOptICadeButtonSelected;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    if (section==0) return 10;
+    if (section==0) return VSTICK_NB_BUTTON;
     return 1;
 }
 
@@ -153,12 +153,13 @@ int mOptICadeButtonSelected;
             joymap_iCade[1].dev_btn=8;//Select/Coin
             joymap_iCade[2].dev_btn=0;//Menu
             joymap_iCade[3].dev_btn=0;//Turbo
-            joymap_iCade[4].dev_btn=1;//Fire 1
-            joymap_iCade[5].dev_btn=2;//Fire 2
-            joymap_iCade[6].dev_btn=3;//...
-            joymap_iCade[7].dev_btn=5;//
-            joymap_iCade[8].dev_btn=6;//
-            joymap_iCade[9].dev_btn=7;//Fire 6
+            joymap_iCade[4].dev_btn=0;//Service
+            joymap_iCade[5].dev_btn=1;//Fire 1
+            joymap_iCade[6].dev_btn=2;//Fire 2
+            joymap_iCade[7].dev_btn=3;//...
+            joymap_iCade[8].dev_btn=5;//
+            joymap_iCade[9].dev_btn=6;//
+            joymap_iCade[10].dev_btn=7;//Fire 6
             [tabView reloadData];            
             break;
     }

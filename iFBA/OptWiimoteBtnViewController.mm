@@ -84,7 +84,7 @@ int mOptWiimoteButtonSelected;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    if (section==0) return 10;
+    if (section==0) return VSTICK_NB_BUTTON;
     return 1;
 }
 
@@ -163,12 +163,13 @@ int mOptWiimoteButtonSelected;
             joymap_wiimote[wiimoteSelected][1].dev_btn=WII_BUTTON_SELECT;//Select/Coin
             joymap_wiimote[wiimoteSelected][2].dev_btn=WII_BUTTON_HOME;//Menu
             joymap_wiimote[wiimoteSelected][3].dev_btn=WII_BUTTON_G;//Turbo
-            joymap_wiimote[wiimoteSelected][4].dev_btn=WII_BUTTON_A;//Fire 1
-            joymap_wiimote[wiimoteSelected][5].dev_btn=WII_BUTTON_B;//Fire 2
-            joymap_wiimote[wiimoteSelected][6].dev_btn=WII_BUTTON_C;//...
-            joymap_wiimote[wiimoteSelected][7].dev_btn=WII_BUTTON_D;//
-            joymap_wiimote[wiimoteSelected][8].dev_btn=WII_BUTTON_E;//
-            joymap_wiimote[wiimoteSelected][9].dev_btn=WII_BUTTON_F;//Fire 6
+            joymap_wiimote[wiimoteSelected][4].dev_btn=WII_BUTTON_G;//Service
+            joymap_wiimote[wiimoteSelected][5].dev_btn=WII_BUTTON_A;//Fire 1
+            joymap_wiimote[wiimoteSelected][6].dev_btn=WII_BUTTON_B;//Fire 2
+            joymap_wiimote[wiimoteSelected][7].dev_btn=WII_BUTTON_C;//...
+            joymap_wiimote[wiimoteSelected][8].dev_btn=WII_BUTTON_D;//
+            joymap_wiimote[wiimoteSelected][9].dev_btn=WII_BUTTON_E;//
+            joymap_wiimote[wiimoteSelected][10].dev_btn=WII_BUTTON_F;//Fire 6
             [tabView reloadData];            
             break;
     }

@@ -1,11 +1,29 @@
+v0.3
+----
+DONE
+- add of a service button
+BUGS FIXED
+- iOS 4.x compatible
+- wrong screen rotation
+
+BUGS TO FIX
+- crash issue only on real device when launching in portrait, going to menu, rotating to landscape & going back to emu
+TODO
+- pad restrictor: 2ways, 4ways, 8ways
+- roms sorted by long name
+- roms filters (categories)
+- remove roms bios from listing (neogeo, pgm, ... ?)
+- buttons mapping / game or buttons nb ?
+- wiimote start/select reversed?
+
 v0.2
 ---------------
-TODO
-- controllers buttons mapping Wiimote
-- pad restrictor: 2ways, 4ways, 8ways
-- implement dip switches
 DONE
-- increase alpha for vpad
+- video filters: scanline, CRT. controllable 'strength'
+- controllers buttons mapping Wiimote
+- roms paths selection
+- implemented dip switches
+- increased alpha for vpad
 - controllers buttons mapping iCade
 - roms long name in browser
 - BTStack is now deactivated by default (if first launch).

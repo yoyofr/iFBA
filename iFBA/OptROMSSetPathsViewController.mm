@@ -56,7 +56,8 @@ static NSMutableArray *dirlist;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    strcpy(currentPath,szAppRomPaths[szAppRomPathsSelected]);    
+    strcpy(currentPath,szAppRomPaths[szAppRomPathsSelected]);
+    if (currentPath[strlen(currentPath)]=='/') currentPath[strlen(currentPath)]=0;
     [self scanDirs];
     [[self tabView] reloadData];
 }
@@ -136,6 +137,7 @@ static NSMutableArray *dirlist;
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
+    if (section==0) footer=NSLocalizedString(@"Tap selected dir above to validate",@"");
     return footer;
 }
 
@@ -166,10 +168,11 @@ static NSMutableArray *dirlist;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==0) { //Validate new path
-        strcpy(szAppRomPaths[szAppRomPathsSelected],currentPath);
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        if (currentPath[strlen(currentPath)]!='/') strcat(currentPath,"/");
+        strcpy(szAppRomPaths[szAppRomPathsSelected],currentPath);        
+        [self.navigationController popViewControllerAnimated:YES];
     } else if (indexPath.section==1) { //Cancel and go back to roms paths list
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
     } else if (indexPath.section==2) {//Select a dir
         NSString *sel=[dirlist objectAtIndex:indexPath.row];
         if ([sel compare:@".."]==NSOrderedSame) {

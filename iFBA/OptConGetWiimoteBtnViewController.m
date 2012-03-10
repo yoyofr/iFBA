@@ -54,7 +54,7 @@ extern int wiimoteSelected;
         else if (pressedBtn&WII_JOY_HOME) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_HOME;
         
         //remove older assignment (if exist)
-        for (int i=0;i<10;i++) {
+        for (int i=0;i<VSTICK_NB_BUTTON;i++) {
             if ((i!=mOptWiimoteButtonSelected)&&(joymap_wiimote[wiimoteSelected][i].dev_btn==joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn)) joymap_wiimote[wiimoteSelected][i].dev_btn=0;
         }
         [self dismissSemiModalViewController:self];

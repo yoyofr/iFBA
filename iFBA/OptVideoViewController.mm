@@ -68,12 +68,16 @@
 }
 
 - (void)segActionVideoMode:(id)sender {
+    int refresh=0;
+    if (ifba_conf.screen_mode!=[sender selectedSegmentIndex]) refresh=1;
     ifba_conf.screen_mode=[sender selectedSegmentIndex];
-    [tabView reloadData];
+    if (refresh) [tabView reloadData];
 }
 - (void)segActionVideoFilter:(id)sender {
+    int refresh=0;
+    if (ifba_conf.video_filter!=[sender selectedSegmentIndex]) refresh=1;
     ifba_conf.video_filter=[sender selectedSegmentIndex];
-    [tabView reloadData];
+    if (refresh) [tabView reloadData];
 }
 
 - (void)switchAspectRatio:(id)sender {
@@ -90,7 +94,7 @@
 }
 -(void)sliderBrightness:(id)sender {
     ifba_conf.brightness=((UISlider*)sender).value;
-    [[UIScreen mainScreen] setBrightness:ifba_conf.brightness];
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]) [[UIScreen mainScreen] setBrightness:ifba_conf.brightness];
 //    [tabView reloadData];
 }
 -(void)sliderFilterStrength:(id)sender {
@@ -166,6 +170,7 @@
     UISwitch *switchview;
     UISegmentedControl *segconview;
     UISlider *sliderview;
+    UIView *accView;
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -183,12 +188,15 @@
             break;
         case 1://Screen mode
             cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
+            
             segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 1 ", @" 2 ", @" 3 ", nil]];
+            segconview.selectedSegmentIndex=ifba_conf.screen_mode;
+            
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
             [segconview addTarget:self action:@selector(segActionVideoMode:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;
             [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.screen_mode;
+            
             break;
         case 2://Video Filters
             if (indexPath.row==0) {
@@ -233,10 +241,12 @@
             [sliderview setMaximumValue:1.0f];
             [sliderview setMinimumValue:0];
             [sliderview setContinuous:true];
+            sliderview.value=ifba_conf.brightness;            
+            
             [sliderview addTarget:self action:@selector(sliderBrightness:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = sliderview;
             [sliderview release];
-            sliderview.value=ifba_conf.brightness;
+            if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]==NO) sliderview.enabled=NO; 
             break;
             
     }

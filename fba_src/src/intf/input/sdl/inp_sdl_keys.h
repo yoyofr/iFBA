@@ -1,6 +1,5 @@
 #ifdef BUILD_SDL
 
-#define VSTICK_NB_BUTTON 10
 typedef enum {
 	GN_NONE=0,
     GN_RIGHT,	
@@ -23,7 +22,7 @@ typedef enum {
 	GN_HOTKEY1,
 	GN_HOTKEY2,
 	GN_HOTKEY3,
-	GN_HOTKEY4,
+	GN_SERVICE,
     GN_TURBO,
 	GN_MAX_KEY,
 }GNGEO_BUTTON;

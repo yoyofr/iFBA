@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#define VERSION_SETTINGS 1
+
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -20,7 +22,7 @@
 
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern char gameName[64];
-extern t_button_map joymap_wiimote[MAX_JOYSTICKS][10];
+extern t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
 
 extern int device_isIpad;
 
@@ -42,86 +44,95 @@ void tstfl_validateloadgame(char *name) {
 }
 
 
-- (void)loadSettings {
+- (int)loadSettings {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSNumber *valNb;
     NSString *valStr;
+    int reset_settings=0;
     
     
     gameName[0]=0;
     
     memset(&ifba_conf,0,sizeof(ifba_conf_t));
+    
+    valNb=[prefs objectForKey:@"VERSION_SETTINGS"];
+	if (valNb == nil) reset_settings=1;
+    else if ([valNb intValue]!=VERSION_SETTINGS) reset_settings=1;
+	
 	
     //    valNb=[prefs objectForKey:@"VERSION_MAJOR"];
     //    valNb=[prefs objectForKey:@"VERSION_MINOR"];
     
     valNb=[prefs objectForKey:@"aspect_ratio"];
-	if (valNb == nil) ifba_conf.aspect_ratio=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.aspect_ratio=1;
 	else ifba_conf.aspect_ratio = [valNb intValue];
     valNb=[prefs objectForKey:@"screen_mode"];
-	if (valNb == nil) ifba_conf.screen_mode=2;
+	if ((valNb == nil)||reset_settings) ifba_conf.screen_mode=2;
 	else ifba_conf.screen_mode = [valNb intValue];
     valNb=[prefs objectForKey:@"filtering"];
-	if (valNb == nil) ifba_conf.filtering=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.filtering=1;
 	else ifba_conf.filtering = [valNb intValue];
     valNb=[prefs objectForKey:@"brightness"];
-	if (valNb == nil) ifba_conf.brightness=[[UIScreen mainScreen] brightness];
+	if ((valNb == nil)||reset_settings) {
+        if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]) ifba_conf.brightness=[[UIScreen mainScreen] brightness];
+        else ifba_conf.brightness=0.5f;
+    }
 	else ifba_conf.brightness = [valNb floatValue];        
     valNb=[prefs objectForKey:@"show_fps"];
-	if (valNb == nil) ifba_conf.show_fps=0;
+	if ((valNb == nil)||reset_settings) ifba_conf.show_fps=0;
 	else ifba_conf.show_fps = [valNb intValue];
     valNb=[prefs objectForKey:@"video_filter"];
-	if (valNb == nil) ifba_conf.video_filter=0;
+	if ((valNb == nil)||reset_settings) ifba_conf.video_filter=0;
 	else ifba_conf.video_filter = [valNb intValue];
     valNb=[prefs objectForKey:@"video_filter_strength"];
-	if (valNb == nil) ifba_conf.video_filter_strength=32;
+	if ((valNb == nil)||reset_settings) ifba_conf.video_filter_strength=32;
 	else ifba_conf.video_filter_strength = [valNb intValue];
     
     valNb=[prefs objectForKey:@"sound_on"];
-	if (valNb == nil) ifba_conf.sound_on=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.sound_on=1;
 	else ifba_conf.sound_on = [valNb intValue];
     valNb=[prefs objectForKey:@"sound_freq"];
-	if (valNb == nil) ifba_conf.sound_freq=0;
+	if ((valNb == nil)||reset_settings) ifba_conf.sound_freq=0;
 	else ifba_conf.sound_freq = [valNb intValue];
     valNb=[prefs objectForKey:@"sound_latency"];
-	if (valNb == nil) ifba_conf.sound_latency=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.sound_latency=1;
 	else ifba_conf.sound_latency = [valNb intValue];
     
     valNb=[prefs objectForKey:@"btstack_on"];
-	if (valNb == nil) ifba_conf.btstack_on=0;
+	if ((valNb == nil)||reset_settings) ifba_conf.btstack_on=0;
 	else ifba_conf.btstack_on = [valNb intValue];
     valNb=[prefs objectForKey:@"vpad_alpha"];
-	if (valNb == nil) ifba_conf.vpad_alpha=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_alpha=2;
 	else ifba_conf.vpad_alpha = [valNb intValue];
     valNb=[prefs objectForKey:@"vpad_showSpecial"];
-	if (valNb == nil) ifba_conf.vpad_showSpecial=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_showSpecial=1;
 	else ifba_conf.vpad_showSpecial = [valNb intValue];
     valNb=[prefs objectForKey:@"vpad_btnsize"];
-	if (valNb == nil) ifba_conf.vpad_btnsize=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_btnsize=1;
 	else ifba_conf.vpad_btnsize = [valNb intValue];
     valNb=[prefs objectForKey:@"vpad_padsize"];
-	if (valNb == nil) ifba_conf.vpad_padsize=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_padsize=1;
 	else ifba_conf.vpad_padsize = [valNb intValue];
     
     valNb=[prefs objectForKey:@"asm_68k"];
-	if (valNb == nil) ifba_conf.asm_68k=1;
+	if ((valNb == nil)||reset_settings) ifba_conf.asm_68k=1;
 	else ifba_conf.asm_68k = [valNb intValue];
     valNb=[prefs objectForKey:@"asm_z80"];
-	if (valNb == nil) ifba_conf.asm_z80=0;
+	if ((valNb == nil)||reset_settings) ifba_conf.asm_z80=0;
 	else ifba_conf.asm_z80 = [valNb intValue];
     valNb=[prefs objectForKey:@"asm_nec"];
-	if (valNb == nil) ifba_conf.asm_nec=0;
+	if ((valNb == nil)||reset_settings) ifba_conf.asm_nec=0;
 	else ifba_conf.asm_nec = [valNb intValue];
     valNb=[prefs objectForKey:@"asm_sh2"];
-	if (valNb == nil) ifba_conf.asm_sh2=0;
+	if ((valNb == nil)||reset_settings) ifba_conf.asm_sh2=0;
 	else ifba_conf.asm_sh2 = [valNb intValue];
     
     for (int i=0;i<MAX_JOYSTICKS;i++) 
-        for (int j=0;j<10;j++) {
+        for (int j=0;j<VSTICK_NB_BUTTON;j++) {
             valNb=[prefs objectForKey:[NSString stringWithFormat:@"wiimap%02X%02X",i,j]];
             if (valNb != nil) joymap_wiimote[i][j].dev_btn=[valNb intValue];
         }
-    for (int j=0;j<10;j++) {
+    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
         valNb=[prefs objectForKey:[NSString stringWithFormat:@"icademap%02X",j]];
         if (valNb != nil) joymap_iCade[j].dev_btn=[valNb intValue];
     }
@@ -131,18 +142,21 @@ void tstfl_validateloadgame(char *name) {
         if (valStr != nil) strcpy(szAppRomPaths[i],[valStr UTF8String]);
     //Recreate dir if not existing
         if (szAppRomPaths[i][0]) {
-            NSLog(@"%s",szAppRomPaths[i]);
+            //NSLog(@"%s",szAppRomPaths[i]);
             [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%s",szAppRomPaths[i]] withIntermediateDirectories:TRUE attributes:nil error:nil];
 
         }
     }
-    
+    return reset_settings;
 }
 
 - (void)saveSettings {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
 	NSNumber *valNb;
     NSString *valStr;
+    
+    valNb=[[NSNumber alloc] initWithInt:VERSION_SETTINGS ];    
+    [prefs setObject:valNb forKey:@"VERSION_SETTINGS"];[valNb autorelease];
     
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.aspect_ratio ];
@@ -189,11 +203,11 @@ void tstfl_validateloadgame(char *name) {
     
     //joymaps
     for (int i=0;i<MAX_JOYSTICKS;i++) 
-        for (int j=0;j<10;j++) {
+        for (int j=0;j<VSTICK_NB_BUTTON;j++) {
             valNb=[[NSNumber alloc] initWithInt:joymap_wiimote[i][j].dev_btn];
             [prefs setObject:valNb forKey:[NSString stringWithFormat:@"wiimap%02X%02X",i,j]];[valNb autorelease];
         }
-    for (int j=0;j<10;j++) {
+    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
         valNb=[[NSNumber alloc] initWithInt:joymap_iCade[j].dev_btn];
         [prefs setObject:valNb forKey:[NSString stringWithFormat:@"icademap%02X",j]];[valNb autorelease];
     }
@@ -220,9 +234,9 @@ void tstfl_validateloadgame(char *name) {
     [TestFlight takeOff:@"2ffa7d1a4e9cbc814d66901ca319816a_NjYzOTkyMDEyLTAyLTI4IDAxOjM1OjE2LjcyOTEwMA"];
 #endif
     
-    [self loadSettings];
+    int settings_reseted=[self loadSettings];
     
-    [[UIScreen mainScreen]setBrightness:ifba_conf.brightness];
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)])  [[UIScreen mainScreen]setBrightness:ifba_conf.brightness];
     
     /* Set working directory to resource path */
     //NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -250,6 +264,13 @@ void tstfl_validateloadgame(char *name) {
     self.window.rootViewController = self.navController;
     
     [self.window makeKeyAndVisible];
+    
+    
+    if (settings_reseted) {
+        NSString *msgString=[NSString stringWithFormat:NSLocalizedString(@"Warning_Settings_Reset",@""),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+        UIAlertView *settingsMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+        [settingsMsg show];
+    }
     return YES;
 }
 

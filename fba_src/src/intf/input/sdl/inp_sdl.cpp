@@ -3,8 +3,7 @@
 
 #include "burner.h"
 #include "inp_sdl_keys.h"
-
-#define MAX_JOYSTICKS 4
+#include "fbaconf.h"
 
 static int* JoyPrevAxes = NULL;
 static int nJoystickCount = 0;						// Number of joysticks connected to this machine
@@ -190,21 +189,38 @@ int SDLinpState(int code) {
     
     if (code < 256) {
         switch(code) {
-            case 0x02: // 1P start
+            case FBK_1: // 1P start
                 return joy_state[0][GN_START];
                 break;
-            case 0x03: // 2P start
+            case FBK_2: // 2P start
                 return joy_state[1][GN_START];
                 break;
-            case 0x06: // 1P coin 
+            case FBK_3: // 3P start
+                return joy_state[2][GN_START];
+                break;
+            case FBK_4: // 4P start
+                return joy_state[3][GN_START];
+                break;    
+            case FBK_5: // 1P coin 
                 return joy_state[0][GN_SELECT_COIN];
                 break;
-            case 0x07: // 2P coin 
+            case FBK_6: // 2P coin 
                 return joy_state[1][GN_SELECT_COIN];
                 break;
-            case 0x3c: //f2
+            case FBK_7: // 3P coin 
+                return joy_state[2][GN_SELECT_COIN];
                 break;
-            case 0x3D: //f3
+            case FBK_8: // 4P coin 
+                return joy_state[3][GN_SELECT_COIN];
+                break;
+            case FBK_9: //Service?
+                break;
+            case FBK_F1: //f1 - op menu
+                break;    
+            case FBK_F2: //f2 - diag
+                return joy_state[0][GN_SERVICE];
+                break;
+            case FBK_F3: //f3
                 if (pendingReset) {
                     pendingReset=0;
                     return 1;
@@ -238,27 +254,27 @@ int SDLinpState(int code) {
                 return joy_state[i][GN_DOWN]|joy_state[i][GN_DOWNLEFT]|joy_state[i][GN_DOWNRIGHT];
                 break;            
             case 0x80: //fire1
-                if (vpad_button_nb<4+1) vpad_button_nb=4+1;
+                if (vpad_button_nb< VPAD_SPECIALS_BUTTON_NB+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+1;
                 return joy_state[i][GN_A];
                 break;
             case 0x81: //fire 2 
-                if (vpad_button_nb<4+2) vpad_button_nb=4+2;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+2) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+2;
                 return joy_state[i][GN_B];
                 break;
             case 0x82: // etc 
-                if (vpad_button_nb<4+3) vpad_button_nb=4+3;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+3) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+3;
                 return joy_state[i][GN_C];            
                 break;
             case 0x83: 
-                if (vpad_button_nb<4+4) vpad_button_nb=4+4;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+4) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
                 return joy_state[i][GN_D];            
                 break;
             case 0x84:
-                if (vpad_button_nb<4+5) vpad_button_nb=4+5;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+5) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+5;
                 return joy_state[i][GN_E];            
                 break;
             case 0x85: 
-                if (vpad_button_nb<4+6) vpad_button_nb=4+6;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+6) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+6;
                 return joy_state[i][GN_F];            
                 break;
         }
