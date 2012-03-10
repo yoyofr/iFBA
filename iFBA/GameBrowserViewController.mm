@@ -134,7 +134,7 @@ static int cur_game_section,cur_game_row;
     cur_game_section=cur_game_row=-1;
     
     int saveActiveDrv=nBurnDrvActive;
-    
+    int currentIdx=0;
     for (int i=0;i<DIRS_MAX;i++) {
         if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
         else cpath=nil;
@@ -150,7 +150,7 @@ static int cur_game_section,cur_game_row;
                         [romlist[27] addObject:file];
                         [rompath[27] addObject:cpath];
                         nBurnDrvActive=ind;
-                        [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] ];
+                        [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                     }
                 }
             }
@@ -161,17 +161,23 @@ static int cur_game_section,cur_game_row;
     //Did we find games? if so, sort them
     if ([romlist[27] count]) {
         int total=[romlist[27] count];
+        
+        [romlistLbl[27] sortUsingSelector:@selector(caseInsensitiveCompare:)];
+        
         for (int i=0;i<total;i++) {
             NSString *tmpStr=[romlistLbl[27] objectAtIndex:i];
             char j;
-            j=[tmpStr UTF8String][0];
+            int k;
+            
+            j=[[tmpStr stringByDeletingLastPathComponent] UTF8String][0];
             if ((j>='a')&&(j<='z')) j+=1-'a';
             else if ((j>='A')&&(j<='Z')) j+=1-'A';
             else j=0;
             [romlistLbl[j] addObject:tmpStr];
-            tmpStr=[romlist[27] objectAtIndex:i];
+            k=[[tmpStr lastPathComponent] intValue]; 
+            tmpStr=[romlist[27] objectAtIndex:k];
             [romlist[j] addObject:tmpStr];
-            [rompath[j] addObject:[rompath[27] objectAtIndex:i]];
+            [rompath[j] addObject:[rompath[27] objectAtIndex:k]];
             if (gameName[0]&&(cur_game_section<0)) {
                 if (strcmp(gameName,[[[tmpStr lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
                     cur_game_section=j;
@@ -214,10 +220,14 @@ static int cur_game_section,cur_game_row;
 	[super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {    
     return YES;
 }
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [tabView reloadData];
+}
+
 
 #pragma mark - UI Actions
 
@@ -249,14 +259,61 @@ static int cur_game_section,cur_game_row;
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    const NSInteger TOP_LABEL_TAG = 1001;
+	const NSInteger BOTTOM_LABEL_TAG = 1002;
+	UILabel *topLabel;
+	UILabel *bottomLabel;
+	
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
+        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+		//
+		// Create the label for the top row of text
+		//
+		topLabel = [[[UILabel alloc] init] autorelease];
+		[cell.contentView addSubview:topLabel];
+		
+		//
+		// Configure the properties for the text that are the same on every row
+		//
+		topLabel.tag = TOP_LABEL_TAG;
+		topLabel.backgroundColor = [UIColor clearColor];
+		topLabel.textColor = [UIColor colorWithRed:.0 green:.0 blue:.0 alpha:1.0];
+		topLabel.highlightedTextColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+		topLabel.font = [UIFont boldSystemFontOfSize:16];
+		
+		//
+		// Create the label for the top row of text
+		//
+		bottomLabel = [[[UILabel alloc] init] autorelease];
+		[cell.contentView addSubview:bottomLabel];
+		//
+		// Configure the properties for the text that are the same on every row
+		//
+		bottomLabel.tag = BOTTOM_LABEL_TAG;
+		bottomLabel.backgroundColor = [UIColor clearColor];
+		bottomLabel.textColor = [UIColor colorWithRed:0.05 green:0 blue:0.2 alpha:1.0];
+		bottomLabel.highlightedTextColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
+		bottomLabel.font = [UIFont systemFontOfSize:12];
+    } else {
+		topLabel = (UILabel *)[cell viewWithTag:TOP_LABEL_TAG];
+		bottomLabel = (UILabel *)[cell viewWithTag:BOTTOM_LABEL_TAG];
+	}
     
-    cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
+    bottomLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+								   22,
+								   tableView.bounds.size.width - 1.0 * cell.indentationWidth-50,
+								   14);
+	topLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+								0,
+								tableView.bounds.size.width - 1.0 * cell.indentationWidth-50,
+								20);
+	topLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];
+    bottomLabel.text=[romlist[indexPath.section] objectAtIndex:indexPath.row];
+    
+    //cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
 	cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
     
     return cell;

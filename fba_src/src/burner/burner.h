@@ -95,8 +95,8 @@ INT32 GameInpMacroRead(TCHAR* szVal, bool bOverWrite);
 INT32 GameInpCustomRead(TCHAR* szVal, bool bOverWrite);
 
 // Player Default Controls
-extern INT32 nPlayerDefaultControls[4];
-extern TCHAR szPlayerDefaultIni[4][MAX_PATH];
+extern INT32 nPlayerDefaultControls[5];
+extern TCHAR szPlayerDefaultIni[5][MAX_PATH];
 
 // cong.cpp
 extern const INT32 nConfigMinVersion;					// Minimum version of application for which input files are valid

@@ -6,9 +6,10 @@ int rom_nocheck=0;
 
 static TCHAR* szBzipName[BZIP_MAX] = { NULL, };					// Zip files to search through
 
-struct RomFind { int nState; int nZip; int nPos; };				// State is non-zero if found. 1 = found totally okay.
+struct RomFind { int nState; int nZip; int nPos;};				// State is non-zero if found. 1 = found totally okay.
 static struct RomFind* RomFind = NULL;
-static int nRomCount = 0; static int nTotalSize = 0;
+static int nRomCount = 0;
+int nTotalSize = 0;
 static struct ZipEntry* List = NULL; static int nListCount = 0;	// List of entries for current zip file
 static int nCurrentZip = -1;									// Zip which is currently open
 static int nZipsFound = 0;
@@ -102,7 +103,7 @@ static int FindRomByLen(unsigned int nLen)
     
 	// Find the rom named szName in the List
 	for (i = 0, pl = List; i< nListCount; i++, pl++)	{
-		if (nLen == pl->nLen) {
+		if (nLen <= pl->nLen) {
 			return i;
 		}
 	}
@@ -315,6 +316,7 @@ static int __cdecl BzipBurnLoadRom(unsigned char* Dest, int* pnWrote, int i)
 		}
 		nCurrentZip = nWantZip;
 	}
+    
 
 	// Read in file and return how many bytes we read
 	if (ZipLoadFile(Dest, ri.nLen, pnWrote, RomFind[i].nPos)) {
@@ -376,7 +378,7 @@ int BzipOpen(bool bootApp)
 			szBzipName[z] = (TCHAR*)malloc(MAX_PATH * sizeof(TCHAR));
 
 			_stprintf(szBzipName[z], _T("%s%hs"), szAppRomPaths[d], szName);
-//            printf("check: %s\n",szBzipName[z]);
+            //printf("check: %s\n",szBzipName[z]);
 
 			if (ZipOpen(TCHARToANSI(szBzipName[z], NULL, 0)) == 0) {	// Open the rom zip file
 				nZipsFound++;
@@ -388,7 +390,7 @@ int BzipOpen(bool bootApp)
 		if (nCurrentZip >= 0) {
 			if (!bootApp) {
 				BzipText.Add(_T("Found %s;\n"), szBzipName[z]);
-//                printf(_T("Found %s;\n"), szBzipName[z]);
+                //printf(_T("Found %s;\n"), szBzipName[z]);
 			}
 			ZipGetList(&List, &nListCount);						// Get the list of entries
 
@@ -410,9 +412,12 @@ int BzipOpen(bool bootApp)
 
 				RomFind[i].nZip = z;							// Remember which zip file it is in
 				RomFind[i].nPos = nFind;
-				RomFind[i].nState = 1;							// Set to found okay
-
+				RomFind[i].nState = 1;							// Set to found okay                
 				BurnDrvGetRomInfo(&ri, i);						// Get info about the rom
+                
+                if (rom_nocheck) {
+                    ri.nLen=List[i].nLen;                    
+                }
 
 				if ((ri.nType & 0x80) == 0)	{
 					nTotalSize += ri.nLen;
@@ -503,6 +508,7 @@ int BzipOpen(bool bootApp)
 		}
         
         ProgressUpdateBurner(0,-1,BzipText.szText);
+        printf("%s",BzipText.szText);
 
 		BurnExtLoadRom = BzipBurnLoadRom;						// Okay to call our function to load each rom
 

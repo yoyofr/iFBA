@@ -57,7 +57,7 @@ static NSMutableArray *dirlist;
     [super viewWillAppear:animated];
     
     strcpy(currentPath,szAppRomPaths[szAppRomPathsSelected]);
-    if (currentPath[strlen(currentPath)]=='/') currentPath[strlen(currentPath)]=0;
+    if (currentPath[strlen(currentPath)-1]=='/') currentPath[strlen(currentPath)]=0;
     [self scanDirs];
     [[self tabView] reloadData];
 }
@@ -168,7 +168,7 @@ static NSMutableArray *dirlist;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==0) { //Validate new path
-        if (currentPath[strlen(currentPath)]!='/') strcat(currentPath,"/");
+        if (currentPath[strlen(currentPath)-1]!='/') strcat(currentPath,"/");
         strcpy(szAppRomPaths[szAppRomPathsSelected],currentPath);        
         [self.navigationController popViewControllerAnimated:YES];
     } else if (indexPath.section==1) { //Cancel and go back to roms paths list

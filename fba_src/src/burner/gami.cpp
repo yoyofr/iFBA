@@ -2,8 +2,8 @@
 #include "burner.h"
 
 // Player Default Controls
-INT32 nPlayerDefaultControls[4] = {1, 2, 3, 0};
-TCHAR szPlayerDefaultIni[4][MAX_PATH] = { _T(""), _T(""), _T(""), _T("") };
+INT32 nPlayerDefaultControls[5] = {1, 2, 3, 4, 1};
+TCHAR szPlayerDefaultIni[5][MAX_PATH] = { _T(""), _T(""), _T(""), _T(""), _T("") };
 
 // Mapping of PC inputs to game inputs
 struct GameInp* GameInp = NULL;
@@ -1310,19 +1310,24 @@ static INT32 GameInpAutoOne(struct GameInp* pgi, char* szi)
 				GamcPlayer(pgi, szi, i, 2);
 				GamcMisc(pgi, szi, i);
 				break;
-			case 4:										// X-Arcade left side
+            case 4:										// Joystick 4
+				GamcAnalogJoy(pgi, szi, i, 3, nSlide);
+				GamcPlayer(pgi, szi, i, 3);
+				GamcMisc(pgi, szi, i);
+				break;
+			case 5:										// X-Arcade left side
 				GamcMisc(pgi, szi, i);
 				GamcPlayerHotRod(pgi, szi, i, 0x10, nSlide);
 				break;
-			case 5:										// X-Arcade right side
+			case 6:										// X-Arcade right side
 				GamcMisc(pgi, szi, i);
 				GamcPlayerHotRod(pgi, szi, i, 0x11, nSlide);
 				break;
-			case 6:										// Hot Rod left side
+			case 7:										// Hot Rod left side
 				GamcMisc(pgi, szi, i);
 				GamcPlayerHotRod(pgi, szi, i, 0x00, nSlide);
 				break;
-			case 7:										// Hot Rod right side
+			case 8:										// Hot Rod right side
 				GamcMisc(pgi, szi, i);
 				GamcPlayerHotRod(pgi, szi, i, 0x01, nSlide);
 				break;

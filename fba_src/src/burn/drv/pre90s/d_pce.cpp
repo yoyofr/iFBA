@@ -7,6 +7,8 @@
 #include "c6280.h"
 #include "bitswap.h"
 
+extern int rom_nocheck;
+
 /*
 Notes:
 
@@ -510,7 +512,11 @@ static INT32 CommonInit(int type)
 	{
 		memset (PCECartROM, 0xff, length);
 
-		if (BurnLoadRom(PCECartROM, 0, 1)) return 1;
+        rom_nocheck=1;
+		if (BurnLoadRom(PCECartROM, 0, 1)) {
+            rom_nocheck=0;
+            return 1;
+        }
 
 		if (ri.nLen & 0x200) { // remove header
 			memcpy (PCECartROM, PCECartROM + 0x200, ri.nLen - 0x200);
@@ -7374,7 +7380,7 @@ struct BurnDriver BurnDrvTG_tbombmn93 = {
 // Bomberman
 
 static struct BurnRomInfo tbombmanRomDesc[] = {
-	{ "bomberman (usa).pce",	0x40000, 0x5f6f3c2a, BRF_PRG | BRF_ESS },
+	{ "bomberman (usa).pce",	0x40200, 0x5f6f3c2a, BRF_PRG | BRF_ESS },
 };
 
 STD_ROM_PICK(tbombman)
