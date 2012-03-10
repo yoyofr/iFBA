@@ -10,8 +10,13 @@
 
 @interface OptDIPSWViewController : UIViewController {
     IBOutlet UITableView *tabView;
+    IBOutlet UIBarButtonItem *btn_backToEmu;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+
+-(IBAction) backToEmu;
+
 
 @end

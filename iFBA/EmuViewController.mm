@@ -146,11 +146,11 @@ long virtual_stick_padfinger;
 
 
 int virtual_stick_pad;
-int virtual_stick_posx=70;
-int virtual_stick_posy=320-70;
-int virtual_stick_maxdist=70;
+int virtual_stick_posx=90;
+int virtual_stick_posy=320-90;
+int virtual_stick_maxdist=90;
 int virtual_stick_mindist=10;
-int virtual_stick_maxdist2=70*70;
+int virtual_stick_maxdist2=90*90;
 int virtual_stick_mindist2=10*10;
 int vpad_button_nb=VPAD_SPECIALS_BUTTON_NB;
 float virtual_stick_angle;
@@ -602,7 +602,7 @@ static int statusLoadMsgUpdated=0;
     //If resuming
     if (nShouldExit==2) {
         //launch new game ?
-        if (launchGame) {//yes, exit current one
+        if (launchGame==1) {//yes, exit current one
             nShouldExit=1;
             while (emuThread_running) {
                 [NSThread sleepForTimeInterval:0.01]; //10ms        
@@ -613,7 +613,7 @@ static int statusLoadMsgUpdated=0;
         }
     }
     //If required launch game / emuthread
-    if (launchGame) {    
+    if (launchGame==1) {    
         nShouldExit=0;    
         pb_value=0;
         pb_total=0;
@@ -676,9 +676,9 @@ static int statusLoadMsgUpdated=0;
         
         
     }
-    
+    launchGame=0;
     //update ogl framebuffer
-    [m_oglView didRotateFromInterfaceOrientation:UIInterfaceOrientationPortrait];
+    [m_oglView didRotateFromInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
     
     mNewGLFrame=1;
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doFrame)];
@@ -1226,9 +1226,9 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
             virtual_stick_on=1;
             if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
                 if (vstick_update_status(x,y)==0) {
-                    virtual_stick_padfinger=0;
-                    joy_analog_x[0]=0;joy_analog_y[0]=0;
-                }
+                    //virtual_stick_padfinger=0;
+                    //joy_analog_x[0]=0;joy_analog_y[0]=0;
+                } else {
                 joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
                 joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
                 joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
@@ -1237,6 +1237,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
                 joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
                 joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
                 joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
+                }
             } else if (virtual_stick_padfinger==0) {
                 if (vstick_update_status(x,y)) virtual_stick_padfinger=touch_id;
                 joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
@@ -1422,14 +1423,14 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     }
     //now the stick
     glBindTexture(GL_TEXTURE_2D, vpad_dpad_texture);    /* Bind The Texture */
-    vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist)/cur_width;
-    vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist)/cur_height;            
-    vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist)/cur_width;;
-    vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist)/cur_height;            
-    vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist)/cur_width;
-    vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist)/cur_height;            
-    vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist)/cur_width;
-    vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist)/cur_height;
+    vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+    vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+    vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
+    vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+    vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+    vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
+    vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
+    vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
     
     vertices[0][0]=vertices[0][0]*2-1;
     vertices[1][0]=vertices[1][0]*2-1;
@@ -1444,14 +1445,14 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     
     glDisable(GL_TEXTURE_2D);
     for (int i=0;i<4;i++) {
-        vertices[0][0]=(float)(virtual_stick_posx+0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
-        vertices[0][1]=(float)(virtual_stick_posy-0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
+        vertices[0][0]=(float)(virtual_stick_posx+0.9f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
+        vertices[0][1]=(float)(virtual_stick_posy-0.9f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
         
-        vertices[1][0]=(float)(virtual_stick_posx+0.6f*virtual_stick_maxdist*cosf(i*M_PI/2+M_PI/8))/cur_width;
-        vertices[1][1]=(float)(virtual_stick_posy-0.6f*virtual_stick_maxdist*sinf(i*M_PI/2+M_PI/8))/cur_height;
+        vertices[1][0]=(float)(virtual_stick_posx+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2+M_PI/8))/cur_width;
+        vertices[1][1]=(float)(virtual_stick_posy-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2+M_PI/8))/cur_height;
         
-        vertices[2][0]=(float)(virtual_stick_posx+0.6f*virtual_stick_maxdist*cosf(i*M_PI/2-M_PI/8))/cur_width;
-        vertices[2][1]=(float)(virtual_stick_posy-0.6f*virtual_stick_maxdist*sinf(i*M_PI/2-M_PI/8))/cur_height;
+        vertices[2][0]=(float)(virtual_stick_posx+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2-M_PI/8))/cur_width;
+        vertices[2][1]=(float)(virtual_stick_posy-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2-M_PI/8))/cur_height;
         
         vertices[0][0]=vertices[0][0]*2-1;
         vertices[1][0]=vertices[1][0]*2-1;

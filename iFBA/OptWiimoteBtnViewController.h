@@ -12,8 +12,13 @@
 @interface OptWiimoteBtnViewController : UIViewController {
     IBOutlet UITableView *tabView;
     TDSemiModalViewController *optgetButton;
+    IBOutlet UIBarButtonItem *btn_backToEmu;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) UIViewController *optgetButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+
+-(IBAction) backToEmu;
+
 @end

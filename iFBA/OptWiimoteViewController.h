@@ -26,6 +26,7 @@
 	BOOL showIcons;
 	int connectingIndex;
 	NSString *customActivityText;
+    IBOutlet UIBarButtonItem *btn_backToEmu;
 }
 
 -(void) markConnecting:(int)index; // use -1 for no connection active
@@ -34,5 +35,9 @@
 
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+
+-(IBAction) backToEmu;
+
 
 @end

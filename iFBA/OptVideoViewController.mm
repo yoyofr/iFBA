@@ -10,9 +10,12 @@
 
 #import "fbaconf.h"
 
+extern volatile int emuThread_running;
+extern int launchGame;
+extern char gameName[64];
 
 @implementation OptVideoViewController
-@synthesize tabView;
+@synthesize tabView,btn_backToEmu;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -42,6 +45,17 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (emuThread_running) {
+        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
+        self.navigationItem.rightBarButtonItem = btn_backToEmu;
+    }    
+    [tabView reloadData];
+}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -248,11 +262,7 @@
             [sliderview release];
             if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]==NO) sliderview.enabled=NO; 
             break;
-            
     }
-    
-	
-    
     return cell;
 }
 
@@ -260,5 +270,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
+-(IBAction) backToEmu {
+    launchGame=2;
+    [self.navigationController popToRootViewControllerAnimated:NO];
+}
 
 @end

@@ -21,6 +21,7 @@ extern unsigned int nBurnDrvCount;
 extern int launchGame;
 extern char gameName[64];
 extern volatile int emuThread_running;
+extern int device_isIpad;
 
 @implementation MenuViewController
 @synthesize emuvc,gamebrowservc,optionsvc,dipswvc;
@@ -67,8 +68,8 @@ extern volatile int emuThread_running;
     [super viewWillAppear:animated];
     
     if (emuThread_running) {
-        //        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
-        //        self.navigationItem.rightBarButtonItem = btn_backToEmu;
+        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
+        self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }    
     [tabView reloadData];
 }
@@ -76,13 +77,13 @@ extern volatile int emuThread_running;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (launchGame) {
-        
+        //[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
         [self.navigationController pushViewController:emuvc animated:NO];
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
+	[super viewWillDisappear:animated];    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -200,6 +201,7 @@ int StatedSave(int slot);
         if (emuThread_running) {
             switch (indexPath.row) {
                 case 0:
+                    //[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
                     [self.navigationController pushViewController:emuvc animated:NO];
                     break;
                 case 1: //load state

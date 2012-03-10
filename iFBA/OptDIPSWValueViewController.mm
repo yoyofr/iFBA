@@ -10,6 +10,10 @@
 
 #import "fbaconf.h"
 
+extern volatile int emuThread_running;
+extern int launchGame;
+extern char gameName[64];
+
 extern int InpDIPSWListMake();
 extern int InpDIPSWGetNb();
 int InpDIPSWGetIndex(int i,char *result);
@@ -21,7 +25,7 @@ unsigned char InpDIPSWGetDIPValue(int dip_idx, int val_idx);
 int InpDIPSWSetCurrentValue(int dip_index,unsigned char dip_new_value);
 
 @implementation OptDIPSWValueViewController
-@synthesize tabView;
+@synthesize tabView,btn_backToEmu;
 @synthesize current_dip_idx;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -58,10 +62,14 @@ int InpDIPSWSetCurrentValue(int dip_index,unsigned char dip_new_value);
     return YES;
 }
 
--(void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if (emuThread_running) {
+        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
+        self.navigationItem.rightBarButtonItem = btn_backToEmu;
+    }    
 }
-
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -110,5 +118,10 @@ int InpDIPSWSetCurrentValue(int dip_index,unsigned char dip_new_value);
     [tabView reloadData];
 }
 
+
+-(IBAction) backToEmu {
+    launchGame=2;
+    [self.navigationController popToRootViewControllerAnimated:NO];
+}
 
 @end

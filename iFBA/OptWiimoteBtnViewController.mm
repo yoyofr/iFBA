@@ -15,6 +15,9 @@
 #import "OptConGetWiimoteBtnViewController.h"
 #import "fbaconf.h"
 
+extern volatile int emuThread_running;
+extern int launchGame;
+extern char gameName[64];
 
 extern int wiimoteSelected;
 
@@ -22,7 +25,7 @@ int mOptWiimoteButtonSelected;
 
 
 @implementation OptWiimoteBtnViewController
-@synthesize tabView;
+@synthesize tabView,btn_backToEmu;
 @synthesize optgetButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -69,11 +72,15 @@ int mOptWiimoteButtonSelected;
     return YES;
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];    
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (emuThread_running) {
+        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
+        self.navigationItem.rightBarButtonItem = btn_backToEmu;
+    }    
     [tabView reloadData];
 }
-
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -175,5 +182,10 @@ int mOptWiimoteButtonSelected;
     }
 }
 
+
+-(IBAction) backToEmu {
+    launchGame=2;
+    [self.navigationController popToRootViewControllerAnimated:NO];
+}
 
 @end

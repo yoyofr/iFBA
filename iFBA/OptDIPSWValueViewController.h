@@ -10,10 +10,15 @@
 
 @interface OptDIPSWValueViewController : UIViewController {
     IBOutlet UITableView *tabView;
+    IBOutlet UIBarButtonItem *btn_backToEmu;
 @public
     int current_dip_idx;
 }
 @property int current_dip_idx;
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+
+-(IBAction) backToEmu;
+
 
 @end

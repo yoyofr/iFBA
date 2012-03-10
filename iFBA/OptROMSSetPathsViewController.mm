@@ -15,9 +15,12 @@ extern int szAppRomPathsSelected;
 static char currentPath[MAX_PATH];
 static NSMutableArray *dirlist;
 
+extern volatile int emuThread_running;
+extern int launchGame;
+extern char gameName[64];
 
 @implementation OptROMSSetPathsViewController
-@synthesize tabView;
+@synthesize tabView,btn_backToEmu;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,6 +58,11 @@ static NSMutableArray *dirlist;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if (emuThread_running) {
+        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
+        self.navigationItem.rightBarButtonItem = btn_backToEmu;
+    }
     
     strcpy(currentPath,szAppRomPaths[szAppRomPathsSelected]);
     if (currentPath[strlen(currentPath)-1]=='/') currentPath[strlen(currentPath)]=0;
@@ -189,5 +197,10 @@ static NSMutableArray *dirlist;
     }
 }
 
+
+-(IBAction) backToEmu {
+    launchGame=2;
+    [self.navigationController popToRootViewControllerAnimated:NO];
+}
 
 @end

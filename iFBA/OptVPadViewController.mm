@@ -10,9 +10,12 @@
 
 #import "fbaconf.h"
 
+extern volatile int emuThread_running;
+extern int launchGame;
+extern char gameName[64];
 
 @implementation OptVPadViewController
-@synthesize tabView;
+@synthesize tabView,btn_backToEmu;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,6 +44,15 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (emuThread_running) {
+        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
+        self.navigationItem.rightBarButtonItem = btn_backToEmu;
+    }    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -77,8 +89,10 @@
 }
 
 - (void)segActionOpacity:(id)sender {
-    ifba_conf.vpad_alpha =[sender selectedSegmentIndex];
-    [tabView reloadData];
+    int refresh=0;
+    if (ifba_conf.vpad_alpha!=[sender selectedSegmentIndex]) refresh=1;
+    ifba_conf.vpad_alpha=[sender selectedSegmentIndex];
+    if (refresh) [tabView reloadData];
 }
 
 - (void)switchDisplaySpecial:(id)sender {
@@ -87,12 +101,16 @@
 }
 
 - (void)segActionBtnSize:(id)sender {
-    ifba_conf.vpad_btnsize =[sender selectedSegmentIndex];
-    [tabView reloadData];
+    int refresh=0;
+    if (ifba_conf.vpad_btnsize!=[sender selectedSegmentIndex]) refresh=1;
+    ifba_conf.vpad_btnsize=[sender selectedSegmentIndex];
+    if (refresh) [tabView reloadData];
 }
 - (void)segActionPadSize:(id)sender {
-    ifba_conf.vpad_padsize =[sender selectedSegmentIndex];
-    [tabView reloadData];
+    int refresh=0;
+    if (ifba_conf.vpad_padsize!=[sender selectedSegmentIndex]) refresh=1;
+    ifba_conf.vpad_padsize=[sender selectedSegmentIndex];
+    if (refresh) [tabView reloadData];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
@@ -168,5 +186,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
+
+-(IBAction) backToEmu {
+    launchGame=2;
+    [self.navigationController popToRootViewControllerAnimated:NO];
+}
 
 @end

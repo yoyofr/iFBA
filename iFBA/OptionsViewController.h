@@ -11,9 +11,14 @@
 @interface OptionsViewController : UIViewController {
     IBOutlet UITableView *tabView;
     UIViewController *optVideo,*optAudio,*optControl,*optEmulation,*optROMSpaths;
+    IBOutlet UIBarButtonItem *btn_backToEmu;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) UIViewController *optVideo,*optAudio,*optControl,*optEmulation,*optROMSpaths;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+
+-(IBAction) backToEmu;
+
 
 @end

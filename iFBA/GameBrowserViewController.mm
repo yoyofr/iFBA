@@ -12,13 +12,15 @@
 
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 
+extern volatile int emuThread_running;
+
 
 extern char gameName[64];
 extern int launchGame;
 static int cur_game_section,cur_game_row;
 
 @implementation GameBrowserViewController
-@synthesize tabView;
+@synthesize tabView,btn_backToEmu;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -129,6 +131,7 @@ static int cur_game_section,cur_game_row;
         romlist[i]=[[NSMutableArray alloc] initWithCapacity:0];
         romlistLbl[i]=[[NSMutableArray alloc] initWithCapacity:0];
         rompath[i]=[[NSMutableArray alloc] initWithCapacity:0];
+        romlistSystem[i]=[[NSMutableArray alloc] initWithCapacity:0];
     }
     
     cur_game_section=cur_game_row=-1;
@@ -150,7 +153,8 @@ static int cur_game_section,cur_game_row;
                         [romlist[27] addObject:file];
                         [rompath[27] addObject:cpath];
                         nBurnDrvActive=ind;
-                        [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
+                        [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
+                        [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
                     }
                 }
             }
@@ -173,11 +177,12 @@ static int cur_game_section,cur_game_row;
             if ((j>='a')&&(j<='z')) j+=1-'a';
             else if ((j>='A')&&(j<='Z')) j+=1-'A';
             else j=0;
-            [romlistLbl[j] addObject:tmpStr];
+            [romlistLbl[j] addObject:[tmpStr stringByDeletingLastPathComponent]];
             k=[[tmpStr lastPathComponent] intValue]; 
             tmpStr=[romlist[27] objectAtIndex:k];
             [romlist[j] addObject:tmpStr];
             [rompath[j] addObject:[rompath[27] objectAtIndex:k]];
+            [romlistSystem[j] addObject:[romlistSystem[27] objectAtIndex:k]];
             if (gameName[0]&&(cur_game_section<0)) {
                 if (strcmp(gameName,[[[tmpStr lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
                     cur_game_section=j;
@@ -212,6 +217,7 @@ static int cur_game_section,cur_game_row;
         [romlist[i] release];
         [romlistLbl[i] release];
         [rompath[i] release];
+        [romlistSystem[i] release];
     }
 }
 
@@ -283,6 +289,7 @@ static int cur_game_section,cur_game_row;
 		topLabel.textColor = [UIColor colorWithRed:.0 green:.0 blue:.0 alpha:1.0];
 		topLabel.highlightedTextColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 		topLabel.font = [UIFont boldSystemFontOfSize:16];
+        topLabel.lineBreakMode=UILineBreakModeMiddleTruncation;
 		
 		//
 		// Create the label for the top row of text
@@ -297,6 +304,7 @@ static int cur_game_section,cur_game_row;
 		bottomLabel.textColor = [UIColor colorWithRed:0.05 green:0 blue:0.2 alpha:1.0];
 		bottomLabel.highlightedTextColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
 		bottomLabel.font = [UIFont systemFontOfSize:12];
+        bottomLabel.lineBreakMode=UILineBreakModeMiddleTruncation;
     } else {
 		topLabel = (UILabel *)[cell viewWithTag:TOP_LABEL_TAG];
 		bottomLabel = (UILabel *)[cell viewWithTag:BOTTOM_LABEL_TAG];
@@ -304,14 +312,14 @@ static int cur_game_section,cur_game_row;
     
     bottomLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
 								   22,
-								   tableView.bounds.size.width - 1.0 * cell.indentationWidth-50,
+								   tableView.bounds.size.width - 1.0 * cell.indentationWidth-80,
 								   14);
 	topLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
 								0,
-								tableView.bounds.size.width - 1.0 * cell.indentationWidth-50,
+								tableView.bounds.size.width - 1.0 * cell.indentationWidth-80,
 								20);
 	topLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];
-    bottomLabel.text=[romlist[indexPath.section] objectAtIndex:indexPath.row];
+    bottomLabel.text=[NSString stringWithFormat:@"%@ / %@",[romlist[indexPath.section] objectAtIndex:indexPath.row],[romlistSystem[indexPath.section] objectAtIndex:indexPath.row]];
     
     //cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
 	cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
@@ -322,12 +330,17 @@ static int cur_game_section,cur_game_row;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     sprintf(gameName,"%s",[[(NSString *)[romlist[indexPath.section] objectAtIndex:indexPath.row] stringByDeletingPathExtension] UTF8String]);
-    NSLog(@"gamename %s",gameName);
+    //NSLog(@"gamename %s",gameName);
     launchGame=1;
     //change dir
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath[indexPath.section] objectAtIndex:indexPath.row]];
     
     [[self navigationController] popViewControllerAnimated:NO];
+}
+
+-(IBAction) backToEmu {
+    launchGame=2;
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 @end
