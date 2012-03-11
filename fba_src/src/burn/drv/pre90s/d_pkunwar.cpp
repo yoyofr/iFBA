@@ -370,7 +370,7 @@ static INT32 DrawChars(INT32 priority)
 					else
 						pos = (y << 8) | (x & 0xff);
 	
-					PutPix(pBurnDraw + pos * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
+					PutPix(pBurnDraw + pos * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
 	 			}
 			}
 		}
@@ -420,7 +420,7 @@ static INT32 DrvDraw()
 						else
 							pos = (y << 8) | (x & 0xff);
 
-						PutPix(pBurnDraw + pos * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
+						PutPix(pBurnDraw + pos * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
 		 			}
 				} else {
 					for (INT32 x = sx; x < sx + 16; x++, src++)
@@ -434,7 +434,7 @@ static INT32 DrvDraw()
 						else
 							pos = (y << 8) | (x & 0xff);
 		
-						PutPix(pBurnDraw + pos * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
+						PutPix(pBurnDraw + pos * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
 		 			}
 				}
 			}
@@ -454,7 +454,7 @@ static INT32 DrvDraw()
 						else
 							pos = (y << 8) | (x & 0xff);
 		
-						PutPix(pBurnDraw + pos * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
+						PutPix(pBurnDraw + pos * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
 		 			}
 				} else {
 					for (INT32 x = sx; x < sx + 16; x++, src++)
@@ -468,7 +468,7 @@ static INT32 DrvDraw()
 						else
 							pos = (y << 8) | (x & 0xff);
 		
-						PutPix(pBurnDraw + pos * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
+						PutPix(pBurnDraw + pos * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
 		 			}
 				}
 			}
@@ -585,7 +585,7 @@ STD_ROM_FN(pkunwar)
 
 struct BurnDriver BurnDrvpkunwar = {
 	"pkunwar", NULL, NULL, NULL, "1985",
-	"Penguin-Kun Wars (US)\0", NULL, "UPL", "misc",
+	"Penguin-Kun Wars (US)\0", NULL, "UPL", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_MISC_PRE90S, GBF_SPORTSMISC, 0,
 	NULL, pkunwarRomInfo, pkunwarRomName, NULL, NULL, DrvInputInfo, DrvDIPInfo,
@@ -614,7 +614,7 @@ STD_ROM_FN(pkunwarj)
 
 struct BurnDriver BurnDrvpkunwarj = {
 	"pkunwarj", "pkunwar", NULL, NULL, "1985",
-	"Penguin-Kun Wars (Japan)\0", NULL, "UPL", "misc",
+	"Penguin-Kun Wars (Japan)\0", NULL, "UPL", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_MISC_PRE90S, GBF_SPORTSMISC, 0,
 	NULL, pkunwarjRomInfo, pkunwarjRomName, NULL, NULL, DrvInputInfo, DrvDIPInfo,

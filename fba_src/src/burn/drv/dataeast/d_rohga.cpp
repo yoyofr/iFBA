@@ -1653,7 +1653,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 	struct BurnArea ba;
 	
 	if (pnMin != NULL) {
-		*pnMin = 0x029682;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_MEMORY_RAM) {
@@ -1666,7 +1666,8 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 	if (nAction & ACB_DRIVER_DATA) {
 		SekScan(nAction);
-	//	huc6280
+	
+		deco16SoundScan(nAction, pnMin);
 
 		deco16Scan();
 
@@ -1719,7 +1720,7 @@ STD_ROM_FN(rohga)
 
 struct BurnDriver BurnDrvRohga = {
 	"rohga", NULL, NULL, NULL, "1991",
-	"Rohga Armor Force (Asia/Europe v5.0)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Rohga Armor Force (Asia/Europe v5.0)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT | GBF_PLATFORM, 0,
 	NULL, rohgaRomInfo, rohgaRomName, NULL, NULL, RohgaInputInfo, RohgaDIPInfo,
@@ -1766,7 +1767,7 @@ STD_ROM_FN(rohga1)
 
 struct BurnDriver BurnDrvRohga1 = {
 	"rohga1", "rohga", NULL, NULL, "1991",
-	"Rohga Armor Force (Asia/Europe v3.0 Set 1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Rohga Armor Force (Asia/Europe v3.0 Set 1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT | GBF_PLATFORM, 0,
 	NULL, rohga1RomInfo, rohga1RomName, NULL, NULL, RohgaInputInfo, RohgaDIPInfo,
@@ -1813,7 +1814,7 @@ STD_ROM_FN(rohga2)
 
 struct BurnDriver BurnDrvRohga2 = {
 	"rohga2", "rohga", NULL, NULL, "1991",
-	"Rohga Armor Force (Asia/Europe v3.0 Set 2)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Rohga Armor Force (Asia/Europe v3.0 Set 2)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT | GBF_PLATFORM, 0,
 	NULL, rohga2RomInfo, rohga2RomName, NULL, NULL, RohgaInputInfo, RohgaDIPInfo,
@@ -1860,7 +1861,7 @@ STD_ROM_FN(rohgah)
 
 struct BurnDriver BurnDrvRohgah = {
 	"rohgah", "rohga", NULL, NULL, "1991",
-	"Rohga Armor Force (Hong Kong v3.0)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Rohga Armor Force (Hong Kong v3.0)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT | GBF_PLATFORM, 0,
 	NULL, rohgahRomInfo, rohgahRomName, NULL, NULL, RohgaInputInfo, RohgaDIPInfo,
@@ -1907,7 +1908,7 @@ STD_ROM_FN(rohgau)
 
 struct BurnDriver BurnDrvRohgau = {
 	"rohgau", "rohga", NULL, NULL, "1991",
-	"Rohga Armor Force (US v1.0)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Rohga Armor Force (US v1.0)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT | GBF_PLATFORM, 0,
 	NULL, rohgauRomInfo, rohgauRomName, NULL, NULL, RohgaInputInfo, RohgaDIPInfo,
@@ -1954,7 +1955,7 @@ STD_ROM_FN(wolffang)
 
 struct BurnDriver BurnDrvWolffang = {
 	"wolffang", "rohga", NULL, NULL, "1991",
-	"Wolf Fang -Kuhga 2001- (Japan)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Wolf Fang -Kuhga 2001- (Japan)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT | GBF_PLATFORM, 0,
 	NULL, wolffangRomInfo, wolffangRomName, NULL, NULL, RohgaInputInfo, RohgaDIPInfo,
@@ -2004,7 +2005,7 @@ STD_ROM_FN(wizdfire)
 
 struct BurnDriver BurnDrvWizdfire = {
 	"wizdfire", NULL, NULL, NULL, "1992",
-	"Wizard Fire (Over Sea v2.1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Wizard Fire (Over Sea v2.1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, wizdfireRomInfo, wizdfireRomName, NULL, NULL, WizdfireInputInfo, WizdfireDIPInfo,
@@ -2054,7 +2055,7 @@ STD_ROM_FN(wizdfireu)
 
 struct BurnDriver BurnDrvWizdfireu = {
 	"wizdfireu", "wizdfire", NULL, NULL, "1992",
-	"Wizard Fire (US v1.1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Wizard Fire (US v1.1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, wizdfireuRomInfo, wizdfireuRomName, NULL, NULL, WizdfireInputInfo, WizdfireDIPInfo,
@@ -2104,7 +2105,7 @@ STD_ROM_FN(darkseal2)
 
 struct BurnDriver BurnDrvDarkseal2 = {
 	"darkseal2", "wizdfire", NULL, NULL, "1992",
-	"Dark Seal 2 (Japan v2.1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Dark Seal 2 (Japan v2.1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, darkseal2RomInfo, darkseal2RomName, NULL, NULL, WizdfireInputInfo, WizdfireDIPInfo,
@@ -2144,7 +2145,7 @@ STD_ROM_FN(schmeisr)
 
 struct BurnDriver BurnDrvSchmeisr = {
 	"schmeisr", NULL, NULL, NULL, "1993",
-	"Schmeiser Robo (Japan)\0",NULL, "Hot B", "Miscellaneous",
+	"Schmeiser Robo (Japan)\0",NULL, "Hot B", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_VSFIGHT, 0,
 	NULL, schmeisrRomInfo, schmeisrRomName, NULL, NULL, RohgaInputInfo, SchmeisrDIPInfo,
@@ -2194,7 +2195,7 @@ STD_ROM_FN(nitrobal)
 
 struct BurnDriver BurnDrvNitrobal = {
 	"nitrobal", NULL, NULL, NULL, "1992",
-	"Nitro Ball (US)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Nitro Ball (US)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL, 3, HARDWARE_PREFIX_DATAEAST, GBF_SHOOT, 0,
 	NULL, nitrobalRomInfo, nitrobalRomName, NULL, NULL, NitrobalInputInfo, NitrobalDIPInfo,
@@ -2244,7 +2245,7 @@ STD_ROM_FN(gunball)
 
 struct BurnDriver BurnDrvGunball = {
 	"gunball", "nitrobal", NULL, NULL, "1992",
-	"Gun Ball (Japan)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Gun Ball (Japan)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL, 3, HARDWARE_PREFIX_DATAEAST, GBF_SHOOT, 0,
 	NULL, gunballRomInfo, gunballRomName, NULL, NULL, NitrobalInputInfo, NitrobalDIPInfo,

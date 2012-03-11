@@ -657,7 +657,7 @@ INT32 PsikyoshDraw()
 	if (nBurnBpp < 4) {
 		for (INT32 i = 0; i < nScreenWidth * nScreenHeight; i++) {
 			INT32 d = DrvTmpDraw[i];
-			PutPix(pBurnDraw + i * nBurnBpp, HighCol16((d>>16), (d>>8), (d&0xFF), 0));
+			PutPix(pBurnDraw + i * nBurnBpp, BurnHighCol(d>>16, d>>8, d, 0));
 		}
 	}
 

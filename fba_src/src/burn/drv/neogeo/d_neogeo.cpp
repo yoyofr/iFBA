@@ -1134,7 +1134,7 @@ struct BurnDriver BurnDrvNeoGeo = {
 	"neogeo", NULL, NULL, NULL, "1990",
 	"Neo Geo\0", "BIOS only", "SNK", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
-	BDF_BOARDROM, 0, HARDWARE_SNK_NEOGEO, GBF_BIOS, 0,
+	BDF_BOARDROM, 0, HARDWARE_SNK_NEOGEO, 0, 0,
 	NULL, neogeoRomInfo, neogeoRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
 	0x1000, 320, 224, 4, 3
@@ -1144,7 +1144,7 @@ struct BurnDriver BurnDrvNeoGeoMVS = {
 	"neogeo", NULL, NULL, NULL, "1990",
 	"Neo Geo MVS system\0", "System - cartridges selected seperately", "SNK", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
-	BDF_GAME_WORKING /*| BDF_SYSTEM_ONLY*/, 2, HARDWARE_SNK_MVS, GBF_BIOS, 0,
+	BDF_GAME_WORKING /*| BDF_SYSTEM_ONLY*/, 2, HARDWARE_SNK_MVS, 0, 0,
 	NULL, neoMVSRomInfo, neoMVSRomName, NULL, NULL, neoMVSInputInfo, neoMVSDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
 	0x1000, 320, 224, 4, 3
@@ -1165,7 +1165,7 @@ struct BurnDriver BurnDrvneocdz = {
 	"neocdz", NULL, "neogeo", NULL, "1996",
 	"Neo Geo CDZ system\0", "System - media selected seperately", "SNK", "Neo Geo CDZ",
 	NULL, NULL, NULL, NULL,
-	BDF_GAME_WORKING /*| BDF_SYSTEM_ONLY*/, 2, HARDWARE_SNK_NEOCD, GBF_BIOS, 0,
+	BDF_GAME_WORKING /*| BDF_SYSTEM_ONLY*/, 2, HARDWARE_SNK_NEOCD, 0, 0,
 	NULL, neocdzRomInfo, neocdzRomName, NULL, NULL, neoCDInputInfo, neoCDDIPInfo,
 	NeoCDInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
 	0x1000, 320, 224, 4, 3
@@ -1744,7 +1744,7 @@ STD_ROM_FN(mahretsu)
 struct BurnDriver BurnDrvMahretsu = {
 	"mahretsu", NULL, "neogeo", NULL, "1990",
 	"Mahjong Kyo Retsuden (NGM-004)(NGH-004)\0", NULL, "SNK", "Neo Geo MVS",
-	L"\u9EBB\u96C0\u72C2\u5217\u4F1D (NGM-004)(NGH-004)\0Mahjong Kyo Retsuden (NGM-004)(NGH-004)\0", NULL, NULL, NULL,
+	L"\u9EBB\u96C0\u72C2\u5217\u4F1D\0Mahjong Kyo Retsuden (NGM-004)(NGH-004)\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO | HARDWARE_SNK_MAHJONG, GBF_MAHJONG, 0,
 	NULL, mahretsuRomInfo, mahretsuRomName, NULL, NULL, neomahjongInputInfo, neomahjongDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -2097,7 +2097,7 @@ STD_ROM_FN(sengoku)
 struct BurnDriver BurnDrvSengoku = {
 	"sengoku", NULL, "neogeo", NULL, "1991",
 	"Sengoku / Sengoku Denshou (NGM-017)(NGH-017)\0", NULL, "SNK", "Neo Geo MVS",
-	L"Sengoku / Sengoku Denshou (NGM-017)(NGH-017)\0\u6226\u56FD\u4F1D\u627F (NGM-017)(NGH-017)\0", NULL, NULL, NULL,
+	L"Sengoku / Sengoku Denshou (NGM-017)(NGH-017)\0\u6226\u56FD\u4F1D\u627F\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_SCRFIGHT, 0,
 	NULL, sengokuRomInfo, sengokuRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -2129,7 +2129,7 @@ STD_ROM_FN(sengokuh)
 struct BurnDriver BurnDrvSengokuh = {
 	"sengokuh", "sengoku", "neogeo", NULL, "1991",
 	"Sengoku / Sengoku Denshou (NGH-017)(US)\0", NULL, "SNK", "Neo Geo MVS",
-	L"Sengoku / Sengoku Denshou (NGH-017)(US)\0\u6226\u56FD\u4F1D\u627F (NGH-017)(US)\0", NULL, NULL, NULL,
+	L"Sengoku / Sengoku Denshou (NGH-017)(US)\0\u6226\u56FD\u4F1D\u627F\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_SCRFIGHT, 0,
 	NULL, sengokuhRomInfo, sengokuhRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -2396,7 +2396,7 @@ STD_ROM_FN(quizdais)
 struct BurnDriver BurnDrvQuizdais = {
 	"quizdais", NULL, "neogeo", NULL, "1991",
 	"Quiz Daisousa Sen - The Last Count Down (NGM-023)(NGH-023)\0", NULL, "SNK", "Neo Geo MVS",
-	L"\u30AF\u30A4\u30BA\u5927\u635C\u67FB\u7DDA - the last count down (NGM-023)(NGH-023)\0Quiz Daisousa Sen - The Last Count Down (NGM-023)(NGH-023)\0", NULL, NULL, NULL,
+	L"\u30AF\u30A4\u30BA\u5927\u635C\u67FB\u7DDA - the last count down\0Quiz Daisousa Sen - The Last Count Down (NGM-023)(NGH-023)\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_QUIZ, 0,
 	NULL, quizdaisRomInfo, quizdaisRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -2424,7 +2424,7 @@ STD_ROM_FN(quizdaisk)
 struct BurnDriver BurnDrvQuizdaisk = {
 	"quizdaisk", "quizdais", "neogeo", NULL, "1991",
 	"Quiz Daisousa Sen - The Last Count Down (Korean release)\0", NULL, "SNK", "Neo Geo MVS",
-	L"\u30AF\u30A4\u30BA\u5927\u635C\u67FB\u7DDA - The Last Count Down (Korean release)\0Quiz Daisousa Sen - The Last Count Down (Korean release)\0", NULL, NULL, NULL,
+	L"\u30AF\u30A4\u30BA\u5927\u635C\u67FB\u7DDA - The Last Count Down\0Quiz Daisousa Sen - The Last Count Down (Korean release)\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_QUIZ, 0,
 	NULL, quizdaiskRomInfo, quizdaiskRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -6305,7 +6305,7 @@ static INT32 sengoku3Init()
 struct BurnDriver BurnDrvSengoku3 = {
 	"sengoku3", NULL, "neogeo", NULL, "2001",
 	"Sengoku 3 / Sengoku Densho 2001\0", NULL, "SNK / Noise Factory", "Neo Geo MVS",
-	L"Sengoku 3\0\u6226\u56FD\u4F1D\u627F\uFF12\uFF10\uFF10\uFF11", NULL, NULL, NULL,
+	L"Sengoku 3\0\u6226\u56FD\u4F1D\u627F\uFF12\uFF10\uFF10\uFF11\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO | HARDWARE_SNK_CMC42 | HARDWARE_SNK_SWAPP, GBF_SCRFIGHT, 0,
 	NULL, sengoku3RomInfo, sengoku3RomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	sengoku3Init, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -6521,7 +6521,7 @@ static INT32 cthd2003Init()
 
 struct BurnDriver BurnDrvcthd2003 = {
 	"cthd2003", "kof2001", "neogeo", NULL, "2003",
-	"Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg)\0", "Hack of \"The King of Fighters 2001\"", "Phenixsoft", "Neo Geo MVS",
+	"Crouching Tiger Hidden Dragon 2003 (set 1)\0", "Hack of \"The King of Fighters 2001\"", "Phenixsoft", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO,  GBF_VSFIGHT, FBF_KOF,
 	NULL, cthd2003RomInfo, cthd2003RomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
@@ -6599,8 +6599,8 @@ static INT32 ct2k3spInit()
 
 struct BurnDriver BurnDrvct2k3sp = {
 	"ct2k3sp", "kof2001", "neogeo", NULL, "2003",
-	"Crouching Tiger Hidden Dragon 2003 Super Plus (The King of Fighters 2001 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
-	L"Crouching Tiger Hidden Dragon 2003 Super Plus (The King of Fighters 2001 bootleg)\0\u81E5\u864E\u85CF\u9F8D Crouching Tiger Hidden Dragon 2003 Super Plus\0", NULL, NULL, NULL,
+	"Crouching Tiger Hidden Dragon 2003 Super Plus\0", NULL, "bootleg", "Neo Geo MVS",
+	L"Crouching Tiger Hidden Dragon 2003 Super Plus\0\u81E5\u864E\u85CF\u9F8D\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_VSFIGHT, FBF_KOF,
 	NULL, ct2k3spRomInfo, ct2k3spRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	ct2k3spInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -6645,8 +6645,8 @@ static INT32 ct2k3saInit()
 
 struct BurnDriver BurnDrvct2k3sa = {
 	"ct2k3sa", "kof2001", "neogeo", NULL, "2003",
-	"Crouching Tiger Hidden Dragon 2003 Super Plus alternate (The King of Fighters 2001 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
-	L"Crouching Tiger Hidden Dragon 2003 Super Plus alternate (The King of Fighters 2001 bootleg)\0\u81E5\u864E\u85CF\u9F8D Crouching Tiger Hidden Dragon 2003 Super Plus\0", NULL, NULL, NULL,
+	"Crouching Tiger Hidden Dragon 2003 Super Plus alternate\0", NULL, "bootleg", "Neo Geo MVS",
+	L"Crouching Tiger Hidden Dragon 2003 Super Plus (alternate set)\0\u81E5\u864E\u85CF\u9F8D\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_VSFIGHT, FBF_KOF,
 	NULL, ct2k3saRomInfo, ct2k3saRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	ct2k3saInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -6997,7 +6997,7 @@ struct BurnDriver BurnDrvkf2k2mp2 = {
 	0x1000,	304, 224, 4, 3
 };
 
-// The King of Fighters 10th Anniversary (The King of Fighters 2002 bootleg)
+// The King of Fighters 10th Anniversary (bootleg)
 
 static struct BurnRomInfo kof10thRomDesc[] = {
 	{ "kf10-p1.bin",  0x800000, 0xb1fd0c43, 1 | BRF_ESS | BRF_PRG }, //  0 68K code
@@ -7176,7 +7176,7 @@ static INT32 kof10thInit()
 
 struct BurnDriver BurnDrvkof10th = {
 	"kof10th", "kof2002", "neogeo", NULL, "2002",
-	"The King of Fighters 10th Anniversary (The King of Fighters 2002 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
+	"The King of Fighters 10th Anniversary (bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_VSFIGHT, FBF_KOF,
 	NULL, kof10thRomInfo, kof10thRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
@@ -7184,7 +7184,7 @@ struct BurnDriver BurnDrvkof10th = {
 	0x1000,	304, 224, 4, 3
 };
 
-// The King of Fighters 10th Anniversary Extra Plus (The King of Fighters 2002 bootleg)
+// The King of Fighters 10th Anniversary Extra Plus (bootleg)
 
 static struct BurnRomInfo kf10thepRomDesc[] = {
 	{ "5008-p1.bin",  0x200000, 0xbf5469ba, 1 | BRF_PRG | BRF_OPT }, //  0 68K code
@@ -7260,7 +7260,7 @@ static INT32 kf10thepInit()
 
 struct BurnDriver BurnDrvkf10thep = {
 	"kf10thep", "kof2002", "neogeo", NULL, "2005",
-	"The King of Fighters 10th Anniversary Extra Plus (The King of Fighters 2002 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
+	"The King of Fighters 10th Anniversary Extra Plus (bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_VSFIGHT, FBF_KOF,
 	NULL, kf10thepRomInfo, kf10thepRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
@@ -7268,7 +7268,7 @@ struct BurnDriver BurnDrvkf10thep = {
 	0x1000,	304, 224, 4, 3
 };
 
-// The King of Fighters 10th Anniversary 2005 Unique (The King of Fighters 2002 bootleg)
+// The King of Fighters 10th Anniversary 2005 Unique (bootleg)
 
 static struct BurnRomInfo kf2k5uniRomDesc[] = {
 	{ "5006-p2a.bin", 0x400000, 0xced883a2, 1 | BRF_ESS | BRF_PRG }, //  0 68K code
@@ -7335,7 +7335,7 @@ static INT32 kf2k5uniInit()
 
 struct BurnDriver BurnDrvkf2k5uni = {
 	"kf2k5uni", "kof2002", "neogeo", NULL, "2004",
-	"The King of Fighters 10th Anniversary 2005 Unique (The King of Fighters 2002 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
+	"The King of Fighters 10th Anniversary 2005 Unique (bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_VSFIGHT, FBF_KOF,
 	NULL, kf2k5uniRomInfo, kf2k5uniRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
@@ -7343,7 +7343,7 @@ struct BurnDriver BurnDrvkf2k5uni = {
 	0x1000,	304, 224, 4, 3
 };
 
-// The King of Fighters Special Edition 2004 (The King of Fighters 2002 bootleg)
+// The King of Fighters Special Edition 2004 (bootleg)
 
 static struct BurnRomInfo kof2k4seRomDesc[] = {
 	{ "k2k4s-p1.bin", 0x400000, 0xe6c50566, 1 | BRF_ESS | BRF_PRG }, //  0 68K code
@@ -7396,7 +7396,7 @@ static INT32 kof2k4seInit()
 
 struct BurnDriver BurnDrvkof2k4se = {
 	"kof2k4se", "kof2002", "neogeo", NULL, "2004",
-	"The King of Fighters Special Edition 2004 (The King of Fighters 2002 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
+	"The King of Fighters Special Edition 2004 (bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_VSFIGHT, FBF_KOF,
 	NULL, kof2k4seRomInfo, kof2k4seRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
@@ -8826,7 +8826,7 @@ struct BurnDriver BurnDrvkf2k3bla = {
 	0x1000,	304, 224, 4, 3
 };
 
-// The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)
+// The King of Fighters 2004 Plus / Hero (bootleg)
 
 static struct BurnRomInfo kf2k3plRomDesc[] = {
 	{ "2k3-p1pl.bin", 0x100000, 0x07b84112, 1 | BRF_ESS | BRF_PRG }, //  0 68K code
@@ -8855,7 +8855,7 @@ STD_ROM_FN(kf2k3pl)
 
 struct BurnDriver BurnDrvkf2k3pl = {
 	"kf2k3pl", "kof2003", "neogeo", NULL, "2003",
-	"The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
+	"The King of Fighters 2004 Plus / Hero (bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO | HARDWARE_SNK_CMC50, GBF_VSFIGHT, FBF_KOF,
 	NULL, kf2k3plRomInfo, kf2k3plRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
@@ -8864,7 +8864,7 @@ struct BurnDriver BurnDrvkf2k3pl = {
 };
 
 
-// The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)
+// The King of Fighters 2004 Ultra Plus (bootleg)
 
 static struct BurnRomInfo kf2k3uplRomDesc[] = {
 	{ "2k3-p1up.bin", 0x800000, 0x87294c01, 1 | BRF_ESS | BRF_PRG }, //  0 68K code
@@ -8925,7 +8925,7 @@ static INT32 kof2k3uplInit()
 
 struct BurnDriver BurnDrvkf2k3upl = {
 	"kf2k3upl", "kof2003", "neogeo", NULL, "2003",
-	"The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
+	"The King of Fighters 2004 Ultra Plus (bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO | HARDWARE_SNK_CMC50, GBF_VSFIGHT, FBF_KOF,
 	NULL, kf2k3uplRomInfo, kf2k3uplRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
@@ -10576,7 +10576,7 @@ STD_ROM_FN(quizkofk)
 struct BurnDriver BurnDrvquizkofk = {
 	"quizkofk", "quizkof", "neogeo", NULL, "1995",
 	"Quiz King of Fighters (Korean release)\0", NULL, "Saurus", "Neo Geo MVS",
-	L"\u30AF\u30A4\u30BA\u30AD\u30F3\u30B0\u30AA\u30D6\u30D5\u30A1\u30A4\u30BF\u30FC\u30BA (Korea)\0Quiz King of Fighters (Korean release)\0", NULL, NULL, NULL,
+	L"\u30AF\u30A4\u30BA\u30AD\u30F3\u30B0\u30AA\u30D6\u30D5\u30A1\u30A4\u30BF\u30FC\u30BA\0Quiz King of Fighters (Korean release)\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_QUIZ, 0,
 	NULL, quizkofkRomInfo, quizkofkRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -12272,6 +12272,65 @@ struct BurnDriver BurnDrvdiggerma = {
 	0x1000,	304, 224, 4, 3
 };
 
+// Super Bubble Pop
+
+static struct BurnRomInfo sbpRomDesc[] = {
+	{ "2a.bin",       0x080000, 0xd054d264, 1 | BRF_ESS | BRF_PRG }, //  0 68K code
+
+	{ "2b.bin",       0x080000, 0x2fd04b2a, 2 | BRF_GRA },           //  1 Text layer tiles
+
+	{ "3b.bin",       0x200000, 0x44791317, 3 | BRF_GRA },           //  2 Sprite data
+	{ "4b.bin",       0x200000, 0xa3a1c0df, 3 | BRF_GRA },           //  3 
+
+	{ "1b.bin",       0x080000, 0x7b1f86f7, 4 | BRF_ESS | BRF_PRG }, //  4 Z80 code
+
+	{ "12a.bin",      0x400000, 0xc96723b9, 5 | BRF_SND }, 		 //  5 Sound data
+	{ "13a.bin",      0x400000, 0x08c339a5, 5 | BRF_SND },		 //  6
+};
+
+STDROMPICKEXT(sbp, sbp, neogeo)
+STD_ROM_FN(sbp)
+
+static void sbpCallback()
+{
+	UINT16* ROM = (UINT16*)Neo68KROMActive;
+	
+	for (INT32 i = 0x200 / 2; i < 0x2000 / 2; i++) {
+		UINT16 OrigData = ROM[i];
+		UINT16 Data =  BITSWAP16(OrigData, 11, 10, 9, 8, 15, 14, 13, 12, 3, 2, 1, 0, 7, 6, 5, 4);
+		
+		if (i == 0xf5e) {
+			ROM[i] = OrigData;
+		} else {
+			ROM[i] = Data;
+		}
+	}
+	
+	// stop the game overwriting the text layer data
+	ROM[0x2a6f8 / 2] = 0x4e71;
+	ROM[0x2a6fa / 2] = 0x4e71;
+	ROM[0x2a6fc / 2] = 0x4e71;
+	
+	nNeoTextROMSize[nNeoActiveSlot] = 0x20000;
+}
+
+static INT32 sbpInit()
+{
+	NeoCallbackActive->pInitialise = sbpCallback;
+
+	return NeoInit();
+}
+
+struct BurnDriverD BurnDrvsbp = {
+	"sbp", NULL, "neogeo", NULL, "2004",
+	"Super Bubble Pop\0", NULL, "Vektorlogic", "Neo Geo MVS",
+	NULL, NULL, NULL, NULL,
+	BDF_HOMEBREW, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_MISC, 0,
+	NULL, sbpRomInfo, sbpRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
+	sbpInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
+	0x1000,	304, 224, 4, 3
+};
+
 // -----------------------------------------------------------------------------
 // Games not in MAME
 
@@ -12382,8 +12441,8 @@ static INT32 cthd2k3aInit()
 
 struct BurnDriver BurnDrvcthd2k3a = {
 	"cthd2k3a", "kof2001", "neogeo", NULL, "2003",
-	"Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg set 2)\0", NULL, "bootleg", "Neo Geo MVS",
-	L"Crouching Tiger Hidden Dragon 2003\0\u81E5\u864E\u85CF\u9F8D Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg set 2)\0", NULL, NULL, NULL,
+	"Crouching Tiger Hidden Dragon 2003 (set 2)\0", NULL, "bootleg", "Neo Geo MVS",
+	L"Crouching Tiger Hidden Dragon 2003 (set 2)\0\u81E5\u864E\u85CF\u9F8D\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_VSFIGHT, FBF_KOF,
 	NULL, cthd2k3aRomInfo, cthd2k3aRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	cthd2k3aInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
@@ -12727,7 +12786,7 @@ struct BurnDriver BurnDrvkf2k2ps2 = {
 	0x1000,	304, 224, 4, 3
 };
 
-// The King of Fighters Special Edition 2004 Plus (The King of Fighters 2002 bootleg)
+// The King of Fighters Special Edition 2004 Plus (bootleg)
 
 static struct BurnRomInfo kf2k4plsRomDesc[] = {
 	{ "k2k4s-p1p.bin", 0x200000, 0xed97c684, 1 | BRF_ESS | BRF_PRG }, //  0 68K code
@@ -12793,7 +12852,7 @@ static INT32 kf2k4plsInit()
 
 struct BurnDriver BurnDrvkf2k4pls = {
 	"kf2k4pls", "kof2002", "neogeo", NULL, "2004",
-	"The King of Fighters Special Edition 2004 Plus (The King of Fighters 2002 bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
+	"The King of Fighters Special Edition 2004 Plus (bootleg)\0", NULL, "bootleg", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_CARTRIDGE | HARDWARE_SNK_NEOGEO, GBF_VSFIGHT, FBF_KOF,
 	NULL, kf2k4plsRomInfo, kf2k4plsRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
@@ -13506,13 +13565,20 @@ static struct BurnRomInfo neopongaRomDesc[] = {
 STDROMPICKEXT(neoponga, neoponga, neogeo)
 STD_ROM_FN(neoponga)
 
-struct BurnDriverD BurnDrvneoponga = {
+static INT32 neopongaInit()
+{
+	bDisableNeoWatchdog = true;
+	
+	return NeoInit();
+}
+
+struct BurnDriver BurnDrvneoponga = {
 	"neoponga", "neopong", "neogeo", NULL, "2002",
 	"Neo Pong (ver 1.0)\0", NULL, "Neo Dev Corporation", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
-	BDF_CLONE | BDF_HOMEBREW, 2, HARDWARE_SNK_NEOGEO, GBF_BALLPADDLE, 0,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_HOMEBREW, 2, HARDWARE_SNK_NEOGEO, GBF_BALLPADDLE, 0,
 	NULL, neopongaRomInfo, neopongaRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
-	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
+	neopongaInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
 	0x1000,	304, 224, 4, 3
 };
 

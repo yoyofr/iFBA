@@ -398,7 +398,7 @@ static void DrvPaletteInit()
 		bit2 = (col >> 7) & 0x01;
 		INT32 b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		DrvPalette[i] = HighCol16(r, g, b, 0);
+		DrvPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 }
 

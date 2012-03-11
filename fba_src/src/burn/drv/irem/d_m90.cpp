@@ -824,7 +824,7 @@ static inline void update_palette_entry(INT32 entry)
 	g = (g << 3) | (g >> 2);
 	b = (b << 3) | (b >> 2);
 
-	DrvPalette[entry / 2] = HighCol16(r, g, b, 0);
+	DrvPalette[entry / 2] = BurnHighCol(r, g, b, 0);
 }
 
 void __fastcall m90_main_write(UINT32 address, UINT8 data)

@@ -155,7 +155,7 @@ static void bionicc_palette_write(INT32 offset)
 	}
 
 	Palette[offset] = (r << 16) | (g << 8) | b;
-	DrvPalette[offset] = HighCol16(r, g, b, 0);
+	DrvPalette[offset] = BurnHighCol(r, g, b, 0);
 }
 
 void __fastcall bionicc_write_byte(UINT32 address, UINT8 data)
@@ -522,7 +522,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x400; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, (rgb&0xFF), 0);
+			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 
@@ -780,7 +780,7 @@ STD_ROM_FN(bionicc)
 
 struct BurnDriver BurnDrvbionicc = {
 	"bionicc", NULL, NULL, NULL, "1987",
-	"Bionic Commando (Euro)\0", NULL, "Capcom", "Misc",
+	"Bionic Commando (Euro)\0", NULL, "Capcom", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARWARE_CAPCOM_MISC, GBF_PLATFORM, 0,
 	NULL, bioniccRomInfo, bioniccRomName, NULL, NULL, DrvInputInfo, DrvDIPInfo,
@@ -832,7 +832,7 @@ STD_ROM_FN(bionicc1)
 
 struct BurnDriver BurnDrvbionicc1 = {
 	"bionicc1", "bionicc", NULL, NULL, "1987",
-	"Bionic Commando (US set 1)\0", NULL, "Capcom", "Misc",
+	"Bionic Commando (US set 1)\0", NULL, "Capcom", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARWARE_CAPCOM_MISC, GBF_PLATFORM, 0,
 	NULL, bionicc1RomInfo, bionicc1RomName, NULL, NULL, DrvInputInfo, DrvDIPInfo,
@@ -884,7 +884,7 @@ STD_ROM_FN(bionicc2)
 
 struct BurnDriver BurnDrvbionicc2 = {
 	"bionicc2", "bionicc", NULL, NULL, "1987",
-	"Bionic Commando (US set 2)\0", NULL, "Capcom", "Misc",
+	"Bionic Commando (US set 2)\0", NULL, "Capcom", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARWARE_CAPCOM_MISC, GBF_PLATFORM, 0,
 	NULL, bionicc2RomInfo, bionicc2RomName, NULL, NULL, DrvInputInfo, DrvDIPInfo,
@@ -936,7 +936,7 @@ STD_ROM_FN(topsecrt)
 
 struct BurnDriver BurnDrvtopsecrt = {
 	"topsecrt", "bionicc", NULL, NULL, "1987",
-	"Top Secret (Japan)\0", NULL, "Capcom", "Misc",
+	"Top Secret (Japan)\0", NULL, "Capcom", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARWARE_CAPCOM_MISC, GBF_PLATFORM, 0,
 	NULL, topsecrtRomInfo, topsecrtRomName, NULL, NULL, DrvInputInfo, DrvDIPInfo,

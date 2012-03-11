@@ -111,7 +111,7 @@ static INT32 DrvDraw()
 	UINT32 DrvPalette[2];
 
 	DrvPalette[0] = 0;
-	DrvPalette[1] = HighCol16(0xff, 0xff, 0xff, 0);
+	DrvPalette[1] = BurnHighCol(0xff, 0xff, 0xff, 0);
 
 	for (INT32 offs = 0x200; offs < 0x1e00; offs++)
 	{

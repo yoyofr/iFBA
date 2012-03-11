@@ -23,7 +23,7 @@ static UINT8 DrvJoy2[8] = {0, };
 static UINT8 DrvJoy3[8] = {0, };
 static UINT8 DrvJoy4[8] = {0, };
 static UINT8 DrvJoy5[8] = {0, };
-static UINT8 DrvDiag[2] = {0, };
+static UINT8 DrvDiag[1] = { 0 };
 static UINT8 DrvReset;
 static UINT8 DrvInputs[6] = {0, };
 
@@ -165,7 +165,7 @@ static void DrvPaletteInit()
 		bit2 = (DrvColPROM[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		DrvPalette[((i & 7) << 2) | ((i >> 3) & 3)] = HighCol16(r, g, b, 0);
+		DrvPalette[((i & 7) << 2) | ((i >> 3) & 3)] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -306,7 +306,6 @@ static INT32 DrvFrame()
 		DrvInputs[2] = 0x00;
 		DrvInputs[3] = 0x00;
 		DrvInputs[4] = 0x00;
-		DrvInputs[5] = 0x00;
 
 		for (INT32 i = 0; i < 8; i++) {
 			DrvInputs[0] ^= (DrvJoy1[i] & 1) << i;
@@ -314,8 +313,9 @@ static INT32 DrvFrame()
 			DrvInputs[2] |= (DrvJoy3[i] & 1) << i;
 			DrvInputs[3] |= (DrvJoy4[i] & 1) << i;
 			DrvInputs[4] |= (DrvJoy5[i] & 1) << i;
-			DrvInputs[5] |= (DrvDiag[i] & 1) << i;
 		}
+
+		DrvInputs[5] = DrvDiag[0] & 1;
 	}
 
 	// Clear Opposites

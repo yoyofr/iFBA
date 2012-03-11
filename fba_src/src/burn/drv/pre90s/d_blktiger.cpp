@@ -160,7 +160,7 @@ static void palette_write(INT32 offset)
 	g |= g << 4;
 	b |= b << 4;
 
-	DrvPalette[offset] = HighCol16(r, g, b, 0);
+	DrvPalette[offset] = BurnHighCol(r, g, b, 0);
 }
 
 static void DrvRomBankswitch(INT32 bank)

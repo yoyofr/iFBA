@@ -3926,7 +3926,7 @@ static void M62CalcPalette()
 		Bit3 = (ColourProm[M62PaletteEntries * 2] >> 3) & 0x01;
 		b =  0x0e * Bit0 + 0x1f * Bit1 + 0x43 * Bit2 + 0x8f * Bit3;
 
-		M62Palette[i] = HighCol16(r, g, b, 0);
+		M62Palette[i] = BurnHighCol(r, g, b, 0);
 
 		ColourProm++;
 	}
@@ -3957,7 +3957,7 @@ static void BattroadCalcPalette()
 		Bit3 = (ColourProm[0x400] >> 3) & 0x01;
 		b =  0x0e * Bit0 + 0x1f * Bit1 + 0x43 * Bit2 + 0x8f * Bit3;
 
-		M62Palette[i] = HighCol16(r, g, b, 0);
+		M62Palette[i] = BurnHighCol(r, g, b, 0);
 
 		ColourProm++;
 	}
@@ -3982,7 +3982,7 @@ static void BattroadCalcPalette()
 		Bit2 = (ColourProm[i] >> 7) & 0x01;
 		b = 0x21 * Bit0 + 0x47 * Bit1 + 0x97 * Bit2;
 
-		M62Palette[i + 0x200] = HighCol16(r, g, b, 0);
+		M62Palette[i + 0x200] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -4011,7 +4011,7 @@ static void Spelunk2CalcPalette()
 		Bit3 = (ColourProm[0x200] >> 3) & 0x01;
 		b =  0x0e * Bit0 + 0x1f * Bit1 + 0x43 * Bit2 + 0x8f * Bit3;
 
-		M62Palette[i] = HighCol16(r, g, b, 0);
+		M62Palette[i] = BurnHighCol(r, g, b, 0);
 
 		ColourProm++;
 	}
@@ -4039,7 +4039,7 @@ static void Spelunk2CalcPalette()
 		Bit3 = (ColourProm[0x200] >> 3) & 0x01;
 		b =  0x0e * Bit0 + 0x1f * Bit1 + 0x43 * Bit2 + 0x8f * Bit3;
 
-		M62Palette[i + 0x200] = HighCol16(r, g, b, 0);
+		M62Palette[i + 0x200] = BurnHighCol(r, g, b, 0);
 
 		ColourProm++;
 	}
@@ -4528,8 +4528,8 @@ static void Ldrun3Draw()
 		
 		for (x = 0; x < nScreenWidth; x++) {
 			for (y = 0; y < 8; y++) {
-				pTransDraw[(y * nScreenWidth) + x] = HighCol16(0, 0, 0, 0);
-				pTransDraw[((y + 248) * nScreenWidth) + x] = HighCol16(0, 0, 0, 0);
+				pTransDraw[(y * nScreenWidth) + x] = BurnHighCol(0, 0, 0, 0);
+				pTransDraw[((y + 248) * nScreenWidth) + x] = BurnHighCol(0, 0, 0, 0);
 			}
 		}
 	}

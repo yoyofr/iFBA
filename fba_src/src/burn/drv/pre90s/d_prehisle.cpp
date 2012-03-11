@@ -739,7 +739,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = (g << 4) | g;
 	b = (b << 4) | b;
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 INT32 PrehisleCalcPalette()
@@ -878,7 +878,7 @@ struct BurnDriver BurnDrvPrehislk = {
 struct BurnDriver BurnDrvGensitou = {
 	"gensitou", "prehisle", NULL, NULL, "1989",
 	"Genshi-Tou 1930's (Japan)\0", NULL, "SNK", "Prehistoric Isle (SNK)",
-	L"Genshi-Tou 1930's (Japan)\0\u539F\u59CB\u5CF6 1930's (Japan)\0", NULL, NULL, NULL,
+	L"Genshi-Tou 1930's (Japan)\0\u539F\u59CB\u5CF6 1930's\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_MISC_PRE90S, GBF_HORSHOOT, 0,
 	NULL, GensitouRomInfo, GensitouRomName, NULL, NULL, PrehisleInputInfo, PrehisleDIPInfo,
 	PrehisleInit, PrehisleExit, PrehisleFrame, NULL, PrehisleScan,

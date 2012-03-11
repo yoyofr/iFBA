@@ -6,7 +6,7 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-     
+
 #if !defined (_WIN32)
  #define __cdecl
 #endif
@@ -95,15 +95,14 @@ extern INT32 (__cdecl *BurnExtProgressUpdateCallback)(double dProgress, const TC
 extern INT32 (__cdecl *BurnExtCartridgeSetupCallback)(BurnCartrigeCommand nCommand);
 
 // Application-defined colour conversion function
-//extern UINT32 (__cdecl *HighCol16) (INT32 r, INT32 g, INT32 b, INT32 i);
-//#define HighCol16(r,g,b,i) ((r<<8)&0xf800)|((g<<3)&0x07e0)|((b>>3)&0x001f)
-#define HighCol16(r,g,b,i) ((r<<8)&0xf800)|((g<<3)&0x07e0)|(b>>3)
-#define HighCol15(r,g,b,i) ((r<<7)&0x7c00)||((g<<2)&0x03e0)|(b>>3)
-
+extern UINT32 (__cdecl *BurnHighCol) (INT32 r, INT32 g, INT32 b, INT32 i);
 
 // ---------------------------------------------------------------------------
 
 extern UINT32 nCurrentFrame;
+
+//IOS_BUILD Patch
+extern int rom_force_len;
 
 inline static INT32 GetCurrentFrame() {
 	return nCurrentFrame;
@@ -134,8 +133,6 @@ struct BurnRomInfo {
 	UINT32 nCrc;
 	UINT32 nType;
 };
-     
-extern int rom_len_adjusted; //used to patch rom length for console roms
 
 struct BurnSampleInfo {
 	char szName[100];
@@ -177,7 +174,7 @@ struct BurnDIPInfo {
 // ---------------------------------------------------------------------------
 
 extern bool bBurnUseMMX;
-extern bool bBurnUseASMCPUEmulation,bBurnUseASMZ80CPUEmulation;
+extern bool bBurnUseASMCPUEmulation;
 
 extern UINT32 nFramesEmulated;
 extern UINT32 nFramesRendered;

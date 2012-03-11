@@ -1074,7 +1074,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x60; i++) {
 			INT32 d = Palette[i];
-			DrvPalette[i] = HighCol16(d >> 16, d >> 8, d, 0);
+			DrvPalette[i] = BurnHighCol(d >> 16, d >> 8, d, 0);
 		}
 		DrvRecalc = 0;
 	}
@@ -1095,12 +1095,12 @@ static INT32 SraiderDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x80; i++) {
 			INT32 d = Palette[i];
-			DrvPalette[i] = HighCol16(d >> 16, d >> 8, d, 0);
+			DrvPalette[i] = BurnHighCol(d >> 16, d >> 8, d, 0);
 		}
 		DrvRecalc = 0;
 	}
 
-	DrvPalette[0x81] = HighCol16((*gridcolor & 0x40) ? 0xff : 0, (*gridcolor & 0x20) ? 0xff : 0, (*gridcolor & 0x10) ? 0xff : 0, 0);
+	DrvPalette[0x81] = BurnHighCol((*gridcolor & 0x40) ? 0xff : 0, (*gridcolor & 0x20) ? 0xff : 0, (*gridcolor & 0x10) ? 0xff : 0, 0);
 
 	BurnTransferClear();
 

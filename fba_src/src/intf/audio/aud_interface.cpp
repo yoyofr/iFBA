@@ -1,10 +1,7 @@
 // Audio Output
 #include "burner.h"
 
-extern bool bSoundOn;
-
-//INT32 nAudSampleRate[8] = { 22050,22050,22050,22050,22050,22050,22050,22050 };			// sample rate
-INT32 nAudSampleRate;
+INT32 nAudSampleRate[8] = { 22050, 22050, 22050, 22050, 22050, 22050, 22050, 22050 };			// sample rate
 INT32 nAudVolume = 10000;				// Sound volume (% * 100)
 INT32 nAudSegCount = 6;				// Segs in the pdsbLoop buffer
 INT32 nAudSegLen = 0;					// Seg length in samples (calculated from Rate/Fps)
@@ -71,7 +68,6 @@ INT32 AudSoundCheck()
 INT32 AudSoundInit()
 {
 	INT32 nRet;
-    if (!bSoundOn) return 1;
 
 	if (nAudSelect >= AUD_LEN) {
 		return 1;
@@ -157,7 +153,7 @@ InterfaceInfo* AudGetInfo()
 
 		AudInfo.pszModuleName = pAudOut[nAudActive]->szModuleName;
 
-		_sntprintf(szString, MAX_PATH, _T("Playback at %iHz, %i%% volume"), nAudSampleRate/*nAudSampleRate[nAudActive]*/, nAudVolume / 100);
+		_sntprintf(szString, MAX_PATH, _T("Playback at %iHz, %i%% volume"), nAudSampleRate[nAudActive], nAudVolume / 100);
 		IntInfoAddStringInterface(&AudInfo, szString);
 
 		if (nAudDSPModule[nAudActive]) {

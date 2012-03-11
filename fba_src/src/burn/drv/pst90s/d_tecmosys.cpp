@@ -313,7 +313,7 @@ static inline void palette_update(INT32 pal)
 	g = (g << 3) | (g >> 2);
 	b = (b << 3) | (b >> 2);
 
-	DrvPalette[pal] = HighCol16(r, g, b, 0);
+	DrvPalette[pal] = BurnHighCol(r, g, b, 0);
 	DrvPalette24[pal] = (r << 16) + (g << 8) + b;
 }
 
@@ -966,7 +966,7 @@ static void blend_sprites_and_transfer()
 			INT32 g = ((colour & 0x0000ff00) + (colour2 & 0x0000ff00)) >>  9;
 			INT32 r = ((colour & 0x00ff0000) + (colour2 & 0x00ff0000)) >> 17;
 
-			PutPix(dstptr + z * nBurnBpp, HighCol16(r, g, b, 0));
+			PutPix(dstptr + z * nBurnBpp, BurnHighCol(r, g, b, 0));
 		}
 		else if ((srcptr2[z] & 0xc000) >= (srcptr[z] & 0xc000))
 		{

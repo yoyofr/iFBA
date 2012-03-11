@@ -40,9 +40,15 @@
 	FrameBufferUtils::Create(m_frameBuffer, oglContext, (CAEAGLLayer*)self.layer);
 }
 
+extern volatile int doFrame_inProgress;
 // Send a resized event when the orientation changes.
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    while (doFrame_inProgress) {
+        [NSThread sleepForTimeInterval:0.001]; //1ms
+    }
+    doFrame_inProgress=1;
     FrameBufferUtils::UpdateFrame(m_frameBuffer, m_oglContext, (CAEAGLLayer*)self.layer);
+    doFrame_inProgress=0;
 }
 
 - (void)layoutSubviews {

@@ -569,7 +569,7 @@ static INT32 DrvDraw()
 			g = (rgb >>  8) & 0xff;
 			b = (rgb >>  0) & 0xff;
 	
-			DrvPalette[i] = HighCol16(r, g, b, 0);
+			DrvPalette[i] = BurnHighCol(r, g, b, 0);
 		}
 	}
 

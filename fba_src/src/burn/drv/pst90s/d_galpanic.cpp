@@ -27,9 +27,9 @@ static UINT16 *RamBgM;
 static UINT32 *RamCurPal;
 static UINT32 *RamCTB64k;
 
-static UINT8 DrvButton[7] = {0, 0, 0, 0, 0, 0, 0};
-static UINT8 DrvJoy1[7] = {0, 0, 0, 0, 0, 0, 0};
-static UINT8 DrvJoy2[7] = {0, 0, 0, 0, 0, 0, 0};
+static UINT8 DrvButton[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+static UINT8 DrvJoy1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+static UINT8 DrvJoy2[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static UINT8 DrvInput[6] = {0, 0, 0, 0, 0, 0};
 static UINT8 DrvReset = 0;
 //static UINT16 GalPanicCoin = 0;
@@ -1613,7 +1613,7 @@ static INT32 GalpanicDraw()
 			INT32 r = pal5bit(i >> 5);
 			INT32 g = pal5bit(i >> 10);
 			INT32 b = pal5bit(i >> 0);
-			RamCTB64k[i] = HighCol16(r, g, b, 0);
+			RamCTB64k[i] = BurnHighCol(r, g, b, 0);
 		}
 
 		RecalcBgPalette = 0;
@@ -1624,7 +1624,7 @@ static INT32 GalpanicDraw()
  		INT32 r = pal5bit(nColour >> 6);
  		INT32 g = pal5bit(nColour >> 11);
  		INT32 b = pal5bit(nColour >> 1);
- 		RamCurPal[i] = HighCol16(r, g, b, 0);
+ 		RamCurPal[i] = BurnHighCol(r, g, b, 0);
  	} 	
 
  	UINT16 * d = (UINT16 *)pBurnDraw + ( 224 * 256 ) - 1;
@@ -1682,7 +1682,7 @@ static INT32 ComadDraw()
 			INT32 r = pal5bit(i >> 5);
 			INT32 g = pal5bit(i >> 10);
 			INT32 b = pal5bit(i >> 0);
-			RamCTB64k[i] = HighCol16(r, g, b, 0);
+			RamCTB64k[i] = BurnHighCol(r, g, b, 0);
 		}
 
 		RecalcBgPalette = 0;
@@ -1693,7 +1693,7 @@ static INT32 ComadDraw()
  		INT32 r = pal5bit(nColour >> 6);
  		INT32 g = pal5bit(nColour >> 11);
  		INT32 b = pal5bit(nColour >> 1);
- 		RamCurPal[i] = HighCol16(r, g, b, 0);
+ 		RamCurPal[i] = BurnHighCol(r, g, b, 0);
  	}
 
  	UINT16 * d = (UINT16 *)pBurnDraw + ( 224 * 256 ) - 1;

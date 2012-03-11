@@ -63,6 +63,10 @@ void tstfl_validateloadgame(char *name) {
     //    valNb=[prefs objectForKey:@"VERSION_MAJOR"];
     //    valNb=[prefs objectForKey:@"VERSION_MINOR"];
     
+    
+    valNb=[prefs objectForKey:@"video_60hz"];
+	if ((valNb == nil)||reset_settings) ifba_conf.video_60hz=0;
+	else ifba_conf.video_60hz = [valNb intValue];    
     valNb=[prefs objectForKey:@"aspect_ratio"];
 	if ((valNb == nil)||reset_settings) ifba_conf.aspect_ratio=1;
 	else ifba_conf.aspect_ratio = [valNb intValue];
@@ -159,6 +163,8 @@ void tstfl_validateloadgame(char *name) {
     [prefs setObject:valNb forKey:@"VERSION_SETTINGS"];[valNb autorelease];
     
     
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_60hz ];
+	[prefs setObject:valNb forKey:@"video_60hz"];[valNb autorelease];    
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.aspect_ratio ];
 	[prefs setObject:valNb forKey:@"aspect_ratio"];[valNb autorelease];
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.screen_mode ];

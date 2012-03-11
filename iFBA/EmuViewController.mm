@@ -15,6 +15,7 @@
 #import "fbaconf.h"
 ifba_conf_t ifba_conf;
 
+static int missedFrame;
 
 #include "inp_sdl_keys.h"
 unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
@@ -471,9 +472,8 @@ static int statusLoadMsgUpdated=0;
     filter_scanline_texture=[self loadTexture:[UIImage imageNamed:@"scanline-1.png"]];
     /**************************************/
     
-    
     vbuffer=(unsigned short*)malloc(TEXTURE_W*TEXTURE_H*2);
-    if (!vbuffer) {
+    if (!vbuffer ) {
         NSLog(@"Critical issue: vbuffer cannot be allocated");
     }
     memset(vbuffer,0,TEXTURE_W*TEXTURE_H*2);
@@ -506,6 +506,8 @@ static int statusLoadMsgUpdated=0;
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden=YES;    
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    
+    missedFrame=0;
     
     if (bt&&ifba_conf.btstack_on) {
         stopWiimoteDetection();
@@ -594,11 +596,15 @@ static int statusLoadMsgUpdated=0;
             joy_state[j][virtual_stick[i].button_id]=0;
         }
     }
+    
+    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(loopCheck)];
+    m_displayLink.frameInterval = 2; //60fps
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
 }
 
 - (void)viewDidAppear:(BOOL)animated {    
     [super viewDidAppear:animated];
-    
+    mNewGLFrame=0;
     //If resuming
     if (nShouldExit==2) {
         //launch new game ?
@@ -679,11 +685,7 @@ static int statusLoadMsgUpdated=0;
     launchGame=0;
     //update ogl framebuffer
     [m_oglView didRotateFromInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-    
-    mNewGLFrame=1;
-    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(doFrame)];
-    m_displayLink.frameInterval = 1; //60fps
-	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
+            
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -738,7 +740,6 @@ static int statusLoadMsgUpdated=0;
     }
     if (prgview) prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
     if (statusview) statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-30,m_oglView.frame.size.width-20,30);
-    //mNewGLFrame++;
     return YES;
 }
 
@@ -1322,6 +1323,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
 
 
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nXAspect,int nYAspect) {
+    
     vid_rotated=rotated;
     visible_area_w=w; 
     if (visible_area_w>TEXTURE_W) {
@@ -1330,7 +1332,6 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     if (visible_area_h>TEXTURE_H) {
         NSLog(@"ERROR: width is too large (%d/%d)",visible_area_h,TEXTURE_H);
     }
-    
     visible_area_h=h;
     vid_aspectX=nXAspect;
     vid_aspectY=nYAspect;
@@ -1342,11 +1343,9 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
         memcpy(dst,src,w<<1);
         dst+=TEXTURE_W;
         src+=pitch;
-        //for (int x=0;x<w;x++) {
-        //vbuffer[y*TEXTURE_W+x]=buff[y*pitch+x];
-        //}    
     }
-    mNewGLFrame++;
+        mNewGLFrame=1;
+        [(id) context doFrame];
 }
 
 
@@ -1497,8 +1496,9 @@ int ErrorWhileLoading(const char* pszText) {
     }
     strcpy(statusMsg,pszText);
     statusMsgUpdated=1;
-    mNewGLFrame++;
+
     usleep(3000000); //3s
+
 }
 
 int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
@@ -1515,29 +1515,24 @@ int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
     } else {
         pb_total=0;
         pb_value=1;
-    }
+    }    
     
-    //mNewGLFrame++;
     if (pszText) strcpy(statusMsg,pszText);
     else statusMsg[0]=0;
     statusMsgUpdated=1;
+    
+
     return 0;
 }
 
 int StopProgressBar() {
     pb_value=1;
     
-    //mNewGLFrame++;
+
 }
 
 -(void) loopCheck {
-}
-
-
-- (void)doFrame {
-    int width,height,rw,rh;
     static int msgCounter=0;
-    
     if (nShouldExit) {
         self.navigationController.navigationBar.hidden=NO;        
         [[self navigationController] popViewControllerAnimated:NO];
@@ -1545,7 +1540,7 @@ int StopProgressBar() {
     
     if (prgview) {
         if (pb_value<1) {
-            msgCounter=120; //2seconds
+            msgCounter=60; //2seconds
             prgview.progress=pb_value;
             if (statusMsgUpdated) {
                 statusMsgview.text=[NSString stringWithFormat:@"%s",statusMsg];
@@ -1578,15 +1573,23 @@ int StopProgressBar() {
             }
         }
     }
+
+}
+
+volatile int doFrame_inProgress=0;
+- (void)doFrame {
     
+    int width,height,rw,rh;
+    
+    
+    if (doFrame_inProgress) return;
+    doFrame_inProgress=1;
     
     //New frame to draw?
-    if (!mNewGLFrame) return;
-    //todo: how many was there?
-    mNewGLFrame=0;
-    
+    if (!mNewGLFrame) {
+        return;
+    }
     //get ogl context & bind
-    
     
     [EAGLContext setCurrentContext:m_oglContext];
 	[m_oglView bind];
@@ -1731,12 +1734,9 @@ int StopProgressBar() {
     }
     
     if (virtual_stick_on) [self drawVPad];
-    
-    
-    
-    
-    
     [m_oglContext presentRenderbuffer:GL_RENDERBUFFER_OES];
+    
+    doFrame_inProgress=0;
 }
 
 @end

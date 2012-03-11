@@ -24,6 +24,7 @@
 #define USE_SPEEDHACKS 1
 #define LSB_FIRST 1
 #define BUILD_SDL 1
+#define INCLUDE_LIB_PNGH 1
 
 
 //#undef _UNICODE

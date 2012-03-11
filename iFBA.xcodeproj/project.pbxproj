@@ -19,6 +19,8 @@
 		331D170E1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D170C1506BF8C00327F74 /* OptConGetWiimoteBtnViewController.xib */; };
 		331D17121507DC1B00327F74 /* OptROMSPathsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D17101507DC1800327F74 /* OptROMSPathsViewController.mm */; };
 		331D17131507DC1B00327F74 /* OptROMSPathsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331D17111507DC1A00327F74 /* OptROMSPathsViewController.xib */; };
+		33217257150D4A6100772645 /* OptSaveStateViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33217255150D4A6100772645 /* OptSaveStateViewController.mm */; };
+		33217258150D4A6100772645 /* OptSaveStateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33217256150D4A6100772645 /* OptSaveStateViewController.xib */; };
 		33231C0014FBA67A00AD7823 /* BTDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BE814FBA67A00AD7823 /* BTDevice.m */; };
 		33231C0114FBA67A00AD7823 /* BTDiscoveryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEA14FBA67A00AD7823 /* BTDiscoveryViewController.m */; };
 		33231C0214FBA67A00AD7823 /* BTInquiryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33231BEC14FBA67A00AD7823 /* BTInquiryViewController.m */; };
@@ -228,7 +230,6 @@
 		336B542214F4439B00CE9A63 /* d_pac2650.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B509714F4439A00CE9A63 /* d_pac2650.cpp */; };
 		336B542314F4439B00CE9A63 /* d_pacland.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B509814F4439A00CE9A63 /* d_pacland.cpp */; };
 		336B542414F4439B00CE9A63 /* d_pacman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B509914F4439A00CE9A63 /* d_pacman.cpp */; };
-		336B542514F4439B00CE9A63 /* d_pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B509A14F4439A00CE9A63 /* d_pce.cpp */; };
 		336B542614F4439B00CE9A63 /* d_pkunwar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B509B14F4439A00CE9A63 /* d_pkunwar.cpp */; };
 		336B542714F4439B00CE9A63 /* d_prehisle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B509C14F4439A00CE9A63 /* d_prehisle.cpp */; };
 		336B542814F4439B00CE9A63 /* d_quizo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B509D14F4439A00CE9A63 /* d_quizo.cpp */; };
@@ -297,7 +298,6 @@
 		336B546714F4439B00CE9A63 /* d_ohmygod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B50E214F4439A00CE9A63 /* d_ohmygod.cpp */; };
 		336B546814F4439B00CE9A63 /* d_pass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B50E314F4439A00CE9A63 /* d_pass.cpp */; };
 		336B546914F4439B00CE9A63 /* d_pirates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B50E414F4439A00CE9A63 /* d_pirates.cpp */; };
-		336B546A14F4439B00CE9A63 /* d_pktgaldx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B50E514F4439A00CE9A63 /* d_pktgaldx.cpp */; };
 		336B546B14F4439B00CE9A63 /* d_powerins.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B50E614F4439A00CE9A63 /* d_powerins.cpp */; };
 		336B546C14F4439B00CE9A63 /* d_pushman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B50E714F4439A00CE9A63 /* d_pushman.cpp */; };
 		336B546D14F4439B00CE9A63 /* d_raiden.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 336B50E814F4439A00CE9A63 /* d_raiden.cpp */; };
@@ -596,6 +596,12 @@
 		33A7E73F14FA97E5007B42B9 /* sdl_font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */; };
 		33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33A7E74314FABEDB007B42B9 /* fastarm_memfunc.o */; };
 		33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AD897B14F85A4D00239FB6 /* Cyclone.o */; };
+		33E88A21150CADC80030EFF7 /* d_pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A1E150CADC80030EFF7 /* d_pce.cpp */; };
+		33E88A22150CADC80030EFF7 /* pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A1F150CADC80030EFF7 /* pce.cpp */; };
+		33E88A26150CAEDC0030EFF7 /* d_actfancr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A24150CAEDC0030EFF7 /* d_actfancr.cpp */; };
+		33E88A27150CAEDC0030EFF7 /* d_pktgaldx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A25150CAEDC0030EFF7 /* d_pktgaldx.cpp */; };
+		33E88A29150CAFA30030EFF7 /* d_momoko.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A28150CAFA30030EFF7 /* d_momoko.cpp */; };
+		33E88A2B150CAFE00030EFF7 /* d_galspnbl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A2A150CAFE00030EFF7 /* d_galspnbl.cpp */; };
 		33F444CB14F50D8800BA36E1 /* cd_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33F444C514F50D8800BA36E1 /* cd_interface.cpp */; };
 		33F444D314F5186000BA36E1 /* support_paths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33F444D214F5186000BA36E1 /* support_paths.cpp */; };
 		33F444D714F567DC00BA36E1 /* EmuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33F444D614F567DC00BA36E1 /* EmuViewController.xib */; };
@@ -626,6 +632,9 @@
 		331D17101507DC1800327F74 /* OptROMSPathsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptROMSPathsViewController.mm; sourceTree = "<group>"; };
 		331D17111507DC1A00327F74 /* OptROMSPathsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptROMSPathsViewController.xib; sourceTree = "<group>"; };
 		331F348F14FD96D7004668BC /* fbaconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fbaconf.h; sourceTree = "<group>"; };
+		33217254150D4A6100772645 /* OptSaveStateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptSaveStateViewController.h; sourceTree = "<group>"; };
+		33217255150D4A6100772645 /* OptSaveStateViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptSaveStateViewController.mm; sourceTree = "<group>"; };
+		33217256150D4A6100772645 /* OptSaveStateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptSaveStateViewController.xib; sourceTree = "<group>"; };
 		33231BE714FBA67A00AD7823 /* BTDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDevice.h; sourceTree = "<group>"; };
 		33231BE814FBA67A00AD7823 /* BTDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTDevice.m; sourceTree = "<group>"; };
 		33231BE914FBA67A00AD7823 /* BTDiscoveryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDiscoveryViewController.h; sourceTree = "<group>"; };
@@ -897,7 +906,6 @@
 		336B509714F4439A00CE9A63 /* d_pac2650.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pac2650.cpp; sourceTree = "<group>"; };
 		336B509814F4439A00CE9A63 /* d_pacland.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pacland.cpp; sourceTree = "<group>"; };
 		336B509914F4439A00CE9A63 /* d_pacman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pacman.cpp; sourceTree = "<group>"; };
-		336B509A14F4439A00CE9A63 /* d_pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pce.cpp; sourceTree = "<group>"; };
 		336B509B14F4439A00CE9A63 /* d_pkunwar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pkunwar.cpp; sourceTree = "<group>"; };
 		336B509C14F4439A00CE9A63 /* d_prehisle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_prehisle.cpp; sourceTree = "<group>"; };
 		336B509D14F4439A00CE9A63 /* d_quizo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_quizo.cpp; sourceTree = "<group>"; };
@@ -970,7 +978,6 @@
 		336B50E214F4439A00CE9A63 /* d_ohmygod.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_ohmygod.cpp; sourceTree = "<group>"; };
 		336B50E314F4439A00CE9A63 /* d_pass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pass.cpp; sourceTree = "<group>"; };
 		336B50E414F4439A00CE9A63 /* d_pirates.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pirates.cpp; sourceTree = "<group>"; };
-		336B50E514F4439A00CE9A63 /* d_pktgaldx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pktgaldx.cpp; sourceTree = "<group>"; };
 		336B50E614F4439A00CE9A63 /* d_powerins.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_powerins.cpp; sourceTree = "<group>"; };
 		336B50E714F4439A00CE9A63 /* d_pushman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pushman.cpp; sourceTree = "<group>"; };
 		336B50E814F4439A00CE9A63 /* d_raiden.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_raiden.cpp; sourceTree = "<group>"; };
@@ -1310,7 +1317,6 @@
 		336B52A314F4439B00CE9A63 /* z80.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = z80.h; sourceTree = "<group>"; };
 		336B52A414F4439B00CE9A63 /* z80daisy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = z80daisy.cpp; sourceTree = "<group>"; };
 		336B52A514F4439B00CE9A63 /* z80daisy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = z80daisy.h; sourceTree = "<group>"; };
-		336B52AE14F4439B00CE9A63 /* fba_libpng_v156.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fba_libpng_v156.txt; sourceTree = "<group>"; };
 		336B52AF14F4439B00CE9A63 /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
 		336B52B014F4439B00CE9A63 /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
 		336B52B114F4439B00CE9A63 /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
@@ -1339,7 +1345,6 @@
 		336B52C914F4439B00CE9A63 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
 		336B52CA14F4439B00CE9A63 /* deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = deflate.c; sourceTree = "<group>"; };
 		336B52CB14F4439B00CE9A63 /* deflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deflate.h; sourceTree = "<group>"; };
-		336B52CC14F4439B00CE9A63 /* fba_zlib_v125.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fba_zlib_v125.txt; sourceTree = "<group>"; };
 		336B52CD14F4439B00CE9A63 /* gzclose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzclose.c; sourceTree = "<group>"; };
 		336B52CE14F4439B00CE9A63 /* gzguts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzguts.h; sourceTree = "<group>"; };
 		336B52CF14F4439B00CE9A63 /* gzlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzlib.c; sourceTree = "<group>"; };
@@ -1456,6 +1461,13 @@
 		33AD897A14F85A4D00239FB6 /* cyclone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclone.h; sourceTree = "<group>"; };
 		33AD897B14F85A4D00239FB6 /* Cyclone.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Cyclone.o; sourceTree = "<group>"; };
 		33AD897C14F85A4D00239FB6 /* Cyclone.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = Cyclone.s; sourceTree = "<group>"; };
+		33E88A1E150CADC80030EFF7 /* d_pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pce.cpp; sourceTree = "<group>"; };
+		33E88A1F150CADC80030EFF7 /* pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pce.cpp; sourceTree = "<group>"; };
+		33E88A20150CADC80030EFF7 /* pce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pce.h; sourceTree = "<group>"; };
+		33E88A24150CAEDC0030EFF7 /* d_actfancr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_actfancr.cpp; sourceTree = "<group>"; };
+		33E88A25150CAEDC0030EFF7 /* d_pktgaldx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pktgaldx.cpp; sourceTree = "<group>"; };
+		33E88A28150CAFA30030EFF7 /* d_momoko.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_momoko.cpp; sourceTree = "<group>"; };
+		33E88A2A150CAFE00030EFF7 /* d_galspnbl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_galspnbl.cpp; sourceTree = "<group>"; };
 		33F444B714F4C44400BA36E1 /* driverlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = driverlist.h; sourceTree = "<group>"; };
 		33F444B814F4C85D00BA36E1 /* ctv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ctv.h; sourceTree = "<group>"; };
 		33F444B914F4C8DA00BA36E1 /* cave_sprite_func_table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cave_sprite_func_table.h; sourceTree = "<group>"; };
@@ -1677,6 +1689,7 @@
 				336B502E14F4439A00CE9A63 /* konami */,
 				336B505614F4439A00CE9A63 /* megadrive */,
 				336B505A14F4439A00CE9A63 /* neogeo */,
+				33E88A1D150CADC80030EFF7 /* pce */,
 				336B506614F4439A00CE9A63 /* pgm */,
 				336B506E14F4439A00CE9A63 /* pre90s */,
 				336B50B314F4439A00CE9A63 /* psikyo */,
@@ -1772,6 +1785,8 @@
 			children = (
 				336B500A14F4439A00CE9A63 /* d_backfire.cpp */,
 				336B500B14F4439A00CE9A63 /* d_boogwing.cpp */,
+				33E88A24150CAEDC0030EFF7 /* d_actfancr.cpp */,
+				33E88A25150CAEDC0030EFF7 /* d_pktgaldx.cpp */,
 				336B500C14F4439A00CE9A63 /* d_cbuster.cpp */,
 				336B500D14F4439A00CE9A63 /* d_cninja.cpp */,
 				336B500E14F4439A00CE9A63 /* d_darkseal.cpp */,
@@ -1924,6 +1939,7 @@
 				336B507414F4439A00CE9A63 /* d_armedf.cpp */,
 				336B507514F4439A00CE9A63 /* d_aztarac.cpp */,
 				336B507614F4439A00CE9A63 /* d_baraduke.cpp */,
+				33E88A28150CAFA30030EFF7 /* d_momoko.cpp */,
 				336B507714F4439A00CE9A63 /* d_bionicc.cpp */,
 				336B507814F4439A00CE9A63 /* d_blktiger.cpp */,
 				336B507914F4439A00CE9A63 /* d_blockout.cpp */,
@@ -1959,7 +1975,6 @@
 				336B509714F4439A00CE9A63 /* d_pac2650.cpp */,
 				336B509814F4439A00CE9A63 /* d_pacland.cpp */,
 				336B509914F4439A00CE9A63 /* d_pacman.cpp */,
-				336B509A14F4439A00CE9A63 /* d_pce.cpp */,
 				336B509B14F4439A00CE9A63 /* d_pkunwar.cpp */,
 				336B509C14F4439A00CE9A63 /* d_prehisle.cpp */,
 				336B509D14F4439A00CE9A63 /* d_quizo.cpp */,
@@ -2016,6 +2031,7 @@
 				336B50C214F4439A00CE9A63 /* d_airbustr.cpp */,
 				336B50C314F4439A00CE9A63 /* d_aquarium.cpp */,
 				336B50C414F4439A00CE9A63 /* d_blmbycar.cpp */,
+				33E88A2A150CAFE00030EFF7 /* d_galspnbl.cpp */,
 				336B50C514F4439A00CE9A63 /* d_bloodbro.cpp */,
 				336B50C614F4439A00CE9A63 /* d_crospang.cpp */,
 				336B50C714F4439A00CE9A63 /* d_crshrace.cpp */,
@@ -2048,7 +2064,6 @@
 				336B50E214F4439A00CE9A63 /* d_ohmygod.cpp */,
 				336B50E314F4439A00CE9A63 /* d_pass.cpp */,
 				336B50E414F4439A00CE9A63 /* d_pirates.cpp */,
-				336B50E514F4439A00CE9A63 /* d_pktgaldx.cpp */,
 				336B50E614F4439A00CE9A63 /* d_powerins.cpp */,
 				336B50E714F4439A00CE9A63 /* d_pushman.cpp */,
 				336B50E814F4439A00CE9A63 /* d_raiden.cpp */,
@@ -2589,7 +2604,6 @@
 		336B52AD14F4439B00CE9A63 /* libpng */ = {
 			isa = PBXGroup;
 			children = (
-				336B52AE14F4439B00CE9A63 /* fba_libpng_v156.txt */,
 				336B52AF14F4439B00CE9A63 /* png.c */,
 				336B52B014F4439B00CE9A63 /* png.h */,
 				336B52B114F4439B00CE9A63 /* pngconf.h */,
@@ -2625,7 +2639,6 @@
 				336B52C914F4439B00CE9A63 /* crc32.h */,
 				336B52CA14F4439B00CE9A63 /* deflate.c */,
 				336B52CB14F4439B00CE9A63 /* deflate.h */,
-				336B52CC14F4439B00CE9A63 /* fba_zlib_v125.txt */,
 				336B52CD14F4439B00CE9A63 /* gzclose.c */,
 				336B52CE14F4439B00CE9A63 /* gzguts.h */,
 				336B52CF14F4439B00CE9A63 /* gzlib.c */,
@@ -2815,6 +2828,9 @@
 				339E5FC514F1851E006FB970 /* MenuViewController.mm */,
 				3354E92B14F90A0E001DAF9D /* MenuViewController_iPhone.xib */,
 				3354E92D14F90A19001DAF9D /* MenuViewController_iPad.xib */,
+				33217254150D4A6100772645 /* OptSaveStateViewController.h */,
+				33217255150D4A6100772645 /* OptSaveStateViewController.mm */,
+				33217256150D4A6100772645 /* OptSaveStateViewController.xib */,
 				331D16A715053B5B00327F74 /* OptDIPSWViewController.h */,
 				331D16A815053B5B00327F74 /* OptDIPSWViewController.mm */,
 				331D16A915053B5B00327F74 /* OptDIPSWViewController.xib */,
@@ -2901,6 +2917,16 @@
 				33AD897C14F85A4D00239FB6 /* Cyclone.s */,
 			);
 			path = cyclone;
+			sourceTree = "<group>";
+		};
+		33E88A1D150CADC80030EFF7 /* pce */ = {
+			isa = PBXGroup;
+			children = (
+				33E88A1E150CADC80030EFF7 /* d_pce.cpp */,
+				33E88A1F150CADC80030EFF7 /* pce.cpp */,
+				33E88A20150CADC80030EFF7 /* pce.h */,
+			);
+			path = pce;
 			sourceTree = "<group>";
 		};
 		33F444C414F50D8800BA36E1 /* cd */ = {
@@ -2998,6 +3024,7 @@
 				33FB5BBC15094C6F00D1904B /* crt-2.png in Resources */,
 				33FB5BBD15094C6F00D1904B /* scanline-1.png in Resources */,
 				33FB5BBE15094C6F00D1904B /* scanline-2.png in Resources */,
+				33217258150D4A6100772645 /* OptSaveStateViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3201,7 +3228,6 @@
 				336B542214F4439B00CE9A63 /* d_pac2650.cpp in Sources */,
 				336B542314F4439B00CE9A63 /* d_pacland.cpp in Sources */,
 				336B542414F4439B00CE9A63 /* d_pacman.cpp in Sources */,
-				336B542514F4439B00CE9A63 /* d_pce.cpp in Sources */,
 				336B542614F4439B00CE9A63 /* d_pkunwar.cpp in Sources */,
 				336B542714F4439B00CE9A63 /* d_prehisle.cpp in Sources */,
 				336B542814F4439B00CE9A63 /* d_quizo.cpp in Sources */,
@@ -3270,7 +3296,6 @@
 				336B546714F4439B00CE9A63 /* d_ohmygod.cpp in Sources */,
 				336B546814F4439B00CE9A63 /* d_pass.cpp in Sources */,
 				336B546914F4439B00CE9A63 /* d_pirates.cpp in Sources */,
-				336B546A14F4439B00CE9A63 /* d_pktgaldx.cpp in Sources */,
 				336B546B14F4439B00CE9A63 /* d_powerins.cpp in Sources */,
 				336B546C14F4439B00CE9A63 /* d_pushman.cpp in Sources */,
 				336B546D14F4439B00CE9A63 /* d_raiden.cpp in Sources */,
@@ -3558,6 +3583,13 @@
 				331D170D1506BF8E00327F74 /* OptConGetWiimoteBtnViewController.m in Sources */,
 				331D17121507DC1B00327F74 /* OptROMSPathsViewController.mm in Sources */,
 				33132C36150884FB002F97BB /* OptROMSSetPathsViewController.mm in Sources */,
+				33E88A21150CADC80030EFF7 /* d_pce.cpp in Sources */,
+				33E88A22150CADC80030EFF7 /* pce.cpp in Sources */,
+				33E88A26150CAEDC0030EFF7 /* d_actfancr.cpp in Sources */,
+				33E88A27150CAEDC0030EFF7 /* d_pktgaldx.cpp in Sources */,
+				33E88A29150CAFA30030EFF7 /* d_momoko.cpp in Sources */,
+				33E88A2B150CAFE00030EFF7 /* d_galspnbl.cpp in Sources */,
+				33217257150D4A6100772645 /* OptSaveStateViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

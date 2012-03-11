@@ -2,17 +2,19 @@ v0.3
 ----
 DONE
 - add of a service button
+- smoother rendering
+- stability improved
+- roms sorted by long name
+- remove roms bios from listing (neogeo, pgm, ... ?)
+- improved megadrive & pcengine support. Roms required prefix (md_, pce_, tg_, sgx_)
 BUGS FIXED
 - iOS 4.x compatible
 - wrong screen rotation
 
-BUGS TO FIX
-- crash issue only on real device when launching in portrait, going to menu, rotating to landscape & going back to emu
 TODO
 - pad restrictor: 2ways, 4ways, 8ways
-- roms sorted by long name
+
 - roms filters (categories)
-- remove roms bios from listing (neogeo, pgm, ... ?)
 - buttons mapping / game or buttons nb ?
 - wiimote start/select reversed?
 

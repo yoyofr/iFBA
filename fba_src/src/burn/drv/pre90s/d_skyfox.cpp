@@ -24,7 +24,7 @@ static UINT8 DrvRecalc;
 
 static UINT8 DrvJoy1[8];
 static UINT8 DrvJoy2[1];
-static UINT8 DrvDips[1];
+static UINT8 DrvDips[3];
 static UINT8 DrvInputs[1];
 static UINT8 DrvReset;
 
@@ -461,7 +461,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x200; i++) {
 			INT32 p = Palette[i];
-			DrvPalette[i] =  HighCol16(p >> 16, p >> 8, p, 0);
+			DrvPalette[i] =  BurnHighCol(p >> 16, p >> 8, p, 0);
 		}
 	}
 

@@ -223,6 +223,8 @@ int RunIdle() {
     }
     now = timer;
     ticks=now-done;
+        
+        //ticks=1;
     
     if(ticks<1) {
         usleep(100); //0.1ms
@@ -331,3 +333,13 @@ int RunMessageLoop()
 	return 0;
 }
 
+/////////////////////////////////////////
+/* DUMMY FUNC for IOS port */
+/////////////////////////////////////////
+void NeoCDInfo_Exit() {
+    
+}
+// for NeoGeo CD (WAV playback)
+void wav_pause(bool bResume) {
+    
+}

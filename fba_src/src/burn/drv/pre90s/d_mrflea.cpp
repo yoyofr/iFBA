@@ -418,7 +418,7 @@ static INT32 DrvDraw()
 			{
 				INT32 pxl = Palette[*src];
 
-				PutPix(pBurnDraw + ((y << 8) | x) * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
+				PutPix(pBurnDraw + ((y << 8) | x) * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
 			}
 		}
 	}
@@ -440,7 +440,7 @@ static INT32 DrvDraw()
 
 				INT32 pxl = Palette[0x10|*src];
 
-				PutPix(pBurnDraw + ((y << 8) | x) * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
+				PutPix(pBurnDraw + ((y << 8) | x) * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
 			}
 		}
 	}
@@ -634,7 +634,7 @@ STD_ROM_FN(mrflea)
 
 struct BurnDriver BurnDrvmrflea = {
 	"mrflea", NULL, NULL, NULL, "1982",
-	"The Amazing Adventures of Mr. F. Lea\0", NULL, "Pacific Novelty", "misc",
+	"The Amazing Adventures of Mr. F. Lea\0", NULL, "Pacific Novelty", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL, 1, HARDWARE_MISC_PRE90S, GBF_PLATFORM, 0,
 	NULL, mrfleaRomInfo, mrfleaRomName, NULL, NULL, DrvInputInfo, DrvDIPInfo,

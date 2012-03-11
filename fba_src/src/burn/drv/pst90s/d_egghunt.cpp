@@ -98,7 +98,7 @@ static inline void palette_write(INT32 offset)
 	g = (g << 3) | (g >> 2);
 	b = (b << 3) | (b >> 2);
 
-	DrvPalette[offset/2] = HighCol16(r, g, b, 0);
+	DrvPalette[offset/2] = BurnHighCol(r, g, b, 0);
 }
 
 void __fastcall egghunt_main_write(UINT16 address, UINT8 data)

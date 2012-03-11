@@ -14,7 +14,7 @@ int (*GetNextSound)(int);				// Callback used to request more sound
 //static SDL_AudioSpec audiospec;
 
 //#define PLAYBACK_FREQ 22050
-extern INT32 nAudSampleRate;
+extern INT32 nAudSampleRate[8];
 extern INT32 nAudSegCount;
 //#define SOUND_BUFFER_NB 6
 
@@ -74,6 +74,7 @@ static int SDLSoundCheck() {
     int diff_buf=buffer_ana_gen_ofs-buffer_ana_play_ofs;
     if (diff_buf<0) diff_buf+=nAudSegCount;
     if (diff_buf>=nAudSegCount/2) drawframe=1;
+    //if (drawframe==0) printf("yo\n");
     GetNextSound(drawframe);    
     //    if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
     memcpy(buffer_ana[buffer_ana_gen_ofs], nAudNextSound, nAudSegLen << 2);
@@ -202,28 +203,29 @@ static int SDLSoundInit()
     
     switch (ifba_conf.sound_freq) {
         case 0:
-            nAudSampleRate=22050;
+            nAudSampleRate[0]=22050;
             break;
         default:
         case 1:
-            nAudSampleRate=44100;
+            nAudSampleRate[0]=44100;
             break;
     }    
     switch (ifba_conf.sound_latency) {  //TODO: maybe should depend how sound_frequency
         case 0:
-            nAudSegCount=4;
+            nAudSegCount=2;
             break;
         case 1:
-            nAudSegCount=6;
+            nAudSegCount=4;
             break;
         case 2:
-            nAudSegCount=8;
+            nAudSegCount=6;
             break;
     }
     
     nSoundFps = nAppVirtualFps;
-	nAudSegLen = (nAudSampleRate * 100 + (nSoundFps >> 1)) / nSoundFps;
+	nAudSegLen = (nAudSampleRate[0] * 100 + (nSoundFps >> 1)) / nSoundFps;
 	nAudLoopLen = (nAudSegLen * 1/*nAudSegCount*/) << 2;	    
+    printf("snd buff:%d\n",nAudSegLen);
     
     AudioSessionInitialize (
                             NULL,
@@ -239,7 +241,7 @@ static int SDLSoundInit()
                              );
     
     //Check if still required or not 
-    Float32 preferredBufferDuration = nAudSegLen*1.0f/nAudSampleRate;                      // 1
+    Float32 preferredBufferDuration = nAudSegLen*1.0f/nAudSampleRate[0];                      // 1
     AudioSessionSetProperty (                                     // 2
                              kAudioSessionProperty_PreferredHardwareIOBufferDuration,
                              sizeof (preferredBufferDuration),
@@ -264,7 +266,7 @@ static int SDLSoundInit()
     mDataFormat.mFormatID = kAudioFormatLinearPCM;
     mDataFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
 	
-	mDataFormat.mSampleRate = nAudSampleRate;
+	mDataFormat.mSampleRate = nAudSampleRate[0];
     
 	mDataFormat.mBitsPerChannel = 16;
     

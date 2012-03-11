@@ -20,7 +20,7 @@ void ComputeGammaLUT()
 }
 
 // Standard callbacks for 16/24/32 bit color:
-static UINT32 __cdecl myHighCol15(INT32 r, INT32 g, INT32 b, INT32  /* i */)
+static UINT32 __cdecl HighCol15(INT32 r, INT32 g, INT32 b, INT32  /* i */)
 {
 	UINT32 t;
 	t =(r<<7)&0x7c00; // 0rrr rr00 0000 0000
@@ -29,7 +29,7 @@ static UINT32 __cdecl myHighCol15(INT32 r, INT32 g, INT32 b, INT32  /* i */)
 	return t;
 }
 
-static UINT32 __cdecl myHighCol16(INT32 r, INT32 g, INT32 b, INT32 /* i */)
+static UINT32 __cdecl HighCol16(INT32 r, INT32 g, INT32 b, INT32 /* i */)
 {
 	UINT32 t;
 	t =(r<<8)&0xf800; // rrrr r000 0000 0000
@@ -94,19 +94,19 @@ INT32 SetBurnHighCol(INT32 nDepth)
 		}
 	} else {
 		if (nDepth == 15) {
-			VidHighCol = myHighCol15;
+			VidHighCol = HighCol15;
 		}
 		if (nDepth == 16) {
-			VidHighCol = myHighCol16;
+			VidHighCol = HighCol16;
 		}
 		if (nDepth > 16) {
 			VidHighCol = HighCol24;
 		}
 	}
-/*	if ((bDrvOkay && !(BurnDrvGetFlags() & BDF_16BIT_ONLY)) || nDepth <= 16) {
-		HighCol15 = VidHighCol;
+	if ((bDrvOkay && !(BurnDrvGetFlags() & BDF_16BIT_ONLY)) || nDepth <= 16) {
+		BurnHighCol = VidHighCol;
 	}
-*/
+
 	return 0;
 }
 

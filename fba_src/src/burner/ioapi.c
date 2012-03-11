@@ -14,6 +14,12 @@
         #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#if defined(__APPLE__)
+	#define fopen64 fopen
+	#define ftello64 ftell
+	#define fseeko64 fseek
+#endif
+
 #include "ioapi.h"
 
 voidpf call_zopen64 (const zlib_filefunc64_32_def* pfilefunc,const void*filename,int mode)
@@ -111,13 +117,8 @@ static voidpf ZCALLBACK fopen64_file_func (voidpf opaque, const void* filename, 
     if (mode & ZLIB_FILEFUNC_MODE_CREATE)
         mode_fopen = "wb";
 
-#ifdef IOS_BUILD
-    if ((filename!=NULL) && (mode_fopen != NULL))
-        file = fopen((const char*)filename, mode_fopen);
-#else    
     if ((filename!=NULL) && (mode_fopen != NULL))
         file = fopen64((const char*)filename, mode_fopen);
-#endif    
     return file;
 }
 
@@ -147,11 +148,7 @@ static long ZCALLBACK ftell_file_func (voidpf opaque, voidpf stream)
 static ZPOS64_T ZCALLBACK ftell64_file_func (voidpf opaque, voidpf stream)
 {
     ZPOS64_T ret;
-#ifdef IOS_BUILD    
-    ret = ftell((FILE *)stream);
-#else
     ret = ftello64((FILE *)stream);
-#endif    
     return ret;
 }
 
@@ -197,13 +194,9 @@ static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T
     }
     ret = 0;
 
-#ifdef IOS_BUILD
-    if(fseek((FILE *)stream, offset, fseek_origin) != 0)
-        ret = -1;
-#else    
     if(fseeko64((FILE *)stream, offset, fseek_origin) != 0)
                         ret = -1;
-#endif
+
     return ret;
 }
 

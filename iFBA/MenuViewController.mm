@@ -11,6 +11,7 @@
 #import "GameBrowserViewController.h"
 #import "OptionsViewController.h"
 #import "OptDIPSWViewController.h"
+#import "OptSaveStateViewController.h"
 
 #ifdef TESTFLIGHT
 #import "TestFlight.h"
@@ -23,8 +24,9 @@ extern char gameName[64];
 extern volatile int emuThread_running;
 extern int device_isIpad;
 
+
 @implementation MenuViewController
-@synthesize emuvc,gamebrowservc,optionsvc,dipswvc;
+@synthesize emuvc,gamebrowservc,optionsvc,dipswvc,statevc;
 @synthesize tabView;
 @synthesize btn_backToEmu;
 
@@ -115,7 +117,7 @@ extern int device_isIpad;
     int nbRows=0;
     switch (section) {
         case 0:
-            if (emuThread_running) nbRows=6;
+            if (emuThread_running) nbRows=5;
             else nbRows=1;
             break;
         case 1:
@@ -156,17 +158,16 @@ extern int device_isIpad;
                     cell.textLabel.text=[NSString stringWithFormat:NSLocalizedString(@"Back to %s",@""),gameName];
 //                    cell.backgroundColor=[UIColor colorWithRed:0.95f green:1.0f blue:0.95f alpha:1.0f];
                 }
-                if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Load State",@"");
-                if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
-                if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"DIPSW",@"");
-                if (indexPath.row==4) {
+                if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
+                if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"DIPSW",@"");
+                if (indexPath.row==3) {
 //                    if (pendingReset) cell.accessoryType=UITableViewCellAccessoryCheckmark;
 //                    else 
                         cell.accessoryType=UITableViewCellAccessoryNone;
                     cell.textLabel.text=@"Reset";
 //                    cell.backgroundColor=[UIColor colorWithRed:1.0f green:0.7f blue:0.7f alpha:1.0f];
                 }
-                if (indexPath.row==5) {
+                if (indexPath.row==4) {
                     cell.textLabel.text=NSLocalizedString(@"Load game",@"");
 //                    cell.backgroundColor=[UIColor colorWithRed:0.8f green:1.0f blue:0.8f alpha:1.0f];
                 }
@@ -194,8 +195,6 @@ extern int device_isIpad;
     return cell;
 }
 
-int StatedLoad(int slot);
-int StatedSave(int slot);
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==0) {//Game browser
@@ -205,25 +204,22 @@ int StatedSave(int slot);
                     //[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
                     [self.navigationController pushViewController:emuvc animated:NO];
                     break;
-                case 1: //load state
-                    StatedLoad(0);
-                    [self backToEmu];
+                case 1: //save state
+                    statevc=[[OptSaveStateViewController alloc] initWithNibName:@"OptSaveStateViewController" bundle:nil];
+                    [self.navigationController pushViewController:statevc animated:YES];
+                    [statevc release];
                     break;
-                case 2: //save state
-                    StatedSave(0);
-                    [self backToEmu];
-                    break;
-                case 3://DIP Switches
+                case 2://DIP Switches
                     dipswvc = [[OptDIPSWViewController alloc] initWithNibName:@"OptDIPSWViewController" bundle:nil];
                     [self.navigationController pushViewController:dipswvc animated:YES];
                     [dipswvc release];
                     break;
-                case 4: //reset
+                case 3: //reset
                     pendingReset=1;
                     //[tabView reloadData];
                     [self backToEmu];
                     break;
-                case 5: //game browser
+                case 4: //game browser
                     gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];

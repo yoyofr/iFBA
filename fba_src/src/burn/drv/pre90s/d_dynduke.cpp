@@ -217,7 +217,7 @@ static inline void palette_update_entry(INT32 entry)
 	INT32 g = (p >> 4) & 0x0f;
 	INT32 b = (p >> 8) & 0x0f;
 
-	DrvPalette[entry] = HighCol16((r<<4)|r, (g<<4)|g, (b<<4)|b, 0);
+	DrvPalette[entry] = BurnHighCol((r<<4)|r, (g<<4)|g, (b<<4)|b, 0);
 }
 
 void __fastcall slave_write(UINT32 address, UINT8 data)

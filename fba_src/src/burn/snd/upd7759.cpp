@@ -65,7 +65,7 @@ struct upd7759_chip
 	UINT32		romoffset;					/* ROM offset to make save/restore easier */
 };
 
-static struct upd7759_chip *Chips[2]={NULL,NULL}; // more?
+static struct upd7759_chip *Chips[2]; // more?
 static struct upd7759_chip *Chip = NULL;
 
 static INT32 nNumChips = 0;

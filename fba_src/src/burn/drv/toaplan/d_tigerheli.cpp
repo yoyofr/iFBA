@@ -328,7 +328,7 @@ static void TigerHeliPaletteInit()
 		b = TigerHeliPaletteROM[i + 0x0200];	  // Blue
 		b |= b << 4;
 
-		TigerHeliPalette[i] = HighCol16(r, g, b, 0);
+		TigerHeliPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 
 	return;

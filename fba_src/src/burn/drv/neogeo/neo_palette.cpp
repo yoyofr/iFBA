@@ -49,7 +49,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g |= g >> 5;
 	b |= b >> 5;
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 INT32 NeoUpdatePalette()

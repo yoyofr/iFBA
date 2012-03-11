@@ -803,7 +803,7 @@ inline static UINT32 CalcCol(UINT32 nColour)
 	b = (BURN_ENDIAN_SWAP_INT32(nColour) & 0x00ff0000) >> 16;
 	g = (BURN_ENDIAN_SWAP_INT32(nColour) & 0xff000000) >> 24;
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 static void SuperchsCalcPalette()

@@ -471,7 +471,7 @@ static INT32 DrvDraw()
 	if (DrvRecalcPal) {
 		for (INT32 i = 0; i < 32; i++) {
 			UINT32 col = Palette[i];
-			DrvPal[i] = HighCol16(col >> 16, col >> 8, col, 0);
+			DrvPal[i] = BurnHighCol(col >> 16, col >> 8, col, 0);
 		}
 	}
 
@@ -654,7 +654,7 @@ STD_ROM_FN(funkybee)
 
 struct BurnDriver BurnDrvfunkybee = {
 	"funkybee", NULL, NULL, NULL, "1982",
-	"Funky Bee\0", NULL, "Orca", "misc",
+	"Funky Bee\0", NULL, "Orca", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_MISC_PRE90S, GBF_VERSHOOT, 0,
 	NULL, funkybeeRomInfo, funkybeeRomName, NULL, NULL, DrvInputInfo, funkybeeDIPInfo,
@@ -682,7 +682,7 @@ STD_ROM_FN(funkbeeb)
 
 struct BurnDriver BurnDrvfunkbeeb = {
 	"funkybeeb", "funkybee", NULL, NULL, "1982",
-	"Funky Bee (bootleg, harder)\0", NULL, "bootleg", "misc",
+	"Funky Bee (bootleg, harder)\0", NULL, "bootleg", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_MISC_PRE90S, GBF_VERSHOOT, 0,
 	NULL, funkbeebRomInfo, funkbeebRomName, NULL, NULL, DrvInputInfo, funkbeebDIPInfo,
@@ -716,7 +716,7 @@ static INT32 skylancrInit()
 
 struct BurnDriver BurnDrvskylancr = {
 	"skylancr", NULL, NULL, NULL, "1983",
-	"Sky Lancer\0", NULL, "Orca", "misc",
+	"Sky Lancer\0", NULL, "Orca", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_MISC_PRE90S, GBF_SHOOT, 0,
 	NULL, skylancrRomInfo, skylancrRomName, NULL, NULL, DrvInputInfo, skylancrDIPInfo,
@@ -743,7 +743,7 @@ STD_ROM_FN(skylance)
 
 struct BurnDriver BurnDrvskylance = {
 	"skylancre", "skylancr", NULL, NULL, "1983",
-	"Sky Lancer (Esco Trading Co license)\0", NULL, "Orca (Esco Trading Co license)", "misc",
+	"Sky Lancer (Esco Trading Co license)\0", NULL, "Orca (Esco Trading Co license)", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_MISC_PRE90S, GBF_SHOOT, 0,
 	NULL, skylanceRomInfo, skylanceRomName, NULL, NULL, DrvInputInfo, skylanceDIPInfo,

@@ -509,7 +509,7 @@ void pow_paletteram16_word_w(UINT32 address)
 	b = (b << 3) | (b >> 2);
 
 	Palette[(address >> 1) & 0x7ff] = (r << 16) | (g << 8) | b;
-	DrvPalette[(address >> 1) & 0x7ff] = HighCol16(r, g, b, 0);
+	DrvPalette[(address >> 1) & 0x7ff] = BurnHighCol(r, g, b, 0);
 }
 
 void __fastcall pow_write_word(UINT32 address, UINT16 data)
@@ -1206,7 +1206,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x800; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 

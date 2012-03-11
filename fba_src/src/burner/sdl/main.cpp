@@ -51,6 +51,7 @@ int fba_main(int argc, char *argv[])
     
     
     bSoundOn=ifba_conf.sound_on;
+    bForce60Hz=ifba_conf.video_60hz;
 	
 	ConfigAppLoad(); 
 	
@@ -79,6 +80,50 @@ int fba_main(int argc, char *argv[])
 		}
 	}
     
+    //Check if console & should patch rom len
+    if ((BurnDrvGetHardwareCode()&HARDWARE_PREFIX_PCENGINE==HARDWARE_PREFIX_PCENGINE)||
+        (BurnDrvGetHardwareCode()&HARDWARE_PREFIX_SEGA_MEGADRIVE ==HARDWARE_PREFIX_SEGA_MEGADRIVE)||
+        (BurnDrvGetHardwareCode()&HARDWARE_PREFIX_NINTENDO_SNES ==HARDWARE_PREFIX_NINTENDO_SNES)) {
+        //pcengine
+        char *zipName;
+        struct ZipEntry* List = NULL;
+        int nListCount = 0;
+        
+        for (int d = 0; d < DIRS_MAX; d++) {
+            zipName = (char*)malloc(MAX_PATH);            
+			sprintf(zipName, "%s%s", szAppRomPaths[d], argv[1]);
+            printf("check: %s\n",zipName);            
+			if (ZipOpen(zipName) == 0) {	// Open the rom zip file				
+                // Get the list of entries
+                ZipGetList(&List, &nListCount);						
+                
+                // Check file for larger one
+                int biggest_file_len=0;
+                for (int i = 0; i < nListCount; i++) {
+                    if (List[i].nLen>biggest_file_len) biggest_file_len=List[i].nLen;
+                }
+                
+                rom_force_len=biggest_file_len;
+                //free zip list
+                if (List) {
+                    for (int i = 0; i < nListCount; i++) {
+                        if (List[i].szName) {
+                            free(List[i].szName);
+                            List[i].szName = NULL;
+                        }
+                    }
+                    free(List);
+                }               
+                List = NULL;
+                nListCount = 0;
+                free(zipName);
+                break;
+            }
+            free(zipName);
+        }
+    }
+    //
+
 	InputInit();
 	init_emu(i);
     

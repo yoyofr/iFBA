@@ -1082,7 +1082,7 @@ static void recalculate_palette()
 			g = (g << 3) | (g >> 2);
 			b = (b << 3) | (b >> 2);
 
-			DrvPalette[i] = HighCol16(r, g, b, 0);
+			DrvPalette[i] = BurnHighCol(r, g, b, 0);
 		}
 		DrvPalette[0x400] = 0;
 	}

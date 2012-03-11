@@ -261,7 +261,7 @@ void __fastcall lkage_main_write(UINT16 address, UINT8 data)
 		b |= b << 4;
 
 		Palette[(address & 0x7ff) >> 1] = (r << 16) | (g << 8) | b;
-		DrvPalette[(address & 0x7ff) >> 1] = HighCol16(r, g, b, 0);
+		DrvPalette[(address & 0x7ff) >> 1] = BurnHighCol(r, g, b, 0);
 
 		return;
 	}
@@ -796,7 +796,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x400; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 		DrvRecalc = 0;
 	}

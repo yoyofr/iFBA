@@ -134,7 +134,7 @@ static inline void palette_update_one(INT32 offset)
 
 	offset = (offset & 0xffc) / 2;
 
-	DrvPalette[offset/2] = HighCol16(p[offset+1], p[offset+1] >> 8, p[offset], 0);
+	DrvPalette[offset/2] = BurnHighCol(p[offset+1], p[offset+1] >> 8, p[offset], 0);
 }
 
 static inline void pixel_layer_update_one(INT32 offset)
@@ -605,7 +605,7 @@ static INT32 DrvDraw()
 			palette_update_one(i);
 		}
 
-		DrvPalette[0x400] = HighCol16(0, 0, 0, 0); // black
+		DrvPalette[0x400] = BurnHighCol(0, 0, 0, 0); // black
 
 		DrvRecalc = 0;
 	}
@@ -710,7 +710,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 	struct BurnArea ba;
 	
 	if (pnMin != NULL) {
-		*pnMin = 0x029682;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_MEMORY_RAM) {
@@ -726,6 +726,9 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 		BurnYM2151Scan(nAction);
 		MSM6295Scan(0, nAction);
+		
+		SCAN_VAR(FakeTrackBallX);
+		SCAN_VAR(FakeTrackBallY);
 	}
 
 	return 0;

@@ -165,7 +165,7 @@ static inline void speedspn_palette_write(INT32 offset)
 
 	offset /= 2;
 
-	DrvPalette[offset] = HighCol16((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
+	DrvPalette[offset] = BurnHighCol((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
 	if (DrvPalette[offset] == 0) black_color = offset;
 }
 

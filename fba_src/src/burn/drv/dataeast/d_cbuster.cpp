@@ -460,7 +460,7 @@ static void DrvPaletteRecalc()
 		INT32 g = ((p0[i] >>  8 ) * 175) / 100;
 		INT32 b = ((p1[i] & 0xff) * 175) / 100;
 
-		DrvPalette[i] = HighCol16(r, g, b, 0);
+		DrvPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -657,7 +657,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 	struct BurnArea ba;
 	
 	if (pnMin != NULL) {
-		*pnMin = 0x029682;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_MEMORY_RAM) {
@@ -670,6 +670,8 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 	if (nAction & ACB_DRIVER_DATA) {
 		SekScan(nAction);
+		
+		deco16SoundScan(nAction, pnMin);
 
 		deco16Scan();
 	}
@@ -713,7 +715,7 @@ STD_ROM_FN(cbuster)
 
 struct BurnDriver BurnDrvCbuster = {
 	"cbuster", NULL, NULL, NULL, "1990",
-	"Crude Buster (World FX version)\0",NULL, "Data East Corporation", "Miscellaneous",
+	"Crude Buster (World FX version)\0",NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM | GBF_SCRFIGHT, 0,
 	NULL, cbusterRomInfo, cbusterRomName, NULL, NULL, CbusterInputInfo, CbusterDIPInfo,
@@ -757,7 +759,7 @@ STD_ROM_FN(cbusterw)
 
 struct BurnDriver BurnDrvCbusterw = {
 	"cbusterw", "cbuster", NULL, NULL, "1990",
-	"Crude Buster (World FU version)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Crude Buster (World FU version)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM | GBF_SCRFIGHT, 0,
 	NULL, cbusterwRomInfo, cbusterwRomName, NULL, NULL, CbusterInputInfo, CbusterDIPInfo,
@@ -801,7 +803,7 @@ STD_ROM_FN(cbusterj)
 
 struct BurnDriver BurnDrvCbusterj = {
 	"cbusterj", "cbuster", NULL, NULL, "1990",
-	"Crude Buster (Japan)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Crude Buster (Japan)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM | GBF_SCRFIGHT, 0,
 	NULL, cbusterjRomInfo, cbusterjRomName, NULL, NULL, CbusterInputInfo, CbusterDIPInfo,
@@ -845,7 +847,7 @@ STD_ROM_FN(twocrude)
 
 struct BurnDriver BurnDrvTwocrude = {
 	"twocrude", "cbuster", NULL, NULL, "1990",
-	"Two Crude (US)\0", NULL, "Data East USA", "Miscellaneous",
+	"Two Crude (US)\0", NULL, "Data East USA", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM | GBF_SCRFIGHT, 0,
 	NULL, twocrudeRomInfo, twocrudeRomName, NULL, NULL, CbusterInputInfo, CbusterDIPInfo,

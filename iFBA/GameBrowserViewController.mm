@@ -169,11 +169,10 @@ NSString *genreList[20]={
             dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
             for (file in dirContent) {
                 NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
+                
                 if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
-                    NSUInteger ind;                    
-                    //NSLog(@"file; %@",[file lastPathComponent]);
-                    
-                    ind=[burn_supportedRoms indexOfObject:[[file lastPathComponent] lowercaseString]];                    
+                    NSUInteger ind;                                        
+                    ind=[burn_supportedRoms indexOfObject:[[[file lastPathComponent] stringByDeletingPathExtension] lowercaseString]];                    
                     if (ind!=NSNotFound) {
                         nBurnDrvActive=ind;
                         int genre=BurnDrvGetGenreFlags();
@@ -185,6 +184,7 @@ NSString *genreList[20]={
                             [romlistGenre[27] addObject:[NSNumber numberWithInt:genre] ];
                             [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
                         }
+                        //NSLog(@"file: %@",file);
                     }
                 }
             }

@@ -5,14 +5,15 @@
 #define SSHOT_LIBPNG_ERROR 2
 #define SSHOT_OTHER_ERROR 3
 
-#define SSHOT_DIRECTORY "screenshots/"
+//IOS_BUILD patch
+#define SSHOT_DIRECTORY "/var/mobile/Documents/iFBA/"
 
 static UINT8* pSShot = NULL;
 static UINT8* pConvertedImage = NULL;
 static png_bytep* pSShotImageRows = NULL;
 static FILE* ff;
 
-INT32 MakeScreenShot()
+INT32 MakeScreenShot(int index)
 {
 	char szAuthor[256]; char szDescription[256]; char szCopyright[256];	char szSoftware[256]; char szSource[256];
 	png_text text_ptr[8] = { { 0, 0, 0, 0, 0, 0, 0 }, };
@@ -148,7 +149,9 @@ INT32 MakeScreenShot()
 	png_convert_from_time_t(&png_time_now, currentTime);
 
 	// construct our filename -> "romname-mm-dd-hms.png"
-    sprintf(szSShotName,"%s%s-%.2d-%.2d-%.2d%.2d%.2d.png", SSHOT_DIRECTORY, BurnDrvGetTextA(DRV_NAME), tmTime->tm_mon + 1, tmTime->tm_mday, tmTime->tm_hour, tmTime->tm_min, tmTime->tm_sec);
+//IOS_BUILD patch    
+//    sprintf(szSShotName,"%s%s-%.2d-%.2d-%.2d%.2d%.2d.png", SSHOT_DIRECTORY, BurnDrvGetTextA(DRV_NAME), tmTime->tm_mon + 1, tmTime->tm_mday, tmTime->tm_hour, tmTime->tm_min, tmTime->tm_sec);
+    sprintf(szSShotName,"%s%s_%02x.png", SSHOT_DIRECTORY, BurnDrvGetTextA(DRV_NAME),index);
 
 	ff = fopen(szSShotName, "wb");
 	if (ff == NULL) {

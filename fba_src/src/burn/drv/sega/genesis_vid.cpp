@@ -257,8 +257,8 @@ static void VDPDataWrite(UINT16 data)
 		case 0x03: {
 			INT32 offset = (VdpAddress >> 1) % CRAM_SIZE;
 			//palette_set_color(Machine, offset + genesis_palette_base, pal3bit(data >> 1), pal3bit(data >> 5), pal3bit(data >> 9));
-			//System16Palette[offset + 0x1800 /*GenesisPaletteBase*/] = HighCol16(pal3bit(data >> 1), pal3bit(data >> 5), pal3bit(data >> 9), 0);
-			GenesisPalette[offset + GenesisPaletteBase] = HighCol16(pal3bit(data >> 1), pal3bit(data >> 5), pal3bit(data >> 9), 0);
+			//System16Palette[offset + 0x1800 /*GenesisPaletteBase*/] = BurnHighCol(pal3bit(data >> 1), pal3bit(data >> 5), pal3bit(data >> 9), 0);
+			GenesisPalette[offset + GenesisPaletteBase] = BurnHighCol(pal3bit(data >> 1), pal3bit(data >> 5), pal3bit(data >> 9), 0);
 			break;
 		}
 		

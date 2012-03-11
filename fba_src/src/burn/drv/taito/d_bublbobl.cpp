@@ -2140,7 +2140,7 @@ inline static INT32 CalcCol(UINT16 nColour)
 	g = pal4bit(nColour >>  8);
 	b = pal4bit(nColour >>  4);
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 static void DrvCalcPalette()

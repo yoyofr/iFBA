@@ -38,7 +38,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	b = (nColour & 0x001F) << 3;	// Blue
 	b |= b >> 5;
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 INT32 CavePalUpdate4Bit(INT32 nOffset, INT32 nNumPalettes)

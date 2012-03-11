@@ -95,7 +95,7 @@ static void palette_write(INT32 offset)
 	g = (g << 3) | (g >> 2);
 	b = (b << 3) | (b >> 2);
 
-	DrvPalette[offset >> 1] = HighCol16(r, g, b, 0);
+	DrvPalette[offset >> 1] = BurnHighCol(r, g, b, 0);
 }
 
 static void set_oki_bank(INT32 data)

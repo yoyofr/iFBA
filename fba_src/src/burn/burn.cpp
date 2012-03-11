@@ -12,15 +12,19 @@ INT32 (__cdecl *bprintf)(INT32 nStatus, TCHAR* szFormat, ...) = BurnbprintfFille
 
 INT32 nBurnVer = BURN_VERSION;		// Version number of the library
 
-UINT32 nBurnDrvCount = sizeof(pDriver) / sizeof(pDriver[0]);		// Count of game drivers
+//IOS_BUILD PATCH
+UINT32 nBurnDrvCount = sizeof(pDriver) / sizeof(pDriver[0]);//0;		// Count of game drivers
 UINT32 nBurnDrvActive = ~0U;	// Which game driver is selected
 UINT32 nBurnDrvSelect[8] = { ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U }; // Which games are selected (i.e. loaded but not necessarily active)
+		
 
-int rom_len_adjusted=0;
-									
+int rom_force_len=0;
 bool bBurnUseMMX;
+#if defined BUILD_A68K
 bool bBurnUseASMCPUEmulation = true;
-bool bBurnUseASMZ80CPUEmulation = false; //not implemented yet => zet.cpp
+#else
+bool bBurnUseASMCPUEmulation = false;
+#endif
 
 #if defined (FBA_DEBUG)
  clock_t starttime = 0;
@@ -30,7 +34,7 @@ UINT32 nCurrentFrame;			// Framecount for emulated game
 
 UINT32 nFramesEmulated;		// Counters for FPS	display
 UINT32 nFramesRendered;		//
-bool bForce60Hz = false;
+bool bForce60Hz = true;  //IOS_BUILD => ios is tied to 60fps
 INT32 nBurnFPS = 6000;
 INT32 nBurnCPUSpeedAdjust = 0x0100;	// CPU speed adjustment (clock * nBurnCPUSpeedAdjust / 0x0100)
 
@@ -136,7 +140,6 @@ INT32 BurnGetZipName(char** pszName, UINT32 i)
 	}
 
 	strcpy(szFilename, pszGameName);
-	strcat(szFilename, ".zip");
 
 	*pszName = szFilename;
 
@@ -172,15 +175,15 @@ extern "C" TCHAR* BurnDrvGetText(UINT32 i)
 
 #else
 
-	static INT8 szShortNameA[32];
-	static INT8 szDateA[32];
-	static INT8 szFullNameA[256];
-	static INT8 szCommentA[256];
-	static INT8 szManufacturerA[256];
-	static INT8 szSystemA[256];
-	static INT8 szParentA[32];
-	static INT8 szBoardROMA[32];
-	static INT8 szSampleNameA[32];
+	static char szShortNameA[32];
+	static char szDateA[32];
+	static char szFullNameA[256];
+	static char szCommentA[256];
+	static char szManufacturerA[256];
+	static char szSystemA[256];
+	static char szParentA[32];
+	static char szBoardROMA[32];
+	static char szSampleNameA[32];
 
 #endif
 
@@ -207,7 +210,7 @@ extern "C" TCHAR* BurnDrvGetText(UINT32 i)
 						INT32 nRet;
 
 						do {
-							nRet = wcstombs((char*)szFullNameA, pszCurrentNameW, 256);
+							nRet = wcstombs(szFullNameA, pszCurrentNameW, 256);
 							pszCurrentNameW += wcslen(pszCurrentNameW) + 1;
 						} while	(nRet >= 0 && pszCurrentNameW[0]);
 
@@ -245,31 +248,31 @@ extern "C" TCHAR* BurnDrvGetText(UINT32 i)
 
 		switch (i & 0xFF) {
 			case DRV_NAME:
-				pszStringA = (char*)szShortNameA;
+				pszStringA = szShortNameA;
 				break;
 			case DRV_DATE:
-				pszStringA = (char*)szDateA;
+				pszStringA = szDateA;
 				break;
 			case DRV_FULLNAME:
-				pszStringA = (char*)szFullNameA;
+				pszStringA = szFullNameA;
 				break;
 			case DRV_COMMENT:
-				pszStringA = (char*)szCommentA;
+				pszStringA = szCommentA;
 				break;
 			case DRV_MANUFACTURER:
-				pszStringA = (char*)szManufacturerA;
+				pszStringA = szManufacturerA;
 				break;
 			case DRV_SYSTEM:
-				pszStringA = (char*)szSystemA;
+				pszStringA = szSystemA;
 				break;
 			case DRV_PARENT:
-				pszStringA = (char*)szParentA;
+				pszStringA = szParentA;
 				break;
 			case DRV_BOARDROM:
-				pszStringA = (char*)szBoardROMA;
+				pszStringA = szBoardROMA;
 				break;
 			case DRV_SAMPLENAME:
-				pszStringA = (char*)szSampleNameA;
+				pszStringA = szSampleNameA;
 				break;
 		}
 
@@ -409,21 +412,17 @@ extern "C" char* BurnDrvGetTextA(UINT32 i)
 	}
 }
 
+#if defined (_UNICODE)
 void BurnLocalisationSetName(char *szName, TCHAR *szLongName)
 {
 	for (UINT32 i = 0; i < nBurnDrvCount; i++) {
 		nBurnDrvActive = i;
 		if (!strcmp(szName, pDriver[i]->szShortName)) {
-#ifdef _UNICODE            
 			pDriver[i]->szFullNameW = szLongName;
-#else
-            //TODO: WARNING: potential mem leak here
-            pDriver[i]->szFullNameW=(wchar_t*)malloc(sizeof(szLongName+1)*sizeof(wchar_t));
-            mbstowcs(pDriver[i]->szFullNameW, szLongName, sizeof(szLongName));
-#endif
 		}
 	}
 }
+#endif
 
 // Get the zip names for the driver
 extern "C" INT32 BurnDrvGetZipName(char** pszName, UINT32 i)
@@ -660,11 +659,8 @@ extern "C" INT32 BurnDrvExit()
 	nBurnCPUSpeedAdjust = 0x0100;
 	
 	pBurnDrvPalette = NULL;	
-    
-    INT32 nRet=0;
-    if (nBurnDrvSelect[0]) nRet = pDriver[nBurnDrvSelect[0]]->Exit();			// Forward to drivers function
 	
-	
+	INT32 nRet = pDriver[nBurnDrvActive]->Exit();			// Forward to drivers function
 	
 	BurnExitMemoryManager();
 #if defined FBA_DEBUG
@@ -822,7 +818,7 @@ INT32 (__cdecl *BurnExtLoadRom)(UINT8 *Dest, INT32 *pnWrote, INT32 i) = NULL;
 
 // Application-defined colour conversion function
 static UINT32 __cdecl BurnHighColFiller(INT32, INT32, INT32, INT32) { return (UINT32)(~0); }
-//UINT32 (__cdecl *HighCol16) (INT32 r, INT32 g, INT32 b, INT32 i) = BurnHighColFiller;
+UINT32 (__cdecl *BurnHighCol) (INT32 r, INT32 g, INT32 b, INT32 i) = BurnHighColFiller;
 
 // ----------------------------------------------------------------------------
 // Colour-depth independant image transfer

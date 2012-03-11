@@ -10,8 +10,7 @@
 "Warning_Settings_Reset"="First launch of iFBA v%@\n\nSettings reseted with default values.";
 
 //Main menu
-"Load State"="Load State";
-"Save State"="Save State";
+"Save State"="Load/Save State";
 "Load game"="Load game";
 "Options"="Options";
 "About"="About";
@@ -23,7 +22,7 @@
 "Donate"="Donate";
 
 //About
-"About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.21\n\nCurrently supporting %d drivers";
+"About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.23\n\nCurrently supporting %d drivers";
 
 //Options
 "Video"="Video";
@@ -38,6 +37,9 @@
 "Tap selected dir above to validate"="Tap selected dir above to validate";
 
 //Video options
+"60Hz"="60Hz";
+"Force 60Hz for smoother video"="Force 60Hz output for a smoother rendering. May alter game speed";
+"Correct timing"="Correct timing. Rendering will be less smooth but it won't alter game speed";
 "Aspect Ratio"="Aspect Ratio";
 "Respect original game's aspect ratio"="Respect original game's aspect ratio";
 "Don't respect original game's aspect ratio"="Don't respect original game's aspect ratio";

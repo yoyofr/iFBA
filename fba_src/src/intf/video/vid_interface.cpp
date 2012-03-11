@@ -13,7 +13,9 @@
 	extern struct VidOut VidOutDX9;
 	extern struct VidOut VidOutDX9Alt;
 #elif defined (BUILD_SDL)
-	//extern struct VidOut VidOutSDLOpenGL;
+#ifndef IOS_BUILD
+	extern struct VidOut VidOutSDLOpenGL;
+#endif
 	extern struct VidOut VidOutSDLFX;
 #elif defined (_XBOX)
 	extern struct VidOut VidOutD3D;
@@ -27,7 +29,9 @@ static struct VidOut *pVidOut[] = {
 	&VidOutDX9,
 	&VidOutDX9Alt,
 #elif defined (BUILD_SDL)
-	//&VidOutSDLOpenGL,
+#ifndef IOS_BUILD    
+	&VidOutSDLOpenGL,
+#endif    
 	&VidOutSDLFX,
 #elif defined (_XBOX)
 	&VidOutD3D,
@@ -113,7 +117,7 @@ static bool bVidRecalcPalette;
 static UINT8* pVidTransImage = NULL;
 static UINT32* pVidTransPalette = NULL;
 
-static UINT32 __cdecl myHighCol15(INT32 r, INT32 g, INT32 b, INT32  /* i */)
+static UINT32 __cdecl HighCol15(INT32 r, INT32 g, INT32 b, INT32  /* i */)
 {
 	UINT32 t;
 
@@ -158,7 +162,11 @@ INT32 VidInit()
 	}
 #endif
 
+#if defined (BUILD_WIN32) && defined (ENABLE_PREVIEW)
+	if ((nVidSelect < VID_LEN) && (bDrvOkay || hbitmap)) {
+#else
 	if ((nVidSelect < VID_LEN) && bDrvOkay) {
+#endif
 		nVidActive = nVidSelect;
 		if ((nRet = pVidOut[nVidActive]->Init()) == 0) {
 			nBurnBpp = nVidImageBPP;								// Set Burn library Bytes per pixel
@@ -171,7 +179,7 @@ INT32 VidInit()
 				pVidTransPalette = (UINT32*)malloc(32768 * sizeof(UINT32));
 				pVidTransImage = (UINT8*)malloc(nVidImageWidth * nVidImageHeight * sizeof(INT16));
 
-//				HighCol16 = HighCol16;
+				BurnHighCol = HighCol15;
 
 				if (pVidTransPalette == NULL || pVidTransImage == NULL) {
 					VidExit();
@@ -181,6 +189,62 @@ INT32 VidInit()
 		}
 	}
 
+#if defined (BUILD_WIN32) && defined (ENABLE_PREVIEW)
+	if (bVidOkay && hbitmap) {
+		BITMAPINFO bitmapinfo;
+		UINT8* pLineBuffer = (UINT8*)malloc(bitmap.bmWidth * 4);
+		HDC hDC = GetDC(hVidWnd);
+
+		if (hDC && pLineBuffer) {
+
+			memset(&bitmapinfo, 0, sizeof(BITMAPINFO));
+			bitmapinfo.bmiHeader.biSize = sizeof(BITMAPINFO);
+			bitmapinfo.bmiHeader.biWidth = bitmap.bmWidth;
+			bitmapinfo.bmiHeader.biHeight = bitmap.bmHeight;
+			bitmapinfo.bmiHeader.biPlanes = 1;
+			bitmapinfo.bmiHeader.biBitCount = 24;
+			bitmapinfo.bmiHeader.biCompression = BI_RGB;
+			
+			for (INT32 y = 0; y < nVidImageHeight; y++) {
+				UINT8* pd = pVidImage + y * nVidImagePitch;
+				UINT8* ps = pLineBuffer;
+
+				GetDIBits(hDC, hbitmap, nVidImageHeight - 1 - y, 1, ps, &bitmapinfo, DIB_RGB_COLORS);
+
+				for (INT32 x = 0; x < nVidImageWidth; x++, ps += 3) {
+					UINT32 nColour = VidHighCol(ps[2], ps[1], ps[0], 0);
+					switch (nVidImageBPP) {
+						case 2:
+							*((UINT16*)pd) = (UINT16)nColour;
+							pd += 2;
+							break;
+						case 3:
+							pd[0] = (nColour >> 16) & 0xFF;
+							ps[1] = (nColour >>  8) & 0xFF;
+							pd[2] = (nColour >>  0) & 0xFF;
+							pd += 3;
+							break;
+						case 4:
+							*((UINT32*)pd) = nColour;
+							pd += 4;
+							break;
+					}
+				}
+			}
+		}
+		if (hDC) {
+			ReleaseDC(hVidWnd, hDC);
+		}
+		if (pLineBuffer) {
+			free(pLineBuffer);
+			pLineBuffer = NULL;
+		}
+	}
+
+	if (hbitmap) {
+		DeleteObject(hbitmap);
+	}
+#endif
 
 	return nRet;
 }
@@ -221,22 +285,22 @@ INT32 VidExit()
 static INT32 VidDoFrame(bool bRedraw)
 {
 	INT32 nRet;
-	
+//PATCH IOS_BUILD	
 	if (0&&pVidTransImage) {
 		UINT16* pSrc = (UINT16*)pVidTransImage;
 		UINT8* pDest = pVidImage;
-
-		/*if (bVidRecalcPalette) {
+    
+		if (bVidRecalcPalette) {
 			for (INT32 r = 0; r < 256; r += 8) {
 				for (INT32 g = 0; g < 256; g += 8) {
 					for (INT32 b = 0; b < 256; b += 8) {
-						pVidTransPalette[(r << 7) | (g << 2) | (b >> 3)] = HighCol16(r | (r >> 5), g | (g >> 5), b | (b >> 5), 0);
+						pVidTransPalette[(r << 7) | (g << 2) | (b >> 3)] = VidHighCol(r | (r >> 5), g | (g >> 5), b | (b >> 5), 0);
 					}
 				}
 			}
 
 			bVidRecalcPalette = false;
-		}*/
+		}
 
 		pBurnDraw = pVidTransImage;
 		nBurnPitch = nVidImageWidth * 2;

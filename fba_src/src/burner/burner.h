@@ -42,7 +42,9 @@ typedef struct tagIMAGE {
  #include "burner_xbox.h"
 #endif
 
-#include "png.h"
+#if defined (INCLUDE_LIB_PNGH)
+ #include "png.h"
+#endif
 
 // ---------------------------------------------------------------------------
 // OS independent functionality
@@ -95,8 +97,8 @@ INT32 GameInpMacroRead(TCHAR* szVal, bool bOverWrite);
 INT32 GameInpCustomRead(TCHAR* szVal, bool bOverWrite);
 
 // Player Default Controls
-extern INT32 nPlayerDefaultControls[5];
-extern TCHAR szPlayerDefaultIni[5][MAX_PATH];
+extern INT32 nPlayerDefaultControls[4];
+extern TCHAR szPlayerDefaultIni[4][MAX_PATH];
 
 // cong.cpp
 extern const INT32 nConfigMinVersion;					// Minimum version of application for which input files are valid
@@ -142,7 +144,7 @@ INT32 write_datfile(INT32 bType, FILE* fDat);
 INT32 create_datfile(TCHAR* szFilename, INT32 bType);
 
 // sshot.cpp
-INT32 MakeScreenShot();
+INT32 MakeScreenShot(int index);
 
 // state.cpp
 INT32 BurnStateLoadEmbed(FILE* fp, INT32 nOffset, INT32 bAll, INT32 (*pLoadGame)());
@@ -157,10 +159,11 @@ INT32 BurnStateDecompress(UINT8* Def, INT32 nDefLen, INT32 bAll);
 // zipfn.cpp
 struct ZipEntry { char* szName;	UINT32 nLen; UINT32 nCrc; };
 
-INT32 ZipOpen(const char* szZip);
+INT32 ZipOpen(char* szZip);
 INT32 ZipClose();
 INT32 ZipGetList(struct ZipEntry** pList, INT32* pnListCount);
 INT32 ZipLoadFile(UINT8* Dest, INT32 nLen, INT32* pnWrote, INT32 nEntry);
+INT32 __cdecl ZipLoadOneFile(char* arcName, const char* fileName, void** Dest, INT32* pnWrote);
 
 // bzip.cpp
 

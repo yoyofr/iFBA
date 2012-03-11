@@ -10,9 +10,7 @@
 "Warning_Settings_Reset"="Premier lancement de iFBA v%@\n\nRéglages réinitiliasés avec les valeurs par défaut.";
 
 //Main menu
-"Load State"="Charger état";
-"Save State"="Sauver état";
-"Load game"="Lancer jeu";
+"Save State"="Sauver/Charger état";
 "Options"="Options";
 "About"="A Propos";
 "Feedback"="Feedback";
@@ -38,6 +36,9 @@
 "Tap selected dir above to validate"="Touchez la séléction en cours ci-dessus pour valider";
 
 //Video options
+"60Hz"="60Hz";
+"Force 60Hz for smoother video"="Forcer 60Hz pour un rendu plus fluide. Vitesse de jeu altérée";
+"Correct timing"="Timing d'origine. Rendu moins fluide mais vitesse de jeu normale";
 "Aspect Ratio"="Aspect Ratio";
 "Respect original game's aspect ratio"="Respecter le ratio écran original";
 "Don't respect original game's aspect ratio"="Ne pas respecter le ratio écran original";

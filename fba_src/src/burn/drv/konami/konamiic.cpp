@@ -74,7 +74,7 @@ void KonamiRecalcPal(UINT8 *src, UINT32 *dst, INT32 len)
 	UINT8 r,g,b;
 	UINT16 *p = (UINT16*)src;
 	for (INT32 i = 0; i < len / 2; i++) {
-		UINT16 d = (p[i] << 8) | (p[i] >> 8);
+		UINT16 d = BURN_ENDIAN_SWAP_INT16((p[i] << 8) | (p[i] >> 8));
 
 		b = (d >> 10) & 0x1f;
 		g = (d >>  5) & 0x1f;
@@ -84,7 +84,7 @@ void KonamiRecalcPal(UINT8 *src, UINT32 *dst, INT32 len)
 		g = (g << 3) | (g >> 2);
 		b = (b << 3) | (b >> 2);
 
-		dst[i] = HighCol16(r, g, b, 0);
+		dst[i] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -164,7 +164,7 @@ void KonamiBlendCopy(UINT32 *palette /* 32-bit color */, UINT32 *drvpalette /* n
 		  			 ((((source & 0x00ff00) * a + (blend & 0x00ff00) * ad) >> 8) & 0x00ff00) |
 		  			 ((((source & 0xff0000) * a + (blend & 0xff0000) * ad) >> 8) & 0xff0000);
 
-			PutPix(dst, HighCol16(p >> 16, p >> 8, (p&0xFF), 0));
+			PutPix(dst, BurnHighCol(p >> 16, p >> 8, p, 0));
 		}
 		else		// normal
 		{

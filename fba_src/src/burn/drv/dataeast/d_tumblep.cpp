@@ -315,7 +315,7 @@ static void DrvPaletteRecalc()
 		g |= g << 4;
 		b |= b << 4;
 
-		DrvPalette[i] = HighCol16(r, g, b, 0);
+		DrvPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -490,7 +490,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 	struct BurnArea ba;
 	
 	if (pnMin != NULL) {
-		*pnMin = 0x029682;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_MEMORY_RAM) {
@@ -503,12 +503,10 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 	if (nAction & ACB_DRIVER_DATA) {
 		SekScan(nAction);
-	//	huc6280
+	
+		deco16SoundScan(nAction, pnMin);
 
 		deco16Scan();
-
-	//	BurnYM2151Scan(nAction);
-	//	MSM6295Scan(0, nAction);
 	}
 
 	return 0;
@@ -536,7 +534,7 @@ STD_ROM_FN(tumblep)
 
 struct BurnDriver BurnDrvTumblep = {
 	"tumblep", NULL, NULL, NULL, "1991",
-	"Tumble Pop (World)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Tumble Pop (World)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, tumblepRomInfo, tumblepRomName, NULL, NULL, TumblepInputInfo, TumblepDIPInfo,
@@ -566,7 +564,7 @@ STD_ROM_FN(tumblepj)
 
 struct BurnDriver BurnDrvTumblepj = {
 	"tumblepj", "tumblep", NULL, NULL, "1991",
-	"Tumble Pop (Japan)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Tumble Pop (Japan)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, tumblepjRomInfo, tumblepjRomName, NULL, NULL, TumblepInputInfo, TumblepDIPInfo,

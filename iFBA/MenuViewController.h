@@ -16,9 +16,10 @@
     UIViewController *gamebrowservc;
     UIViewController *optionsvc;
     UIViewController *dipswvc;
+    UIViewController *statevc;
 }
 
-@property (nonatomic, retain) UIViewController *emuvc,*gamebrowservc,*optionsvc,*dipswvc;
+@property (nonatomic, retain) UIViewController *emuvc,*gamebrowservc,*optionsvc,*dipswvc,*statevc;
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
 

@@ -394,7 +394,7 @@ static INT32 DrvDraw()
 
 			UINT32 c = Palette[(color << 2) | data];
 
-			PutPix(pBurnDraw + (sy + sx + (x ^ 3)) * nBurnBpp, HighCol16(c >> 16, c >> 8, c, 0));
+			PutPix(pBurnDraw + (sy + sx + (x ^ 3)) * nBurnBpp, BurnHighCol(c >> 16, c >> 8, c, 0));
 		}
 	}
 

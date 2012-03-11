@@ -139,7 +139,7 @@ static inline void palette_write(INT32 offset)
 	g = (data[0x0000/2] >> 8) & 0xff;
 	b = (data[0x1000/2] >> 0) & 0xff;
 
-	DrvPalette[offset/2] = HighCol16(r, g, b, 0);
+	DrvPalette[offset/2] = BurnHighCol(r, g, b, 0);
 }
 
 void __fastcall darkseal_write_byte(UINT32 address, UINT8 data)
@@ -694,7 +694,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 	struct BurnArea ba;
 	
 	if (pnMin != NULL) {
-		*pnMin = 0x029698;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_MEMORY_RAM) {
@@ -707,6 +707,12 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 	if (nAction & ACB_DRIVER_DATA) {
 		SekScan(nAction);
+		
+		deco16SoundScan(nAction, pnMin);
+		
+		deco16Scan();
+		
+		SCAN_VAR(vblank);
 	}
 
 	return 0;
@@ -743,7 +749,7 @@ STD_ROM_FN(darkseal)
 
 struct BurnDriver BurnDrvDarkseal = {
 	"darkseal", NULL, NULL, NULL, "1990",
-	"Dark Seal (World revision 3)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Dark Seal (World revision 3)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_MAZE | GBF_SCRFIGHT, 0,
 	NULL, darksealRomInfo, darksealRomName, NULL, NULL, DarksealInputInfo, DarksealDIPInfo,
@@ -782,7 +788,7 @@ STD_ROM_FN(darksea1)
 
 struct BurnDriver BurnDrvDarksea1 = {
 	"darkseal1", "darkseal", NULL, NULL, "1990",
-	"Dark Seal (World revision 1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Dark Seal (World revision 1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_MAZE | GBF_SCRFIGHT, 0,
 	NULL, darksea1RomInfo, darksea1RomName, NULL, NULL, DarksealInputInfo, DarksealDIPInfo,
@@ -821,7 +827,7 @@ STD_ROM_FN(darkseaj)
 
 struct BurnDriver BurnDrvDarkseaj = {
 	"darksealj", "darkseal", NULL, NULL, "1990",
-	"Dark Seal (Japan)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Dark Seal (Japan)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_MAZE | GBF_SCRFIGHT, 0,
 	NULL, darkseajRomInfo, darkseajRomName, NULL, NULL, DarksealInputInfo, DarksealDIPInfo,
@@ -860,7 +866,7 @@ STD_ROM_FN(gatedoom)
 
 struct BurnDriver BurnDrvGatedoom = {
 	"gatedoom", "darkseal", NULL, NULL, "1990",
-	"Gate of Doom (US revision 4)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Gate of Doom (US revision 4)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_MAZE | GBF_SCRFIGHT, 0,
 	NULL, gatedoomRomInfo, gatedoomRomName, NULL, NULL, DarksealInputInfo, DarksealDIPInfo,
@@ -899,7 +905,7 @@ STD_ROM_FN(gatedom1)
 
 struct BurnDriver BurnDrvGatedom1 = {
 	"gatedoom1", "darkseal", NULL, NULL, "1990",
-	"Gate of Doom (US revision 1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Gate of Doom (US revision 1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_MAZE | GBF_SCRFIGHT, 0,
 	NULL, gatedom1RomInfo, gatedom1RomName, NULL, NULL, DarksealInputInfo, DarksealDIPInfo,

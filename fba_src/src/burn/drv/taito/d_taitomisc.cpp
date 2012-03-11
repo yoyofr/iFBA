@@ -1829,9 +1829,9 @@ STD_ROM_FN(Rastanu2)
 static struct BurnRomInfo RastsagaRomDesc[] = {
 	{ "b04-38.19",   0x10000, 0xa38ac909, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-37.7",    0x10000, 0xbad60872, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-40.20",   0x10000, 0x6bcf70dc, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-40(__rastsaga).20", 0x10000, 0x6bcf70dc, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-39.8",    0x10000, 0x8838ecc5, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-42.21",   0x10000, 0xb626c439, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-42(__rastsaga).21", 0x10000, 0xb626c439, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-43.9",    0x10000, 0xc928a516, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 
 	{ "b04-19.49",   0x10000, 0xee81fdd8, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
@@ -4850,7 +4850,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >>  5);
 	b = pal5bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 10);
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 inline static UINT32 OpwolfCalcCol(UINT16 nColour)
@@ -4861,7 +4861,7 @@ inline static UINT32 OpwolfCalcCol(UINT16 nColour)
 	g = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 4);
 	b = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 0);
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 inline static UINT32 JumpingCalcCol(UINT16 nColour)
@@ -4872,7 +4872,7 @@ inline static UINT32 JumpingCalcCol(UINT16 nColour)
 	g = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 4);
 	b = pal4bit(BURN_ENDIAN_SWAP_INT16(nColour) >> 8);
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 static void TaitoMiscCalcPalette()

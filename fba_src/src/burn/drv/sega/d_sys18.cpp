@@ -958,7 +958,6 @@ static struct BurnRomInfo AstormuRomDesc[] = {
 STD_ROM_PICK(Astormu)
 STD_ROM_FN(Astormu)
 
-
 static struct BurnRomInfo BloxeedRomDesc[] = {
 	{ "epr-12911.a6",   0x20000, 0xa481581a, SYS16_ROM_PROG | BRF_ESS | BRF_PRG },
 	{ "epr-12910.a5",   0x20000, 0xdd1bc3bf, SYS16_ROM_PROG | BRF_ESS | BRF_PRG },

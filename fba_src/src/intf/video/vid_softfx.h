@@ -4,14 +4,16 @@
  #define SOFTFX_ENABLE_DIRECTX
 #endif
 #ifdef BUILD_SDL
-//#define SOFTFX_ENABLE_SDL
+#ifndef IOS_BUILD
+ #define SOFTFX_ENABLE_SDL
+#endif
 #endif
 
 #ifdef SOFTFX_ENABLE_DIRECTX
  #include "vid_directx_support.h"
 #endif
 #ifdef SOFTFX_ENABLE_SDL
-// #include <SDL.h>
+ #include <SDL.h>
 #endif
 
 #define FILTER_PLAIN				0

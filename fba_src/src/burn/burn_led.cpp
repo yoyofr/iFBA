@@ -199,7 +199,7 @@ void BurnLEDRender()
 
 	INT32 xpos = led_xpos;
 	INT32 ypos = led_ypos;
-	int color = HighCol16((led_color >> 16) & 0xff, (led_color >> 8) & 0xff, (led_color >> 0) & 0xff, 0);
+	int color = BurnHighCol((led_color >> 16) & 0xff, (led_color >> 8) & 0xff, (led_color >> 0) & 0xff, 0);
 
 	for (INT32 i = 0; i < led_count; i++)
 	{

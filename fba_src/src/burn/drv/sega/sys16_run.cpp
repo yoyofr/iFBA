@@ -1115,9 +1115,6 @@ static INT32 System16LoadRoms(bool bLoad)
 		// Tile Roms
 		Offset = 0;
 		System16TempGfx = (UINT8*)BurnMalloc(System16TileRomSize);
-        if (!System16TempGfx) {
-            printf("Major issue: not enough ram for System16TempGfx\n");
-        }
 		for (i = System16RomNum + System16Rom2Num + System16Rom3Num; i < System16RomNum + System16Rom2Num + System16Rom3Num + System16TileRomNum; i++) {
 			nRet = BurnLoadRom(System16TempGfx + Offset, i, 1); if (nRet) return 1;
 			
@@ -1742,8 +1739,8 @@ Main Driver Init function
 INT32 System16Init()
 {
 	INT32 nRet = 0, nLen;
-    
-    // Allocate and Blank all required memory
+	
+	// Allocate and Blank all required memory
 	Mem = NULL;
 	System16LoadRoms(0); // Get required rom sizes
 	System16MemIndex();
@@ -1771,7 +1768,9 @@ INT32 System16Init()
 	if ((BurnDrvGetHardwareCode() & HARDWARE_SEGA_FD1094_ENC) || (BurnDrvGetHardwareCode() & HARDWARE_SEGA_FD1094_ENC_CPU2)) {
 		// Make sure we use Musashi
 		if (bBurnUseASMCPUEmulation) {
-			//printf("Switching to Musashi 68000 core\n");
+#if 1 && defined FBA_DEBUG
+			bprintf(PRINT_NORMAL, _T("Switching to Musashi 68000 core\n"));
+#endif
 			bUseAsm68KCoreOldValue = bBurnUseASMCPUEmulation;
 			bBurnUseASMCPUEmulation = false;
 		}
@@ -2503,7 +2502,9 @@ INT32 System16Exit()
 		
 		// Switch back CPU core if needed
 		if (bUseAsm68KCoreOldValue) {
-			//printf("Switching back to C68K core\n");
+#if 1 && defined FBA_DEBUG
+			bprintf(PRINT_NORMAL, _T("Switching back to A68K core\n"));
+#endif
 			bUseAsm68KCoreOldValue = false;
 			bBurnUseASMCPUEmulation = true;
 		}

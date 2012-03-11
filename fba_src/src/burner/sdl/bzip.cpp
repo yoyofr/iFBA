@@ -103,7 +103,7 @@ static int FindRomByLen(unsigned int nLen)
     
 	// Find the rom named szName in the List
 	for (i = 0, pl = List; i< nListCount; i++, pl++)	{
-		if (nLen <= pl->nLen) {
+		if (nLen == pl->nLen) {
 			return i;
 		}
 	}

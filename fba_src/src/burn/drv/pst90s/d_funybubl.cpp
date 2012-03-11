@@ -143,7 +143,7 @@ void __fastcall funybubl_write(UINT16 address, UINT8 data)
 		b |= b >> 6;
 
 		Palette[offset >> 2] = (r << 16) | (g << 8) | b;
-		DrvPalette[offset >> 2] = HighCol16(r, g, b, 0);
+		DrvPalette[offset >> 2] = BurnHighCol(r, g, b, 0);
 
 		return;
 	}
@@ -449,7 +449,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x300; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "snes.h"
 
+extern int rom_nocheck;
+
 static INT32 frames;
 INT32 intthisline;
 INT32 framenum;
@@ -42,7 +44,10 @@ INT32 SnesInit()
 	spccycles=-10000;
 
 	rom=(UINT8*)BurnMalloc(4096*1024);
+    rom_nocheck=1;
 	BurnLoadRom(rom,0,0);
+    rom_nocheck=0;
+    memmove(rom,rom+512,4096*1024-512);
 
 
 	temp=rom[0x7FDC]|(rom[0x7FDD]<<8);

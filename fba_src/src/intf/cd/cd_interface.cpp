@@ -32,16 +32,6 @@ static struct CDEmuDo* pCDEmuDo[] =
 TCHAR CDEmuImage[MAX_PATH] = _T("");
 
 
-#ifdef IOS_BUILD
-void wav_pause(bool bResume) {
-    
-}
-void NeoCDInfo_Exit() {
-    
-}
-#endif
-
-
 // ----------------------------------------------------------------------------
 
 INT32 CDEmuExit()

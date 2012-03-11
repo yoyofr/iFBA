@@ -127,8 +127,7 @@ INT32 AudSoundSetVolume();
 InterfaceInfo* AudGetInfo();
 void AudWriteSilence();
 
-//extern INT32 nAudSampleRate[8];          // sample rate
-extern INT32 nAudSampleRate;
+extern INT32 nAudSampleRate[8];          // sample rate
 extern INT32 nAudVolume;				// Sound volume (% * 100)
 extern INT32 nAudSegCount;          	// Segs in the pdsbLoop buffer
 extern INT32 nAudSegLen;            	// Seg length in samples (calculated from Rate/Fps)

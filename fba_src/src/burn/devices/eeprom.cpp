@@ -90,9 +90,11 @@ void EEPROMInit(const eeprom_interface *interface)
 	else locked = 0;
 
 	char output[128];
-	//sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
+#ifdef IOS_BUILD
     sprintf (output, "/var/mobile/Documents/iFBA/%s.nv", BurnDrvGetTextA(DRV_NAME));
-
+#else
+	sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
+#endif
 	neeprom_available = 0;
 
 	INT32 len = ((1 << intf->address_bits) * (intf->data_bits >> 3)) & (MEMORY_SIZE-1);
@@ -112,8 +114,11 @@ void EEPROMExit()
 #endif
 
 	char output[128];
-//	sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
+#ifdef IOS_BUILD
     sprintf (output, "/var/mobile/Documents/iFBA/%s.nv", BurnDrvGetTextA(DRV_NAME));
+#else
+	sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
+#endif
 
 	neeprom_available = 0;
 

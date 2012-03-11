@@ -1606,7 +1606,7 @@ SNES_INLINE static unsigned int CalcCol(unsigned short nColour)
 	b = (nColour & 0x001F) << 3;	// Blue
 	b |= b >> 10;
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 #endif
 
@@ -1703,7 +1703,7 @@ static void snes_refresh_scanline(UINT16 curline )
 
 			if (pBurnDraw)
 			{
-				dstbitmap[(curline * (nBurnPitch>>1))+ (xpos<<1) + 1] =HighCol16(pal5bit(r),pal5bit(g),pal5bit(b),0); //HighCol16(pal5bit(r),pal5bit(g),pal5bit(b),0);
+				dstbitmap[(curline * (nBurnPitch>>1))+ (xpos<<1) + 1] =BurnHighCol(pal5bit(r),pal5bit(g),pal5bit(b),0); //BurnHighCol(pal5bit(r),pal5bit(g),pal5bit(b),0);
 			}
 
 			/* in hires, the first pixel (of 512) is subscreen pixel, then the first mainscreen pixel follows, and so on... */
@@ -1711,7 +1711,7 @@ static void snes_refresh_scanline(UINT16 curline )
 			{
 				if (pBurnDraw)
 				{
-					dstbitmap[(curline * (nBurnPitch>>1))+(xpos<<1) + 0] =HighCol16(pal5bit(r),pal5bit(g),pal5bit(b),0); //HighCol16(pal5bit(r), pal5bit(g), pal5bit(b),0);
+					dstbitmap[(curline * (nBurnPitch>>1))+(xpos<<1) + 0] =BurnHighCol(pal5bit(r),pal5bit(g),pal5bit(b),0); //BurnHighCol(pal5bit(r), pal5bit(g), pal5bit(b),0);
 				}
 			}
 			else
@@ -1734,7 +1734,7 @@ static void snes_refresh_scanline(UINT16 curline )
 				b = (((c & 0x7c00) >> 10) * fade) >> 4;
 				if (pBurnDraw)
 				{
-					dstbitmap[(curline * (nBurnPitch>>1))+ (xpos<<1) + 0] = HighCol16(pal5bit(r),pal5bit(g),pal5bit(b),0);//HighCol16(pal5bit(r), pal5bit(g), pal5bit(b),0);
+					dstbitmap[(curline * (nBurnPitch>>1))+ (xpos<<1) + 0] = BurnHighCol(pal5bit(r),pal5bit(g),pal5bit(b),0);//BurnHighCol(pal5bit(r), pal5bit(g), pal5bit(b),0);
 				}
 			}
 		}
@@ -2471,7 +2471,7 @@ void writeppu(unsigned short offset, unsigned char data)
 			break;
 
 		default:
-			printf("%x, %x",offset,data);
+			//printf("%x, %x",offset,data);
 			break;
 			}
 }

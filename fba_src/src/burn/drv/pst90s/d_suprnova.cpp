@@ -669,7 +669,7 @@ static void DrvCalcPalette()
 		g <<= 3;
 		b <<= 3;
 		
-		DrvPalette[Offset] = HighCol16(r, g, b, 0);
+		DrvPalette[Offset] = BurnHighCol(r, g, b, 0);
 	}
 }
 

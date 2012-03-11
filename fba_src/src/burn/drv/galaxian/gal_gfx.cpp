@@ -439,7 +439,7 @@ void GalaxianCalcPalette()
 		Bit1 = BIT(GalProm[i + (GalPaletteBank * 0x20)],7);
 		b = Combine2Weights(bWeights, Bit0, Bit1);
 
-		GalPalette[i] = HighCol16(r, g, b, 0);
+		GalPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 	
 	// Stars
@@ -454,14 +454,14 @@ void GalaxianCalcPalette()
 		Bits = (i >> 4) & 0x03;
 		b = Map[Bits];
 
-		GalPalette[i + GAL_PALETTE_STARS_OFFSET] = HighCol16(r, g, b, 0);
+		GalPalette[i + GAL_PALETTE_STARS_OFFSET] = BurnHighCol(r, g, b, 0);
 	}
 
 	// Bullets
 	for (INT32 i = 0; i < GAL_PALETTE_NUM_COLOURS_BULLETS - 1; i++) {
-		GalPalette[i + GAL_PALETTE_BULLETS_OFFSET] = HighCol16(0xff, 0xff, 0xff, 0);
+		GalPalette[i + GAL_PALETTE_BULLETS_OFFSET] = BurnHighCol(0xff, 0xff, 0xff, 0);
 	}
-	GalPalette[GAL_PALETTE_NUM_COLOURS_BULLETS - 1 + GAL_PALETTE_BULLETS_OFFSET] = HighCol16(0xff, 0xff, 0x00, 0);
+	GalPalette[GAL_PALETTE_NUM_COLOURS_BULLETS - 1 + GAL_PALETTE_BULLETS_OFFSET] = BurnHighCol(0xff, 0xff, 0x00, 0);
 }
 
 void RockclimCalcPalette()
@@ -489,7 +489,7 @@ void RockclimCalcPalette()
 		Bit1 = BIT(GalProm[i + (GalPaletteBank * 0x20)],7);
 		b = Combine2Weights(bWeights, Bit0, Bit1);
 
-		GalPalette[i] = HighCol16(r, g, b, 0);
+		GalPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 	
 	// Stars
@@ -504,14 +504,14 @@ void RockclimCalcPalette()
 		Bits = (i >> 4) & 0x03;
 		b = Map[Bits];
 
-		GalPalette[i + GAL_PALETTE_STARS_OFFSET] = HighCol16(r, g, b, 0);
+		GalPalette[i + GAL_PALETTE_STARS_OFFSET] = BurnHighCol(r, g, b, 0);
 	}
 
 	// Bullets
 	for (INT32 i = 0; i < GAL_PALETTE_NUM_COLOURS_BULLETS - 1; i++) {
-		GalPalette[i + GAL_PALETTE_BULLETS_OFFSET] = HighCol16(0xff, 0xff, 0xff, 0);
+		GalPalette[i + GAL_PALETTE_BULLETS_OFFSET] = BurnHighCol(0xff, 0xff, 0xff, 0);
 	}
-	GalPalette[GAL_PALETTE_NUM_COLOURS_BULLETS - 1 + GAL_PALETTE_BULLETS_OFFSET] = HighCol16(0xff, 0xff, 0x00, 0);
+	GalPalette[GAL_PALETTE_NUM_COLOURS_BULLETS - 1 + GAL_PALETTE_BULLETS_OFFSET] = BurnHighCol(0xff, 0xff, 0x00, 0);
 }
 
 void MarinerCalcPalette()
@@ -520,7 +520,7 @@ void MarinerCalcPalette()
 	
 	for (INT32 i = 0; i < 16; i++) {
 		INT32 b = 0x0e * BIT(i, 0) + 0x1f * BIT(i, 1) + 0x43 * BIT(i, 2) + 0x8f * BIT(i, 3);
-		GalPalette[i + GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(0, 0, b, 0);
+		GalPalette[i + GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(0, 0, b, 0);
 	}
 }
 
@@ -532,7 +532,7 @@ void StratgyxCalcPalette()
 		INT32 r = BIT(i, 0) * 0x7c;
 		INT32 g = BIT(i, 1) * 0x3c;
 		INT32 b = BIT(i, 2) * 0x47;
-		GalPalette[i + GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(r, g, b, 0);
+		GalPalette[i + GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -542,7 +542,7 @@ void RescueCalcPalette()
 	
 	for (INT32 i = 0; i < 128; i++) {
 		INT32 b = i * 2;
-		GalPalette[i + GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(0, 0, b, 0);
+		GalPalette[i + GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(0, 0, b, 0);
 	}
 }
 
@@ -554,7 +554,7 @@ void MinefldCalcPalette()
 		INT32 r = (INT32)(i * 1.5);
 		INT32 g = (INT32)(i * 0.75);
 		INT32 b = i / 2;
-		GalPalette[i + 128 + GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(r, g, b, 0);
+		GalPalette[i + 128 + GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -581,7 +581,7 @@ void DarkplntCalcPalette()
 		Bit2 = BIT(GalProm[i + (GalPaletteBank * 0x20)],5);
 		b = Combine2Weights(bWeights, Bit0, Bit1);
 
-		GalPalette[i] = HighCol16(r, g, b, 0);
+		GalPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 	
 	// Stars
@@ -596,12 +596,12 @@ void DarkplntCalcPalette()
 		Bits = (i >> 4) & 0x03;
 		b = Map[Bits];
 
-		GalPalette[i + GAL_PALETTE_STARS_OFFSET] = HighCol16(r, g, b, 0);
+		GalPalette[i + GAL_PALETTE_STARS_OFFSET] = BurnHighCol(r, g, b, 0);
 	}
 
 	// Bullets
-	GalPalette[0 + GAL_PALETTE_BULLETS_OFFSET] = HighCol16(0xef, 0x00, 0x00, 0);
-	GalPalette[1 + GAL_PALETTE_BULLETS_OFFSET] = HighCol16(0x00, 0x00, 0xef, 0);
+	GalPalette[0 + GAL_PALETTE_BULLETS_OFFSET] = BurnHighCol(0xef, 0x00, 0x00, 0);
+	GalPalette[1 + GAL_PALETTE_BULLETS_OFFSET] = BurnHighCol(0x00, 0x00, 0xef, 0);
 }
 
 void DambustrCalcPalette()
@@ -629,7 +629,7 @@ void DambustrCalcPalette()
 		Bit1 = BIT(GalProm[i + (GalPaletteBank * 0x20)],7);
 		g = Combine2Weights(bWeights, Bit0, Bit1);
 
-		GalPalette[i] = HighCol16(r, g, b, 0);
+		GalPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 	
 	// Stars
@@ -644,20 +644,20 @@ void DambustrCalcPalette()
 		Bits = (i >> 4) & 0x03;
 		b = Map[Bits];
 
-		GalPalette[i + GAL_PALETTE_STARS_OFFSET] = HighCol16(r, g, b, 0);
+		GalPalette[i + GAL_PALETTE_STARS_OFFSET] = BurnHighCol(r, g, b, 0);
 	}
 
 	// Bullets
 	for (INT32 i = 0; i < GAL_PALETTE_NUM_COLOURS_BULLETS - 1; i++) {
-		GalPalette[i + GAL_PALETTE_BULLETS_OFFSET] = HighCol16(0xff, 0xff, 0xff, 0);
+		GalPalette[i + GAL_PALETTE_BULLETS_OFFSET] = BurnHighCol(0xff, 0xff, 0xff, 0);
 	}
-	GalPalette[GAL_PALETTE_NUM_COLOURS_BULLETS - 1 + GAL_PALETTE_BULLETS_OFFSET] = HighCol16(0xff, 0xff, 0x00, 0);
+	GalPalette[GAL_PALETTE_NUM_COLOURS_BULLETS - 1 + GAL_PALETTE_BULLETS_OFFSET] = BurnHighCol(0xff, 0xff, 0x00, 0);
 	
 	for (INT32 i = 0; i < 8; i++) {
 		INT32 r = BIT(i, 0) * 0x47;
 		INT32 g = BIT(i, 1) * 0x47;
 		INT32 b = BIT(i, 2) * 0x4f;
-		GalPalette[i + GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(r, g, b, 0);
+		GalPalette[i + GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -711,7 +711,7 @@ void JumpbugDrawBackground()
 
 void FroggerDrawBackground()
 {
-	GalPalette[GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(0, 0, 0x47, 0);
+	GalPalette[GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(0, 0, 0x47, 0);
 	
 	if (GalFlipScreenX) {
 		for (INT32 y = 0; y < nScreenHeight; y++) {
@@ -730,7 +730,7 @@ void FroggerDrawBackground()
 
 void TurtlesDrawBackground()
 {
-	GalPalette[GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(GalBackgroundRed * 0x55, GalBackgroundGreen * 0x47, GalBackgroundBlue * 0x55, 0);
+	GalPalette[GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(GalBackgroundRed * 0x55, GalBackgroundGreen * 0x47, GalBackgroundBlue * 0x55, 0);
 	
 	for (INT32 y = 0; y < nScreenHeight; y++) {
 		for (INT32 x = 0; x < nScreenWidth; x++) {
@@ -741,7 +741,7 @@ void TurtlesDrawBackground()
 
 void ScrambleDrawBackground()
 {
-	GalPalette[GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(0, 0, 0x56, 0);
+	GalPalette[GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(0, 0, 0x56, 0);
 	
 	if (GalBackgroundEnable) {
 		for (INT32 y = 0; y < nScreenHeight; y++) {
@@ -756,7 +756,7 @@ void ScrambleDrawBackground()
 
 void AnteaterDrawBackground()
 {
-	GalPalette[GAL_PALETTE_BACKGROUND_OFFSET] = HighCol16(0, 0, 0x56, 0);
+	GalPalette[GAL_PALETTE_BACKGROUND_OFFSET] = BurnHighCol(0, 0, 0x56, 0);
 	
 	if (GalBackgroundEnable) {
 		if (GalFlipScreenX) {
@@ -1096,7 +1096,7 @@ void TheendDrawBullets(INT32 Offs, INT32 x, INT32 y)
 {
 	x -= 4;
 	
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 7] = HighCol16(0xff, 0x00, 0xff, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 7] = BurnHighCol(0xff, 0x00, 0xff, 0);
 	
 	GalDrawPixel(x++, y, GAL_PALETTE_BULLETS_OFFSET + Offs);
 	GalDrawPixel(x++, y, GAL_PALETTE_BULLETS_OFFSET + Offs);
@@ -1115,21 +1115,21 @@ void MoonwarDrawBullets(INT32, INT32 x, INT32 y)
 {
 	x -= 6;
 	
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 7] = HighCol16(0xef, 0xef, 0x97, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 7] = BurnHighCol(0xef, 0xef, 0x97, 0);
 	
 	GalDrawPixel(x, y, GAL_PALETTE_BULLETS_OFFSET + 7);
 }
 
 void MshuttleDrawBullets(INT32, INT32 x, INT32 y)
 {
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 0] = HighCol16(0xff, 0xff, 0xff, 0);
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 1] = HighCol16(0xff, 0xff, 0x00, 0);
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 2] = HighCol16(0x00, 0xff, 0xff, 0);
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 3] = HighCol16(0x00, 0xff, 0x00, 0);
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 4] = HighCol16(0xff, 0x00, 0xff, 0);
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 5] = HighCol16(0xff, 0x00, 0x00, 0);
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 6] = HighCol16(0x00, 0x00, 0xff, 0);
-	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 7] = HighCol16(0x00, 0x00, 0x00, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 0] = BurnHighCol(0xff, 0xff, 0xff, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 1] = BurnHighCol(0xff, 0xff, 0x00, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 2] = BurnHighCol(0x00, 0xff, 0xff, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 3] = BurnHighCol(0x00, 0xff, 0x00, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 4] = BurnHighCol(0xff, 0x00, 0xff, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 5] = BurnHighCol(0xff, 0x00, 0x00, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 6] = BurnHighCol(0x00, 0x00, 0xff, 0);
+	GalPalette[GAL_PALETTE_BULLETS_OFFSET + 7] = BurnHighCol(0x00, 0x00, 0x00, 0);
 	
 	--x;
 	GalDrawPixel(x, y, ((x & 0x40) == 0) ? GAL_PALETTE_BULLETS_OFFSET +  + ((x >> 2) & 7) : GAL_PALETTE_BULLETS_OFFSET +  + 4);

@@ -66,7 +66,7 @@ extern char gameName[64];
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 6;
+	return 7;
 }
 
 
@@ -92,6 +92,11 @@ extern char gameName[64];
     if (ifba_conf.video_filter!=[sender selectedSegmentIndex]) refresh=1;
     ifba_conf.video_filter=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
+}
+
+- (void)switch60Hz:(id)sender {
+    ifba_conf.video_60hz =((UISwitch*)sender).on;
+    [tabView reloadData];
 }
 
 - (void)switchAspectRatio:(id)sender {
@@ -172,7 +177,17 @@ extern char gameName[64];
                     break;
             }
             break;
-        case 5://brightness
+        case 5://60Hz
+            switch (ifba_conf.video_60hz) {
+                case 0:
+                    footer=NSLocalizedString(@"Correct timing",@"");
+                    break;
+                case 1:
+                    footer=NSLocalizedString(@"Force 60Hz for smoother video",@"");
+                    break;
+            }
+            break;
+        case 6://brightness
             footer=nil;
             break;
     }
@@ -249,7 +264,15 @@ extern char gameName[64];
             [switchview release];
             switchview.on=ifba_conf.show_fps;
             break;
-        case 5://Brightness
+        case 5://60Hz
+            cell.textLabel.text=NSLocalizedString(@"60Hz",@"");
+            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+            [switchview addTarget:self action:@selector(switch60Hz:) forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = switchview;
+            [switchview release];
+            switchview.on=ifba_conf.video_60hz;
+            break;
+        case 6://Brightness
             cell.textLabel.text=NSLocalizedString(@"Brightness",@"");
             sliderview = [[UISlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
             [sliderview setMaximumValue:1.0f];

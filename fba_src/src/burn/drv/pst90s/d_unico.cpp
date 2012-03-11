@@ -1655,7 +1655,7 @@ static void DrvCalcPalette()
 		 Data1 = PaletteRam[i & ~1];
 		 Data2 = PaletteRam[i |  1];
 		 
-		 DrvPalette[i >> 1] = HighCol16((Data1 >> 8) & 0xfc, (Data1 >> 0) & 0xfc, (Data2 >> 8) & 0xfc, 0);
+		 DrvPalette[i >> 1] = BurnHighCol((Data1 >> 8) & 0xfc, (Data1 >> 0) & 0xfc, (Data2 >> 8) & 0xfc, 0);
 	}
 }
 
@@ -1667,7 +1667,7 @@ static void Zeropnt2CalcPalette()
 	for (INT32 i = 0; i < 0x2000; i++) {
 		 rgb0 = PaletteRam[i];
 		 
-		 DrvPalette[i] = HighCol16((rgb0 >> 8) & 0xfc, (rgb0 >> 0) & 0xfc, (rgb0 >> 24) & 0xfc, 0);
+		 DrvPalette[i] = BurnHighCol((rgb0 >> 8) & 0xfc, (rgb0 >> 0) & 0xfc, (rgb0 >> 24) & 0xfc, 0);
 	}
 }
 

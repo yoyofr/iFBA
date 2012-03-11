@@ -113,7 +113,7 @@ static inline void set_palette(UINT16 pal, INT32 offset)
 	    b = (b << 3) | (b >> 2);
 
 	Palette[offset] = (r << 16) | (g << 8) | b;
-	DrvPalette[offset] = HighCol16(r, g, b, 0);
+	DrvPalette[offset] = BurnHighCol(r, g, b, 0);
 }
 
 UINT8 __fastcall drtomy_read_byte(UINT32 address)
@@ -319,11 +319,11 @@ static void draw_sprites()
 	UINT16 *spriteram = (UINT16*)SprRam;
 
 	for (i = 3; i < 0x1000/2; i+=4){
-		INT32 sx = spriteram[i+2] & 0x01ff;
-		INT32 sy = (240 - (spriteram[i] & 0x00ff)) & 0x00ff;
-		INT32 number = spriteram[i+3];
-		INT32 color = (spriteram[i+2] & 0x1e00) >> 9;
-		INT32 attr = (spriteram[i] & 0xfe00) >> 9;
+		INT32 sx = BURN_ENDIAN_SWAP_INT16(spriteram[i+2]) & 0x01ff;
+		INT32 sy = (240 - (BURN_ENDIAN_SWAP_INT16(spriteram[i]) & 0x00ff)) & 0x00ff;
+		INT32 number = BURN_ENDIAN_SWAP_INT16(spriteram[i+3]);
+		INT32 color = (BURN_ENDIAN_SWAP_INT16(spriteram[i+2]) & 0x1e00) >> 9;
+		INT32 attr = (BURN_ENDIAN_SWAP_INT16(spriteram[i]) & 0xfe00) >> 9;
 
 		INT32 xflip = attr & 0x20;
 		INT32 yflip = attr & 0x40;
@@ -372,7 +372,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x300; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 
@@ -390,14 +390,14 @@ static INT32 DrvDraw()
 			sy -= 0x10;
 
 			// background
-			code  = bg_ram[offs] & 0xfff;
-			color = bg_ram[offs] >> 12;
+			code  = BURN_ENDIAN_SWAP_INT16(bg_ram[offs]) & 0xfff;
+			color = BURN_ENDIAN_SWAP_INT16(bg_ram[offs]) >> 12;
 
 			Render16x16Tile_Clip(pTransDraw, code, sx, sy, color, 4, 0, Gfx1);
 
 			// foreground
-			code  = fg_ram[offs] & 0xfff;
-			color = fg_ram[offs] >> 12;
+			code  = BURN_ENDIAN_SWAP_INT16(fg_ram[offs]) & 0xfff;
+			color = BURN_ENDIAN_SWAP_INT16(fg_ram[offs]) >> 12;
 
 			if (!code) continue;
 

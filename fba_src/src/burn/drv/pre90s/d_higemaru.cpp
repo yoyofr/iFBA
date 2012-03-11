@@ -360,7 +360,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x100; i++) {
 			INT32 color = Palette[i];
-			DrvPalette[i] = HighCol16(color >> 16, color >> 8, color, 0);
+			DrvPalette[i] = BurnHighCol(color >> 16, color >> 8, color, 0);
 		}
 	}
 
@@ -527,7 +527,7 @@ STD_ROM_FN(higemaru)
 
 struct BurnDriver BurnDrvhigemaru = {
 	"higemaru", NULL, NULL, NULL, "1984",
-	"Pirate Ship Higemaru\0", NULL, "Capcom", "Misc",
+	"Pirate Ship Higemaru\0", NULL, "Capcom", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARWARE_CAPCOM_MISC, GBF_MAZE, 0,
 	NULL, higemaruRomInfo, higemaruRomName, NULL, NULL, DrvInputInfo, DrvDIPInfo,

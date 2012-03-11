@@ -445,7 +445,7 @@ static void simpl156_palette_recalc()
 		g = (g << 3) | (g >> 2);
 		b = (b << 3) | (b >> 2);
 
-		DrvPalette[i] = HighCol16(r, g, b, 0);
+		DrvPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -708,7 +708,7 @@ static INT32 backfireInit()
 
 struct BurnDriver BurnDrvBackfire = {
 	"backfire", NULL, NULL, NULL, "1995",
-	"Backfire! (set 1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Backfire! (set 1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_RACING, 0,
 	NULL, backfireRomInfo, backfireRomName, NULL, NULL, BackfireInputInfo, BackfireDIPInfo,
@@ -748,7 +748,7 @@ static INT32 backfireaInit()
 
 struct BurnDriverD BurnDrvBackfirea = {
 	"backfirea", "backfire", NULL, NULL, "1995",
-	"Backfire! (set 2)\0", "Set inputs to \"Joystick\" in test mode", "Data East Corporation", "Miscellaneous",
+	"Backfire! (set 2)\0", "Set inputs to \"Joystick\" in test mode", "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_RACING, 0,
 	NULL, backfireaRomInfo, backfireaRomName, NULL, NULL, BackfireInputInfo, BackfireDIPInfo,

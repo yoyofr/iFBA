@@ -166,7 +166,7 @@ static void palette_write(INT32 offset)
 	b  = (b << 3) | (b >> 2);
 
 	Palette[offset>>1] = (r << 16) | (g << 8) | b;
-	DrvPalette[offset>>1] = HighCol16(r, g, b, 0);
+	DrvPalette[offset>>1] = BurnHighCol(r, g, b, 0);
 
 	return;
 }
@@ -382,7 +382,7 @@ static INT32 DrvDraw()
 	if (DrvRecalc) {
 		for (INT32 i = 0; i < 0x100; i++) {
 			INT32 rgb = Palette[i];
-			DrvPalette[i] = HighCol16(rgb >> 16, rgb >> 8, rgb, 0);
+			DrvPalette[i] = BurnHighCol(rgb >> 16, rgb >> 8, rgb, 0);
 		}
 	}
 
@@ -397,10 +397,10 @@ static INT32 DrvDraw()
 		sx -=  8;
 		if (sy < 0 || sx < 0 || sy >= nScreenHeight || sx >= nScreenWidth) continue;
 
-		INT32 code  = vram[offs] & 0x7ff;
-		INT32 color = vram[offs] >> 12;
+		INT32 code  = BURN_ENDIAN_SWAP_INT16(vram[offs]) & 0x7ff;
+		INT32 color = BURN_ENDIAN_SWAP_INT16(vram[offs]) >> 12;
 
-		code += tilebank * (vram[offs] & 0x800);
+		code += tilebank * (BURN_ENDIAN_SWAP_INT16(vram[offs]) & 0x800);
 
 		Render8x8Tile(pTransDraw, code, sx, sy, color, 4, 0, DrvGfxROM);
 	}

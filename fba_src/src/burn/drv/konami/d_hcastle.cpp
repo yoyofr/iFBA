@@ -698,7 +698,7 @@ static INT32 DrvDraw()
 			g = (g << 3) | (g >> 2);
 			b = (b << 3) | (b >> 2);
 
-			tmp[i/2] = HighCol16(r, g, b, 0);
+			tmp[i/2] = BurnHighCol(r, g, b, 0);
 		}
 
 		for (INT32 i = 0; i < 0x1000; i++) {

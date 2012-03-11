@@ -2383,7 +2383,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 	struct BurnArea ba;
 	
 	if (pnMin != NULL) {
-		*pnMin = 0x029682;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_MEMORY_RAM) {
@@ -2396,14 +2396,10 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 	if (nAction & ACB_DRIVER_DATA) {
 		SekScan(nAction);
-	//	huc6280
+	
+		deco16SoundScan(nAction, pnMin);
 
 		deco16Scan();
-
-		BurnYM2203Scan(nAction, pnMin);
-		BurnYM2151Scan(nAction);
-		MSM6295Scan(0, nAction);
-		MSM6295Scan(1, nAction);
 
 		SCAN_VAR(scanline);
 		SCAN_VAR(irq_mask);
@@ -2411,6 +2407,41 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 		SCAN_VAR(DrvOkiBank);
 		DrvYM2151WritePort(0, DrvOkiBank);
+	}
+
+	return 0;
+}
+
+static INT32 StoneageScan(INT32 nAction, INT32 *pnMin)
+{
+	struct BurnArea ba;
+	
+	if (pnMin != NULL) {
+		*pnMin = 0x029722;
+	}
+
+	if (nAction & ACB_MEMORY_RAM) {
+		memset(&ba, 0, sizeof(ba));
+		ba.Data	  = AllRam;
+		ba.nLen	  = RamEnd-AllRam;
+		ba.szName = "All Ram";
+		BurnAcb(&ba);
+	}
+
+	if (nAction & ACB_DRIVER_DATA) {
+		SekScan(nAction);
+		ZetScan(nAction);
+		BurnYM2151Scan(nAction);
+		MSM6295Scan(0, nAction);
+		MSM6295Scan(1, nAction);
+	
+		deco16Scan();
+
+		SCAN_VAR(scanline);
+		SCAN_VAR(irq_mask);
+		SCAN_VAR(irq_timer);
+
+		SCAN_VAR(DrvOkiBank);
 	}
 
 	return 0;
@@ -2454,10 +2485,55 @@ STD_ROM_FN(cninja)
 
 struct BurnDriver BurnDrvCninja = {
 	"cninja", NULL, NULL, NULL, "1991",
-	"Caveman Ninja (World ver 4)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Caveman Ninja (World ver 4)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, cninjaRomInfo, cninjaRomName, NULL, NULL, DrvInputInfo, CninjaDIPInfo,
+	CninjaInit, DrvExit, CninjaFrame, CninjaDraw, DrvScan, &DrvRecalc, 0x800,
+	256, 240, 4, 3
+};
+
+// Caveman Ninja (World, alt ver.)
+
+static struct BurnRomInfo cninja2RomDesc[] = {
+	{ "gn-01.1k",		0x020000, 0xa6c40959, 1 | BRF_PRG | BRF_ESS }, //  0 68k Code
+	{ "gn-04.3k",		0x020000, 0x2e01d1fd, 1 | BRF_PRG | BRF_ESS }, //  1
+	{ "gn-02.2j",		0x020000, 0x18f0527c, 1 | BRF_PRG | BRF_ESS }, //  2
+	{ "gn-05.3j",		0x020000, 0xea4b6d53, 1 | BRF_PRG | BRF_ESS }, //  3
+	{ "gn-00.rom",		0x020000, 0x0b110b16, 1 | BRF_PRG | BRF_ESS }, //  4
+	{ "gn-03.rom",		0x020000, 0x1e28e697, 1 | BRF_PRG | BRF_ESS }, //  5
+
+	{ "gl-07.rom",		0x010000, 0xca8bef96, 2 | BRF_PRG | BRF_ESS }, //  6 Huc6280 Code
+
+	{ "gl-08.rom",		0x010000, 0x33a2b400, 3 | BRF_GRA }, 	       //  7 Characters
+	{ "gl-09.rom",		0x010000, 0x5a2d4752, 3 | BRF_GRA }, 	       //  8
+
+	{ "mag-02.rom",		0x080000, 0xde89c69a, 4 | BRF_GRA }, 	       //  9 Foreground Tiles
+ 
+	{ "mag-00.rom",		0x080000, 0xa8f05d33, 5 | BRF_GRA }, 	       // 10 Background Tiles
+	{ "mag-01.rom",		0x080000, 0x5b399eed, 5 | BRF_GRA }, 	       // 11
+
+	{ "mag-03.rom",		0x080000, 0x2220eb9f, 6 | BRF_GRA }, 	       // 12 Sprites
+	{ "mag-05.rom",		0x080000, 0x56a53254, 6 | BRF_GRA }, 	       // 13
+	{ "mag-04.rom",		0x080000, 0x144b94cc, 6 | BRF_GRA }, 	       // 14
+	{ "mag-06.rom",		0x080000, 0x82d44749, 6 | BRF_GRA }, 	       // 15
+
+	{ "gl-06.rom",		0x020000, 0xd92e519d, 7 | BRF_SND }, 	       // 16 OKI M6295 Samples 0
+
+	{ "mag-07.rom",		0x080000, 0x08eb5264, 8 | BRF_SND }, 	       // 17 OKI M6295 Samples 1
+
+	{ "mb7122h.7v",		0x000400, 0xa1267336, 0 | BRF_OPT }, 	       // 18 Unused PROMs
+};
+
+STD_ROM_PICK(cninja2)
+STD_ROM_FN(cninja2)
+
+struct BurnDriver BurnDrvCninja2 = {
+	"cninja2", "cninja", NULL, NULL, "1991",
+	"Caveman Ninja (World, alt ver.)\0", NULL, "Data East Corporation", "DECO IC16",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
+	NULL, cninja2RomInfo, cninja2RomName, NULL, NULL, DrvInputInfo, CninjaDIPInfo,
 	CninjaInit, DrvExit, CninjaFrame, CninjaDraw, DrvScan, &DrvRecalc, 0x800,
 	256, 240, 4, 3
 };
@@ -2500,7 +2576,7 @@ STD_ROM_FN(cninja1)
 
 struct BurnDriver BurnDrvCninja1 = {
 	"cninja1", "cninja", NULL, NULL, "1991",
-	"Caveman Ninja (World ver 1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Caveman Ninja (World ver 1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, cninja1RomInfo, cninja1RomName, NULL, NULL, DrvInputInfo, CninjaDIPInfo,
@@ -2546,7 +2622,7 @@ STD_ROM_FN(cninjau)
 
 struct BurnDriver BurnDrvCninjau = {
 	"cninjau", "cninja", NULL, NULL, "1991",
-	"Caveman Ninja (US ver 4)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Caveman Ninja (US ver 4)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, cninjauRomInfo, cninjauRomName, NULL, NULL, DrvInputInfo, CninjauDIPInfo,
@@ -2592,7 +2668,7 @@ STD_ROM_FN(joemac)
 
 struct BurnDriver BurnDrvJoemac = {
 	"joemac", "cninja", NULL, NULL, "1991",
-	"Tatakae Genshizin Joe & Mac (Japan ver 1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Tatakae Genshizin Joe & Mac (Japan ver 1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, joemacRomInfo, joemacRomName, NULL, NULL, DrvInputInfo, CninjaDIPInfo,
@@ -2634,11 +2710,11 @@ STD_ROM_FN(stoneage)
 
 struct BurnDriver BurnDrvStoneage = {
 	"stoneage", "cninja", NULL, NULL, "1991",
-	"Stoneage (bootleg of Caveman Ninja)\0", NULL, "bootleg", "Miscellaneous",
+	"Stoneage (bootleg of Caveman Ninja)\0", NULL, "bootleg", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, stoneageRomInfo, stoneageRomName, NULL, NULL, DrvInputInfo, CninjaDIPInfo,
-	StoneageInit, DrvExit, StoneageFrame, CninjaDraw, DrvScan, &DrvRecalc, 0x800,
+	StoneageInit, DrvExit, StoneageFrame, CninjaDraw, StoneageScan, &DrvRecalc, 0x800,
 	256, 240, 4, 3
 };
 
@@ -2662,11 +2738,11 @@ STD_ROM_FN(cninjabl)
 
 struct BurnDriver BurnDrvCninjabl = {
 	"cninjabl", "cninja", NULL, NULL, "1991",
-	"Caveman Ninja (bootleg)\0", NULL, "bootleg", "Miscellaneous",
+	"Caveman Ninja (bootleg)\0", NULL, "bootleg", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, cninjablRomInfo, cninjablRomName, NULL, NULL, DrvInputInfo, CninjaDIPInfo,
-	CninjablInit, DrvExit, StoneageFrame, CninjablDraw, DrvScan, &DrvRecalc, 0x800,
+	CninjablInit, DrvExit, StoneageFrame, CninjablDraw, StoneageScan, &DrvRecalc, 0x800,
 	256, 240, 4, 3
 };
 
@@ -2711,7 +2787,7 @@ STD_ROM_FN(mutantf)
 
 struct BurnDriver BurnDrvMutantf = {
 	"mutantf", NULL, NULL, NULL, "1992",
-	"Mutant Fighter (World ver EM-5)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Mutant Fighter (World ver EM-5)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_VSFIGHT, 0,
 	NULL, mutantfRomInfo, mutantfRomName, NULL, NULL, DrvInputInfo, MutantfDIPInfo,
@@ -2760,7 +2836,7 @@ STD_ROM_FN(mutantf4)
 
 struct BurnDriver BurnDrvMutantf4 = {
 	"mutantf4", "mutantf", NULL, NULL, "1992",
-	"Mutant Fighter (World ver EM-4)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Mutant Fighter (World ver EM-4)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_VSFIGHT, 0,
 	NULL, mutantf4RomInfo, mutantf4RomName, NULL, NULL, DrvInputInfo, MutantfDIPInfo,
@@ -2809,7 +2885,7 @@ STD_ROM_FN(mutantf3)
 
 struct BurnDriver BurnDrvMutantf3 = {
 	"mutantf3", "mutantf", NULL, NULL, "1992",
-	"Mutant Fighter (World ver EM-3)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Mutant Fighter (World ver EM-3)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_VSFIGHT, 0,
 	NULL, mutantf3RomInfo, mutantf3RomName, NULL, NULL, DrvInputInfo, MutantfDIPInfo,
@@ -2858,7 +2934,7 @@ STD_ROM_FN(deathbrd)
 
 struct BurnDriver BurnDrvDeathbrd = {
 	"deathbrd", "mutantf", NULL, NULL, "1992",
-	"Death Brade (Japan ver JM-3)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Death Brade (Japan ver JM-3)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_VSFIGHT, 0,
 	NULL, deathbrdRomInfo, deathbrdRomName, NULL, NULL, DrvInputInfo, MutantfDIPInfo,
@@ -2912,7 +2988,7 @@ STD_ROM_FN(edrandy)
 
 struct BurnDriver BurnDrvEdrandy = {
 	"edrandy", NULL, NULL, NULL, "1990",
-	"The Cliffhanger - Edward Randy (World ver 3)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"The Cliffhanger - Edward Randy (World ver 3)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, edrandyRomInfo, edrandyRomName, NULL, NULL, DrvInputInfo, EdrandyDIPInfo,
@@ -2966,7 +3042,7 @@ STD_ROM_FN(edrandy2)
 
 struct BurnDriver BurnDrvEdrandy2 = {
 	"edrandy2", "edrandy", NULL, NULL, "1990",
-	"The Cliffhanger - Edward Randy (World ver 2)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"The Cliffhanger - Edward Randy (World ver 2)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, edrandy2RomInfo, edrandy2RomName, NULL, NULL, DrvInputInfo, EdrandcDIPInfo,
@@ -3020,7 +3096,7 @@ STD_ROM_FN(edrandy1)
 
 struct BurnDriver BurnDrvEdrandy1 = {
 	"edrandy1", "edrandy", NULL, NULL, "1990",
-	"The Cliffhanger - Edward Randy (World ver 1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"The Cliffhanger - Edward Randy (World ver 1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, edrandy1RomInfo, edrandy1RomName, NULL, NULL, DrvInputInfo, EdrandcDIPInfo,
@@ -3074,7 +3150,7 @@ STD_ROM_FN(edrandyj)
 
 struct BurnDriver BurnDrvEdrandyj = {
 	"edrandyj", "edrandy", NULL, NULL, "1990",
-	"The Cliffhanger - Edward Randy (Japan ver 3)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"The Cliffhanger - Edward Randy (Japan ver 3)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, edrandyjRomInfo, edrandyjRomName, NULL, NULL, DrvInputInfo, EdrandcDIPInfo,
@@ -3126,7 +3202,7 @@ STD_ROM_FN(robocop2)
 
 struct BurnDriver BurnDrvRobocop2 = {
 	"robocop2", NULL, NULL, NULL, "1991",
-	"Robocop 2 (Euro/Asia v0.10)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Robocop 2 (Euro/Asia v0.10)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, robocop2RomInfo, robocop2RomName, NULL, NULL, Robocop2InputInfo, Robocop2DIPInfo,
@@ -3178,7 +3254,7 @@ STD_ROM_FN(robocop2u)
 
 struct BurnDriver BurnDrvRobocop2u = {
 	"robocop2u", "robocop2", NULL, NULL, "1991",
-	"Robocop 2 (US v0.05)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Robocop 2 (US v0.05)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, robocop2uRomInfo, robocop2uRomName, NULL, NULL, Robocop2InputInfo, Robocop2DIPInfo,
@@ -3230,7 +3306,7 @@ STD_ROM_FN(robocop2j)
 
 struct BurnDriver BurnDrvRobocop2j = {
 	"robocop2j", "robocop2", NULL, NULL, "1991",
-	"Robocop 2 (Japan v0.11)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Robocop 2 (Japan v0.11)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_SCRFIGHT, 0,
 	NULL, robocop2jRomInfo, robocop2jRomName, NULL, NULL, Robocop2InputInfo, Robocop2DIPInfo,

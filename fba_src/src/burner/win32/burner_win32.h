@@ -286,6 +286,8 @@ extern int nLoadMenuShowX;
 extern int nLoadMenuBoardTypeFilter;
 extern int nLoadMenuGenreFilter;
 extern int nLoadMenuFamilyFilter;
+extern int nSelDlgWidth;
+extern int nSelDlgHeight;
 int SelDialog(int nMVSCartsOnly, HWND hParentWND);
 extern UINT_PTR nTimer;
 extern HBITMAP hPrevBmp;
@@ -444,7 +446,6 @@ void IpsPatchExit();
 // Misc
 #define _TtoA(a)	TCHARToANSI(a, NULL, 0)
 #define _AtoT(a)	ANSIToTCHAR(a, NULL, 0)
-int __cdecl ZipLoadOneFile(const char* arcName, const char* fileName, void** Dest, int* pnWrote);
 
 // numpluscommas.cpp
 TCHAR* FormatCommasNumber(__int64);

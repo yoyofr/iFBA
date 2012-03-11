@@ -105,8 +105,6 @@ struct NeoMediaInfo {
 #include "bitswap.h"
 #include "neocdlist.h"
 
-extern bool bSoundOn;
-
 // #undef USE_SPEEDHACKS
 
 // #define LOG_IRQ
@@ -241,6 +239,8 @@ static INT32 nIRQCycles;
 #if defined EMULATE_WATCHDOG
 static INT32 nNeoWatchdog;
 #endif
+
+bool bDisableNeoWatchdog = false;
 
 static INT32 nNeoCDIRQVector;
 static INT32 nNeoCDIRQVectorAck;
@@ -633,6 +633,7 @@ static INT32 LoadRoms()
 	if (!strcmp("alpham2p", BurnDrvGetTextA(DRV_NAME))) nYM2610ADPCMASize[nNeoActiveSlot] = 0x200000;
 	if (!strcmp("burningfp", BurnDrvGetTextA(DRV_NAME))) nYM2610ADPCMASize[nNeoActiveSlot] = 0x180000;
 	if (!strcmp("kotm2p", BurnDrvGetTextA(DRV_NAME))) nYM2610ADPCMASize[nNeoActiveSlot] = 0x300000;
+	if (!strcmp("sbp", BurnDrvGetTextA(DRV_NAME))) nYM2610ADPCMASize[nNeoActiveSlot] = 0x800000;
 	
 //	bprintf(PRINT_NORMAL, _T("%x\n"), nYM2610ADPCMASize[nNeoActiveSlot]);
 	
@@ -744,9 +745,11 @@ static INT32 LoadRoms()
 
 		pADPCMData = YM2610ADPCMAROM[nNeoActiveSlot];
 
-		// pbobblen needs this (V ROMs are v3 & v4), note aof/wh1/wh1h/kotm2 (V ROMs are v2 & v4)
-		if (pInfo->nADPCMANum == 2 && pName[FindType(pName) + 1] == '3') {
-			pADPCMData += ri.nLen * 2;
+		if (strcmp(BurnDrvGetTextA(DRV_NAME), "sbp") != 0) { // not for sbp!
+			// pbobblen needs this (V ROMs are v3 & v4), note aof/wh1/wh1h/kotm2 (V ROMs are v2 & v4)
+			if (pInfo->nADPCMANum == 2 && pName[FindType(pName) + 1] == '3') {
+				pADPCMData += ri.nLen * 2;
+			}
 		}
 		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "pbobblenb")) {
 			pADPCMData = YM2610ADPCMAROM[nNeoActiveSlot] + 0x200000;
@@ -1654,12 +1657,7 @@ INT32 __fastcall NeoCDIRQCallback(INT32 /* nIRQ */)
 		nNeoCDIRQVectorAck = 0;
 		return nNeoCDIRQVector;
 	}
-#ifdef EMU_C68K
-    return CYCLONE_INT_ACK_AUTOVECTOR;
-#endif
-#ifdef EMU_M68K
 	return M68K_INT_ACK_AUTOVECTOR;
-#endif
 }
 
 static inline INT32 NeoConvertIRQPosition(INT32 nOffset)
@@ -4094,9 +4092,9 @@ INT32 NeoInit()
 			BurnLoadRom(NeoTextROMBIOS,	0x00080 + 28, 1);
 			BurnLoadRom(NeoZoomROM,		0x00080 + 29, 1);
 		} else {
-			if (BurnLoadRom(NeoZ80BIOS,		0x00080 + 27, 1)) return 1;
-			if (BurnLoadRom(NeoTextROMBIOS,	0x00080 + 28, 1)) return 1;
-			if (BurnLoadRom(NeoZoomROM,		0x00080 + 29, 1)) return 1;
+			BurnLoadRom(NeoZ80BIOS,		0x00080 + 27, 1);
+			BurnLoadRom(NeoTextROMBIOS,	0x00080 + 28, 1);
+			BurnLoadRom(NeoZoomROM,		0x00080 + 29, 1);
 		}
 	}
 	BurnUpdateProgress(0.0, _T("Preprocessing text layer graphics...")/*, BST_PROCESS_TXT*/, 0);
@@ -4253,6 +4251,8 @@ INT32 NeoExit()
 	}
 
 	recursing = false;
+	
+	bDisableNeoWatchdog = false;
 
 	// release the NeoGeo CD information object if needed
 	NeoCDInfo_Exit();
@@ -4551,12 +4551,14 @@ INT32 NeoFrame()
 	// If the watchdog isn't reset every 8 frames, reset the system
 	// This can't be 100% accurate, as the 68000 instruction timings are not 100%
 	if ((nNeoSystemType & NEO_SYS_CART) && nNeoWatchdog > nCyclesTotal[0] * 8) {
+		if (bDisableNeoWatchdog == false) {
 #if 1 && defined FBA_DEBUG
-		SekOpen(0);
-		bprintf(PRINT_IMPORTANT, _T(" ** Watchdog triggered system reset (PC: 0x%06X)\n"), SekGetPC(-1));
-		SekClose();
+			SekOpen(0);
+			bprintf(PRINT_IMPORTANT, _T(" ** Watchdog triggered system reset (PC: 0x%06X)\n"), SekGetPC(-1));
+			SekClose();
 #endif
-		neogeoReset();
+			neogeoReset();
+		}
 	}
 #endif
 //bprintf(PRINT_NORMAL, _T("***\n"));
@@ -4830,7 +4832,7 @@ INT32 NeoFrame()
 	
 	nCycles68KSync = SekTotalCycles();
 	BurnTimerEndFrame(nCyclesTotal[1]);
-	if (bSoundOn) BurnYM2610Update(pBurnSoundOut, nBurnSoundLen);
+	BurnYM2610Update(pBurnSoundOut, nBurnSoundLen);
 	
 	// Update the uPD4990 until the end of the frame
 	uPD4990AUpdate(SekTotalCycles() - nuPD4990ATicks);
@@ -4857,7 +4859,7 @@ INT32 NeoFrame()
 		}
 	}
 
-	if (bSoundOn) CDEmuGetSoundBuffer(pBurnSoundOut, nBurnSoundLen);
+	CDEmuGetSoundBuffer(pBurnSoundOut, nBurnSoundLen);
 
 	return 0;
 }

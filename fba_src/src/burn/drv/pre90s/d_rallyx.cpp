@@ -317,7 +317,11 @@ STD_ROM_PICK(Jungler)
 STD_ROM_FN(Jungler)
 
 static struct BurnSampleInfo RallyxSampleDesc[] = {
+#if !defined (ROM_VERIFY)
    { "bang.wav", SAMPLE_NOLOOP },
+#else
+	{ "bang", SAMPLE_NOLOOP },
+#endif
    { "", 0 }
 };
 
@@ -1106,7 +1110,7 @@ static void DrvCalcPalette()
 		Bit1 = (DrvPromPalette[i] >> 7) & 0x01;
 		b = Combine2Weights(bWeights, Bit0, Bit1);
 
-		Palette[i] = HighCol16(r, g, b, 0);
+		Palette[i] = BurnHighCol(r, g, b, 0);
 	}
 	
 	for (i = 0; i < 256; i++) {

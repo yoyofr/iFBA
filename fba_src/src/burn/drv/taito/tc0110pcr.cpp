@@ -48,7 +48,7 @@ void TC0110PCRWordWrite(INT32 Chip, INT32 Offset, UINT16 Data)
 			g = pal5bit(Data >>  5);
 			b = pal5bit(Data >> 10);
 			
-			TC0110PCRPalette[TC0110PCRAddr[Chip] | PaletteOffset] = HighCol16(r, g, b, 0);
+			TC0110PCRPalette[TC0110PCRAddr[Chip] | PaletteOffset] = BurnHighCol(r, g, b, 0);
 			return;
 		}
 	}
@@ -74,7 +74,7 @@ void TC0110PCRStep1WordWrite(INT32 Chip, INT32 Offset, UINT16 Data)
 			g = pal5bit(Data >>  5);
 			b = pal5bit(Data >> 10);
 			
-			TC0110PCRPalette[TC0110PCRAddr[Chip] | PaletteOffset] = HighCol16(r, g, b, 0);
+			TC0110PCRPalette[TC0110PCRAddr[Chip] | PaletteOffset] = BurnHighCol(r, g, b, 0);
 			return;
 		}
 	}
@@ -100,7 +100,7 @@ void TC0110PCRStep14rbgWordWrite(INT32 Chip, INT32 Offset, UINT16 Data)
 			g = pal4bit(Data >>  4);
 			b = pal4bit(Data >>  8);
 			
-			TC0110PCRPalette[TC0110PCRAddr[Chip] | PaletteOffset] = HighCol16(r, g, b, 0);
+			TC0110PCRPalette[TC0110PCRAddr[Chip] | PaletteOffset] = BurnHighCol(r, g, b, 0);
 			return;
 		}
 	}
@@ -126,7 +126,7 @@ void TC0110PCRStep1RBSwapWordWrite(INT32 Chip, INT32 Offset, UINT16 Data)
 			g = pal5bit(Data >>  5);
 			b = pal5bit(Data >>  0);
 			
-			TC0110PCRPalette[TC0110PCRAddr[Chip] | PaletteOffset] = HighCol16(r, g, b, 0);
+			TC0110PCRPalette[TC0110PCRAddr[Chip] | PaletteOffset] = BurnHighCol(r, g, b, 0);
 			return;
 		}
 	}

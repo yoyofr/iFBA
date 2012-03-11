@@ -9,14 +9,29 @@ static INT32 nInterrupt;
 static INT32 nIrqLine, nIrqCycles;
 static bool bEnableAutoIrq50, bEnableAutoIrq52;				// Trigger an interrupt every 32 scanlines
 
-static const INT32 nFirstLine = 0x0C;							// The first scanline of the display
-static const INT32 nVBlank = 0x0106 - 0x0C;					// The scanline at which the vblank interrupt is triggered
+static const INT32 nFirstLine = 0x10;							// The first scanline of the display
 
 static INT32 nCpsCyclesExtra;
 
 INT32 CpsDrawSpritesInReverse = 0;
 
 INT32 nIrqLine50, nIrqLine52;
+
+INT32 nCpsNumScanlines = 259;
+
+static void CpsQSoundCheatSearchCallback()
+{
+	// Q-Sound Shared RAM ranges - not useful for cheat searching, and runs the Z80
+	// in the handler, exclude it from cheat searching
+	if (Cps == 2) {
+		CheatSearchExcludeAddressRange(0x618000, 0x619FFF);
+	}
+	
+	if (Cps1Qs == 1) {	
+		CheatSearchExcludeAddressRange(0xF18000, 0xF19FFF);
+		CheatSearchExcludeAddressRange(0xF1E000, 0xF1FFFF);
+	}
+}
 
 static INT32 DrvReset()
 {
@@ -35,9 +50,9 @@ static INT32 DrvReset()
 
 	if (Cps == 2) {
 		// Disable beam-synchronized interrupts
-		*((UINT16*)(CpsReg + 0x4E)) = 0x0200;
-		*((UINT16*)(CpsReg + 0x50)) = 0x0106;
-		*((UINT16*)(CpsReg + 0x52)) = 0x0106;
+		*((UINT16*)(CpsReg + 0x4E)) = BURN_ENDIAN_SWAP_INT16(0x0200);
+		*((UINT16*)(CpsReg + 0x50)) = BURN_ENDIAN_SWAP_INT16(nCpsNumScanlines);
+		*((UINT16*)(CpsReg + 0x52)) = BURN_ENDIAN_SWAP_INT16(nCpsNumScanlines);
 	}
 
 	SekOpen(0);
@@ -83,10 +98,6 @@ static const eeprom_interface cps2_eeprom_interface =
 
 INT32 CpsRunInit()
 {
-	nLagObjectPalettes = 0;
-
-	if (Cps == 2) nLagObjectPalettes = 1;
-
 	SekInit(0, 0x68000);					// Allocate 68000
 	
 	if (CpsMemInit()) {						// Memory init
@@ -129,6 +140,10 @@ INT32 CpsRunInit()
 	DrawFnInit();
 	
 	pBurnDrvPalette = CpsPal;
+	
+	if (Cps == 2 || Cps1Qs == 1) {
+		CheatSearchInitCallbackFunction = CpsQSoundCheatSearchCallback;
+	}
 
 	return 0;
 }
@@ -157,29 +172,6 @@ INT32 CpsRunExit()
 	return 0;
 }
 
-// nStart = 0-3, nCount=1-4
-inline static void GetPalette(INT32 nStart, INT32 nCount)
-{
-	// Update Palette (Ghouls points to the wrong place on boot up I think)
-	INT32 nPal = (BURN_ENDIAN_SWAP_INT16(*((UINT16*)(CpsReg + 0x0A))) << 8) & 0xFFF800;
-
-	UINT8* Find = CpsFindGfxRam(nPal, 0x1000);
-	if (Find) {
-		memcpy(CpsSavePal + (nStart << 10), Find + (nStart << 10), nCount << 10);
-	}
-}
-
-static void GetStarPalette()
-{
-	INT32 nPal = (BURN_ENDIAN_SWAP_INT16(*((UINT16*)(CpsReg + 0x0A))) << 8) & 0xFFF800;
-
-	UINT8* Find = CpsFindGfxRam(nPal, 256);
-	if (Find) {
-		memcpy(CpsSavePal + 4096, Find + 4096, 256);
-		memcpy(CpsSavePal + 5120, Find + 5120, 256);
-	}
-}
-
 inline static void CopyCpsReg(INT32 i)
 {
 	memcpy(CpsSaveReg[i], CpsReg, 0x0100);
@@ -193,7 +185,7 @@ inline static void CopyCpsFrg(INT32 i)
 // Schedule a beam-synchronized interrupt
 static void ScheduleIRQ()
 {
-	INT32 nLine = 0x0106;
+	INT32 nLine = nCpsNumScanlines;
 
 	if (nIrqLine50 <= nLine) {
 		nLine = nIrqLine50;
@@ -202,9 +194,9 @@ static void ScheduleIRQ()
 		nLine = nIrqLine52;
 	}
 
-	if (nLine < 0x0106) {
+	if (nLine < nCpsNumScanlines) {
 		nIrqLine = nLine;
-		nIrqCycles = (nLine * nCpsCycles / 0x0106) + 1;
+		nIrqCycles = (nLine * nCpsCycles / nCpsNumScanlines) + 1;
 	} else {
 		nIrqCycles = nCpsCycles + 1;
 	}
@@ -227,7 +219,7 @@ static void DoIRQ()
 	}
 
 	SekSetIRQLine(4, SEK_IRQSTATUS_AUTO);
-	SekRun(nCpsCycles * 0x01 / 0x0106);
+	SekRun(nCpsCycles * 0x01 / nCpsNumScanlines);
 	if (nRasterline[nInterrupt] < 224) {
 		CopyCpsReg(nInterrupt);
 		CopyCpsFrg(nInterrupt);
@@ -238,7 +230,7 @@ static void DoIRQ()
 	// Schedule next interrupt
 	if (!bEnableAutoIrq50) {
 		if (nIrqLine >= nIrqLine50) {
-			nIrqLine50 = 0x0106;
+			nIrqLine50 = nCpsNumScanlines;
 		}
 	} else {
 		if (bEnableAutoIrq50 && nIrqLine == nIrqLine50) {
@@ -246,7 +238,7 @@ static void DoIRQ()
 		}
 	}
 	if (!bEnableAutoIrq52 && nIrqLine >= nIrqLine52) {
-		nIrqLine52 = 0x0106;
+		nIrqLine52 = nCpsNumScanlines;
 	} else {
 		if (bEnableAutoIrq52 && nIrqLine == nIrqLine52) {
 			nIrqLine52 += 32;
@@ -282,12 +274,12 @@ INT32 Cps1Frame()
 
 	CpsRwGetInp();												// Update the input port values
 
-	nDisplayEnd = (nCpsCycles * (nFirstLine + 224)) / 0x0106;	// Account for VBlank
+	nDisplayEnd = (nCpsCycles * (nFirstLine + 224)) / nCpsNumScanlines;	// Account for VBlank
 
 	SekOpen(0);
 	SekIdle(nCpsCyclesExtra);
 
-	SekRun(nCpsCycles * nFirstLine / 0x0106);					// run 68K for the first few lines
+	SekRun(nCpsCycles * nFirstLine / nCpsNumScanlines);					// run 68K for the first few lines
 
 	if (!CpsDrawSpritesInReverse) {
 		CpsObjGet();											// Get objects
@@ -301,11 +293,6 @@ INT32 Cps1Frame()
 			SekRun(nNext - nDisplayEnd);						// run 68K
 
 			memcpy(CpsSaveReg[0], CpsReg, 0x100);				// Registers correct now
-
-			GetPalette(0, 6);									// Get palette
-			if (CpsStar) {
-				GetStarPalette();
-			}
 
 			if (CpsDrawSpritesInReverse) {
 				if (i == 3) CpsObjGet();   									// Get objects
@@ -359,11 +346,11 @@ INT32 Cps2Frame()
 
 	nCpsCycles = (INT32)(((INT64)nCPS68KClockspeed * nBurnCPUSpeedAdjust) / 0x0100);
 	SekOpen(0);
-	SekSetCyclesScanline(nCpsCycles / 262);
+	SekSetCyclesScanline(nCpsCycles / nCpsNumScanlines);
 
 	CpsRwGetInp();											// Update the input port values
 
-	nDisplayEnd = nCpsCycles * (nFirstLine + 224) / 0x0106;	// Account for VBlank
+	nDisplayEnd = nCpsCycles * (nFirstLine + 224) / nCpsNumScanlines;	// Account for VBlank
 
 	nInterrupt = 0;
 	for (i = 0; i < MAX_RASTER + 2; i++) {
@@ -372,7 +359,7 @@ INT32 Cps2Frame()
 
 	// Determine which (if any) of the line counters generates the first IRQ
 	bEnableAutoIrq50 = bEnableAutoIrq52 = false;
-	nIrqLine50 = nIrqLine52 = 0x0106;
+	nIrqLine50 = nIrqLine52 = nCpsNumScanlines;
 	if (BURN_ENDIAN_SWAP_INT16(*((UINT16*)(CpsReg + 0x50))) & 0x8000) {
 		bEnableAutoIrq50 = true;
 	}
@@ -389,11 +376,11 @@ INT32 Cps2Frame()
 
 	SekIdle(nCpsCyclesExtra);
 
-	if (nIrqCycles < nCpsCycles * nFirstLine / 0x0106) {
+	if (nIrqCycles < nCpsCycles * nFirstLine / nCpsNumScanlines) {
 		SekRun(nIrqCycles);
 		DoIRQ();
 	}
-	nNext = nCpsCycles * nFirstLine / 0x0106;
+	nNext = nCpsCycles * nFirstLine / nCpsNumScanlines;
 	if (SekTotalCycles() < nNext) {
 		SekRun(nNext - SekTotalCycles());
 	}
@@ -401,14 +388,11 @@ INT32 Cps2Frame()
 	CopyCpsReg(0);										// Get inititial copy of registers
 	CopyCpsFrg(0);										//
 
-	if (nIrqLine >= 0x0106 && (*((UINT16*)(CpsReg + 0x4E)) & 0x0200) == 0) {
-		nIrqLine50 = *((UINT16*)(CpsReg + 0x50)) & 0x01FF;
-		nIrqLine52 = *((UINT16*)(CpsReg + 0x52)) & 0x01FF;
+	if (nIrqLine >= nCpsNumScanlines && (BURN_ENDIAN_SWAP_INT16(*((UINT16*)(CpsReg + 0x4E))) & 0x0200) == 0) {
+		nIrqLine50 = BURN_ENDIAN_SWAP_INT16(*((UINT16*)(CpsReg + 0x50))) & 0x01FF;
+		nIrqLine52 = BURN_ENDIAN_SWAP_INT16(*((UINT16*)(CpsReg + 0x52))) & 0x01FF;
 		ScheduleIRQ();
 	}
-
-	GetPalette(0, 4);									// Get palettes
-	CpsObjGet();										// Get objects
 
 	for (i = 0; i < 3; i++) {
 		nNext = ((i + 1) * nDisplayEnd) / 3;			// find out next cycle count to run to
@@ -419,25 +403,17 @@ INT32 Cps2Frame()
 		}
 		SekRun(nNext - SekTotalCycles());				// run cpu
 	}
+	
+	CpsObjGet();										// Get objects
 
-//	nCpsCyclesSegment[0] = (nCpsCycles * nVBlank) / 0x0106;
+//	nCpsCyclesSegment[0] = (nCpsCycles * nVBlank) / nCpsNumScanlines;
 //	nDone += SekRun(nCpsCyclesSegment[0] - nDone);
 
-#if 1
-	// This triggers the VBlank IRQ straight away at display end,
-	// it causes glitches in the D&D games text (Press Start, Insert Coin, etc)
 	SekSetIRQLine(2, SEK_IRQSTATUS_AUTO);				// VBlank
-	SekRun(nCpsCycles - SekTotalCycles());
-#else
-	// Here we delay the VBlank IRQ until frame-end, or part-way through VBlank
-	// fixes D&D glitching credit text but breaks lower Manhattan stage rasters in xmvsf
-	SekRun(nCpsCycles - SekTotalCycles());
-	SekSetIRQLine(2, SEK_IRQSTATUS_AUTO);				// VBlank
-#endif
-	
 	if (pBurnDraw) {
 		CpsDraw();
 	}
+	SekRun(nCpsCycles - SekTotalCycles());	
 
 	nCpsCyclesExtra = SekTotalCycles() - nCpsCycles;
 

@@ -531,7 +531,7 @@ static UINT32 CalcCol(UINT16 nColour)
 	g = (g << 4) | g;
 	b = (b << 4) | b;
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 INT32 CalcAll()

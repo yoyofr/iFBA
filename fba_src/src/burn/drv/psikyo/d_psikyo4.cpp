@@ -245,6 +245,7 @@ STDDIPINFO(Hotgmck)
 static void le_to_be(unsigned char * p, int size)
 {
         unsigned char c;
+
         for(int i=0; i<size; i+=4, p+=4) {
                 c = *(p+0);     *(p+0) = *(p+3);        *(p+3) = c;
                 c = *(p+1);     *(p+1) = *(p+2);        *(p+2) = c;
@@ -334,7 +335,6 @@ UINT16 __fastcall ps4_read_word(UINT32 address)
 #ifdef LSB_FIRST
 	address ^= 2;
 #endif
-
 	if (address >= 0x03000000 && address <= 0x030037ff) {
 		return *((UINT16 *)(DrvSprRAM + (address & 0x3ffe)));
 	}
@@ -449,7 +449,7 @@ void __fastcall ps4_write_byte(UINT32 address, UINT8 data)
 #ifdef LSB_FIRST
 		DrvSprRAM[(address ^ 3) & 0x3fff] = data;
 #else
-		DrvSprRAM[(address) & 0x3fff] = data;
+		DrvSprRAM((address) & 0x3fff] = data;
 #endif
 		return;
 	}
@@ -602,7 +602,7 @@ static INT32 MemIndex(INT32 gfx_len)
 
 static INT32 DrvDoReset()
 {
-	Sh2Reset( *(UINT32 *)(DrvSh2ROM + 0), *(UINT32 *)(DrvSh2ROM + 4) );
+	Sh2Reset();
 
 	memset (AllRam, 0, RamEnd - AllRam);
 
@@ -838,9 +838,9 @@ static void DrvDoPalette(UINT32 *dst, INT32 c)
 		b = p[i] >>  8;
 
 		if (c == 0x7f) {
-			dst[i] = HighCol16(r, g, b, 0);
+			dst[i] = BurnHighCol(r, g, b, 0);
 		} else {
-			dst[i] = HighCol16((r * c) / 0x7f, (g * c) / 0x7f, (b * c) / 0x7f, 0);
+			dst[i] = BurnHighCol((r * c) / 0x7f, (g * c) / 0x7f, (b * c) / 0x7f, 0);
 		}
 	}
 }
@@ -852,8 +852,8 @@ static void DrvRecalcPalette()
 	DrvDoPalette(DrvPalette + 0x000, DrvBrightVal[0]);
 	DrvDoPalette(DrvPalette + 0x800, DrvBrightVal[1]);
 
-	DrvPalette[0x1000] = HighCol16(p[0x800] >> 24, p[0x800] >> 16, p[0x800] >> 8, 0);
-	DrvPalette[0x1001] = HighCol16(p[0x801] >> 24, p[0x801] >> 16, p[0x801] >> 8, 0);
+	DrvPalette[0x1000] = BurnHighCol(p[0x800] >> 24, p[0x800] >> 16, p[0x800] >> 8, 0);
+	DrvPalette[0x1001] = BurnHighCol(p[0x801] >> 24, p[0x801] >> 16, p[0x801] >> 8, 0);
 }
 
 static INT32 DrvDraw()

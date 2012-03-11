@@ -435,7 +435,7 @@ static void DrvRecalcPalette()
 		INT32 g = (pal[i] >>  8) & 0x0f;
 		INT32 b = (pal[i] >>  4) & 0x0f;
 
-		DrvPalette[i] = HighCol16((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
+		DrvPalette[i] = BurnHighCol((r << 4) | r, (g << 4) | g, (b << 4) | b, 0);
 	}
 }
 
@@ -654,7 +654,7 @@ static INT32 DrvScan(INT32 nAction,INT32 *pnMin)
 	struct BurnArea ba;
 
 	if (pnMin) {
-		*pnMin = 0x029707;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_VOLATILE) {		
@@ -666,9 +666,10 @@ static INT32 DrvScan(INT32 nAction,INT32 *pnMin)
 		BurnAcb(&ba);
 
 		SekScan(nAction);
-		ZetScan(nAction);
+		M6809Scan(nAction);
 
 		AY8910Scan(nAction, pnMin);
+		BurnY8950Scan(nAction, pnMin);
 
 		SCAN_VAR(MC6840_idx0);
 		SCAN_VAR(MC6840_idx1);
@@ -717,7 +718,7 @@ STD_ROM_FN(ginganin)
 struct BurnDriver BurnDrvGinganin = {
 	"ginganin", NULL, NULL, NULL, "1987",
 	"Ginga NinkyouDen (set 1)\0", NULL, "Jaleco", "Miscellaneous",
-	L"\u9280\u6CB3\u4EFB\u4FA0\u4F1D (set 1)\0Ginga NinkyouDen (set 1)\0", NULL, NULL, NULL,
+	L"\u9280\u6CB3\u4EFB\u4FA0\u4F1D\0Ginga NinkyouDen (set 1)\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_MISC_PRE90S, GBF_PLATFORM, 0,
 	NULL, ginganinRomInfo, ginganinRomName, NULL, NULL, GinganinInputInfo, GinganinDIPInfo,
 	DrvInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x400,
@@ -758,7 +759,7 @@ STD_ROM_FN(ginganina)
 struct BurnDriver BurnDrvGinganina = {
 	"ginganina", "ginganin", NULL, NULL, "1987",
 	"Ginga NinkyouDen (set 2)\0", NULL, "Jaleco", "Miscellaneous",
-	L"\u9280\u6CB3\u4EFB\u4FA0\u4F1D (set 2)\0Ginga NinkyouDen (set 2)\0", NULL, NULL, NULL,
+	L"\u9280\u6CB3\u4EFB\u4FA0\u4F1D\0Ginga NinkyouDen (set 2)\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_MISC_PRE90S, GBF_PLATFORM, 0,
 	NULL, ginganinaRomInfo, ginganinaRomName, NULL, NULL, GinganinInputInfo, GinganinDIPInfo,
 	DrvInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x400,

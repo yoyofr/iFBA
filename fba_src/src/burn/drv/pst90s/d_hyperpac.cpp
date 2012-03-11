@@ -3228,7 +3228,7 @@ inline static UINT32 CalcCol(UINT16 nColour)
 	g = (g << 3) | (g >> 2);
 	b = (b << 3) | (b >> 2);
 
-	return HighCol16(r, g, b, 0);
+	return BurnHighCol(r, g, b, 0);
 }
 
 static INT32 HyperpacCalcPalette()

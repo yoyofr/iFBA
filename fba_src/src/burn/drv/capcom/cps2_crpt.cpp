@@ -705,14 +705,11 @@ static void cps2_decrypt(const UINT32 *master_key, UINT32 upper_limit)
 
 #if 1
 			TCHAR loadingMessage[256]; // for displaying with UI 
-#ifdef _UNICODE
-            _stprintf(loadingMessage, _T("Decrypting 68000 ROMs with key %d %s"), (i*100/0x10000), _T("%"));
-#else                
-			sprintf(loadingMessage, "Decrypting 68000 ROMs with key %d%", (i*100/0x10000)); 
-#endif            
+			_stprintf(loadingMessage, _T("Decrypting 68000 ROMs with key %d %s"), (i*100/0x10000), _T("%")); 
 			BurnUpdateProgress(0.0, loadingMessage, 0); 
 #endif
 		}
+
 
 		// pass the address through FN1
 		seed = feistel(i, fn1_groupA, fn1_groupB,
@@ -817,6 +814,7 @@ static const struct game_keys keys_table[] =
 	{ "ssf2tu",     { 0x94fa8902,0x4c77143f }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "ssf2tur1",   { 0x94fa8902,0x4c77143f }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "ssf2xj",     { 0x942a5702,0x05ac140e }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
+	{ "ssf2xjr",    { 0x943c2b02,0x7acd1422 }, 0x400000 },  // 0838 0007 2000 btst #7,$2000 // curious, not the usual Japan key on the rent version
 	{ "xmcota",     { 0x3bc6eda4,0x97f80251 }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
 	{ "xmcotau",    { 0x32a57ecd,0x98016f4b }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
 	{ "xmcotah",    { 0xf5e8dc34,0xa096b217 }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
@@ -868,6 +866,7 @@ static const struct game_keys keys_table[] =
 	{ "nwarrb",     { 0x17c67109,0xb7362a20 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "nwarra",     { 0x4e940d0c,0x39b861a4 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "vhuntj",     { 0x1135b2c3,0xa4e9d7f2 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
+	{ "vhuntjr1s",  { 0x1135b2c3,0xa4e9d7f2 }, 0x180000 },  // 0838 0000 6160 btst #0,$6160
 	{ "vhuntjr1",   { 0x1135b2c3,0xa4e9d7f2 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "vhuntjr2",   { 0x1135b2c3,0xa4e9d7f2 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "sfa",        { 0x0f895d6e,0xc4273a1b }, 0x080000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
@@ -1006,6 +1005,7 @@ static const struct game_keys keys_table[] =
 	{ "mpangj",     { 0x95f741c6,0xe547a21b }, 0x100000 },	// 0C84 347D 89A3  cmpi.l  #$347D89A3,D4
 	{ "pzloop2",    { 0xa054f812,0xc40d36b4 }, 0x400000 },	// 0C82 9A73 15F1  cmpi.l  #$9A7315F1,D2
 	{ "pzloop2j",   { 0xa054f812,0xc40d36b4 }, 0x400000 },	// 0C82 9A73 15F1  cmpi.l  #$9A7315F1,D2
+	{ "pzloop2jr1", { 0xa054f812,0xc40d36b4 }, 0x400000 },	// 0C82 9A73 15F1  cmpi.l  #$9A7315F1,D2
 	{ "choko",      { 0xd3fb12c6,0x7f8e17b5 }, 0x400000 },	// 0C86 4D17 5B3C  cmpi.l  #$4D175B3C,D6
 	{ "dimahoo",    { 0x0ddb8e40,0x2817fd2b }, 0x080000 },	// BE4C B244 B6C5  cmp.w   A4,D7   cmp.w   D4,D1   cmpa.w  D5,A3
 	{ "dimahoou",   { 0x6575af59,0xb0fea691 }, 0x080000 },	// BE4C B244 B6C5  cmp.w   A4,D7   cmp.w   D4,D1   cmpa.w  D5,A3

@@ -377,7 +377,7 @@ static void bankp_plot_pixel(INT32 x, INT32 y, INT32 color, UINT8 src, INT32 tra
 	INT32 pxl = Palette[color | src];
 	if (transp && !pxl) return;
 
-	PutPix(pBurnDraw + (y * 224 + x) * nBurnBpp, HighCol16(pxl >> 16, pxl >> 8, pxl, 0));
+	PutPix(pBurnDraw + (y * 224 + x) * nBurnBpp, BurnHighCol(pxl >> 16, pxl >> 8, pxl, 0));
 }
 
 
@@ -561,7 +561,7 @@ STD_ROM_FN(bankp)
 
 struct BurnDriver BurnDrvbankp = {
 	"bankp", NULL, NULL, NULL, "1984",
-	"Bank Panic\0", NULL, "[Sanritsu] Sega", "Misc",
+	"Bank Panic\0", NULL, "[Sanritsu] Sega", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 3, HARDWARE_SEGA_MISC, GBF_MISC, 0,
 	NULL, bankpRomInfo, bankpRomName, NULL, NULL, bankpInputInfo, bankpDIPInfo,
@@ -600,7 +600,7 @@ STD_ROM_FN(combh)
 
 struct BurnDriver BurnDrvcombh = {
 	"combh", NULL, NULL, NULL, "1987",
-	"Combat Hawk\0", NULL, "Sega / Sanritsu", "Misc",
+	"Combat Hawk\0", NULL, "Sega / Sanritsu", "Miscellaneous",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL, 3, HARDWARE_SEGA_MISC, GBF_MISC, 0,
 	NULL, combhRomInfo, combhRomName, NULL, NULL, combhInputInfo, combhDIPInfo,

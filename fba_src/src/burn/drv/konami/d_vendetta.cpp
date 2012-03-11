@@ -746,7 +746,7 @@ static void DrvRecalcPal()
 	UINT8 r,g,b;
 	UINT16 *p = (UINT16*)DrvPalRAM;
 	for (INT32 i = 0; i < 0x1000 / 2; i++) {
-		UINT16 d = (p[i] << 8) | (p[i] >> 8);
+		UINT16 d = BURN_ENDIAN_SWAP_INT16((p[i] << 8) | (p[i] >> 8));
 
 		b = (d >> 10) & 0x1f;
 		g = (d >>  5) & 0x1f;
@@ -757,7 +757,7 @@ static void DrvRecalcPal()
 		b = (b << 3) | (b >> 2);
 
 		Palette[i] = (r << 16) | (g << 8) | b;
-		DrvPalette[i] = HighCol16(r, g, b, 0);
+		DrvPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 }
 

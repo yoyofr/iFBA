@@ -1,7 +1,7 @@
 // Driver Init module
 #include "burner.h"
 
-extern INT32 nAudSampleRate;
+extern INT32 nAudSampleRate[8];
 
 
 int bDrvOkay = 0;						// 1 if the Driver has been initted okay, and it's okay to use the BurnDrv functions
@@ -68,7 +68,7 @@ int DrvInit(int nDrvNum, bool bRestore)
 	nBurnSoundRate = 0;					// Assume no sound
 	pBurnSoundOut = NULL;
 	if (bAudOkay) {
-		nBurnSoundRate = nAudSampleRate;//nAudSampleRate[0];
+		nBurnSoundRate = nAudSampleRate[0];
 		nBurnSoundLen = nAudSegLen;
 	}
 	nBurnDrvSelect[0] = nDrvNum;		// Set the driver number

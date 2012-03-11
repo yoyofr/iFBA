@@ -356,18 +356,11 @@ void HiscoreInit()
 	if (!CheckHiscoreAllowed()) return;
 	
 	HiscoresInUse = 0;
-
-#ifdef IOS_BUILD
-    char szDatFilename[MAX_PATH];
-	sprintf(szDatFilename, "%shiscore.dat", szAppHiscorePath);
-    FILE *fp = fopen(szDatFilename, "r");
-#else    
+	
 	TCHAR szDatFilename[MAX_PATH];
 	_stprintf(szDatFilename, _T("%shiscore.dat"), szAppHiscorePath);
-    FILE *fp = _tfopen(szDatFilename, _T("r"));
-#endif
 
-	
+	FILE *fp = _tfopen(szDatFilename, _T("r"));
 	if (fp) {
 		char buffer[MAX_CONFIG_LINE_SIZE];
 		enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;

@@ -415,7 +415,7 @@ static void DrvPaletteRecalc()
 	UINT16 *p1 = (UINT16*)DrvPalRAM1;
 
 	for (INT32 i = 0; i < 0xa00 / 2; i++) {
-		DrvPalette[i] = HighCol16(p0[i] & 0xff, p0[i] >> 8, p1[i]& 0xff, 0);
+		DrvPalette[i] = BurnHighCol(p0[i] & 0xff, p0[i] >> 8, p1[i]& 0xff, 0);
 	}
 }
 
@@ -595,7 +595,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 	struct BurnArea ba;
 	
 	if (pnMin != NULL) {
-		*pnMin = 0x029682;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_MEMORY_RAM) {
@@ -608,7 +608,8 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 	if (nAction & ACB_DRIVER_DATA) {
 		SekScan(nAction);
-	//	huc6280
+	
+		deco16SoundScan(nAction, pnMin);
 
 		deco16Scan();
 	}
@@ -658,7 +659,7 @@ static INT32 VaportraInit()
 
 struct BurnDriver BurnDrvVaportra = {
 	"vaportra", NULL, NULL, NULL, "1989",
-	"Vapor Trail - Hyper Offence Formation (World revision 1)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Vapor Trail - Hyper Offence Formation (World revision 1)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_PREFIX_DATAEAST, GBF_VERSHOOT, 0,
 	NULL, vaportraRomInfo, vaportraRomName, NULL, NULL, VaportraInputInfo, VaportraDIPInfo,
@@ -711,7 +712,7 @@ static INT32 Vaportraw3Init()
 
 struct BurnDriver BurnDrvVaportraw3 = {
 	"vaportra3", "vaportra", NULL, NULL, "1989",
-	"Vapor Trail - Hyper Offence Formation (World revision 3)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Vapor Trail - Hyper Offence Formation (World revision 3)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_PREFIX_DATAEAST, GBF_VERSHOOT, 0,
 	NULL, vaportraw3RomInfo, vaportraw3RomName, NULL, NULL, VaportraInputInfo, VaportraDIPInfo,
@@ -756,7 +757,7 @@ STD_ROM_FN(vaportrau)
 
 struct BurnDriver BurnDrvVaportrau = {
 	"vaportrau", "vaportra", NULL, NULL, "1989",
-	"Vapor Trail - Hyper Offence Formation (US)\0", NULL, "Data East USA", "Miscellaneous",
+	"Vapor Trail - Hyper Offence Formation (US)\0", NULL, "Data East USA", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_PREFIX_DATAEAST, GBF_VERSHOOT, 0,
 	NULL, vaportrauRomInfo, vaportrauRomName, NULL, NULL, VaportraInputInfo, VaportraDIPInfo,
@@ -795,7 +796,7 @@ STD_ROM_FN(kuhga)
 
 struct BurnDriver BurnDrvKuhga = {
 	"kuhga", "vaportra", NULL, NULL, "1989",
-	"Kuhga - Operation Code 'Vapor Trail' (Japan revision 3)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Kuhga - Operation Code 'Vapor Trail' (Japan revision 3)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_PREFIX_DATAEAST, GBF_VERSHOOT, 0,
 	NULL, kuhgaRomInfo, kuhgaRomName, NULL, NULL, VaportraInputInfo, VaportraDIPInfo,

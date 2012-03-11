@@ -100,14 +100,43 @@ INT32 BurnTransferInit();
 // ---------------------------------------------------------------------------
 // Plotting pixels
 
-inline static void PutPix(UINT8* pPix, UINT32 c) {
-    *((UINT16*)pPix) = (UINT16)c;
+inline static void PutPix(UINT8* pPix, UINT32 c)
+{
+	if (nBurnBpp >= 4) {
+		*((UINT32*)pPix) = c;
+	} else {
+		if (nBurnBpp == 2) {
+			*((UINT16*)pPix) = (UINT16)c;
+		} else {
+			pPix[0] = (UINT8)(c >>  0);
+			pPix[1] = (UINT8)(c >>  8);
+			pPix[2] = (UINT8)(c >> 16);
+		}
+	}
 }
 
 // ---------------------------------------------------------------------------
 // Setting up cpus for cheats
 
-void CpuCheatRegister(INT32 type, INT32 num);
+struct cpu_core_config {
+	void (*open)(INT32);		// cpu open
+	void (*close)();		// cpu close
+
+	UINT8 (*read)(UINT32);		// read
+	void (*write)(UINT32, UINT8);	// write
+	INT32 (*active)();		// active cpu
+	INT32 (*totalcycles)();		// total cycles
+	void (*newframe)();		// new frame
+
+	INT32 (*run)(INT32);		// execute cycles
+	void (*runend)();		// end run
+	void (*reset)();		// reset cpu
+
+	UINT64 nMemorySize;		// how large is our memory range?
+	UINT32 nAddressXor;		// fix endianness for some cpus
+};
+
+void CpuCheatRegister(INT32 type, cpu_core_config *config);
 
 // burn_memory.cpp
 void BurnInitMemoryManager();

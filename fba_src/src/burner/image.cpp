@@ -8,6 +8,7 @@ typedef UINT16 WORD;
 typedef UINT32 DWORD;
 #endif
 
+
 #define PNG_SIG_CHECK_BYTES (8)
 
 void img_free(IMAGE* img)

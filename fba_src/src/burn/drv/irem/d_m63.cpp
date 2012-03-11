@@ -400,7 +400,7 @@ static void m63PaletteRecalc()
 		bit3 = (DrvColPROM[i + 2*256] >> 3) & 0x01;
 		INT32 b =  0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		DrvPalette[i] = HighCol16(r,g,b,0);
+		DrvPalette[i] = BurnHighCol(r,g,b,0);
 	}
 
 	for (INT32 i = 0; i < 4; i++)
@@ -419,7 +419,7 @@ static void m63PaletteRecalc()
 		bit1 = (DrvColPROM[0x300+i] >> 7) & 0x01;
 		INT32 b = 0x4f * bit0 + 0xa8 * bit1;
 
-		DrvPalette[0x100+i] = HighCol16(r,g,b,0);
+		DrvPalette[0x100+i] = BurnHighCol(r,g,b,0);
 	}
 }
 

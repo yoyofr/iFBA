@@ -539,7 +539,7 @@ static void DrvIRQCallback(INT32, INT32 nStatus)
 
 static INT32 DrvDoReset()
 {
-	Sh2Reset( *(UINT32 *)(DrvSh2ROM + 0), *(UINT32 *)(DrvSh2ROM + 4) );
+	Sh2Reset();
 
 	memset (AllRam, 0, RamEnd - AllRam);
 
@@ -653,7 +653,6 @@ static INT32 DrvInit(INT32 (*LoadCallback)(), INT32 type, INT32 gfx_max, INT32 g
 		}
 
 		BurnSwap32(DrvSh2ROM, 0x100000);
-
 #ifndef LSB_FIRST
 		le_to_be(DrvSh2ROM,0x200000);
 #endif

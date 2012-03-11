@@ -439,7 +439,7 @@ static void DrvPaletteRecalc()
 		g |= g << 4;
 		b |= b << 4;
 
-		DrvPalette[i] = HighCol16(r, g, b, 0);
+		DrvPalette[i] = BurnHighCol(r, g, b, 0);
 	}
 }
 
@@ -608,7 +608,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 	struct BurnArea ba;
 	
 	if (pnMin != NULL) {
-		*pnMin = 0x029682;
+		*pnMin = 0x029722;
 	}
 
 	if (nAction & ACB_MEMORY_RAM) {
@@ -621,7 +621,8 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 	if (nAction & ACB_DRIVER_DATA) {
 		SekScan(nAction);
-	//	huc6280
+	
+		deco16SoundScan(nAction, pnMin);
 
 		deco16Scan();
 	}
@@ -651,7 +652,7 @@ STD_ROM_FN(funkyjet)
 
 struct BurnDriver BurnDrvFunkyjet = {
 	"funkyjet", NULL, NULL, NULL, "1992",
-	"Funky Jet (World)\0", NULL, "[Data East] (Mitchell license)", "Miscellaneous",
+	"Funky Jet (World)\0", NULL, "[Data East] (Mitchell license)", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, funkyjetRomInfo, funkyjetRomName, NULL, NULL, FunkyjetInputInfo, FunkyjetDIPInfo,
@@ -681,7 +682,7 @@ STD_ROM_FN(funkyjetj)
 
 struct BurnDriver BurnDrvFunkyjetj = {
 	"funkyjetj", "funkyjet", NULL, NULL, "1992",
-	"Funky Jet (Japan)\0", NULL, "Data East Corporation", "Miscellaneous",
+	"Funky Jet (Japan)\0", NULL, "Data East Corporation", "DECO IC16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_PREFIX_DATAEAST, GBF_PLATFORM, 0,
 	NULL, funkyjetjRomInfo, funkyjetjRomName, NULL, NULL, FunkyjetInputInfo, FunkyjetjDIPInfo,
@@ -711,7 +712,7 @@ STD_ROM_FN(sotsugyo)
 
 struct BurnDriver BurnDrvSotsugyo = {
 	"sotsugyo", NULL, NULL, NULL, "1995",
-	"Sotsugyo Shousho\0", NULL, "Mitchell (Atlus license)", "Miscellaneous",
+	"Sotsugyo Shousho\0", NULL, "Mitchell (Atlus license)", "DECO IC16",
 	L"\u5352\u696D\u8A3C\u66F8\0Sotsugyo Shousho\0", NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_PREFIX_DATAEAST, GBF_MINIGAMES, 0,
 	NULL, sotsugyoRomInfo, sotsugyoRomName, NULL, NULL, FunkyjetInputInfo, SotsugyoDIPInfo,
