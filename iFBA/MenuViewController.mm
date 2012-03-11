@@ -70,7 +70,7 @@ extern int device_isIpad;
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
-    }    
+    } 
     [tabView reloadData];
 }
 
@@ -160,8 +160,9 @@ extern int device_isIpad;
                 if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
                 if (indexPath.row==3) cell.textLabel.text=NSLocalizedString(@"DIPSW",@"");
                 if (indexPath.row==4) {
-                    if (pendingReset) cell.accessoryType=UITableViewCellAccessoryCheckmark;
-                    else cell.accessoryType=UITableViewCellAccessoryNone;
+//                    if (pendingReset) cell.accessoryType=UITableViewCellAccessoryCheckmark;
+//                    else 
+                        cell.accessoryType=UITableViewCellAccessoryNone;
                     cell.textLabel.text=@"Reset";
 //                    cell.backgroundColor=[UIColor colorWithRed:1.0f green:0.7f blue:0.7f alpha:1.0f];
                 }
@@ -218,8 +219,9 @@ int StatedSave(int slot);
                     [dipswvc release];
                     break;
                 case 4: //reset
-                    pendingReset^=1;
-                    [tabView reloadData];
+                    pendingReset=1;
+                    //[tabView reloadData];
+                    [self backToEmu];
                     break;
                 case 5: //game browser
                     gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];

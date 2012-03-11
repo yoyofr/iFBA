@@ -1134,7 +1134,7 @@ struct BurnDriver BurnDrvNeoGeo = {
 	"neogeo", NULL, NULL, NULL, "1990",
 	"Neo Geo\0", "BIOS only", "SNK", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
-	BDF_BOARDROM, 0, HARDWARE_SNK_NEOGEO, 0, 0,
+	BDF_BOARDROM, 0, HARDWARE_SNK_NEOGEO, GBF_BIOS, 0,
 	NULL, neogeoRomInfo, neogeoRomName, NULL, NULL, neogeoInputInfo, neogeoDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
 	0x1000, 320, 224, 4, 3
@@ -1144,7 +1144,7 @@ struct BurnDriver BurnDrvNeoGeoMVS = {
 	"neogeo", NULL, NULL, NULL, "1990",
 	"Neo Geo MVS system\0", "System - cartridges selected seperately", "SNK", "Neo Geo MVS",
 	NULL, NULL, NULL, NULL,
-	BDF_GAME_WORKING /*| BDF_SYSTEM_ONLY*/, 2, HARDWARE_SNK_MVS, 0, 0,
+	BDF_GAME_WORKING /*| BDF_SYSTEM_ONLY*/, 2, HARDWARE_SNK_MVS, GBF_BIOS, 0,
 	NULL, neoMVSRomInfo, neoMVSRomName, NULL, NULL, neoMVSInputInfo, neoMVSDIPInfo,
 	NeoInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
 	0x1000, 320, 224, 4, 3
@@ -1165,7 +1165,7 @@ struct BurnDriver BurnDrvneocdz = {
 	"neocdz", NULL, "neogeo", NULL, "1996",
 	"Neo Geo CDZ system\0", "System - media selected seperately", "SNK", "Neo Geo CDZ",
 	NULL, NULL, NULL, NULL,
-	BDF_GAME_WORKING /*| BDF_SYSTEM_ONLY*/, 2, HARDWARE_SNK_NEOCD, 0, 0,
+	BDF_GAME_WORKING /*| BDF_SYSTEM_ONLY*/, 2, HARDWARE_SNK_NEOCD, GBF_BIOS, 0,
 	NULL, neocdzRomInfo, neocdzRomName, NULL, NULL, neoCDInputInfo, neoCDDIPInfo,
 	NeoCDInit, NeoExit, NeoFrame, NeoRender, NeoScan, &NeoRecalcPalette,
 	0x1000, 320, 224, 4, 3

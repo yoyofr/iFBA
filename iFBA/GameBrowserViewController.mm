@@ -19,6 +19,29 @@ extern char gameName[64];
 extern int launchGame;
 static int cur_game_section,cur_game_row;
 
+NSString *genreList[20]={
+    @"H-Shooter",
+    @"V-Shooter",
+    @"Beat'em all",
+    @"Versus Fighting",
+    @"BIOS",
+    @"Breakout",
+    @"Casino",
+    @"Ball Paddle",
+    @"Maze",
+    @"Minigames",
+    @"Pinball",
+    @"Platform",
+    @"Puzzle",
+    @"Quiz",
+    @"Sport",
+    @"Football",
+    @"Misc",
+    @"Mahjong",
+    @"Racong",
+    @"Shoot"    
+};
+
 @implementation GameBrowserViewController
 @synthesize tabView,btn_backToEmu;
 
@@ -132,6 +155,7 @@ static int cur_game_section,cur_game_row;
         romlistLbl[i]=[[NSMutableArray alloc] initWithCapacity:0];
         rompath[i]=[[NSMutableArray alloc] initWithCapacity:0];
         romlistSystem[i]=[[NSMutableArray alloc] initWithCapacity:0];
+        romlistGenre[i]=[[NSMutableArray alloc] initWithCapacity:0];
     }
     
     cur_game_section=cur_game_row=-1;
@@ -146,15 +170,21 @@ static int cur_game_section,cur_game_row;
             for (file in dirContent) {
                 NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
                 if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
-                    NSUInteger ind;
+                    NSUInteger ind;                    
                     //NSLog(@"file; %@",[file lastPathComponent]);
-                    ind=[burn_supportedRoms indexOfObject:[[file lastPathComponent] lowercaseString]];
+                    
+                    ind=[burn_supportedRoms indexOfObject:[[file lastPathComponent] lowercaseString]];                    
                     if (ind!=NSNotFound) {
-                        [romlist[27] addObject:file];
-                        [rompath[27] addObject:cpath];
                         nBurnDrvActive=ind;
-                        [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
-                        [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                        int genre=BurnDrvGetGenreFlags();
+                        if ((genre&GBF_BIOS)==0) {
+                            [romlist[27] addObject:file];
+                            [rompath[27] addObject:cpath];
+                            
+                            [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
+                            [romlistGenre[27] addObject:[NSNumber numberWithInt:genre] ];
+                            [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                        }
                     }
                 }
             }
@@ -183,6 +213,7 @@ static int cur_game_section,cur_game_row;
             [romlist[j] addObject:tmpStr];
             [rompath[j] addObject:[rompath[27] objectAtIndex:k]];
             [romlistSystem[j] addObject:[romlistSystem[27] objectAtIndex:k]];
+            [romlistGenre[j] addObject:[romlistGenre[27] objectAtIndex:k]];
             if (gameName[0]&&(cur_game_section<0)) {
                 if (strcmp(gameName,[[[tmpStr lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
                     cur_game_section=j;
@@ -204,6 +235,11 @@ static int cur_game_section,cur_game_row;
     [self scanRomsDirs];
     [[self tabView] reloadData];
     if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
+    
+    if (emuThread_running) {
+        btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
+        self.navigationItem.rightBarButtonItem = btn_backToEmu;
+    }    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -218,6 +254,7 @@ static int cur_game_section,cur_game_row;
         [romlistLbl[i] release];
         [rompath[i] release];
         [romlistSystem[i] release];
+        [romlistGenre[i] release];
     }
 }
 
@@ -261,6 +298,20 @@ static int cur_game_section,cur_game_row;
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     return indexTitles;    
+}
+
+-(NSString*) genreStr:(int)genre {
+    NSString *result=[NSString stringWithFormat:@""];
+    int j=0;
+    for (int i=0;i<20;i++) {
+        if ((1<<i)&genre) {
+            
+            if (j==0) result=[result stringByAppendingString:genreList[i]];
+            else result=[result stringByAppendingFormat:@",%@",genreList[i]];
+            j=1;
+        }
+    }
+    return result;
 }
 
 // Customize the appearance of table view cells.
@@ -311,18 +362,18 @@ static int cur_game_section,cur_game_row;
 	}
     
     bottomLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
-								   22,
-								   tableView.bounds.size.width - 1.0 * cell.indentationWidth-80,
+								   24,
+								   tableView.bounds.size.width - 1.0 * cell.indentationWidth-40,
 								   14);
 	topLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
-								0,
-								tableView.bounds.size.width - 1.0 * cell.indentationWidth-80,
+								2,
+								tableView.bounds.size.width - 1.0 * cell.indentationWidth-40,
 								20);
 	topLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];
-    bottomLabel.text=[NSString stringWithFormat:@"%@ / %@",[romlist[indexPath.section] objectAtIndex:indexPath.row],[romlistSystem[indexPath.section] objectAtIndex:indexPath.row]];
+    bottomLabel.text=[NSString stringWithFormat:@"%@ - %@ - %@",[romlist[indexPath.section] objectAtIndex:indexPath.row],[romlistSystem[indexPath.section] objectAtIndex:indexPath.row],[self genreStr:[(NSNumber*)[romlistGenre[indexPath.section] objectAtIndex:indexPath.row] intValue]]   ];
     
     //cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
-	cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
+	cell.accessoryType=UITableViewCellAccessoryNone;// DetailDisclosureButton;
     
     return cell;
 }

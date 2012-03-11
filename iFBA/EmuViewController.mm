@@ -286,8 +286,8 @@ t_touch_area virtual_stick_iphone_portrait[VSTICK_NB_BUTTON]={
 t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
     {GN_START,      1024-80,        0,              64,64,64,64,0xFF,0xFF,0xFF,0},
     {GN_SELECT_COIN,1024-80,        100,            64,64,64,64,0xDF,0xDF,0xDF,0},
-    {GN_MENU_KEY,     0,            0,              64,64,64,64,0xEF,0xFF,0x7F,0},
-    {GN_TURBO,        0,            100,            64,64,64,64,0xFF,0x7F,0xFF,0},
+    {GN_MENU_KEY,     0,            0,              64,64,64,64,0x4F,0xFF,0x1F,0},
+    {GN_TURBO,        0,            100,            64,64,64,64,0xFF,0xFF,0x2F,0},
     {GN_SERVICE,      1024/2-32,         0,             64,64,64,64,0xAF,0xAF,0xAF,0},
     {GN_A,          1024-96*2-10,   768-96*2-6,    96,96,96,96,0xFF,0x00,0x00,0},  //red
     {GN_B,          1024-96,        768-96*2-6-20,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
@@ -300,8 +300,8 @@ t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
 t_touch_area virtual_stick_ipad_portrait[VSTICK_NB_BUTTON]={
     {GN_START,      768-80,        0,             64,64,64,64,0xFF,0xFF,0xFF,0},
     {GN_SELECT_COIN,768-80-120,    0,             64,64,64,64,0xDF,0xDF,0xDF,0},
-    {GN_MENU_KEY,     0,           0,             64,64,64,64,0xEF,0xFF,0x7F,0},
-    {GN_TURBO,        120,         0,             64,64,64,64,0xFF,0x7F,0xFF,0},
+    {GN_MENU_KEY,     0,           0,             64,64,64,64,0x4F,0xFF,0x1F,0},
+    {GN_TURBO,        120,         0,             64,64,64,64,0xFF,0xFF,0x2F,0},
     {GN_SERVICE,      768/2-32,         0,             64,64,64,64,0xAF,0xAF,0xAF,0},
     {GN_A,          768-96*2-20,   1024-96*2-6-60,    96,96,96,96,0xFF,0x00,0x00,0},  //red
     {GN_B,          768-96,        1024-96*2-6-20-60,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
@@ -631,7 +631,7 @@ static int statusLoadMsgUpdated=0;
         [prgview release];
         
         statusview=[[UIView alloc] init];
-        statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-80,m_oglView.frame.size.width-20,80);        
+        statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-110,m_oglView.frame.size.width-20,80);        
         [[statusview layer] setCornerRadius:15.0];	
         [[statusview layer] setBorderWidth:3.0];
         [[statusview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
@@ -1191,16 +1191,21 @@ int vstick_update_status(int rx,int ry) {
         //    printf("angle: %f pad:%02X\n",angle*180/M_PI,virtual_stick_pad);
     }
     
+    if (dist<virtual_stick_mindist2) {//deadzone
+        return -1;
+    }
+    
     return virtual_stick_pad;
 }
 
 
 void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
     //printf("touch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
+    int ret;
     switch (evt_type) {
         case 1: //Pressed            
             virtual_stick_on=1;
-            if (vstick_update_status(x,y)) { //finger is on pad
+            if (vstick_update_status(x,y)>0) { //finger is on pad
                 joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
                 joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
                 joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
@@ -1225,9 +1230,19 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
         case 2: //Moved
             virtual_stick_on=1;
             if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
-                if (vstick_update_status(x,y)==0) {
-                    //virtual_stick_padfinger=0;
-                    //joy_analog_x[0]=0;joy_analog_y[0]=0;
+                if ((ret=vstick_update_status(x,y))<=0) {
+                    if (ret<0) {
+                        virtual_stick_padfinger=0;
+                        joy_analog_x[0]=0;joy_analog_y[0]=0;
+                        joy_state[0][GN_UP]=0;
+                        joy_state[0][GN_DOWN]=0;
+                        joy_state[0][GN_LEFT]=0;
+                        joy_state[0][GN_RIGHT]=0;
+                        joy_state[0][GN_UPRIGHT]=0;
+                        joy_state[0][GN_DOWNRIGHT]=0;
+                        joy_state[0][GN_UPLEFT]=0;
+                        joy_state[0][GN_DOWNLEFT]=0;
+                    }
                 } else {
                 joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
                 joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);

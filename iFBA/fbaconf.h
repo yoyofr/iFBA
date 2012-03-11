@@ -35,6 +35,8 @@ typedef struct {
     unsigned char vpad_btnsize;
     unsigned char vpad_padsize;
     unsigned char btstack_on;
+    int vpad_pad_x,vpad_pad_y;
+    int vpad_buttons_x,vpad_buttons_y;
     
     //Emulation
     unsigned char asm_68k;

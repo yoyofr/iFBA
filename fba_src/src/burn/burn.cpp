@@ -15,6 +15,8 @@ INT32 nBurnVer = BURN_VERSION;		// Version number of the library
 UINT32 nBurnDrvCount = sizeof(pDriver) / sizeof(pDriver[0]);		// Count of game drivers
 UINT32 nBurnDrvActive = ~0U;	// Which game driver is selected
 UINT32 nBurnDrvSelect[8] = { ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U }; // Which games are selected (i.e. loaded but not necessarily active)
+
+int rom_len_adjusted=0;
 									
 bool bBurnUseMMX;
 bool bBurnUseASMCPUEmulation = true;

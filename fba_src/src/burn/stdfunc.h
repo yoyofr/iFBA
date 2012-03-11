@@ -36,7 +36,8 @@ static INT32 Name##RomInfo(struct BurnRomInfo* pri, UINT32 i)			\
 		return 1;														\
 	}																	\
 	if (pri) {															\
-		pri->nLen = por->nLen;											\
+		if (rom_len_adjusted) pri->nLen = rom_len_adjusted;             \
+        else pri->nLen = por->nLen;                                     \
 		pri->nCrc = por->nCrc;											\
 		pri->nType = por->nType;										\
 	}																	\

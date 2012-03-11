@@ -56,6 +56,7 @@ int szAppRomPathsSelected;
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }    
+    [tabView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -499,6 +499,11 @@ static INT32 PCEDoReset()
 static INT32 CommonInit(int type)
 {
 	struct BurnRomInfo ri;
+    
+    //get real length
+    
+    rom_len_adjusted=0x100200;
+    
 	BurnDrvGetRomInfo(&ri, 0);
 	UINT32 length = ri.nLen;
 
@@ -7380,7 +7385,7 @@ struct BurnDriver BurnDrvTG_tbombmn93 = {
 // Bomberman
 
 static struct BurnRomInfo tbombmanRomDesc[] = {
-	{ "bomberman (usa).pce",	0x40200, 0x5f6f3c2a, BRF_PRG | BRF_ESS },
+	{ "bomberman (usa).pce",	0x40000, 0x5f6f3c2a, BRF_PRG | BRF_ESS },
 };
 
 STD_ROM_PICK(tbombman)

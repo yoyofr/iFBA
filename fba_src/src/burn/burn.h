@@ -134,6 +134,8 @@ struct BurnRomInfo {
 	UINT32 nCrc;
 	UINT32 nType;
 };
+     
+extern int rom_len_adjusted; //used to patch rom length for console roms
 
 struct BurnSampleInfo {
 	char szName[100];
