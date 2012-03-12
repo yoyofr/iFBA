@@ -596,6 +596,22 @@
 		33A7E73F14FA97E5007B42B9 /* sdl_font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */; };
 		33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33A7E74314FABEDB007B42B9 /* fastarm_memfunc.o */; };
 		33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AD897B14F85A4D00239FB6 /* Cyclone.o */; };
+		33B584EF150E8463000B5D03 /* DPad_D.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584E6150E8463000B5D03 /* DPad_D.png */; };
+		33B584F0150E8463000B5D03 /* DPad_DL.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584E7150E8463000B5D03 /* DPad_DL.png */; };
+		33B584F1150E8463000B5D03 /* DPad_DR.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584E8150E8463000B5D03 /* DPad_DR.png */; };
+		33B584F2150E8463000B5D03 /* DPad_L.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584E9150E8463000B5D03 /* DPad_L.png */; };
+		33B584F3150E8463000B5D03 /* DPad_NotPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584EA150E8463000B5D03 /* DPad_NotPressed.png */; };
+		33B584F4150E8463000B5D03 /* DPad_R.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584EB150E8463000B5D03 /* DPad_R.png */; };
+		33B584F5150E8463000B5D03 /* DPad_U.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584EC150E8463000B5D03 /* DPad_U.png */; };
+		33B584F6150E8463000B5D03 /* DPad_UL.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584ED150E8463000B5D03 /* DPad_UL.png */; };
+		33B584F7150E8463000B5D03 /* DPad_UR.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584EE150E8463000B5D03 /* DPad_UR.png */; };
+		33B584FA150E847B000B5D03 /* stick-inner.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584F8150E847B000B5D03 /* stick-inner.png */; };
+		33B584FB150E847B000B5D03 /* stick-outer.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584F9150E847B000B5D03 /* stick-outer.png */; };
+		33B584FD150EA4BC000B5D03 /* button-start.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584FC150EA4BC000B5D03 /* button-start.png */; };
+		33B584FF150EA651000B5D03 /* button-service.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584FE150EA651000B5D03 /* button-service.png */; };
+		33B58501150EA81B000B5D03 /* button-turbo.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B58500150EA81B000B5D03 /* button-turbo.png */; };
+		33B58504150EA82D000B5D03 /* button-coin.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B58502150EA82D000B5D03 /* button-coin.png */; };
+		33B58505150EA82D000B5D03 /* button-menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B58503150EA82D000B5D03 /* button-menu.png */; };
 		33E88A21150CADC80030EFF7 /* d_pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A1E150CADC80030EFF7 /* d_pce.cpp */; };
 		33E88A22150CADC80030EFF7 /* pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A1F150CADC80030EFF7 /* pce.cpp */; };
 		33E88A26150CAEDC0030EFF7 /* d_actfancr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A24150CAEDC0030EFF7 /* d_actfancr.cpp */; };
@@ -607,9 +623,7 @@
 		33F444D714F567DC00BA36E1 /* EmuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33F444D614F567DC00BA36E1 /* EmuViewController.xib */; };
 		33F444DA14F5685100BA36E1 /* EmuViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33F444D914F5685100BA36E1 /* EmuViewController.mm */; };
 		33FB5BBB15094C6F00D1904B /* crt-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 33FB5BB715094C6F00D1904B /* crt-1.png */; };
-		33FB5BBC15094C6F00D1904B /* crt-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 33FB5BB815094C6F00D1904B /* crt-2.png */; };
 		33FB5BBD15094C6F00D1904B /* scanline-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 33FB5BB915094C6F00D1904B /* scanline-1.png */; };
-		33FB5BBE15094C6F00D1904B /* scanline-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 33FB5BBA15094C6F00D1904B /* scanline-2.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1461,6 +1475,22 @@
 		33AD897A14F85A4D00239FB6 /* cyclone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclone.h; sourceTree = "<group>"; };
 		33AD897B14F85A4D00239FB6 /* Cyclone.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Cyclone.o; sourceTree = "<group>"; };
 		33AD897C14F85A4D00239FB6 /* Cyclone.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = Cyclone.s; sourceTree = "<group>"; };
+		33B584E6150E8463000B5D03 /* DPad_D.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_D.png; sourceTree = "<group>"; };
+		33B584E7150E8463000B5D03 /* DPad_DL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_DL.png; sourceTree = "<group>"; };
+		33B584E8150E8463000B5D03 /* DPad_DR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_DR.png; sourceTree = "<group>"; };
+		33B584E9150E8463000B5D03 /* DPad_L.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_L.png; sourceTree = "<group>"; };
+		33B584EA150E8463000B5D03 /* DPad_NotPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_NotPressed.png; sourceTree = "<group>"; };
+		33B584EB150E8463000B5D03 /* DPad_R.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_R.png; sourceTree = "<group>"; };
+		33B584EC150E8463000B5D03 /* DPad_U.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_U.png; sourceTree = "<group>"; };
+		33B584ED150E8463000B5D03 /* DPad_UL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_UL.png; sourceTree = "<group>"; };
+		33B584EE150E8463000B5D03 /* DPad_UR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_UR.png; sourceTree = "<group>"; };
+		33B584F8150E847B000B5D03 /* stick-inner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stick-inner.png"; sourceTree = "<group>"; };
+		33B584F9150E847B000B5D03 /* stick-outer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stick-outer.png"; sourceTree = "<group>"; };
+		33B584FC150EA4BC000B5D03 /* button-start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-start.png"; sourceTree = "<group>"; };
+		33B584FE150EA651000B5D03 /* button-service.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-service.png"; sourceTree = "<group>"; };
+		33B58500150EA81B000B5D03 /* button-turbo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-turbo.png"; sourceTree = "<group>"; };
+		33B58502150EA82D000B5D03 /* button-coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-coin.png"; sourceTree = "<group>"; };
+		33B58503150EA82D000B5D03 /* button-menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-menu.png"; sourceTree = "<group>"; };
 		33E88A1E150CADC80030EFF7 /* d_pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pce.cpp; sourceTree = "<group>"; };
 		33E88A1F150CADC80030EFF7 /* pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pce.cpp; sourceTree = "<group>"; };
 		33E88A20150CADC80030EFF7 /* pce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pce.h; sourceTree = "<group>"; };
@@ -1488,9 +1518,7 @@
 		33F444D814F5685100BA36E1 /* EmuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmuViewController.h; sourceTree = "<group>"; };
 		33F444D914F5685100BA36E1 /* EmuViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EmuViewController.mm; sourceTree = "<group>"; };
 		33FB5BB715094C6F00D1904B /* crt-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crt-1.png"; sourceTree = "<group>"; };
-		33FB5BB815094C6F00D1904B /* crt-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crt-2.png"; sourceTree = "<group>"; };
 		33FB5BB915094C6F00D1904B /* scanline-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scanline-1.png"; sourceTree = "<group>"; };
-		33FB5BBA15094C6F00D1904B /* scanline-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scanline-2.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1589,12 +1617,26 @@
 		3354E97014F9573D001DAF9D /* Textures */ = {
 			isa = PBXGroup;
 			children = (
+				33B584FC150EA4BC000B5D03 /* button-start.png */,
+				33B584FE150EA651000B5D03 /* button-service.png */,
+				33B58500150EA81B000B5D03 /* button-turbo.png */,
+				33B58502150EA82D000B5D03 /* button-coin.png */,
+				33B58503150EA82D000B5D03 /* button-menu.png */,
 				3354E97114F9573D001DAF9D /* button.png */,
 				3354E97214F9573D001DAF9D /* dpad.png */,
 				33FB5BB715094C6F00D1904B /* crt-1.png */,
-				33FB5BB815094C6F00D1904B /* crt-2.png */,
 				33FB5BB915094C6F00D1904B /* scanline-1.png */,
-				33FB5BBA15094C6F00D1904B /* scanline-2.png */,
+				33B584F8150E847B000B5D03 /* stick-inner.png */,
+				33B584F9150E847B000B5D03 /* stick-outer.png */,
+				33B584E6150E8463000B5D03 /* DPad_D.png */,
+				33B584E7150E8463000B5D03 /* DPad_DL.png */,
+				33B584E8150E8463000B5D03 /* DPad_DR.png */,
+				33B584E9150E8463000B5D03 /* DPad_L.png */,
+				33B584EA150E8463000B5D03 /* DPad_NotPressed.png */,
+				33B584EB150E8463000B5D03 /* DPad_R.png */,
+				33B584EC150E8463000B5D03 /* DPad_U.png */,
+				33B584ED150E8463000B5D03 /* DPad_UL.png */,
+				33B584EE150E8463000B5D03 /* DPad_UR.png */,
 			);
 			name = Textures;
 			path = Resources/Textures;
@@ -3021,10 +3063,24 @@
 				331D17131507DC1B00327F74 /* OptROMSPathsViewController.xib in Resources */,
 				33132C37150884FB002F97BB /* OptROMSSetPathsViewController.xib in Resources */,
 				33FB5BBB15094C6F00D1904B /* crt-1.png in Resources */,
-				33FB5BBC15094C6F00D1904B /* crt-2.png in Resources */,
 				33FB5BBD15094C6F00D1904B /* scanline-1.png in Resources */,
-				33FB5BBE15094C6F00D1904B /* scanline-2.png in Resources */,
 				33217258150D4A6100772645 /* OptSaveStateViewController.xib in Resources */,
+				33B584EF150E8463000B5D03 /* DPad_D.png in Resources */,
+				33B584F0150E8463000B5D03 /* DPad_DL.png in Resources */,
+				33B584F1150E8463000B5D03 /* DPad_DR.png in Resources */,
+				33B584F2150E8463000B5D03 /* DPad_L.png in Resources */,
+				33B584F3150E8463000B5D03 /* DPad_NotPressed.png in Resources */,
+				33B584F4150E8463000B5D03 /* DPad_R.png in Resources */,
+				33B584F5150E8463000B5D03 /* DPad_U.png in Resources */,
+				33B584F6150E8463000B5D03 /* DPad_UL.png in Resources */,
+				33B584F7150E8463000B5D03 /* DPad_UR.png in Resources */,
+				33B584FA150E847B000B5D03 /* stick-inner.png in Resources */,
+				33B584FB150E847B000B5D03 /* stick-outer.png in Resources */,
+				33B584FD150EA4BC000B5D03 /* button-start.png in Resources */,
+				33B584FF150EA651000B5D03 /* button-service.png in Resources */,
+				33B58501150EA81B000B5D03 /* button-turbo.png in Resources */,
+				33B58504150EA82D000B5D03 /* button-coin.png in Resources */,
+				33B58505150EA82D000B5D03 /* button-menu.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

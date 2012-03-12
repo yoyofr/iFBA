@@ -36,6 +36,7 @@ typedef struct {
     unsigned char vpad_btnsize;
     unsigned char vpad_padsize;
     unsigned char btstack_on;
+    unsigned char vpad_style;
     int vpad_pad_x,vpad_pad_y;
     int vpad_buttons_x,vpad_buttons_y;
     

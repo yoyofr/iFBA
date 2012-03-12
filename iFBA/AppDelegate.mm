@@ -117,6 +117,9 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"vpad_padsize"];
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_padsize=1;
 	else ifba_conf.vpad_padsize = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_style"];
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_style=0;
+	else ifba_conf.vpad_style = [valNb intValue];    
     
     valNb=[prefs objectForKey:@"asm_68k"];
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_68k=1;
@@ -197,6 +200,9 @@ void tstfl_validateloadgame(char *name) {
 	[prefs setObject:valNb forKey:@"vpad_padsize"];[valNb autorelease];    
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.btstack_on ];
 	[prefs setObject:valNb forKey:@"btstack_on"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_style ];
+	[prefs setObject:valNb forKey:@"vpad_style"];[valNb autorelease];    
+    
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_68k];
 	[prefs setObject:valNb forKey:@"asm_68k"];[valNb autorelease];

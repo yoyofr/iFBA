@@ -64,7 +64,7 @@ extern char gameName[64];
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 2;
+	return 3;
 }
 
 
@@ -73,6 +73,7 @@ extern char gameName[64];
     switch (section) {
         case 0:return 2;
         case 1:return 2;
+            case 2:return 1;
     }
     return 0;
 }
@@ -83,6 +84,8 @@ extern char gameName[64];
         case 0:title=NSLocalizedString(@"Display",@"");
             break;
         case 1:title=NSLocalizedString(@"Size",@"");
+            break;
+        case 2:title=@"";
             break;
     }
     return title;
@@ -112,7 +115,12 @@ extern char gameName[64];
     ifba_conf.vpad_padsize=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
-
+- (void)segActionSkin:(id)sender {
+    int refresh=0;
+    if (ifba_conf.vpad_style!=[sender selectedSegmentIndex]) refresh=1;
+    ifba_conf.vpad_style=[sender selectedSegmentIndex];
+    if (refresh) [tabView reloadData];
+}
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
@@ -174,6 +182,15 @@ extern char gameName[64];
                 [segconview release];
                 segconview.selectedSegmentIndex=ifba_conf.vpad_padsize;                
             }
+            break;
+        case 2://skin
+                cell.textLabel.text=NSLocalizedString(@"Skin",@"");
+                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
+                segconview.segmentedControlStyle = UISegmentedControlStylePlain;
+                [segconview addTarget:self action:@selector(segActionSkin:) forControlEvents:UIControlEventValueChanged];            
+                cell.accessoryView = segconview;
+                [segconview release];
+                segconview.selectedSegmentIndex=ifba_conf.vpad_style;
             break;
     }
     

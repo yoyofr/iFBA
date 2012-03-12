@@ -50,8 +50,7 @@ int mOptWiimoteButtonSelected;
     optgetButton=[[OptConGetWiimoteBtnViewController alloc] initWithNibName:@"OptConGetWiimoteBtnViewController" bundle:nil];
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     [optgetButton release];
     // Release any retained subviews of the main view.
@@ -67,8 +66,7 @@ int mOptWiimoteButtonSelected;
     }*/
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
 

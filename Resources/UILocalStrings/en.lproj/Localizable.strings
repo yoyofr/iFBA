@@ -22,7 +22,7 @@
 "Donate"="Donate";
 
 //About
-"About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.23\n\nCurrently supporting %d drivers";
+"About_Msg"="iFBA v%@- YoyoFR\n\nBased on FBA v0.2.97.23\n\nCurrently supporting %d drivers\n\nUses graphics (pad/stick) resources from iMame4ALL by David Valdeita/Bryn Thomson\nDo not forget to try the great 'iMame4ALL Reloaded' from Seleuco";
 
 //Options
 "Video"="Video";
@@ -72,13 +72,14 @@
 "Virtual pad"="Virtual pad";
 "Display"="Display";
 "Opacity"="Opacity";
-"Display vpad"="Change display settings. Specials are the specials buttons: menu, turbo, coin, start";
+"Display vpad"="Change display settings. Specials are the specials buttons: menu, turbo, service, coin, start";
 "Display specials"="Display specials";
 "Size"="Size";
 "Change size"="Change buttons & pad size";
 "Buttons"="Buttons";
 "Pad"="Pad";
 "Mapping"="Mapping";
+"Skin"="Skin";
 
 "Mapping info"="Change button mapping. Buttons are listed from left to right, top to bottom. 1 is top left, 8 is bottom right.";
 "Mapping wii info"="Change button mapping.";

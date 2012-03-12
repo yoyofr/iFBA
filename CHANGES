@@ -1,26 +1,26 @@
 v0.3
 ----
-DONE
+- upgraded to FBA v0.2.97.23
 - add of a service button
 - smoother rendering
 - stability improved
 - roms sorted by long name
 - remove roms bios from listing (neogeo, pgm, ... ?)
-- improved megadrive & pcengine support. Roms required prefix (md_, pce_, tg_, sgx_)
+- improved megadrive & pcengine support. Roms require prefix (md_ for megadrive, pce_, tg_, sgx_ for pcengine)
+- multi slot save states with screenshot
 BUGS FIXED
 - iOS 4.x compatible
 - wrong screen rotation
+- multiple bug fixes
+- wiimote start/select reversed?
 
 TODO
 - pad restrictor: 2ways, 4ways, 8ways
-
 - roms filters (categories)
 - buttons mapping / game or buttons nb ?
-- wiimote start/select reversed?
 
-v0.2
----------------
-DONE
+v0.2 - 09/03/2012 (first release on cydia)
+-----------------
 - video filters: scanline, CRT. controllable 'strength'
 - controllers buttons mapping Wiimote
 - roms paths selection
@@ -30,7 +30,7 @@ DONE
 - roms long name in browser
 - BTStack is now deactivated by default (if first launch).
 
-v0.1 - 04/03/2012
+v0.1 - 04/03/2012 (beta)
 -----------------
 - First beta version
 - Not 100% stable

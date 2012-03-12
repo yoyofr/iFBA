@@ -149,6 +149,7 @@ long virtual_stick_padfinger;
 int virtual_stick_pad;
 int virtual_stick_posx=90;
 int virtual_stick_posy=320-90;
+int virtual_stick_posx_ofs,virtual_stick_posy_ofs;
 int virtual_stick_maxdist=90;
 int virtual_stick_mindist=10;
 int virtual_stick_maxdist2=90*90;
@@ -256,11 +257,11 @@ void computeButtonLayout(int btnsize,int nb_button,int width,int height){
 }
 
 t_touch_area virtual_stick_iphone_landscape[VSTICK_NB_BUTTON]={
-    {GN_START,      480-48,         0,              48,48,32,32,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,480-48,         48,             48,48,32,32,0xDF,0xDF,0x3F,0},
-    {GN_MENU_KEY,     0,            0,              48,48,32,32,0x4F,0xFF,0x1F,0},
-    {GN_TURBO,        0,            48,             48,48,32,32,0xFF,0xFF,0x2F,0},
-    {GN_SERVICE,      480/2-24,         0,             48,48,32,32,0xAF,0xAF,0xAF,0},
+    {GN_START,      480-48,         0,              48,48,48,24,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,480-48,         48,             48,48,48,24,0xFF,0xFF,0xFF,0},
+    {GN_MENU_KEY,     0,            0,              48,48,48,24,0xFF,0xFF,0xFF,0},
+    {GN_TURBO,        0,            48,             48,48,48,24,0xFF,0xFF,0xFF,0},
+    {GN_SERVICE,      480/2-24,         0,             48,48,48,24,0xFF,0xFF,0xFF,0},
     {GN_A,          480-64-10-64,   320-64-6-64,   64,64,64,64,0xCF,0xCF,0xCF,0},
     {GN_B,          480-64,         320-64-6-64-10,   64,64,64,64,0xFF,0xFF,0x00,0},  //yellow
     {GN_C,          480-64-10-64,   320-64,         64,64,64,64,0x00,0xFF,0x00,0},  //green
@@ -270,11 +271,11 @@ t_touch_area virtual_stick_iphone_landscape[VSTICK_NB_BUTTON]={
 };
 
 t_touch_area virtual_stick_iphone_portrait[VSTICK_NB_BUTTON]={
-    {GN_START,      320-48,         0,               48,48,32,32,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,320-64-48,         0,               48,48,32,32,0xDF,0xDF,0x3F,0},
-    {GN_MENU_KEY,     0,            0,            48,48,32,32,0x4F,0xFF,0x1F,0},
-    {GN_TURBO,        64,            0,           48,48,32,32,0xFF,0xFF,0x2F,0},
-    {GN_SERVICE,      320/2-24,         0,             48,48,32,32,0xAF,0xAF,0xAF,0},
+    {GN_START,      320-48,         0,               48,48,48,24,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,320-64-48,         0,               48,48,48,24,0xFF,0xFF,0xFF,0},
+    {GN_MENU_KEY,     0,            0,            48,48,48,24,0xFF,0xFF,0xFF,0},
+    {GN_TURBO,        64,            0,           48,48,48,24,0xFF,0xFF,0xFF,0},
+    {GN_SERVICE,      320/2-24,         0,             48,48,48,24,0xFF,0xFF,0xFF,0},
     {GN_A,          320-64-10-64,   480-2*64-6-0,   64,64,64,64,0xFF,0x00,0x00,0},  //red
     {GN_B,          320-64,         480-2*64-6-10,   64,64,64,64,0xFF,0xFF,0x00,0},  //yellow
     {GN_C,          320-64-10-64,   480-64-0,         64,64,64,64,0x00,0xFF,0x00,0},  //green
@@ -285,11 +286,11 @@ t_touch_area virtual_stick_iphone_portrait[VSTICK_NB_BUTTON]={
 
 
 t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
-    {GN_START,      1024-80,        0,              64,64,64,64,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,1024-80,        100,            64,64,64,64,0xDF,0xDF,0xDF,0},
-    {GN_MENU_KEY,     0,            0,              64,64,64,64,0x4F,0xFF,0x1F,0},
-    {GN_TURBO,        0,            100,            64,64,64,64,0xFF,0xFF,0x2F,0},
-    {GN_SERVICE,      1024/2-32,         0,             64,64,64,64,0xAF,0xAF,0xAF,0},
+    {GN_START,      1024-80,        0,              64,64,64,32,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,1024-80,        100,            64,64,64,32,0xFF,0xFF,0xFF,0},
+    {GN_MENU_KEY,     0,            0,              64,64,64,32,0xFF,0xFF,0xFF,0},
+    {GN_TURBO,        0,            100,            64,64,64,32,0xFF,0xFF,0xFF,0},
+    {GN_SERVICE,      1024/2-32,         0,             64,64,64,32,0xFF,0xFF,0xFF,0},
     {GN_A,          1024-96*2-10,   768-96*2-6,    96,96,96,96,0xFF,0x00,0x00,0},  //red
     {GN_B,          1024-96,        768-96*2-6-20,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
     {GN_C,          1024-96*2-10,   768-96,         96,96,96,96,0x00,0xFF,0x00,0},  //green
@@ -299,11 +300,11 @@ t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
 };
 
 t_touch_area virtual_stick_ipad_portrait[VSTICK_NB_BUTTON]={
-    {GN_START,      768-80,        0,             64,64,64,64,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,768-80-120,    0,             64,64,64,64,0xDF,0xDF,0xDF,0},
-    {GN_MENU_KEY,     0,           0,             64,64,64,64,0x4F,0xFF,0x1F,0},
-    {GN_TURBO,        120,         0,             64,64,64,64,0xFF,0xFF,0x2F,0},
-    {GN_SERVICE,      768/2-32,         0,             64,64,64,64,0xAF,0xAF,0xAF,0},
+    {GN_START,      768-80,        0,             64,64,64,32,0xFF,0xFF,0xFF,0},
+    {GN_SELECT_COIN,768-80-120,    0,             64,64,64,32,0xFF,0xFF,0xFF,0},
+    {GN_MENU_KEY,     0,           0,             64,64,64,32,0xFF,0xFF,0xFF,0},
+    {GN_TURBO,        120,         0,             64,64,64,32,0xFF,0xFF,0xFF,0},
+    {GN_SERVICE,      768/2-32,         0,             64,64,64,32,0xFF,0xFF,0xFF,0},
     {GN_A,          768-96*2-20,   1024-96*2-6-60,    96,96,96,96,0xFF,0x00,0x00,0},  //red
     {GN_B,          768-96,        1024-96*2-6-20-60,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
     {GN_C,          768-96*2-20,   1024-96-60,         96,96,96,96,0x00,0xFF,0x00,0},  //green
@@ -316,7 +317,11 @@ t_touch_area virtual_stick_ipad_portrait[VSTICK_NB_BUTTON]={
 int gTurboMode;
 
 static uint vpad_button_texture,vpad_dpad_texture;
+static uint vpad_button_spe_texture[5];
 static uint filter_crt_texture,filter_scanline_texture;
+static uint vpad_animated_dpad[9]; //8directions + still
+static uint vpad_animated_stick[2]; //8directions + still
+
 
 char gameName[64];
 int launchGame;
@@ -466,7 +471,27 @@ static int statusLoadMsgUpdated=0;
     // a,b,c,d buttons
     vpad_dpad_texture=[self loadTexture:[UIImage imageNamed:@"dpad.png"]];
     vpad_button_texture=[self loadTexture:[UIImage imageNamed:@"button.png"]];
+    vpad_button_spe_texture[0]=[self loadTexture:[UIImage imageNamed:@"button-start.png"]];
+    vpad_button_spe_texture[1]=[self loadTexture:[UIImage imageNamed:@"button-coin.png"]];
+    vpad_button_spe_texture[2]=[self loadTexture:[UIImage imageNamed:@"button-menu.png"]];
+    vpad_button_spe_texture[3]=[self loadTexture:[UIImage imageNamed:@"button-turbo.png"]];
+    vpad_button_spe_texture[4]=[self loadTexture:[UIImage imageNamed:@"button-service.png"]];
+    
     vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
+    
+    vpad_animated_dpad[0]=[self loadTexture:[UIImage imageNamed:@"DPad_NotPressed.png"]];
+    vpad_animated_dpad[1]=[self loadTexture:[UIImage imageNamed:@"DPad_R.png"]];
+    vpad_animated_dpad[2]=[self loadTexture:[UIImage imageNamed:@"DPad_DR.png"]];
+    vpad_animated_dpad[3]=[self loadTexture:[UIImage imageNamed:@"DPad_D.png"]];
+    vpad_animated_dpad[4]=[self loadTexture:[UIImage imageNamed:@"DPad_DL.png"]];
+    vpad_animated_dpad[5]=[self loadTexture:[UIImage imageNamed:@"DPad_L.png"]];
+    vpad_animated_dpad[6]=[self loadTexture:[UIImage imageNamed:@"DPad_UL.png"]];
+    vpad_animated_dpad[7]=[self loadTexture:[UIImage imageNamed:@"DPad_U.png"]];
+    vpad_animated_dpad[8]=[self loadTexture:[UIImage imageNamed:@"DPad_UR.png"]];
+    
+    vpad_animated_stick[0]=[self loadTexture:[UIImage imageNamed:@"stick-inner.png"]];
+    vpad_animated_stick[1]=[self loadTexture:[UIImage imageNamed:@"stick-outer.png"]];
+    
     
     filter_crt_texture=[self loadTexture:[UIImage imageNamed:@"crt-1.png"]];
     filter_scanline_texture=[self loadTexture:[UIImage imageNamed:@"scanline-1.png"]];
@@ -685,7 +710,7 @@ static int statusLoadMsgUpdated=0;
     launchGame=0;
     //update ogl framebuffer
     [m_oglView didRotateFromInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-            
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -1144,9 +1169,10 @@ int vstick_update_status(int rx,int ry) {
     float dist=(rx-virtual_stick_posx)*(rx-virtual_stick_posx)+(ry-virtual_stick_posy)*(ry-virtual_stick_posy);
     
     
-    virtual_stick_pad=0; //Reset pad state
+    //virtual_stick_pad=0; //Reset pad state
     joy_analog_x[0]=0;joy_analog_y[0]=0;
     if ((dist>virtual_stick_mindist2)&&(dist<virtual_stick_maxdist2)) {
+        virtual_stick_pad=0; //Reset pad state
         //compute angle
         //        float rdist=sqrtf(dist);
         float dx=rx-virtual_stick_posx;
@@ -1193,6 +1219,7 @@ int vstick_update_status(int rx,int ry) {
     }
     
     if (dist<virtual_stick_mindist2) {//deadzone
+        virtual_stick_pad=0; //Reset pad state
         return -1;
     }
     
@@ -1245,14 +1272,14 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
                         joy_state[0][GN_DOWNLEFT]=0;
                     }
                 } else {
-                joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
-                joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
-                joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
-                joy_state[0][GN_RIGHT]=(virtual_stick_pad==GN_RIGHT?1:0);
-                joy_state[0][GN_UPRIGHT]=(virtual_stick_pad==GN_UPRIGHT?1:0);
-                joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
-                joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
-                joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
+                    joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
+                    joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
+                    joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
+                    joy_state[0][GN_RIGHT]=(virtual_stick_pad==GN_RIGHT?1:0);
+                    joy_state[0][GN_UPRIGHT]=(virtual_stick_pad==GN_UPRIGHT?1:0);
+                    joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
+                    joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
+                    joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
                 }
             } else if (virtual_stick_padfinger==0) {
                 if (vstick_update_status(x,y)) virtual_stick_padfinger=touch_id;
@@ -1344,8 +1371,8 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
         dst+=TEXTURE_W;
         src+=pitch;
     }
-        mNewGLFrame=1;
-        [(id) context doFrame];
+    mNewGLFrame=1;
+    [(id) context doFrame];
 }
 
 
@@ -1407,8 +1434,13 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     texcoords[2][0]=0; texcoords[2][1]=1;
     texcoords[3][0]=1; texcoords[3][1]=1;
     
-    glBindTexture(GL_TEXTURE_2D, vpad_button_texture);    /* Bind The Texture */    
     for (int i=(ifba_conf.vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {            
+        
+        if (i<=VPAD_SPECIALS_BUTTON_NB) {
+        if (i==VPAD_SPECIALS_BUTTON_NB) glBindTexture(GL_TEXTURE_2D, vpad_button_texture);   
+        else glBindTexture(GL_TEXTURE_2D, vpad_button_spe_texture[i]);
+        }
+        
         vertices[0][0]=(float)(virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
         vertices[0][1]=(float)(virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
         
@@ -1436,54 +1468,162 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
     //now the stick
-    glBindTexture(GL_TEXTURE_2D, vpad_dpad_texture);    /* Bind The Texture */
-    vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-    vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-    vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
-    vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-    vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-    vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
-    vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
-    vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
     
-    vertices[0][0]=vertices[0][0]*2-1;
-    vertices[1][0]=vertices[1][0]*2-1;
-    vertices[2][0]=vertices[2][0]*2-1;
-    vertices[3][0]=vertices[3][0]*2-1;
-    vertices[0][1]=-vertices[0][1]*2+1;
-    vertices[1][1]=-vertices[1][1]*2+1;
-    vertices[2][1]=-vertices[2][1]*2+1;
-    vertices[3][1]=-vertices[3][1]*2+1;
-    glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    switch (ifba_conf.vpad_style) {
+        case 0: //animated pad
+            glBindTexture(GL_TEXTURE_2D, vpad_animated_dpad[virtual_stick_pad]);    /* Bind The Texture */
+            vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
+            vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
+            
+            vertices[0][0]=vertices[0][0]*2-1;
+            vertices[1][0]=vertices[1][0]*2-1;
+            vertices[2][0]=vertices[2][0]*2-1;
+            vertices[3][0]=vertices[3][0]*2-1;
+            vertices[0][1]=-vertices[0][1]*2+1;
+            vertices[1][1]=-vertices[1][1]*2+1;
+            vertices[2][1]=-vertices[2][1]*2+1;
+            vertices[3][1]=-vertices[3][1]*2+1;
+            glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            break;
+        case 1: //animated stick
+            glBindTexture(GL_TEXTURE_2D, vpad_animated_stick[1]);    /* Bind The Texture */
+            vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
+            vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
+            
+            vertices[0][0]=vertices[0][0]*2-1;
+            vertices[1][0]=vertices[1][0]*2-1;
+            vertices[2][0]=vertices[2][0]*2-1;
+            vertices[3][0]=vertices[3][0]*2-1;
+            vertices[0][1]=-vertices[0][1]*2+1;
+            vertices[1][1]=-vertices[1][1]*2+1;
+            vertices[2][1]=-vertices[2][1]*2+1;
+            vertices[3][1]=-vertices[3][1]*2+1;
+            glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            
+            switch (virtual_stick_pad) {
+                case 0:
+                    virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=0;
+                    break;
+                case 1:
+                    virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=0;
+                    break;
+                case 2:
+                    virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
+                    break;
+                case 3:
+                    virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
+                    break;
+                case 4:
+                    virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
+                    break;
+                case 5:
+                    virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=0;
+                    break;
+                case 6:
+                    virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
+                    break;
+                case 7:
+                    virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
+                    break;
+                case 8:
+                    virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
+                    break;
+            }
+            
+            
+            glBindTexture(GL_TEXTURE_2D, vpad_animated_stick[0]);    /* Bind The Texture */
+            vertices[0][0]=(float)(virtual_stick_posx_ofs+virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[0][1]=(float)(virtual_stick_posy_ofs+virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[1][0]=(float)(virtual_stick_posx_ofs+virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
+            vertices[1][1]=(float)(virtual_stick_posy_ofs+virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[2][0]=(float)(virtual_stick_posx_ofs+virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[2][1]=(float)(virtual_stick_posy_ofs+virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[3][0]=(float)(virtual_stick_posx_ofs+virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[3][1]=(float)(virtual_stick_posy_ofs+virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
+            
+            vertices[0][0]=vertices[0][0]*2-1;
+            vertices[1][0]=vertices[1][0]*2-1;
+            vertices[2][0]=vertices[2][0]*2-1;
+            vertices[3][0]=vertices[3][0]*2-1;
+            vertices[0][1]=-vertices[0][1]*2+1;
+            vertices[1][1]=-vertices[1][1]*2+1;
+            vertices[2][1]=-vertices[2][1]*2+1;
+            vertices[3][1]=-vertices[3][1]*2+1;
+            glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+            break;
+        case 2: //not animated
+            glBindTexture(GL_TEXTURE_2D, vpad_dpad_texture);    /* Bind The Texture */
+            vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
+            vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
+            
+            vertices[0][0]=vertices[0][0]*2-1;
+            vertices[1][0]=vertices[1][0]*2-1;
+            vertices[2][0]=vertices[2][0]*2-1;
+            vertices[3][0]=vertices[3][0]*2-1;
+            vertices[0][1]=-vertices[0][1]*2+1;
+            vertices[1][1]=-vertices[1][1]*2+1;
+            vertices[2][1]=-vertices[2][1]*2+1;
+            vertices[3][1]=-vertices[3][1]*2+1;
+            glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            break;
+    }
+    
+    
+    
     
     glDisable(GL_TEXTURE_2D);
-    for (int i=0;i<4;i++) {
-        vertices[0][0]=(float)(virtual_stick_posx+0.9f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
-        vertices[0][1]=(float)(virtual_stick_posy-0.9f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
-        
-        vertices[1][0]=(float)(virtual_stick_posx+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2+M_PI/8))/cur_width;
-        vertices[1][1]=(float)(virtual_stick_posy-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2+M_PI/8))/cur_height;
-        
-        vertices[2][0]=(float)(virtual_stick_posx+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2-M_PI/8))/cur_width;
-        vertices[2][1]=(float)(virtual_stick_posy-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2-M_PI/8))/cur_height;
-        
-        vertices[0][0]=vertices[0][0]*2-1;
-        vertices[1][0]=vertices[1][0]*2-1;
-        vertices[2][0]=vertices[2][0]*2-1;
-        vertices[0][1]=-vertices[0][1]*2+1;
-        vertices[1][1]=-vertices[1][1]*2+1;
-        vertices[2][1]=-vertices[2][1]*2+1;
-        
-        
-        if (virtual_stick_pad) {
-            if (((virtual_stick_pad-1)>>1==i)||((((virtual_stick_pad)>>1)&3)==i)) glColor4ub(250,245,255,virtual_stick_buttons_alpha2);
-            else glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-        } else glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-        
-        
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
-    }                
+    
+    if (ifba_conf.vpad_style==2) { //highlight direction
+        for (int i=0;i<4;i++) {
+            vertices[0][0]=(float)(virtual_stick_posx+0.9f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
+            vertices[0][1]=(float)(virtual_stick_posy-0.9f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
+            
+            vertices[1][0]=(float)(virtual_stick_posx+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2+M_PI/8))/cur_width;
+            vertices[1][1]=(float)(virtual_stick_posy-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2+M_PI/8))/cur_height;
+            
+            vertices[2][0]=(float)(virtual_stick_posx+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2-M_PI/8))/cur_width;
+            vertices[2][1]=(float)(virtual_stick_posy-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2-M_PI/8))/cur_height;
+            
+            vertices[0][0]=vertices[0][0]*2-1;
+            vertices[1][0]=vertices[1][0]*2-1;
+            vertices[2][0]=vertices[2][0]*2-1;
+            vertices[0][1]=-vertices[0][1]*2+1;
+            vertices[1][1]=-vertices[1][1]*2+1;
+            vertices[2][1]=-vertices[2][1]*2+1;
+            
+            
+            if (virtual_stick_pad) {
+                if (((virtual_stick_pad-1)>>1==i)||((((virtual_stick_pad)>>1)&3)==i)) glColor4ub(250,245,255,virtual_stick_buttons_alpha2);
+                else glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+            } else glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+            
+            
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+        } 
+    }
     glDisable(GL_BLEND);        
 }
 
@@ -1496,9 +1636,9 @@ int ErrorWhileLoading(const char* pszText) {
     }
     strcpy(statusMsg,pszText);
     statusMsgUpdated=1;
-
+    
     usleep(3000000); //3s
-
+    
 }
 
 int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
@@ -1521,14 +1661,14 @@ int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
     else statusMsg[0]=0;
     statusMsgUpdated=1;
     
-
+    
     return 0;
 }
 
 int StopProgressBar() {
     pb_value=1;
     
-
+    
 }
 
 -(void) loopCheck {
@@ -1573,7 +1713,7 @@ int StopProgressBar() {
             }
         }
     }
-
+    
 }
 
 volatile int doFrame_inProgress=0;

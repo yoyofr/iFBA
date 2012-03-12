@@ -165,6 +165,8 @@ int StatedSave(int slot);
     sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x.png",gameName,current_slot);
     [imgview setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%s",tmp_str]]];
     
+    if (slot[current_slot]) btn_load.hidden=NO;
+    
     
 }
 -(IBAction) loadState {
