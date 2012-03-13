@@ -116,3 +116,6 @@
 "nec_core"="nec core";
 "asm cpu core, faster but less compatible"="asm cpu core, faster. Use C core if you encounter issues";
 "C cpu core, slower but more compatible"="C cpu core, slower but (usually) more compatible";
+
+//
+"Not dev yet"="Not developed yet";

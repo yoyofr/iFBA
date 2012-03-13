@@ -14,11 +14,12 @@ extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 
 extern volatile int emuThread_running;
 
+static int show_missing=1;
+
 
 extern char gameName[64];
 extern int launchGame;
 static int cur_game_section,cur_game_row;
-
 NSString *genreList[20]={
     @"H-Shooter",
     @"V-Shooter",
@@ -89,6 +90,8 @@ NSString *genreList[20]={
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.    
     
+    show_missing=0;
+    
     indexTitles = [[NSMutableArray alloc] init];
 	[indexTitles addObject:@"#"];
 	[indexTitles addObject:@"A"];
@@ -156,35 +159,85 @@ NSString *genreList[20]={
         rompath[i]=[[NSMutableArray alloc] initWithCapacity:0];
         romlistSystem[i]=[[NSMutableArray alloc] initWithCapacity:0];
         romlistGenre[i]=[[NSMutableArray alloc] initWithCapacity:0];
+        romavail[i]=[[NSMutableArray alloc] initWithCapacity:0];
     }
     
     cur_game_section=cur_game_row=-1;
     
     int saveActiveDrv=nBurnDrvActive;
     int currentIdx=0;
-    for (int i=0;i<DIRS_MAX;i++) {
-        if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
-        else cpath=nil;
-        if (cpath) {
-            dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
-            for (file in dirContent) {
-                NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
-                
-                if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
-                    NSUInteger ind;                                        
-                    ind=[burn_supportedRoms indexOfObject:[[[file lastPathComponent] stringByDeletingPathExtension] lowercaseString]];                    
-                    if (ind!=NSNotFound) {
-                        nBurnDrvActive=ind;
-                        int genre=BurnDrvGetGenreFlags();
-                        if ((genre&GBF_BIOS)==0) {
-                            [romlist[27] addObject:file];
-                            [rompath[27] addObject:cpath];
-                            
-                            [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
-                            [romlistGenre[27] addObject:[NSNumber numberWithInt:genre] ];
-                            [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+    
+    if (show_missing) {
+        int total_roms_nb=[burn_supportedRoms count];
+        NSMutableArray *filelist,*filepath;
+        
+        filelist=[[NSMutableArray alloc] initWithCapacity:0];
+        filepath=[[NSMutableArray alloc] initWithCapacity:0];
+        
+        for (int i=0;i<DIRS_MAX;i++) {
+            if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
+            else cpath=nil;
+            if (cpath) {
+                dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
+                for (file in dirContent) {
+                    NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
+                    if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
+                        //got a file, check if it is in the list
+                        [filelist addObject:[[[file lastPathComponent] stringByDeletingPathExtension] lowercaseString]];
+                        [filepath addObject:cpath];
+                    }
+                }
+            }
+        }
+        
+        for (int i=0;i<total_roms_nb;i++) {
+            nBurnDrvActive=i;
+            int genre=BurnDrvGetGenreFlags();
+            if ((genre&GBF_BIOS)==0) {
+                [romlist[27] addObject:[burn_supportedRoms objectAtIndex:i]];
+                [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
+                [romlistGenre[27] addObject:[NSNumber numberWithInt:genre] ];
+                [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
+                //check if file is existing
+                NSUInteger ind=[filelist indexOfObject:[burn_supportedRoms objectAtIndex:i]];
+                if (ind!=NSNotFound) {                    
+                    [rompath[27] addObject:[filepath objectAtIndex:ind]];
+                    [romavail[27] addObject:[NSNumber numberWithBool:TRUE]];
+                } else {
+                    [rompath[27] addObject:@""];
+                    [romavail[27] addObject:[NSNumber numberWithBool:NO]];
+                }
+            }
+        }
+        
+        [filelist release];
+        [filepath release];
+    } else {
+        
+        
+        for (int i=0;i<DIRS_MAX;i++) {
+            if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
+            else cpath=nil;
+            if (cpath) {
+                dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
+                for (file in dirContent) {
+                    NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
+                    
+                    if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
+                        NSUInteger ind;                                        
+                        ind=[burn_supportedRoms indexOfObject:[[[file lastPathComponent] stringByDeletingPathExtension] lowercaseString]];
+                        if (ind!=NSNotFound) {
+                            nBurnDrvActive=ind;
+                            int genre=BurnDrvGetGenreFlags();
+                            if ((genre&GBF_BIOS)==0) {
+                                [romlist[27] addObject:file];
+                                [rompath[27] addObject:cpath];                                                                
+                                [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
+                                [romlistGenre[27] addObject:[NSNumber numberWithInt:genre] ];
+                                [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                            }
+                            //NSLog(@"file: %@",file);
                         }
-                        //NSLog(@"file: %@",file);
                     }
                 }
             }
@@ -212,6 +265,7 @@ NSString *genreList[20]={
             tmpStr=[romlist[27] objectAtIndex:k];
             [romlist[j] addObject:tmpStr];
             [rompath[j] addObject:[rompath[27] objectAtIndex:k]];
+            if (show_missing) [romavail[j] addObject:[romavail[27] objectAtIndex:k]];
             [romlistSystem[j] addObject:[romlistSystem[27] objectAtIndex:k]];
             [romlistGenre[j] addObject:[romlistGenre[27] objectAtIndex:k]];
             if (gameName[0]&&(cur_game_section<0)) {
@@ -253,6 +307,7 @@ NSString *genreList[20]={
         [romlist[i] release];
         [romlistLbl[i] release];
         [rompath[i] release];
+        [romavail[i] release];
         [romlistSystem[i] release];
         [romlistGenre[i] release];
     }
@@ -369,7 +424,23 @@ NSString *genreList[20]={
 								2,
 								tableView.bounds.size.width - 1.0 * cell.indentationWidth-40,
 								20);
-	topLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];
+    
+    if (show_missing) {
+        NSNumber *nb=[romavail[indexPath.section] objectAtIndex:indexPath.row];
+        if ([nb boolValue]==NO) {
+            topLabel.textColor = [UIColor colorWithRed:.6 green:.6 blue:.6 alpha:1.0];
+            bottomLabel.textColor = [UIColor colorWithRed:.8 green:.8 blue:.8 alpha:1.0];
+        } else {
+            topLabel.textColor = [UIColor colorWithRed:.0 green:.0 blue:.0 alpha:1.0];
+            bottomLabel.textColor = [UIColor colorWithRed:0.05 green:0 blue:0.2 alpha:1.0];
+        }
+    } else {
+        topLabel.textColor = [UIColor colorWithRed:.0 green:.0 blue:.0 alpha:1.0];
+        bottomLabel.textColor = [UIColor colorWithRed:0.05 green:0 blue:0.2 alpha:1.0];
+    }
+    
+    
+    topLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];
     bottomLabel.text=[NSString stringWithFormat:@"%@ - %@ - %@",[romlist[indexPath.section] objectAtIndex:indexPath.row],[romlistSystem[indexPath.section] objectAtIndex:indexPath.row],[self genreStr:[(NSNumber*)[romlistGenre[indexPath.section] objectAtIndex:indexPath.row] intValue]]   ];
     
     //cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
@@ -380,6 +451,11 @@ NSString *genreList[20]={
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (show_missing) {
+        NSNumber *nb=[romavail[indexPath.section] objectAtIndex:indexPath.row];
+        if (![nb boolValue]) return;
+    }
+    
     sprintf(gameName,"%s",[[(NSString *)[romlist[indexPath.section] objectAtIndex:indexPath.row] stringByDeletingPathExtension] UTF8String]);
     //NSLog(@"gamename %s",gameName);
     launchGame=1;
@@ -394,4 +470,22 @@ NSString *genreList[20]={
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
+-(IBAction) showFavorites{
+    UIAlertView *alertMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Not dev yet",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+    [alertMsg show];
+    
+}
+-(IBAction) showMostplayed{
+    UIAlertView *alertMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Not dev yet",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+    [alertMsg show];
+}
+-(IBAction) showGenres{
+    UIAlertView *alertMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Not dev yet",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+    [alertMsg show];
+}
+-(IBAction) showMissing{
+    show_missing^=1;
+    [self scanRomsDirs];
+    [tabView reloadData];
+}
 @end

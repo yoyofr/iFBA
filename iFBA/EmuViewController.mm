@@ -1216,12 +1216,10 @@ int vstick_update_status(int rx,int ry) {
             virtual_stick_pad=GN_DOWNRIGHT;
         }
         //    printf("angle: %f pad:%02X\n",angle*180/M_PI,virtual_stick_pad);
-    }
-    
-    if (dist<virtual_stick_mindist2) {//deadzone
+    } else if (dist<virtual_stick_mindist2) {//deadzone
         virtual_stick_pad=0; //Reset pad state
         return -1;
-    }
+    } else if (dist>virtual_stick_maxdist2) return 0;
     
     return virtual_stick_pad;
 }

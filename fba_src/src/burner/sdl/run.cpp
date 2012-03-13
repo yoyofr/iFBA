@@ -146,7 +146,7 @@ static int RunGetNextSound(int bDraw) {
 		return 1;
 	}
     
-	if (bRunPause) {
+/*	if (bRunPause) {
 		if (bAppDoStep) {
 			RunFrame(bDraw, 0);
 			memset(nAudNextSound, 0, nAudSegLen << 2);	// Write silence into the buffer
@@ -156,11 +156,14 @@ static int RunGetNextSound(int bDraw) {
         
 		bAppDoStep = 0;									// done one step
 		return 0;
-	}
+	}*/
+    // Render frame with sound
+	pBurnSoundOut = nAudNextSound;
     
 	if (bAppDoFast) {									// do more frames
 		for (int i = 0; i < nFastSpeed; i++) {
 			RunFrame(0, 0);
+            memset(nAudNextSound, 0, nAudSegLen << 2);	// Write silence into the buffer
 		}
         bDraw=1;
         sdl_fps = 0;
@@ -176,13 +179,12 @@ static int RunGetNextSound(int bDraw) {
         }        
     }
     
-	// Render frame with sound
-	pBurnSoundOut = nAudNextSound;
-    //YOYOFR
+	//YOYOFR
 	RunFrame(bDraw, 0);
-	if (bAppDoStep) {
+    if (bAppDoFast) memset(nAudNextSound, 0, nAudSegLen << 2);		// Write silence into the buffer
+/*	if (bAppDoStep) {
 		memset(nAudNextSound, 0, nAudSegLen << 2);		// Write silence into the buffer
-	}
+	}*/
 	bAppDoStep = 0;										// done one step
     
 	return 0;

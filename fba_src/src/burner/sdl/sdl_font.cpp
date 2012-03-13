@@ -110,7 +110,7 @@ void DisplayChar (uint16 *Screen, uint8 c, uint16 resW,int rotated)
 	int h, w;
 	uint16 *s = (uint16 *) Screen;
     
-    if (rotated) {
+    if (rotated&1) {
         s+=font_width-1;
         for (h = 0; h < font_height; h++, line++,
              s += -1-resW*font_width/*resW - font_width*/)
@@ -152,7 +152,7 @@ void DrawString (const char *string, uint16 *screen, uint8 x, uint8 y, uint16 re
 	int i;	
 //	if (len > 47) len = 47;
 	
-    if (rotated) {
+    if (rotated&1) {
         Screen = screen + (resW-x-font_height) + y * resW;
         for (i = 0; i < len; i++, char_count++)
         {
@@ -195,7 +195,7 @@ void DrawRect ( uint16 *screen, int x, int y, int w, int h, int c , uint16 resW,
 	uint16 *Screen = screen + x + y * resW;
 	uint16 * ss;    
 	int ww, hh = h;
-    if (rotated) {
+    if (rotated&1) {
         Screen = screen + (resW-x-h) + y * resW;
         while ( --w > 0) {
             hh = h;

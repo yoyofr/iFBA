@@ -11,7 +11,7 @@
 
 @interface GameBrowserViewController : UIViewController {
     IBOutlet UITableView *tabView;    
-    NSMutableArray *romlist[28],*romlistLbl[28],*rompath[28],*romlistSystem[28],*romlistGenre[28];
+    NSMutableArray *romlist[28],*romlistLbl[28],*rompath[28],*romlistSystem[28],*romlistGenre[28],*romavail[28];
     NSMutableArray *indexTitles;
     NSMutableArray *burn_supportedRoms,*burn_supportedRomsNames;
     IBOutlet UIBarButtonItem *btn_backToEmu;
@@ -21,6 +21,10 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
 
 -(IBAction) backToEmu;
+-(IBAction) showFavorites;
+-(IBAction) showMostplayed;
+-(IBAction) showGenres;
+-(IBAction) showMissing;
 
 
 @end

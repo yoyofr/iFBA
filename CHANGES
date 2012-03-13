@@ -15,6 +15,10 @@ BUGS FIXED
 - wiimote start/select reversed?
 
 TODO
+- sound off when turbo enabled
+- customizable pad position
+- missing roms filter
+- delete rom capabilities => popup to delete other files (state, png, nvram, ini)
 - pad restrictor: 2ways, 4ways, 8ways
 - roms filters (categories)
 - buttons mapping / game or buttons nb ?
