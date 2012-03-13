@@ -249,11 +249,11 @@ AAgACAAIAAEAAQABAAE</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">showMissing</string>
+						<string key="label">showMissing:</string>
 						<reference key="source" ref="687365941"/>
 						<reference key="destination" ref="372490531"/>
 					</object>
-					<int key="connectionID">24</int>
+					<int key="connectionID">25</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -345,7 +345,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">24</int>
+			<int key="maxID">25</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -356,7 +356,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<string key="backToEmu">id</string>
 						<string key="showFavorites">id</string>
 						<string key="showGenres">id</string>
-						<string key="showMissing">id</string>
+						<string key="showMissing:">id</string>
 						<string key="showMostplayed">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
@@ -372,8 +372,8 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<string key="name">showGenres</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="showMissing">
-							<string key="name">showMissing</string>
+						<object class="IBActionInfo" key="showMissing:">
+							<string key="name">showMissing:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="showMostplayed">

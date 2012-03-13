@@ -10,12 +10,12 @@
 #include "string.h"
 #include "burner.h"
 
-extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
+int genreFilter=0xFFFFFFFF^GBF_BIOS;
 
+extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
 
 static int show_missing=1;
-
 
 extern char gameName[64];
 extern int launchGame;
@@ -39,12 +39,12 @@ NSString *genreList[20]={
     @"Football",
     @"Misc",
     @"Mahjong",
-    @"Racong",
+    @"Racing",
     @"Shoot"    
 };
 
 @implementation GameBrowserViewController
-@synthesize tabView,btn_backToEmu;
+@synthesize tabView,btn_backToEmu,selgenrevc;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,11 +61,6 @@ NSString *genreList[20]={
 {
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
-}
-
-- (void)dealloc{
-    [super dealloc];
-    [indexTitles release];
 }
 
 - (void)buildFilters {
@@ -89,6 +84,8 @@ NSString *genreList[20]={
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.    
+    
+    selgenrevc=[[OptSelGenresViewController alloc] initWithNibName:@"OptSelGenresViewController" bundle:nil];
     
     show_missing=0;
     
@@ -128,20 +125,10 @@ NSString *genreList[20]={
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    [selgenrevc release];
+    [indexTitles release];
 }
-/*
- int qsort_ComparePlEntries(const void *entryA, const void *entryB) {
- NSString *strA,*strB;
- NSComparisonResult res;
- strA=((t_plPlaylist_entry*)entryA)->mPlaylistFilename;
- strB=((t_plPlaylist_entry*)entryB)->mPlaylistFilename;
- res=[strA localizedCaseInsensitiveCompare:strB];
- if (res==NSOrderedAscending) return -1;
- if (res==NSOrderedSame) return 0;
- return 1; //NSOrderedDescending
- }
- qsort(mPlaylist,mPlaylist_size,sizeof(t_plPlaylist_entry),qsort_ComparePlEntries);
- */
+
 - (void)scanRomsDirs {
     NSError *error;
     NSArray *dirContent;
@@ -193,7 +180,7 @@ NSString *genreList[20]={
         for (int i=0;i<total_roms_nb;i++) {
             nBurnDrvActive=i;
             int genre=BurnDrvGetGenreFlags();
-            if ((genre&GBF_BIOS)==0) {
+            if ((genre&genreFilter)!=0) {
                 [romlist[27] addObject:[burn_supportedRoms objectAtIndex:i]];
                 [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
                 [romlistGenre[27] addObject:[NSNumber numberWithInt:genre] ];
@@ -229,7 +216,7 @@ NSString *genreList[20]={
                         if (ind!=NSNotFound) {
                             nBurnDrvActive=ind;
                             int genre=BurnDrvGetGenreFlags();
-                            if ((genre&GBF_BIOS)==0) {
+                            if ((genre&genreFilter)!=0) {
                                 [romlist[27] addObject:file];
                                 [rompath[27] addObject:cpath];                                                                
                                 [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
@@ -469,7 +456,6 @@ NSString *genreList[20]={
     launchGame=2;
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
-
 -(IBAction) showFavorites{
     UIAlertView *alertMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Not dev yet",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
     [alertMsg show];
@@ -480,11 +466,15 @@ NSString *genreList[20]={
     [alertMsg show];
 }
 -(IBAction) showGenres{
-    UIAlertView *alertMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Not dev yet",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
-    [alertMsg show];
+    [self presentSemiModalViewController:selgenrevc];
+    [tabView reloadData];            
 }
--(IBAction) showMissing{
+-(IBAction) showMissing:(id)sender{
     show_missing^=1;
+    
+    if (show_missing) [(UIBarButtonItem*)sender setStyle:UIBarButtonItemStyleDone];
+    else [(UIBarButtonItem*)sender setStyle:UIBarButtonItemStyleBordered];
+    
     [self scanRomsDirs];
     [tabView reloadData];
 }

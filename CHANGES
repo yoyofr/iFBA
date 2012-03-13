@@ -1,27 +1,26 @@
-v0.3
-----
+TODO
+- customizable pad position
+- delete rom capabilities => popup to delete other files (state, png, nvram, ini)
+- pad restrictor: 2ways, 4ways, 8ways
+- buttons mapping / game or buttons nb ?
+
+
+v0.3 - 14/03/2012
+-----------------
 - upgraded to FBA v0.2.97.23
 - add of a service button
 - smoother rendering
 - stability improved
 - roms sorted by long name
-- remove roms bios from listing (neogeo, pgm, ... ?)
+- roms filters (missing, genres)
 - improved megadrive & pcengine support. Roms require prefix (md_ for megadrive, pce_, tg_, sgx_ for pcengine)
 - multi slot save states with screenshot
+- sound off when turbo enabled
 BUGS FIXED
 - iOS 4.x compatible
 - wrong screen rotation
 - multiple bug fixes
-- wiimote start/select reversed?
 
-TODO
-- sound off when turbo enabled
-- customizable pad position
-- missing roms filter
-- delete rom capabilities => popup to delete other files (state, png, nvram, ini)
-- pad restrictor: 2ways, 4ways, 8ways
-- roms filters (categories)
-- buttons mapping / game or buttons nb ?
 
 v0.2 - 09/03/2012 (first release on cydia)
 -----------------

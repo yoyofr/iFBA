@@ -612,6 +612,8 @@
 		33B58501150EA81B000B5D03 /* button-turbo.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B58500150EA81B000B5D03 /* button-turbo.png */; };
 		33B58504150EA82D000B5D03 /* button-coin.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B58502150EA82D000B5D03 /* button-coin.png */; };
 		33B58505150EA82D000B5D03 /* button-menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B58503150EA82D000B5D03 /* button-menu.png */; };
+		33B58509150FE748000B5D03 /* OptSelGenresViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B58507150FE747000B5D03 /* OptSelGenresViewController.m */; };
+		33B5850A150FE748000B5D03 /* OptSelGenresViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33B58508150FE747000B5D03 /* OptSelGenresViewController.xib */; };
 		33E88A21150CADC80030EFF7 /* d_pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A1E150CADC80030EFF7 /* d_pce.cpp */; };
 		33E88A22150CADC80030EFF7 /* pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A1F150CADC80030EFF7 /* pce.cpp */; };
 		33E88A26150CAEDC0030EFF7 /* d_actfancr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A24150CAEDC0030EFF7 /* d_actfancr.cpp */; };
@@ -1491,6 +1493,9 @@
 		33B58500150EA81B000B5D03 /* button-turbo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-turbo.png"; sourceTree = "<group>"; };
 		33B58502150EA82D000B5D03 /* button-coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-coin.png"; sourceTree = "<group>"; };
 		33B58503150EA82D000B5D03 /* button-menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-menu.png"; sourceTree = "<group>"; };
+		33B58506150FE746000B5D03 /* OptSelGenresViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptSelGenresViewController.h; sourceTree = "<group>"; };
+		33B58507150FE747000B5D03 /* OptSelGenresViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptSelGenresViewController.m; sourceTree = "<group>"; };
+		33B58508150FE747000B5D03 /* OptSelGenresViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptSelGenresViewController.xib; sourceTree = "<group>"; };
 		33E88A1E150CADC80030EFF7 /* d_pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pce.cpp; sourceTree = "<group>"; };
 		33E88A1F150CADC80030EFF7 /* pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pce.cpp; sourceTree = "<group>"; };
 		33E88A20150CADC80030EFF7 /* pce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pce.h; sourceTree = "<group>"; };
@@ -2906,6 +2911,9 @@
 				331D170A1506BF8A00327F74 /* OptConGetWiimoteBtnViewController.h */,
 				331D170B1506BF8B00327F74 /* OptConGetWiimoteBtnViewController.m */,
 				331D170C1506BF8C00327F74 /* OptConGetWiimoteBtnViewController.xib */,
+				33B58506150FE746000B5D03 /* OptSelGenresViewController.h */,
+				33B58507150FE747000B5D03 /* OptSelGenresViewController.m */,
+				33B58508150FE747000B5D03 /* OptSelGenresViewController.xib */,
 				331D17051506BEBF00327F74 /* OptWiimoteBtnViewController.h */,
 				331D17061506BEC000327F74 /* OptWiimoteBtnViewController.mm */,
 				331D17071506BEC100327F74 /* OptWiimoteBtnViewController.xib */,
@@ -3081,6 +3089,7 @@
 				33B58501150EA81B000B5D03 /* button-turbo.png in Resources */,
 				33B58504150EA82D000B5D03 /* button-coin.png in Resources */,
 				33B58505150EA82D000B5D03 /* button-menu.png in Resources */,
+				33B5850A150FE748000B5D03 /* OptSelGenresViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3646,6 +3655,7 @@
 				33E88A29150CAFA30030EFF7 /* d_momoko.cpp in Sources */,
 				33E88A2B150CAFE00030EFF7 /* d_galspnbl.cpp in Sources */,
 				33217257150D4A6100772645 /* OptSaveStateViewController.mm in Sources */,
+				33B58509150FE748000B5D03 /* OptSelGenresViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
