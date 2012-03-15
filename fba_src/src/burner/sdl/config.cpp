@@ -2,10 +2,16 @@
 #include "burner.h"
 int nIniVersion = 0;
 
+extern char debug_root_path[256];
+
 static void CreateConfigName(char* szConfig)
 {
 	//memcpy(szConfig, "fba.ini", 8);
+#ifdef RELEASE_DEBUG
+    sprintf(szConfig, "%s/fba.ini", debug_root_path);
+#else    
     strcpy(szConfig, "/var/mobile/Documents/iFBA/fba.ini");
+#endif
 	return;
 }
 

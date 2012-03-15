@@ -225,7 +225,7 @@ static int SDLSoundInit()
     nSoundFps = nAppVirtualFps;
 	nAudSegLen = (nAudSampleRate[0] * 100 + (nSoundFps >> 1)) / nSoundFps;
 	nAudLoopLen = (nAudSegLen * 1/*nAudSegCount*/) << 2;	    
-    printf("snd buff:%d\n",nAudSegLen);
+//    printf("snd buff:%d\n",nAudSegLen);
     
     AudioSessionInitialize (
                             NULL,

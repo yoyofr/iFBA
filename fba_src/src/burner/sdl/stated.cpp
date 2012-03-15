@@ -2,6 +2,7 @@
 #include "burner.h"
 
 char szChoice[256];
+extern char debug_root_path[256];
 
 int bDrvSaveAll = 0;
 
@@ -9,9 +10,11 @@ int bDrvSaveAll = 0;
 int StatedAuto(int bSave) {
 	static TCHAR szName[32] = "";
 	int nRet;
-    
+#ifdef RELEASE_DEBUG
+    sprintf(szName, "%s/%s.fs", debug_root_path,BurnDrvGetText(DRV_NAME));
+#else
 	sprintf(szName, "/var/mobile/Documents/iFBA/%s.fs", BurnDrvGetText(DRV_NAME));
-    
+#endif
 	if (bSave == 0) {
 		nRet = BurnStateLoad(szName, bDrvSaveAll, NULL);		// Load ram
 		if (nRet && bDrvSaveAll)	{
@@ -25,7 +28,11 @@ int StatedAuto(int bSave) {
 }
 
 static void CreateStateName(int nSlot) {
+#ifdef RELEASE_DEBUG
+    sprintf(szChoice, "%s/%s_%02x.fs", debug_root_path,BurnDrvGetText(DRV_NAME),nSlot);
+#else
 	sprintf(szChoice, "/var/mobile/Documents/iFBA/%s_%02x.fs", BurnDrvGetText(DRV_NAME), nSlot);
+#endif
 }
 
 int StatedLoad(int nSlot) {

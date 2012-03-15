@@ -6,6 +6,9 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+char debug_root_path[256];
+
+
 #define VERSION_SETTINGS 1
 
 #import "AppDelegate.h"
@@ -133,6 +136,9 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"asm_sh2"];
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_sh2=0;
 	else ifba_conf.asm_sh2 = [valNb intValue];
+    valNb=[prefs objectForKey:@"rom_nocheck"];
+	if ((valNb == nil)||reset_settings) ifba_conf.rom_nocheck=1;
+	else ifba_conf.rom_nocheck = [valNb intValue];
     
     for (int i=0;i<MAX_JOYSTICKS;i++) 
         for (int j=0;j<VSTICK_NB_BUTTON;j++) {
@@ -212,6 +218,8 @@ void tstfl_validateloadgame(char *name) {
 	[prefs setObject:valNb forKey:@"asm_nec"];[valNb autorelease];
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_sh2];
 	[prefs setObject:valNb forKey:@"asm_sh2"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.rom_nocheck];
+	[prefs setObject:valNb forKey:@"rom_nocheck"];[valNb autorelease];
     
     //joymaps
     for (int i=0;i<MAX_JOYSTICKS;i++) 
@@ -255,6 +263,8 @@ void tstfl_validateloadgame(char *name) {
     NSString *documentsDirectory=@"/var/mobile/Documents/iFBA";
     [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory withIntermediateDirectories:TRUE attributes:nil error:nil];
     [[NSFileManager defaultManager] changeCurrentDirectoryPath: documentsDirectory];
+    
+    strcpy(debug_root_path,[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] UTF8String]);
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     

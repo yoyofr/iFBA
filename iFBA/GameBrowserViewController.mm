@@ -330,12 +330,9 @@ NSString *genreList[20]={
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if ([romlistLbl[section] count]) return [indexTitles objectAtIndex:section];
-    else return nil;
+    /*if ([romlistLbl[section] count]) return [indexTitles objectAtIndex:section];
+    else*/ return nil;
 }
-
-
-
 
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {

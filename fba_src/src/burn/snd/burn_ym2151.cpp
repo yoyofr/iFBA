@@ -188,7 +188,7 @@ void BurnYM2151Scan(INT32 nAction)
 	
 	if ((nAction & ACB_DRIVER_DATA) == 0) {
 		return;
-	}
+	}    
 	SCAN_VAR(nBurnCurrentYM2151Register);
 	SCAN_VAR(BurnYM2151Registers);
 

@@ -34,16 +34,16 @@ static void* org_vc;
 	   orientation == UIInterfaceOrientationLandscapeRight) {		
 		offScreenCenter = CGPointMake(offSize.height / 2.0, offSize.width *1.2);
 		middleCenter = CGPointMake(offSize.height / 2.0, offSize.width / 2.0);
-        //[modalView setBounds:CGRectMake(0, 0,offSize.height, offSize.width)];
+        [modalView setBounds:CGRectMake(0, 0,offSize.height, offSize.width)];
         [coverView setFrame:CGRectMake(0, 0, offSize.height, offSize.width)];
 	}
 	else {
 		offScreenCenter = CGPointMake(offSize.width / 2.0, offSize.height *1.2);
         middleCenter = CGPointMake(offSize.width / 2.0, offSize.height / 2.0);
-	//	[modalView setBounds:CGRectMake(0, 0, offSize.width, offSize.height)];                        
+		[modalView setBounds:CGRectMake(0, 0, offSize.width, offSize.height)];
 		[coverView setFrame:CGRectMake(0, 0, offSize.width, offSize.height)];
+
 	}
-	
 	// we start off-screen
 	modalView.center = offScreenCenter;
 	 
@@ -58,7 +58,6 @@ static void* org_vc;
 	
 	modalView.center = middleCenter;
 	coverView.alpha = 0.5;
-
 	[UIView commitAnimations];
 
 }

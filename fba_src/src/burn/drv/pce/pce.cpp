@@ -403,7 +403,7 @@ static INT32 CommonInit(int type)
 		memset (PCECartROM, 0xff, length);
 
         rom_nocheck=1;
-		if (BurnLoadRom(PCECartROM, 0, 1)) {rom_nocheck=0;return 1;}
+		if (BurnLoadRom(PCECartROM, 0, 1)) {return 1;}
 
 		if (ri.nLen & 0x200) { // remove header
 			memcpy (PCECartROM, PCECartROM + 0x200, ri.nLen - 0x200);

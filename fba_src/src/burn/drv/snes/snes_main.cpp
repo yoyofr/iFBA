@@ -46,7 +46,7 @@ INT32 SnesInit()
 	rom=(UINT8*)BurnMalloc(4096*1024);
     rom_nocheck=1;
 	BurnLoadRom(rom,0,0);
-    rom_nocheck=0;
+
     memmove(rom,rom+512,4096*1024-512);
 
 

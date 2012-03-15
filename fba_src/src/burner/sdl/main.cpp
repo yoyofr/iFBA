@@ -13,6 +13,7 @@ probably many other things.
 #include "fbaconf.h"
 
 extern bool bSoundOn;
+extern int rom_nocheck;
 
 int nAppVirtualFps = 6000;			// App fps * 100
 bool bRunPause=0;
@@ -52,6 +53,7 @@ int fba_main(int argc, char *argv[])
     
     bSoundOn=ifba_conf.sound_on;
     bForce60Hz=ifba_conf.video_60hz;
+    rom_nocheck=ifba_conf.rom_nocheck;    
 	
 	ConfigAppLoad(); 
 	
@@ -81,9 +83,9 @@ int fba_main(int argc, char *argv[])
 	}
     
     //Check if console & should patch rom len
-    if ((BurnDrvGetHardwareCode()&HARDWARE_PREFIX_PCENGINE==HARDWARE_PREFIX_PCENGINE)||
-        (BurnDrvGetHardwareCode()&HARDWARE_PREFIX_SEGA_MEGADRIVE ==HARDWARE_PREFIX_SEGA_MEGADRIVE)||
-        (BurnDrvGetHardwareCode()&HARDWARE_PREFIX_NINTENDO_SNES ==HARDWARE_PREFIX_NINTENDO_SNES)) {
+    if (((BurnDrvGetHardwareCode()&HARDWARE_PREFIX_PCENGINE)==HARDWARE_PREFIX_PCENGINE)||
+        ((BurnDrvGetHardwareCode()&HARDWARE_PREFIX_SEGA_MEGADRIVE) ==HARDWARE_PREFIX_SEGA_MEGADRIVE)||
+        ((BurnDrvGetHardwareCode()&HARDWARE_PREFIX_NINTENDO_SNES) ==HARDWARE_PREFIX_NINTENDO_SNES)) {
         //pcengine
         char *zipName;
         struct ZipEntry* List = NULL;
@@ -92,7 +94,7 @@ int fba_main(int argc, char *argv[])
         for (int d = 0; d < DIRS_MAX; d++) {
             zipName = (char*)malloc(MAX_PATH);            
 			sprintf(zipName, "%s%s", szAppRomPaths[d], argv[1]);
-            printf("check: %s\n",zipName);            
+            //printf("check: %s\n",zipName);            
 			if (ZipOpen(zipName) == 0) {	// Open the rom zip file				
                 // Get the list of entries
                 ZipGetList(&List, &nListCount);						

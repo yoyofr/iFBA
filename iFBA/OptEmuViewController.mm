@@ -64,7 +64,7 @@ extern char gameName[64];
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 1;//4;
+	return 2;//4;
 }
 
 
@@ -75,16 +75,6 @@ extern char gameName[64];
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
-    switch (section) {
-        case 0:title=@"";//NSLocalizedString(@"68000 core",@"");
-            break;
-        case 1:title=@"";//NSLocalizedString(@"z80 core",@"");
-            break;
-        case 2:title=@"";//NSLocalizedString(@"nec core",@"");
-            break;
-        case 3:title=@"";//NSLocalizedString(@"sh2 core",@"");
-            break;
-    }
     return title;
 }
 
@@ -92,16 +82,8 @@ extern char gameName[64];
     ifba_conf.asm_68k =((UISwitch*)sender).on;
     [tabView reloadData];
 }
-- (void)switchz80:(id)sender {
-    ifba_conf.asm_z80 =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
-- (void)switchsh2:(id)sender {
-    ifba_conf.asm_sh2 =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
-- (void)switchnec:(id)sender {
-    ifba_conf.asm_nec =((UISwitch*)sender).on;
+- (void)switchRomcheck:(id)sender {
+    ifba_conf.rom_nocheck=((UISwitch*)sender).on;
     [tabView reloadData];
 }
 
@@ -115,25 +97,11 @@ extern char gameName[64];
                 footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
             }
             break;
-        case 1://z80
-            if (ifba_conf.asm_z80) {
-                footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
+        case 1://rom check
+            if (ifba_conf.rom_nocheck) {
+                footer=NSLocalizedString(@"Do not check ROMs CRC. Might allow older ROM to run",@"");
             } else {
-                footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
-            }
-            break;
-        case 2://sh2
-            if (ifba_conf.asm_sh2) {
-                footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
-            } else {
-                footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
-            }
-            break;
-        case 3://nec
-            if (ifba_conf.asm_nec) {
-                footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
-            } else {
-                footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
+                footer=NSLocalizedString(@"Strict ROM CRC check",@"");
             }
             break;
     }
@@ -143,7 +111,6 @@ extern char gameName[64];
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UISwitch *switchview;
-    UISegmentedControl *segconview;
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -159,29 +126,13 @@ extern char gameName[64];
             [switchview release];
             switchview.on=ifba_conf.asm_68k;
             break;
-        case 1://z80
-            cell.textLabel.text=NSLocalizedString(@"z80_core",@"");
+        case 1://rom check
+            cell.textLabel.text=NSLocalizedString(@"Bypass CRC Check",@"");
             switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchz80:) forControlEvents:UIControlEventValueChanged];
+            [switchview addTarget:self action:@selector(switchRomcheck:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.asm_z80;
-            break;
-        case 2://sh2
-            cell.textLabel.text=NSLocalizedString(@"sh2_core",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchsh2:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=ifba_conf.asm_sh2;
-            break;
-        case 3://nec
-            cell.textLabel.text=NSLocalizedString(@"nec_core",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchnec:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=ifba_conf.asm_nec;
+            switchview.on=ifba_conf.rom_nocheck;
             break;
     }
     return cell;

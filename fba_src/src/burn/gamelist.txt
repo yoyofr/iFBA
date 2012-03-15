@@ -1,6 +1,6 @@
 This list contains all games supported by FB Alpha.
 
-5676 games supported in total; X = excluded from build; D = included in debug build only; NW = not working
+5670 games supported in total; X = excluded from build; D = included in debug build only; NW = not working
 
   name		  status  full name						  parent	  year	  company	  hardware	  remarks
 +---------------+-------+-------------------------------------------------------+---------------+-------+---------------+---------------+---------------------------------------+
@@ -2086,21 +2086,15 @@ This list contains all games supported by FB Alpha.
 | md_madden	|  	| John Madden Football (Euro, USA)			| 		| 1990	| Electronic Art| Sega Megadrive| 					|
 | md_maddenj	|  	| John Madden Football - Pro Football (Jpn)		| md_madden	| 1992	| Electronic Art| Sega Megadrive| 					|
 | joinem	|  	| Joinem						| 		| 1986	| Global Corpora| Jack the Giant| 					|
-| jojobaner1	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| jojoba	| 1999	| Capcom	| CPS-3		| 					|
 | jojobane	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| jojoba	| 1999	| Capcom	| CPS-3		| 					|
-| jojobar1	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| jojoba	| 1999	| Capcom	| CPS-3		| 					|
-| jojobanr1	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| jojoba	| 1999	| Capcom	| CPS-3		| 					|
 | jojoba	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| 		| 1999	| Capcom	| CPS-3		| 					|
 | jojoban	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| jojoba	| 1999	| Capcom	| CPS-3		| 					|
-| jojonr2	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Asia 981202,| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojonr1	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990108,| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojon		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990128,| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojojr2	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Japan 981202| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojojr1	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990108| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojoj		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990128| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojor2	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 981202)	| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojor1	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108)	| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojo		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 990128)	| 		| 1998	| Capcom	| CPS-3		| 					|
+| jojoan	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Asia 981202,| jojo		| 1998	| Capcom	| CPS-3		| 					|
+| jojon		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990108,| jojo		| 1998	| Capcom	| CPS-3		| 					|
+| jojoaj	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Japan 981202| jojo		| 1998	| Capcom	| CPS-3		| 					|
+| jojoj		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990108| jojo		| 1998	| Capcom	| CPS-3		| 					|
+| jojoa		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 981202)	| jojo		| 1998	| Capcom	| CPS-3		| 					|
+| jojo		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108)	| 		| 1998	| Capcom	| CPS-3		| 					|
 | ltorb1	|  	| Jonas Indiana and the Lost Temple of RA (20050717)	| 		| 2005	| blastar@gmx.ne| Neo Geo MVS	| 					|
 | md_jordanb1	|  	| Jordan Vs Bird (Euro, USA)				| md_jordanb	| 1992	| Electronic Art| Sega Megadrive| 					|
 | md_jordanb	|  	| Jordan Vs Bird (Euro, USA, v1.1)			| 		| 1992	| Electronic Art| Sega Megadrive| 					|
@@ -3548,7 +3542,7 @@ This list contains all games supported by FB Alpha.
 | rbff2		|  	| Real Bout Fatal Fury 2 - The Newcomers / Real Bout Gar| 		| 1998	| SNK		| Neo Geo MVS	| 					|
 | rbffspec	|  	| Real Bout Fatal Fury Special / Real Bout Garou Densets| 		| 1996	| SNK		| Neo Geo MVS	| 					|
 | rbffspeck	|  	| Real Bout Fatal Fury Special / Real Bout Garou Densets| rbffspec	| 1996	| SNK		| Neo Geo MVS	| 					|
-| redearthr1	|  	| Red Earth / War-Zard (Euro 961023)			| redearth	| 1996	| Capcom	| CPS-3		| 					|
+| redeartha	|  	| Red Earth / War-Zard (Euro 961023)			| redearth	| 1996	| Capcom	| CPS-3		| 					|
 | redearth	|  	| Red Earth / War-Zard (Euro 961121)			| 		| 1996	| Capcom	| CPS-3		| 					|
 | redhawke	|  	| Red Hawk (Excellent Co., Ltd)				| stagger1	| 1997	| Afega (Excelle| NMK16		| 					|
 | redhawki	|  	| Red Hawk (Italy)					| stagger1	| 1997	| Afega (Hea Don| NMK16		| 					|
@@ -4268,11 +4262,11 @@ This list contains all games supported by FB Alpha.
 | sfiii2n	|  	| Street Fighter III 2nd Impact: Giant Attack (Asia 9709| sfiii2	| 1997	| Capcom	| CPS-3		| 					|
 | sfiii2j	|  	| Street Fighter III 2nd Impact: Giant Attack (Japan 970| sfiii2	| 1997	| Capcom	| CPS-3		| 					|
 | sfiii2	|  	| Street Fighter III 2nd Impact: Giant Attack (USA 97093| 		| 1997	| Capcom	| CPS-3		| 					|
-| sfiii3r1	|  	| Street Fighter III 3rd Strike: Fight for the Future (E| sfiii3	| 1999	| Capcom	| CPS-3		| 					|
+| sfiii3a	|  	| Street Fighter III 3rd Strike: Fight for the Future (E| sfiii3	| 1999	| Capcom	| CPS-3		| 					|
 | sfiii3	|  	| Street Fighter III 3rd Strike: Fight for the Future (E| 		| 1999	| Capcom	| CPS-3		| 					|
-| sfiii3nr1	|  	| Street Fighter III 3rd Strike: Fight for the Future (J| sfiii3	| 1999	| Capcom	| CPS-3		| 					|
+| sfiii3an	|  	| Street Fighter III 3rd Strike: Fight for the Future (J| sfiii3	| 1999	| Capcom	| CPS-3		| 					|
 | sfiii3n	|  	| Street Fighter III 3rd Strike: Fight for the Future (J| sfiii3	| 1999	| Capcom	| CPS-3		| 					|
-| sfiii3ur1	|  	| Street Fighter III 3rd Strike: Fight for the Future (U| sfiii3	| 1999	| Capcom	| CPS-3		| 					|
+| sfiii3au	|  	| Street Fighter III 3rd Strike: Fight for the Future (U| sfiii3	| 1999	| Capcom	| CPS-3		| 					|
 | sfiii3u	|  	| Street Fighter III 3rd Strike: Fight for the Future (U| sfiii3	| 1999	| Capcom	| CPS-3		| 					|
 | sfiiin	|  	| Street Fighter III: New Generation (Asia 970204, NO CD| sfiii		| 1997	| Capcom	| CPS-3		| 					|
 | sfiiih	|  	| Street Fighter III: New Generation (Hispanic 970204)	| sfiii		| 1997	| Capcom	| CPS-3		| 					|
@@ -5333,7 +5327,7 @@ This list contains all games supported by FB Alpha.
 | wrofaero	|  	| War of Aero - Project MEIOU				| 		| 1993	| Yang Cheng	| Seta		| 					|
 | warofbug	|  	| War of the Bugs or Monsterous Manouvers in a Mushroom | 		| 1981	| Armenia	| Galaxian	| 					|
 | warofbugg	| D	| War of the Bugs or Monsterous Manouvers in a Mushroom | warofbug	| 1981	| Armenia	| Galaxian	| 					|
-| warzardr1	|  	| War-Zard / Red Earth (Japan 961023)			| redearth	| 1996	| Capcom	| CPS-3		| 					|
+| warzarda	|  	| War-Zard / Red Earth (Japan 961023)			| redearth	| 1996	| Capcom	| CPS-3		| 					|
 | warzard	|  	| War-Zard / Red Earth (Japan 961121)			| redearth	| 1996	| Capcom	| CPS-3		| 					|
 | md_wardner	|  	| Wardner (USA)						| 		| 1991	| Mentrix Softwa| Sega Megadrive| 					|
 | md_wardnerj	|  	| Wardner no Mori Special (Jpn)				| md_wardner	| 1991	| Visco		| Sega Megadrive| 					|

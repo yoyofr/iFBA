@@ -2148,20 +2148,14 @@ DRV		BurnDrvmd_madd93ce;
 DRV		BurnDrvmd_madden;
 DRV		BurnDrvmd_maddenj;
 DRV		BurnDrvjoinem;
-DRV		BurnDrvJojobaner1;
 DRV		BurnDrvJojobane;
-DRV		BurnDrvJojobar1;
-DRV		BurnDrvJojobanr1;
 DRV		BurnDrvJojoba;
 DRV		BurnDrvJojoban;
-DRV		BurnDrvJojonr2;
-DRV		BurnDrvJojonr1;
+DRV		BurnDrvJojoan;
 DRV		BurnDrvJojon;
-DRV		BurnDrvJojojr2;
-DRV		BurnDrvJojojr1;
+DRV		BurnDrvJojoaj;
 DRV		BurnDrvJojoj;
-DRV		BurnDrvJojor2;
-DRV		BurnDrvJojor1;
+DRV		BurnDrvJojoa;
 DRV		BurnDrvJojo;
 DRV		BurnDrvltorb1;
 DRV		BurnDrvmd_jordanb1;
@@ -3634,7 +3628,7 @@ DRV		BurnDrvrbff2h;
 DRV		BurnDrvrbff2;
 DRV		BurnDrvrbffspec;
 DRV		BurnDrvrbffspeck;
-DRV		BurnDrvRedearthr1;
+DRV		BurnDrvRedeartha;
 DRV		BurnDrvRedearth;
 DRV		BurnDrvRedhawke;
 DRV		BurnDrvRedhawki;
@@ -4378,11 +4372,11 @@ DRV		BurnDrvCpsSf2hfj;
 DRV		BurnDrvSfiii2n;
 DRV		BurnDrvSfiii2j;
 DRV		BurnDrvSfiii2;
-DRV		BurnDrvSfiii3r1;
+DRV		BurnDrvSfiii3a;
 DRV		BurnDrvSfiii3;
-DRV		BurnDrvSfiii3nr1;
+DRV		BurnDrvSfiii3an;
 DRV		BurnDrvSfiii3n;
-DRV		BurnDrvSfiii3ur1;
+DRV		BurnDrvSfiii3au;
 DRV		BurnDrvSfiii3u;
 DRV		BurnDrvSfiiin;
 DRV		BurnDrvSfiiih;
@@ -4566,11 +4560,11 @@ DRV		BurnDrvmd_smario2;
 DRV		BurnDrvmd_smb;
 DRV		BurnDrvmd_smbbc;
 DRV		BurnDrvmd_smw;
-//#if defined FBA_DEBUG
+#if defined FBA_DEBUG
 DRV		BurnDrvrSuperMarioWorldEurope;// no comment
 DRV		BurnDrvrSMW;			// no comment
 DRV		BurnDrvrSuperMarioWorldJapan;// no comment
-//#endif
+#endif
 DRV		BurnDrvmd_smwa;
 #if defined FBA_DEBUG
 DRV		BurnDrvrSuperMarioWorldUSA;// no comment
@@ -5477,7 +5471,7 @@ DRV		BurnDrvWarofbug;
 #if defined FBA_DEBUG
 DRV		BurnDrvWarofbugg;		// no comment
 #endif
-DRV		BurnDrvWarzardr1;
+DRV		BurnDrvWarzarda;
 DRV		BurnDrvWarzard;
 DRV		BurnDrvmd_wardner;
 DRV		BurnDrvmd_wardnerj;
@@ -7987,21 +7981,15 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_madden,			// John Madden Football (Euro, USA)
 	&BurnDrvmd_maddenj,			// John Madden Football - Pro Football (Jpn)
 	&BurnDrvjoinem,				// Joinem
-	&BurnDrvJojobaner1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro 990913, NO CD)
-	&BurnDrvJojobane,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro 990927, NO CD)
-	&BurnDrvJojobar1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913)
-	&BurnDrvJojobanr1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913, NO CD)
-	&BurnDrvJojoba,				// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927)
-	&BurnDrvJojoban,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927, NO CD)
-	&BurnDrvJojonr2,			// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 981202, NO CD)
-	&BurnDrvJojonr1,			// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990108, NO CD)
-	&BurnDrvJojon,				// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990128, NO CD)
-	&BurnDrvJojojr2,			// JoJo's Venture / JoJo no Kimyouna Bouken (Japan 981202)
-	&BurnDrvJojojr1,			// JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990108)
-	&BurnDrvJojoj,				// JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990128)
-	&BurnDrvJojor2,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 981202)
-	&BurnDrvJojor1,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108)
-	&BurnDrvJojo,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990128)
+	&BurnDrvJojobane,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro 990913, NO CD)
+	&BurnDrvJojoba,				// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913)
+	&BurnDrvJojoban,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913, NO CD)
+	&BurnDrvJojoan,				// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 981202, NO CD)
+	&BurnDrvJojon,				// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990108, NO CD)
+	&BurnDrvJojoaj,				// JoJo's Venture / JoJo no Kimyouna Bouken (Japan 981202)
+	&BurnDrvJojoj,				// JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990108)
+	&BurnDrvJojoa,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 981202)
+	&BurnDrvJojo,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108)
 	&BurnDrvltorb1,				// Jonas Indiana and the Lost Temple of RA (20050717)
 	&BurnDrvmd_jordanb1,		// Jordan Vs Bird (Euro, USA)
 	&BurnDrvmd_jordanb,			// Jordan Vs Bird (Euro, USA, v1.1)
@@ -9473,7 +9461,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvrbff2,				// Real Bout Fatal Fury 2 - The Newcomers / Real Bout Garou Densetsu 2 - the newcomers (NGM-2400)
 	&BurnDrvrbffspec,			// Real Bout Fatal Fury Special / Real Bout Garou Densetsu Special
 	&BurnDrvrbffspeck,			// Real Bout Fatal Fury Special / Real Bout Garou Densetsu Special (Korean release)
-	&BurnDrvRedearthr1,			// Red Earth / War-Zard (Euro 961023)
+	&BurnDrvRedeartha,			// Red Earth / War-Zard (Euro 961023)
 	&BurnDrvRedearth,			// Red Earth / War-Zard (Euro 961121)
 	&BurnDrvRedhawke,			// Red Hawk (Excellent Co., Ltd)
 	&BurnDrvRedhawki,			// Red Hawk (Italy)
@@ -10217,11 +10205,11 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvSfiii2n,			// Street Fighter III 2nd Impact: Giant Attack (Asia 970930, NO CD)
 	&BurnDrvSfiii2j,			// Street Fighter III 2nd Impact: Giant Attack (Japan 970930)
 	&BurnDrvSfiii2,				// Street Fighter III 2nd Impact: Giant Attack (USA 970930)
-	&BurnDrvSfiii3r1,			// Street Fighter III 3rd Strike: Fight for the Future (Euro 990512)
+	&BurnDrvSfiii3a,			// Street Fighter III 3rd Strike: Fight for the Future (Euro 990512)
 	&BurnDrvSfiii3,				// Street Fighter III 3rd Strike: Fight for the Future (Euro 990608)
-	&BurnDrvSfiii3nr1,			// Street Fighter III 3rd Strike: Fight for the Future (Japan 990512, NO CD)
+	&BurnDrvSfiii3an,			// Street Fighter III 3rd Strike: Fight for the Future (Japan 990512, NO CD)
 	&BurnDrvSfiii3n,			// Street Fighter III 3rd Strike: Fight for the Future (Japan 990608, NO CD)
-	&BurnDrvSfiii3ur1,			// Street Fighter III 3rd Strike: Fight for the Future (USA 990512)
+	&BurnDrvSfiii3au,			// Street Fighter III 3rd Strike: Fight for the Future (USA 990512)
 	&BurnDrvSfiii3u,			// Street Fighter III 3rd Strike: Fight for the Future (USA 990608)
 	&BurnDrvSfiiin,				// Street Fighter III: New Generation (Asia 970204, NO CD)
 	&BurnDrvSfiiih,				// Street Fighter III: New Generation (Hispanic 970204)
@@ -10405,11 +10393,11 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_smb,				// Super Mario Bros.
 	&BurnDrvmd_smbbc,			// Super Mario Bros. + Battle City (Rus)
 	&BurnDrvmd_smw,				// Super Mario World
-//#if defined FBA_DEBUG
+#if defined FBA_DEBUG
 	&BurnDrvrSuperMarioWorldEurope,// Super Mario World (Europe) [no comment]
 	&BurnDrvrSMW,				// Super Mario World (Europe) (Rev 1) [no comment]
 	&BurnDrvrSuperMarioWorldJapan,// Super Mario World (Japan) [no comment]
-//#endif
+#endif
 	&BurnDrvmd_smwa,			// Super Mario World (Pirate)
 #if defined FBA_DEBUG
 	&BurnDrvrSuperMarioWorldUSA,// Super Mario World (USA) [no comment]
@@ -11316,7 +11304,7 @@ static struct BurnDriver* pDriver[] = {
 #if defined FBA_DEBUG
 	&BurnDrvWarofbugg,			// War of the Bugs or Monsterous Manouvers in a Mushroom Maze (German) [no comment]
 #endif
-	&BurnDrvWarzardr1,			// War-Zard / Red Earth (Japan 961023)
+	&BurnDrvWarzarda,			// War-Zard / Red Earth (Japan 961023)
 	&BurnDrvWarzard,			// War-Zard / Red Earth (Japan 961121)
 	&BurnDrvmd_wardner,			// Wardner (USA)
 	&BurnDrvmd_wardnerj,		// Wardner no Mori Special (Jpn)

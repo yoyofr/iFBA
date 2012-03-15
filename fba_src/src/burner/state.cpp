@@ -299,7 +299,6 @@ INT32 BurnStateSave(TCHAR* szName, INT32 bAll)
 	if (nLen <= 0) {									// No data, so exit without creating a savestate
 		return 0;										// Don't return an error code
 	}
-
 	FILE* fp = _tfopen(szName, _T("wb"));
 	if (fp == NULL) {
 		return 1;

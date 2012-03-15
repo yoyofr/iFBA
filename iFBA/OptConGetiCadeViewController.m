@@ -58,8 +58,7 @@ extern int mOptICadeButtonSelected;
     // e.g. self.myOutlet = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
 
@@ -95,18 +94,6 @@ extern int mOptICadeButtonSelected;
         case iCadeButtonH:            
             iCadePress=8;
             break;
-            /*        case iCadeJoystickUp:
-             joy_state[0][GN_UP]=state;
-             break;
-             case iCadeJoystickRight:
-             joy_state[0][GN_RIGHT]=state;
-             break;
-             case iCadeJoystickDown:
-             joy_state[0][GN_DOWN]=state;
-             break;
-             case iCadeJoystickLeft:
-             joy_state[0][GN_LEFT]=state;
-             break;            */
         default:
             break;
     }

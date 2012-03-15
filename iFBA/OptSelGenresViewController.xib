@@ -46,7 +46,7 @@
 								<string key="NSFrame">{{6, 6}, {74, 37}}</string>
 								<reference key="NSSuperview" ref="803704580"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="711172082"/>
+								<reference key="NSNextKeyView" ref="397802398"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -76,7 +76,7 @@
 									<int key="NSfFlags">16</int>
 								</object>
 							</object>
-							<object class="IBUIButton" id="711172082">
+							<object class="IBUIButton" id="397802398">
 								<reference key="NSNextResponder" ref="803704580"/>
 								<int key="NSvFlags">288</int>
 								<string key="NSFrame">{{112, 6}, {86, 37}}</string>
@@ -125,7 +125,7 @@
 							<object class="IBUITableView" id="280446200">
 								<reference key="NSNextResponder" ref="803704580"/>
 								<int key="NSvFlags">274</int>
-								<string key="NSFrame">{{6, 51}, {298, 327}}</string>
+								<string key="NSFrame">{{6, 51}, {298, 338}}</string>
 								<reference key="NSSuperview" ref="803704580"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
@@ -142,7 +142,7 @@
 								<float key="IBUISectionFooterHeight">22</float>
 							</object>
 						</array>
-						<string key="NSFrame">{{5, 9}, {310, 398}}</string>
+						<string key="NSFrame">{{5, 19}, {310, 398}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="468219611"/>
@@ -158,6 +158,10 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="803704580"/>
+				<object class="IBUISimulatedSizeMetrics" key="IBUISimulatedDestinationMetrics">
+					<string key="IBUISimulatedSizeMetricsClass">IBUISimulatedFreeformSizeMetricsSentinel</string>
+					<string key="IBUIDisplayName">Freeform</string>
+				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 		</array>
@@ -224,7 +228,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">allNoneInput</string>
-						<reference key="source" ref="711172082"/>
+						<reference key="source" ref="397802398"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
@@ -264,7 +268,7 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="468219611"/>
 							<reference ref="424045175"/>
-							<reference ref="711172082"/>
+							<reference ref="397802398"/>
 							<reference ref="280446200"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
@@ -286,7 +290,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">17</int>
-						<reference key="object" ref="711172082"/>
+						<reference key="object" ref="397802398"/>
 						<reference key="parent" ref="803704580"/>
 					</object>
 				</array>

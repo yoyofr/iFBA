@@ -5,6 +5,8 @@
 #define SSHOT_LIBPNG_ERROR 2
 #define SSHOT_OTHER_ERROR 3
 
+extern char debug_root_path[256];
+
 //IOS_BUILD patch
 #define SSHOT_DIRECTORY "/var/mobile/Documents/iFBA/"
 
@@ -151,7 +153,11 @@ INT32 MakeScreenShot(int index)
 	// construct our filename -> "romname-mm-dd-hms.png"
 //IOS_BUILD patch    
 //    sprintf(szSShotName,"%s%s-%.2d-%.2d-%.2d%.2d%.2d.png", SSHOT_DIRECTORY, BurnDrvGetTextA(DRV_NAME), tmTime->tm_mon + 1, tmTime->tm_mday, tmTime->tm_hour, tmTime->tm_min, tmTime->tm_sec);
+#ifdef RELEASE_DEBUG    
+    sprintf(szSShotName,"%s/%s_%02x.png", debug_root_path, BurnDrvGetTextA(DRV_NAME),index);
+#else
     sprintf(szSShotName,"%s%s_%02x.png", SSHOT_DIRECTORY, BurnDrvGetTextA(DRV_NAME),index);
+#endif
 
 	ff = fopen(szSShotName, "wb");
 	if (ff == NULL) {

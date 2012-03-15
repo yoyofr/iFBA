@@ -5,6 +5,7 @@
 //  Created by Yohann Magnien on 28/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
+extern char debug_root_path[256];
 #import <QuartzCore/QuartzCore.h>
 #import "OptSaveStateViewController.h"
 #import "OptROMSSetPathsViewController.h"
@@ -60,7 +61,11 @@ int StatedSave(int slot);
     char tmp_str[256];
     FILE *f;
     for (int i=0;i<10;i++) {
+#ifdef RELEASE_DEBUG    
+        sprintf(tmp_str,"%s/%s_%02x.fs", debug_root_path, gameName,i);
+#else        
         sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x.fs",gameName,i);
+#endif        
         f=fopen(tmp_str,"rb");
         if (f) {
             slot[i]=1;
@@ -133,7 +138,11 @@ int StatedSave(int slot);
     current_slot=indexPath.row;
     if (slot[indexPath.row]) {
         char tmp_str[256];
+#ifdef RELEASE_DEBUG    
+        sprintf(tmp_str,"%s/%s_%02x.png", debug_root_path, gameName,indexPath.row);
+#else        
         sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x.png",gameName,indexPath.row);
+#endif        
         [imgview setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%s",tmp_str]]];        
         
         btn_load.hidden=NO;
@@ -162,7 +171,11 @@ int StatedSave(int slot);
     
     char tmp_str[256];
     FILE *f;
+#ifdef RELEASE_DEBUG    
+    sprintf(tmp_str,"%s/%s_%02x.png", debug_root_path, gameName,current_slot);
+#else        
     sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x.png",gameName,current_slot);
+#endif            
     [imgview setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%s",tmp_str]]];
     
     if (slot[current_slot]) btn_load.hidden=NO;

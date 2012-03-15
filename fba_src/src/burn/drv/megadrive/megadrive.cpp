@@ -2897,7 +2897,6 @@ INT32 MegadriveInit()
     rom_nocheck=1;
 	MegadriveLoadRoms(0);
 	MegadriveLoadRoms(1);
-    rom_nocheck=0;
 
 	{
 		SekInit(0, 0x68000);										// Allocate 68000

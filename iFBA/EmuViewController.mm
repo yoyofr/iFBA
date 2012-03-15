@@ -546,7 +546,7 @@ static int statusLoadMsgUpdated=0;
     
     //icade map
     memset(joymap_dir_iCade,0,sizeof(joymap_dir_iCade));
-    for (int i=0;i<10;i++) {
+    for (int i=0;i<VSTICK_NB_BUTTON;i++) {
         int j=joymap_iCade[i].dev_btn;
         if (j) {
             switch (i) {
@@ -567,7 +567,7 @@ static int statusLoadMsgUpdated=0;
     //wiimotes map
     memset(joymap_dir_wiimote,0,sizeof(joymap_dir_wiimote));
     for (int joy=0;joy<MAX_JOYSTICKS;joy++)
-        for (int i=0;i<10;i++) {
+        for (int i=0;i<VSTICK_NB_BUTTON;i++) {
             int j=joymap_wiimote[joy][i].dev_btn;
             if (j) {
                 switch (i) {

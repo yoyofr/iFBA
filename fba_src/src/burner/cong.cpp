@@ -4,13 +4,18 @@
 const INT32 nConfigMinVersion = 0x020921;
 
 bool bSaveInputs = true;
+extern char debug_root_path[256];
 
 static TCHAR* GameConfigName()
 {
 	// Return the path of the config file for this game
 	static TCHAR szName[32];
-#ifdef IOS_BUILD    
+#ifdef IOS_BUILD
+#ifdef RELEASE_DEBUG
+    sprintf(szName, "%s/%s.ini", debug_root_path,BurnDrvGetText(DRV_NAME));
+#else
     _stprintf(szName, _T("/var/mobile/Documents/iFBA/%s.ini"), BurnDrvGetText(DRV_NAME));
+#endif
 #else
 	_stprintf(szName, _T("config/games/%s.ini"), BurnDrvGetText(DRV_NAME));
 #endif
