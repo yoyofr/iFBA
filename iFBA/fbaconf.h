@@ -45,7 +45,6 @@ typedef struct {
     unsigned char asm_z80;
     unsigned char asm_nec;
     unsigned char asm_sh2;    
-    unsigned char rom_nocheck;
     
     //Extension
     unsigned char extension[64];

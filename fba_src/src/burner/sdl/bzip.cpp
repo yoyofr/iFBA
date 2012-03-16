@@ -121,6 +121,10 @@ static int FindRom(int i)
 	memset(&ri, 0, sizeof(ri));
 
 	nRet = BurnDrvGetRomInfo(&ri, i);
+    
+//    printf("check rom %d: %s %d\n",i,ri.szName,ri.nLen);
+    
+    
 	if (nRet != 0) {											// Failure: no such rom
 		return -2;
 	}
@@ -136,6 +140,7 @@ static int FindRom(int i)
 		char *szPossibleName = NULL;
 
 		nRet = BurnDrvGetRomName(&szPossibleName, i, nAka);
+        printf("szPossibleName:%s\n",szPossibleName);
 		if (nRet) {												// No more rom names
 			break;
 		}
@@ -145,7 +150,7 @@ static int FindRom(int i)
 		}
 	}
     
-    if (ri.nLen) {												// Search by crc first
+    if (ri.nLen&&rom_nocheck) {												// Search by len
 		nRet = FindRomByLen(ri.nLen);
 		if (nRet >= 0) {
 			return nRet;
@@ -415,16 +420,17 @@ int BzipOpen(bool bootApp)
 				RomFind[i].nState = 1;							// Set to found okay                
 				BurnDrvGetRomInfo(&ri, i);						// Get info about the rom
                 
-                if (rom_nocheck) {
+                
+                /*if (rom_nocheck) {
                     ri.nLen=List[i].nLen;                    
-                }
+                }*/
 
 				if ((ri.nType & 0x80) == 0)	{
 					nTotalSize += ri.nLen;
 				}
 
-				if ((List[nFind].nLen == ri.nLen)||(rom_nocheck)) {
-					if (ri.nCrc&&(rom_nocheck==0)) {								// If we know the CRC
+				if (List[nFind].nLen == ri.nLen) {
+					if (ri.nCrc) {								// If we know the CRC
 						if (List[nFind].nCrc != ri.nCrc) {		// Length okay, but CRC wrong
 							RomFind[i].nState = 2;
 						}

@@ -53,7 +53,8 @@ int fba_main(int argc, char *argv[])
     
     bSoundOn=ifba_conf.sound_on;
     bForce60Hz=ifba_conf.video_60hz;
-    rom_nocheck=ifba_conf.rom_nocheck;    
+    rom_nocheck=0;  
+    rom_force_len=0;
 	
 	ConfigAppLoad(); 
 	
@@ -83,10 +84,12 @@ int fba_main(int argc, char *argv[])
 	}
     
     //Check if console & should patch rom len
-    if (((BurnDrvGetHardwareCode()&HARDWARE_PREFIX_PCENGINE)==HARDWARE_PREFIX_PCENGINE)||
-        ((BurnDrvGetHardwareCode()&HARDWARE_PREFIX_SEGA_MEGADRIVE) ==HARDWARE_PREFIX_SEGA_MEGADRIVE)||
-        ((BurnDrvGetHardwareCode()&HARDWARE_PREFIX_NINTENDO_SNES) ==HARDWARE_PREFIX_NINTENDO_SNES)) {
-        //pcengine
+    int hardwarecode=BurnDrvGetHardwareCode()&HARDWARE_PUBLIC_MASK;
+    if ( (hardwarecode==HARDWARE_PCENGINE_PCENGINE)||
+        (hardwarecode==HARDWARE_PCENGINE_SGX)||
+        (hardwarecode==HARDWARE_PCENGINE_TG16)||
+        (hardwarecode==HARDWARE_SEGA_MEGADRIVE)||
+        (hardwarecode==HARDWARE_NINTENDO_SNES)) {
         char *zipName;
         struct ZipEntry* List = NULL;
         int nListCount = 0;
@@ -106,6 +109,7 @@ int fba_main(int argc, char *argv[])
                 }
                 
                 rom_force_len=biggest_file_len;
+                //printf("Forcing rom len: %d\n",rom_force_len);
                 //free zip list
                 if (List) {
                     for (int i = 0; i < nListCount; i++) {

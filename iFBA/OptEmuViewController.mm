@@ -82,10 +82,6 @@ extern char gameName[64];
     ifba_conf.asm_68k =((UISwitch*)sender).on;
     [tabView reloadData];
 }
-- (void)switchRomcheck:(id)sender {
-    ifba_conf.rom_nocheck=((UISwitch*)sender).on;
-    [tabView reloadData];
-}
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
@@ -95,13 +91,6 @@ extern char gameName[64];
                 footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
             } else {
                 footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
-            }
-            break;
-        case 1://rom check
-            if (ifba_conf.rom_nocheck) {
-                footer=NSLocalizedString(@"Do not check ROMs CRC. Might allow older ROM to run",@"");
-            } else {
-                footer=NSLocalizedString(@"Strict ROM CRC check",@"");
             }
             break;
     }
@@ -125,14 +114,6 @@ extern char gameName[64];
             cell.accessoryView = switchview;
             [switchview release];
             switchview.on=ifba_conf.asm_68k;
-            break;
-        case 1://rom check
-            cell.textLabel.text=NSLocalizedString(@"Bypass CRC Check",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switchRomcheck:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=ifba_conf.rom_nocheck;
             break;
     }
     return cell;

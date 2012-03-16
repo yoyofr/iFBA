@@ -136,9 +136,6 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"asm_sh2"];
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_sh2=0;
 	else ifba_conf.asm_sh2 = [valNb intValue];
-    valNb=[prefs objectForKey:@"rom_nocheck"];
-	if ((valNb == nil)||reset_settings) ifba_conf.rom_nocheck=1;
-	else ifba_conf.rom_nocheck = [valNb intValue];
     
     for (int i=0;i<MAX_JOYSTICKS;i++) 
         for (int j=0;j<VSTICK_NB_BUTTON;j++) {
@@ -218,8 +215,6 @@ void tstfl_validateloadgame(char *name) {
 	[prefs setObject:valNb forKey:@"asm_nec"];[valNb autorelease];
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_sh2];
 	[prefs setObject:valNb forKey:@"asm_sh2"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.rom_nocheck];
-	[prefs setObject:valNb forKey:@"rom_nocheck"];[valNb autorelease];
     
     //joymaps
     for (int i=0;i<MAX_JOYSTICKS;i++) 

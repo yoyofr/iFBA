@@ -1,3 +1,6 @@
+#include "fbaconf.h"
+extern int rom_nocheck;
+
 /*
 
 struct NeoMediaInfo {
@@ -431,7 +434,7 @@ static INT32 NeoLoad68KBIOS(INT32 nNewBIOS)
 			BurnLoadRom(Neo68KBIOS, 0x00080 +     0, 1);
 		}
 	}
-
+    
 	if (!strcmp(BurnDrvGetTextA(DRV_NAME), "kf2k3pcb") || !strcmp(BurnDrvGetTextA(DRV_NAME), "k2k3pcbd")) kf2k3pcb_bios_decode();
 	
 	NeoUpdateVector();

@@ -89,6 +89,15 @@ NSString *genreList[20]={
     
     show_missing=0;
     
+    for (int i=0;i<28;i++) {
+        romlist[i]=nil;
+        romlistLbl[i]=nil;
+        rompath[i]=nil;
+        romavail[i]=nil;
+        romlistSystem[i]=nil;
+        romlistGenre[i]=nil;
+    }
+    
     indexTitles = [[NSMutableArray alloc] init];
 	[indexTitles addObject:@"#"];
 	[indexTitles addObject:@"A"];
@@ -141,6 +150,14 @@ NSString *genreList[20]={
     
     //Master unsorted list in [27]
     for (int i=0;i<28;i++) {
+        
+        if (romlist[i]) [romlist[i] release];
+        if (romlistLbl[i]) [romlistLbl[i] release];
+        if (rompath[i]) [rompath[i] release];
+        if (romavail[i]) [romavail[i] release];
+        if (romlistSystem[i]) [romlistSystem[i] release];
+        if (romlistGenre[i]) [romlistGenre[i] release];
+        
         romlist[i]=[[NSMutableArray alloc] initWithCapacity:0];
         romlistLbl[i]=[[NSMutableArray alloc] initWithCapacity:0];
         rompath[i]=[[NSMutableArray alloc] initWithCapacity:0];
@@ -291,12 +308,18 @@ NSString *genreList[20]={
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
     for (int i=0;i<28;i++) {
-        [romlist[i] release];
-        [romlistLbl[i] release];
-        [rompath[i] release];
-        [romavail[i] release];
-        [romlistSystem[i] release];
-        [romlistGenre[i] release];
+        if (romlist[i]) [romlist[i] release];
+        romlist[i]=nil;
+        if (romlistLbl[i]) [romlistLbl[i] release];
+        romlistLbl[i]=nil;
+        if (rompath[i]) [rompath[i] release];
+        rompath[i]=nil;
+        if (romavail[i]) [romavail[i] release];
+        romavail[i]=nil;
+        if (romlistSystem[i]) [romlistSystem[i] release];
+        romlistSystem[i]=nil;
+        if (romlistGenre[i]) [romlistGenre[i] release];
+        romlistGenre[i]=nil;
     }
 }
 
@@ -331,7 +354,7 @@ NSString *genreList[20]={
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     /*if ([romlistLbl[section] count]) return [indexTitles objectAtIndex:section];
-    else*/ return nil;
+     else*/ return nil;
 }
 
 

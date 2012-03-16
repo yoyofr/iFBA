@@ -9,9 +9,9 @@ v0.4
 - changed gamebrowser look
 - revert to previous cps3 driver for better compatibility
 - mutiple bugs fixes
-- add of a new emulation option: "CRC Check". Allow old ROMs dump to start by disabling CRC check.
 - fixed "Fire 6" mapping issue for wiimotes & iCade
-
+- audio: allow ipod music playback
+- keep app in background when pushing home button
 
 v0.3 - 14/03/2012
 -----------------
