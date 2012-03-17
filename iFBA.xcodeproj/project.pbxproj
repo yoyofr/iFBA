@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		331082051514905700B6FD1A /* MNEValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 331082041514905400B6FD1A /* MNEValueTrackingSlider.m */; };
 		33132C36150884FB002F97BB /* OptROMSSetPathsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33132C34150884F9002F97BB /* OptROMSSetPathsViewController.mm */; };
 		33132C37150884FB002F97BB /* OptROMSSetPathsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33132C35150884FA002F97BB /* OptROMSSetPathsViewController.xib */; };
 		331D16AA15053B5C00327F74 /* OptDIPSWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D16A815053B5B00327F74 /* OptDIPSWViewController.mm */; };
@@ -629,6 +630,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		331082031514905300B6FD1A /* MNEValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNEValueTrackingSlider.h; sourceTree = "<group>"; };
+		331082041514905400B6FD1A /* MNEValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNEValueTrackingSlider.m; sourceTree = "<group>"; };
 		33132C33150884F9002F97BB /* OptROMSSetPathsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptROMSSetPathsViewController.h; sourceTree = "<group>"; };
 		33132C34150884F9002F97BB /* OptROMSSetPathsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptROMSSetPathsViewController.mm; sourceTree = "<group>"; };
 		33132C35150884FA002F97BB /* OptROMSSetPathsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptROMSSetPathsViewController.xib; sourceTree = "<group>"; };
@@ -2855,6 +2858,8 @@
 				33231BE614FBA67A00AD7823 /* BTstack */,
 				33231BFC14FBA67A00AD7823 /* iCade */,
 				331F348F14FD96D7004668BC /* fbaconf.h */,
+				331082031514905300B6FD1A /* MNEValueTrackingSlider.h */,
+				331082041514905400B6FD1A /* MNEValueTrackingSlider.m */,
 				339E636714F1B8C8006FB970 /* OGLView.h */,
 				339E636814F1B8C8006FB970 /* OGLView.mm */,
 				339E636314F1B8BC006FB970 /* FrameBuffer.h */,
@@ -3656,6 +3661,7 @@
 				33E88A2B150CAFE00030EFF7 /* d_galspnbl.cpp in Sources */,
 				33217257150D4A6100772645 /* OptSaveStateViewController.mm in Sources */,
 				33B58509150FE748000B5D03 /* OptSelGenresViewController.m in Sources */,
+				331082051514905700B6FD1A /* MNEValueTrackingSlider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

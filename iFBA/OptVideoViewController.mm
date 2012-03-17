@@ -7,6 +7,7 @@
 //
 
 #import "OptVideoViewController.h"
+#import "MNEValueTrackingSlider.h"
 
 #import "fbaconf.h"
 
@@ -66,7 +67,7 @@ extern char gameName[64];
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 7;
+	return 8;
 }
 
 
@@ -81,45 +82,8 @@ extern char gameName[64];
     return title;
 }
 
-- (void)segActionVideoMode:(id)sender {
-    int refresh=0;
-    if (ifba_conf.screen_mode!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.screen_mode=[sender selectedSegmentIndex];
-    if (refresh) [tabView reloadData];
-}
-- (void)segActionVideoFilter:(id)sender {
-    int refresh=0;
-    if (ifba_conf.video_filter!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.video_filter=[sender selectedSegmentIndex];
-    if (refresh) [tabView reloadData];
-}
 
-- (void)switch60Hz:(id)sender {
-    ifba_conf.video_60hz =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
 
-- (void)switchAspectRatio:(id)sender {
-    ifba_conf.aspect_ratio =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
-- (void)switchFiltering:(id)sender {
-    ifba_conf.filtering =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
-- (void)switchShowFPS:(id)sender {
-    ifba_conf.show_fps =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
--(void)sliderBrightness:(id)sender {
-    ifba_conf.brightness=((UISlider*)sender).value;
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]) [[UIScreen mainScreen] setBrightness:ifba_conf.brightness];
-//    [tabView reloadData];
-}
--(void)sliderFilterStrength:(id)sender {
-    ifba_conf.video_filter_strength=((UISlider*)sender).value;
-//    [tabView reloadData];
-}
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
@@ -190,20 +154,70 @@ extern char gameName[64];
         case 6://brightness
             footer=nil;
             break;
+        case 7://frameskip
+            footer=nil;
+            break;
     }
     return footer;
+}
+
+- (void)segActionVideoMode:(id)sender {
+    int refresh=0;
+    if (ifba_conf.screen_mode!=[sender selectedSegmentIndex]) refresh=1;
+    ifba_conf.screen_mode=[sender selectedSegmentIndex];
+    if (refresh) [tabView reloadData];
+}
+- (void)segActionVideoFilter:(id)sender {
+    int refresh=0;
+    if (ifba_conf.video_filter!=[sender selectedSegmentIndex]) refresh=1;
+    ifba_conf.video_filter=[sender selectedSegmentIndex];
+    if (refresh) [tabView reloadData];
+}
+
+- (void)switch60Hz:(id)sender {
+    ifba_conf.video_60hz =((UISwitch*)sender).on;
+    [tabView reloadData];
+}
+
+- (void)switchAspectRatio:(id)sender {
+    ifba_conf.aspect_ratio =((UISwitch*)sender).on;
+    [tabView reloadData];
+}
+- (void)switchFiltering:(id)sender {
+    ifba_conf.filtering =((UISwitch*)sender).on;
+    [tabView reloadData];
+}
+- (void)switchShowFPS:(id)sender {
+    ifba_conf.show_fps =((UISwitch*)sender).on;
+    [tabView reloadData];
+}
+-(void)sliderBrightness:(id)sender {
+    ifba_conf.brightness=((UISlider*)sender).value;
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]) [[UIScreen mainScreen] setBrightness:ifba_conf.brightness];
+    //    [tabView reloadData];
+}
+-(void)sliderFilterStrength:(id)sender {
+    ifba_conf.video_filter_strength=((UISlider*)sender).value;
+    //    [tabView reloadData];
+}
+
+-(void)sliderFSkip:(id)sender {
+    //int refresh=0;
+    //if (ifba_conf.video_fskip!=((UISlider*)sender).value) refresh=1;
+    ifba_conf.video_fskip=((MNEValueTrackingSlider*)sender).value;
+    if (ifba_conf.video_fskip==10) [((MNEValueTrackingSlider*)sender) setValue:10 sValue:@"AUTO"];
+    //if (refresh) [tabView reloadData];
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UISwitch *switchview;
     UISegmentedControl *segconview;
-    UISlider *sliderview;
-    UIView *accView;
+    MNEValueTrackingSlider *sliderview;
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];                
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];  
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
@@ -238,7 +252,7 @@ extern char gameName[64];
             segconview.selectedSegmentIndex=ifba_conf.video_filter;
             } else { //strength
                 cell.textLabel.text=NSLocalizedString(@"Video filter strength",@"");
-                sliderview = [[UISlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];                
                 [sliderview setMaximumValue:255.0f];
                 [sliderview setMinimumValue:0];
                 [sliderview setContinuous:true];
@@ -274,7 +288,7 @@ extern char gameName[64];
             break;
         case 6://Brightness
             cell.textLabel.text=NSLocalizedString(@"Brightness",@"");
-            sliderview = [[UISlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+            sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
             [sliderview setMaximumValue:1.0f];
             [sliderview setMinimumValue:0];
             [sliderview setContinuous:true];
@@ -284,6 +298,19 @@ extern char gameName[64];
             cell.accessoryView = sliderview;
             [sliderview release];
             if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]==NO) sliderview.enabled=NO; 
+            break;
+        case 7://Frameskipping
+            if (ifba_conf.video_fskip<10) cell.textLabel.text=NSLocalizedString(@"Frame skipping",@"");
+            else cell.textLabel.text=[NSString stringWithFormat:@"%@ AUTO",NSLocalizedString(@"Frame skipping",@""),ifba_conf.video_fskip];
+            sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+            [sliderview setMaximumValue:10.0f];
+            [sliderview setMinimumValue:0];
+            [sliderview setContinuous:true];
+            if (ifba_conf.video_fskip<10) sliderview.value=ifba_conf.video_fskip;
+            else [sliderview setValue:10 sValue:@"AUTO"];
+            [sliderview addTarget:self action:@selector(sliderFSkip:) forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = sliderview;
+            [sliderview release];
             break;
     }
     return cell;

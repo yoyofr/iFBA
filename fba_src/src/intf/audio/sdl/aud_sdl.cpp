@@ -8,6 +8,7 @@
 #include <AudioToolbox/AudioToolbox.h>
 
 static unsigned int nSoundFps;	
+extern int video_fskipcounter;
 
 int (*GetNextSound)(int);				// Callback used to request more sound
 
@@ -71,10 +72,18 @@ static int SDLSoundCheck() {
 	}
     
     //		dprintf(_T("Filling seg %i at %i\n"), nSDLFillSeg, nSDLFillSeg * (nAudSegLen << 2));
-    int diff_buf=buffer_ana_gen_ofs-buffer_ana_play_ofs;
-    if (diff_buf<0) diff_buf+=nAudSegCount;
-    if (diff_buf>=nAudSegCount/2) drawframe=1;
-    //if (drawframe==0) printf("yo\n");
+    if (ifba_conf.video_fskip==10) {//AUTO Frame skip
+        int diff_buf=buffer_ana_gen_ofs-buffer_ana_play_ofs;
+        if (diff_buf<0) diff_buf+=nAudSegCount;
+        if (diff_buf>=nAudSegCount/2) drawframe=1;
+        //if (drawframe==0) printf("yo\n");
+    } else {
+        video_fskipcounter++;
+        if (video_fskipcounter>ifba_conf.video_fskip) {
+            video_fskipcounter=0;
+            drawframe=1;
+        } else drawframe=0;
+    }
     GetNextSound(drawframe);    
     //    if (nAudDSPModule) DspDo(nAudNextSound, nAudSegLen);
     memcpy(buffer_ana[buffer_ana_gen_ofs], nAudNextSound, nAudSegLen << 2);
@@ -225,7 +234,7 @@ static int SDLSoundInit()
     nSoundFps = nAppVirtualFps;
 	nAudSegLen = (nAudSampleRate[0] * 100 + (nSoundFps >> 1)) / nSoundFps;
 	nAudLoopLen = (nAudSegLen * 1/*nAudSegCount*/) << 2;	    
-//    printf("snd buff:%d\n",nAudSegLen);
+    //    printf("snd buff:%d\n",nAudSegLen);
     
     AudioSessionInitialize (
                             NULL,

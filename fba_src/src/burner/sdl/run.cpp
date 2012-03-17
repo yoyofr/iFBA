@@ -10,6 +10,7 @@
 void tstfl_validateloadgame(char *name);
 extern char gameName[64];
 
+int video_fskipcounter=0;
 bool bAltPause = 0;
 bool bSoundOn=1;
 
@@ -146,46 +147,30 @@ static int RunGetNextSound(int bDraw) {
 		return 1;
 	}
     
-/*	if (bRunPause) {
-		if (bAppDoStep) {
-			RunFrame(bDraw, 0);
-			memset(nAudNextSound, 0, nAudSegLen << 2);	// Write silence into the buffer
-		} else {
-			RunFrame(bDraw, 1);
-		}
-        
-		bAppDoStep = 0;									// done one step
-		return 0;
-	}*/
     // Render frame with sound
 	pBurnSoundOut = nAudNextSound;
     
-	if (bAppDoFast) {									// do more frames
+	if (bAppDoFast) {  //TURBO MODE
 		for (int i = 0; i < nFastSpeed; i++) {
 			RunFrame(0, 0);
             memset(nAudNextSound, 0, nAudSegLen << 2);	// Write silence into the buffer
 		}
         bDraw=1;
         sdl_fps = 0;
-        nFramesRendered = 0;        
-	} else {
-        
-        timer = SDL_GetTicks()/frametime;
+        nFramesRendered = 0;   
+        video_fskipcounter=0;
+	} else {        
+        timer = SDL_GetTicks()/frametime; //track how many frames are drawn
         if(timer-tick>frame_limit && ifba_conf.show_fps) {
             sdl_fps = nFramesRendered;
             nFramesRendered = 0;
-            tick = timer;
-            //printf("fps:%d\n",fps);
-        }        
+            tick = timer;            
+        }
     }
     
 	//YOYOFR
 	RunFrame(bDraw, 0);
     if (bAppDoFast) memset(nAudNextSound, 0, nAudSegLen << 2);		// Write silence into the buffer
-/*	if (bAppDoStep) {
-		memset(nAudNextSound, 0, nAudSegLen << 2);		// Write silence into the buffer
-	}*/
-	bAppDoStep = 0;										// done one step
     
 	return 0;
 }
@@ -214,29 +199,39 @@ int RunIdle() {
     }
     now = timer;
     ticks=now-done;
+    RunFrame(1,0);
 #else
-    if (!bAppDoFast) {
-    timer = SDL_GetTicks()/frametime;
-    if(timer-tick>frame_limit && ifba_conf.show_fps) {
-        sdl_fps = nFramesRendered;
-        nFramesRendered = 0;
-        tick = timer;
-        //printf("fps:%d\n",fps);
-    }
-    now = timer;
-    ticks=now-done;
+    if (!bAppDoFast) {  //Normal
+        timer = SDL_GetTicks()/frametime;
+        if(timer-tick>frame_limit && ifba_conf.show_fps) {
+            sdl_fps = nFramesRendered;
+            nFramesRendered = 0;
+            tick = timer;
+            //printf("fps:%d\n",fps);
+        }
+        now = timer;
+        ticks=now-done;
         
-        //ticks=1;
-    
-    if(ticks<1) {
-        usleep(100); //0.1ms
-        return 0;
-    }
-    if(ticks>10) ticks=10;
-    for (int i=0; i<ticks-1; i++) {
-        RunFrame(0,0);	
-    } 
-    } else {
+        if(ticks<1) { //TO FAST, Limit rendering speed
+            usleep(100); //0.1ms
+            return 0;
+        }
+        
+        if (ifba_conf.video_fskip==10) {//AUTO FSKIP        
+            if(ticks>10) ticks=10;
+            for (int i=0; i<ticks-1; i++) {
+                RunFrame(0,0);	
+            }
+            RunFrame(1,0);
+        } else {
+            video_fskipcounter++;
+            if (video_fskipcounter>ifba_conf.video_fskip) {
+                video_fskipcounter=0;
+                RunFrame(1,0);
+            } else RunFrame(0,0);
+            
+        }
+    } else {  //TURBO
         for (int i=0;i<10;i++) RunFrame(0,0);
         timer = SDL_GetTicks()/frametime;
         sdl_fps = 0;
@@ -244,9 +239,10 @@ int RunIdle() {
         tick = timer;
         now = timer;
         ticks=now-done;
+        video_fskipcounter=0;
+        RunFrame(1,0);
     }
-#endif        
-    RunFrame(1,0);
+#endif            
     
     done = now;
     
@@ -293,6 +289,7 @@ int RunMessageLoop()
 	int bRestartVideo;
 	int finished= 0;
     
+    video_fskipcounter=0;
     SDL_StartTicks();
     
 	do {

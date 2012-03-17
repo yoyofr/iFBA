@@ -9,7 +9,7 @@
 char debug_root_path[256];
 
 
-#define VERSION_SETTINGS 1
+#define VERSION_SETTINGS 2
 
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
@@ -23,6 +23,7 @@ char debug_root_path[256];
 #import "TestFlight.h"
 #endif
 
+extern int nShouldExit;
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern char gameName[64];
 extern t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
@@ -66,7 +67,9 @@ void tstfl_validateloadgame(char *name) {
     //    valNb=[prefs objectForKey:@"VERSION_MAJOR"];
     //    valNb=[prefs objectForKey:@"VERSION_MINOR"];
     
-    
+    valNb=[prefs objectForKey:@"video_fskip"];
+	if ((valNb == nil)||reset_settings) ifba_conf.video_fskip=10; //AUTO
+	else ifba_conf.video_fskip = [valNb intValue];    
     valNb=[prefs objectForKey:@"video_60hz"];
 	if ((valNb == nil)||reset_settings) ifba_conf.video_60hz=0;
 	else ifba_conf.video_60hz = [valNb intValue];    
@@ -150,6 +153,7 @@ void tstfl_validateloadgame(char *name) {
     for (int i=0;i<DIRS_MAX;i++) {        
         valStr=[prefs objectForKey:[NSString stringWithFormat:@"romspath%02X",i]];
         if (valStr != nil) strcpy(szAppRomPaths[i],[valStr UTF8String]);
+        else szAppRomPaths[i][0]=0;
     //Recreate dir if not existing
         if (szAppRomPaths[i][0]) {
             //NSLog(@"%s",szAppRomPaths[i]);
@@ -163,11 +167,13 @@ void tstfl_validateloadgame(char *name) {
 - (void)saveSettings {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
 	NSNumber *valNb;
-    NSString *valStr;
+    NSString *valStr,*keyStr;
     
     valNb=[[NSNumber alloc] initWithInt:VERSION_SETTINGS ];    
     [prefs setObject:valNb forKey:@"VERSION_SETTINGS"];[valNb autorelease];
     
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_fskip ];
+	[prefs setObject:valNb forKey:@"video_fskip"];[valNb autorelease];    
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_60hz ];
 	[prefs setObject:valNb forKey:@"video_60hz"];[valNb autorelease];    
@@ -220,17 +226,22 @@ void tstfl_validateloadgame(char *name) {
     for (int i=0;i<MAX_JOYSTICKS;i++) 
         for (int j=0;j<VSTICK_NB_BUTTON;j++) {
             valNb=[[NSNumber alloc] initWithInt:joymap_wiimote[i][j].dev_btn];
-            [prefs setObject:valNb forKey:[NSString stringWithFormat:@"wiimap%02X%02X",i,j]];[valNb autorelease];
+            [prefs setObject:valNb forKey:[NSString stringWithFormat:@"wiimap%02X%02X",i,j]];
+            [valNb release];
         }
     for (int j=0;j<VSTICK_NB_BUTTON;j++) {
         valNb=[[NSNumber alloc] initWithInt:joymap_iCade[j].dev_btn];
-        [prefs setObject:valNb forKey:[NSString stringWithFormat:@"icademap%02X",j]];[valNb autorelease];
+        [prefs setObject:valNb forKey:[NSString stringWithFormat:@"icademap%02X",j]];
+        [valNb release];
     }
     
     for (int i=0;i<DIRS_MAX;i++) {        
+        NSLog(@"save : %d-%s",i,szAppRomPaths[i]);
         valStr=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
-        [prefs setObject:valStr forKey:[NSString stringWithFormat:@"romspath%02X",i]];
-        [valStr autorelease];
+        keyStr=[NSString stringWithFormat:@"romspath%02X",i];
+        NSLog(@"%@",valStr);
+        NSLog(@"%@",keyStr);
+        [prefs setObject:valStr forKey:keyStr];
     }	
 	
     [prefs synchronize];
@@ -297,6 +308,8 @@ void tstfl_validateloadgame(char *name) {
      Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
      Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
      */
+    nShouldExit=2;
+    [self saveSettings];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application

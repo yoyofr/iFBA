@@ -64,7 +64,7 @@ extern char gameName[64];
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 2;//4;
+	return 1;//4;
 }
 
 
