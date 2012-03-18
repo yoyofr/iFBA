@@ -10,12 +10,26 @@
 #include "string.h"
 #include "burner.h"
 
+#define MAX_FILTER 3
+//0: game name
+//1: hardware
+//2: genre
+
+#define min(a,b) (a<b?a:b)
+
 int genreFilter=0xFFFFFFFF^GBF_BIOS;
 
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
 
+int *listSectionIndexes;
+int *listSortedList;
+int *listSectionCount;
+int listNbSection;
+
 static int show_missing=1;
+
+static int filter_type=1;
 
 extern char gameName[64];
 extern int launchGame;
@@ -42,6 +56,8 @@ NSString *genreList[20]={
     @"Racing",
     @"Shoot"    
 };
+NSMutableArray *filterEntries;
+
 
 @implementation GameBrowserViewController
 @synthesize tabView,btn_backToEmu,selgenrevc;
@@ -89,43 +105,18 @@ NSString *genreList[20]={
     
     show_missing=0;
     
-    for (int i=0;i<28;i++) {
-        romlist[i]=nil;
-        romlistLbl[i]=nil;
-        rompath[i]=nil;
-        romavail[i]=nil;
-        romlistSystem[i]=nil;
-        romlistGenre[i]=nil;
-    }
-    
-    indexTitles = [[NSMutableArray alloc] init];
-	[indexTitles addObject:@"#"];
-	[indexTitles addObject:@"A"];
-	[indexTitles addObject:@"B"];
-	[indexTitles addObject:@"C"];
-	[indexTitles addObject:@"D"];
-	[indexTitles addObject:@"E"];
-	[indexTitles addObject:@"F"];
-	[indexTitles addObject:@"G"];
-	[indexTitles addObject:@"H"];	
-	[indexTitles addObject:@"I"];
-	[indexTitles addObject:@"J"];
-	[indexTitles addObject:@"K"];
-	[indexTitles addObject:@"L"];
-	[indexTitles addObject:@"M"];
-	[indexTitles addObject:@"N"];
-	[indexTitles addObject:@"O"];
-	[indexTitles addObject:@"P"];
-	[indexTitles addObject:@"Q"];
-	[indexTitles addObject:@"R"];
-	[indexTitles addObject:@"S"];
-	[indexTitles addObject:@"T"];
-	[indexTitles addObject:@"U"];
-	[indexTitles addObject:@"V"];
-	[indexTitles addObject:@"W"];
-	[indexTitles addObject:@"X"];
-	[indexTitles addObject:@"Y"];
-	[indexTitles addObject:@"Z"];
+    sectionLbl=nil;
+    sectionLblMin=nil;
+    romlist=nil;
+    romlistLbl=nil;
+    rompath=nil;
+    romavail=nil;
+    romlistSystem=nil;
+    romlistGenre=nil;
+    listSectionIndexes=NULL;
+    listSectionCount=NULL;
+    listSortedList=NULL;
+    listNbSection=0;        
 }
 
 
@@ -135,7 +126,6 @@ NSString *genreList[20]={
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     [selgenrevc release];
-    [indexTitles release];
 }
 
 - (void)scanRomsDirs {
@@ -146,25 +136,32 @@ NSString *genreList[20]={
     NSString *file;
     NSArray *filetype_extROMFILE=[@"ZIP" componentsSeparatedByString:@","];    //,FBA ?
     
-    [self buildFilters];    
+    [self buildFilters];
     
-    //Master unsorted list in [27]
-    for (int i=0;i<28;i++) {
-        
-        if (romlist[i]) [romlist[i] release];
-        if (romlistLbl[i]) [romlistLbl[i] release];
-        if (rompath[i]) [rompath[i] release];
-        if (romavail[i]) [romavail[i] release];
-        if (romlistSystem[i]) [romlistSystem[i] release];
-        if (romlistGenre[i]) [romlistGenre[i] release];
-        
-        romlist[i]=[[NSMutableArray alloc] initWithCapacity:0];
-        romlistLbl[i]=[[NSMutableArray alloc] initWithCapacity:0];
-        rompath[i]=[[NSMutableArray alloc] initWithCapacity:0];
-        romlistSystem[i]=[[NSMutableArray alloc] initWithCapacity:0];
-        romlistGenre[i]=[[NSMutableArray alloc] initWithCapacity:0];
-        romavail[i]=[[NSMutableArray alloc] initWithCapacity:0];
-    }
+    if (listSortedList) free(listSortedList);
+    if (listSectionIndexes) free(listSectionIndexes);
+    if (listSectionCount) free(listSectionCount);
+    listSortedList=NULL;
+    listSectionIndexes=NULL;
+    listSectionCount=NULL;
+    listNbSection=0;
+    if (romlist) [romlist release];
+    if (romlistLbl) [romlistLbl release];
+    if (rompath) [rompath release];
+    if (romavail) [romavail release];
+    if (romlistSystem) [romlistSystem release];
+    if (romlistGenre) [romlistGenre release];
+    if (sectionLbl) [sectionLbl release];
+    if (sectionLblMin) [sectionLblMin release];
+    
+    romlist=[[NSMutableArray alloc] initWithCapacity:0];
+    romlistLbl=[[NSMutableArray alloc] initWithCapacity:0];
+    rompath=[[NSMutableArray alloc] initWithCapacity:0];
+    romlistSystem=[[NSMutableArray alloc] initWithCapacity:0];
+    romlistGenre=[[NSMutableArray alloc] initWithCapacity:0];
+    romavail=[[NSMutableArray alloc] initWithCapacity:0];
+    sectionLbl=[[NSMutableArray alloc] initWithCapacity:0];
+    sectionLblMin=[[NSMutableArray alloc] initWithCapacity:0];
     
     cur_game_section=cur_game_row=-1;
     
@@ -198,18 +195,34 @@ NSString *genreList[20]={
             nBurnDrvActive=i;
             int genre=BurnDrvGetGenreFlags();
             if ((genre&genreFilter)!=0) {
-                [romlist[27] addObject:[burn_supportedRoms objectAtIndex:i]];
-                [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
-                [romlistGenre[27] addObject:[NSNumber numberWithInt:genre] ];
-                [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
+                [romlist addObject:[burn_supportedRoms objectAtIndex:i]];
+                [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
+                [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
+                //[romlistLbl addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
+                
+                int tmpchar=BurnDrvGetTextA(DRV_FULLNAME)[0];
+                if (tmpchar<'A') tmpchar='#';
+                switch (filter_type) {
+                    case 2://genre
+                        [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                        break;
+                    case 1://system
+                        [romlistLbl addObject:[NSString stringWithFormat:@"%s/%s/%d",BurnDrvGetTextA(DRV_SYSTEM),BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                        break;
+                    case 0: //game name
+                    default:
+                        [romlistLbl addObject:[NSString stringWithFormat:@"%c/%s/%d",tmpchar,BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                        break;
+                }
+                
                 //check if file is existing
                 NSUInteger ind=[filelist indexOfObject:[burn_supportedRoms objectAtIndex:i]];
                 if (ind!=NSNotFound) {                    
-                    [rompath[27] addObject:[filepath objectAtIndex:ind]];
-                    [romavail[27] addObject:[NSNumber numberWithBool:TRUE]];
+                    [rompath addObject:[filepath objectAtIndex:ind]];
+                    [romavail addObject:[NSNumber numberWithBool:TRUE]];
                 } else {
-                    [rompath[27] addObject:@""];
-                    [romavail[27] addObject:[NSNumber numberWithBool:NO]];
+                    [rompath addObject:@""];
+                    [romavail addObject:[NSNumber numberWithBool:NO]];
                 }
             }
         }
@@ -234,11 +247,25 @@ NSString *genreList[20]={
                             nBurnDrvActive=ind;
                             int genre=BurnDrvGetGenreFlags();
                             if ((genre&genreFilter)!=0) {
-                                [romlist[27] addObject:file];
-                                [rompath[27] addObject:cpath];                                                                
-                                [romlistSystem[27] addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
-                                [romlistGenre[27] addObject:[NSNumber numberWithInt:genre] ];
-                                [romlistLbl[27] addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                                int tmpchar=BurnDrvGetTextA(DRV_FULLNAME)[0];
+                                if (tmpchar<'A') tmpchar='#';
+                                [romlist addObject:file];
+                                [rompath addObject:cpath];                                                                
+                                [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
+                                [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
+                                
+                                switch (filter_type) {
+                                    case 2://genre
+                                        [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                                        break;
+                                    case 1://system
+                                        [romlistLbl addObject:[NSString stringWithFormat:@"%s/%s/%d",BurnDrvGetTextA(DRV_SYSTEM),BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                                        break;
+                                    case 0: //game name
+                                    default:
+                                        [romlistLbl addObject:[NSString stringWithFormat:@"%c/%s/%d",tmpchar,BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                                        break;
+                                }
                             }
                             //NSLog(@"file: %@",file);
                         }
@@ -250,36 +277,68 @@ NSString *genreList[20]={
     [mFileMngr release];
     
     //Did we find games? if so, sort them
-    if ([romlist[27] count]) {
-        int total=[romlist[27] count];
+    if ([romlist count]) {
+        int total=[romlist count];
+        NSString *tmpStr1,*tmpStr2,*tmpStr;
+        NSMutableArray *romlistLblSorted=[romlistLbl mutableCopy];
+        [romlistLblSorted sortUsingSelector:@selector(caseInsensitiveCompare:)];
         
-        [romlistLbl[27] sortUsingSelector:@selector(caseInsensitiveCompare:)];
+        tmpStr1=[romlistLblSorted objectAtIndex:0];
+        tmpStr1=[tmpStr1 substringToIndex:[tmpStr1 rangeOfString:@"/"].location];
+        listNbSection++;
+        [sectionLbl addObject:tmpStr1];
+        [sectionLblMin addObject:[tmpStr1 substringToIndex:min(2,[tmpStr1 length]) ]];
+        for (int i=0;i<total-1;i++) {
+            tmpStr1=[romlistLblSorted objectAtIndex:i];
+            tmpStr1=[tmpStr1 substringToIndex:[tmpStr1 rangeOfString:@"/"].location];
+            tmpStr2=[romlistLblSorted objectAtIndex:i+1];
+            tmpStr2=[tmpStr2 substringToIndex:[tmpStr2 rangeOfString:@"/"].location];
+            if ([tmpStr1 compare:tmpStr2]!=NSOrderedSame) {
+                listNbSection++;
+                [sectionLbl addObject:tmpStr2];
+                [sectionLblMin addObject:[tmpStr2 substringToIndex:min(2,[tmpStr2 length])]];
+            }            
+        }
+        
+        listSectionIndexes=(int *)malloc(listNbSection*sizeof(int));
+        listSortedList=(int *)malloc(total*sizeof(int));
+        listSectionCount=(int *)malloc(listNbSection*sizeof(int));
+        memset(listSectionIndexes,0,listNbSection*sizeof(int));
+        memset(listSectionCount,0,listNbSection*sizeof(int));
+        
         
         for (int i=0;i<total;i++) {
-            NSString *tmpStr=[romlistLbl[27] objectAtIndex:i];
+            tmpStr=[romlistLblSorted objectAtIndex:i];
             char j;
             int k;
             
-            j=[[tmpStr stringByDeletingLastPathComponent] UTF8String][0];
+            
+            //get section nb
+            /*j=[[tmpStr stringByDeletingLastPathComponent] UTF8String][0];
             if ((j>='a')&&(j<='z')) j+=1-'a';
             else if ((j>='A')&&(j<='Z')) j+=1-'A';
-            else j=0;
-            [romlistLbl[j] addObject:[tmpStr stringByDeletingLastPathComponent]];
-            k=[[tmpStr lastPathComponent] intValue]; 
-            tmpStr=[romlist[27] objectAtIndex:k];
-            [romlist[j] addObject:tmpStr];
-            [rompath[j] addObject:[rompath[27] objectAtIndex:k]];
-            if (show_missing) [romavail[j] addObject:[romavail[27] objectAtIndex:k]];
-            [romlistSystem[j] addObject:[romlistSystem[27] objectAtIndex:k]];
-            [romlistGenre[j] addObject:[romlistGenre[27] objectAtIndex:k]];
-            if (gameName[0]&&(cur_game_section<0)) {
-                if (strcmp(gameName,[[[tmpStr lastPathComponent] stringByDeletingPathExtension] UTF8String])==0) {
+            else j=0;*/
+            j=[sectionLbl indexOfObject:[tmpStr substringToIndex:[tmpStr rangeOfString:@"/"].location]];
+            
+            //get index in master list
+            k=[[tmpStr lastPathComponent] intValue];
+            
+            //check if last game is found
+       
+            if ((cur_game_section==-1)&&gameName[0]) {
+                if (strcasecmp(gameName,[[[romlist objectAtIndex:k] stringByDeletingPathExtension] UTF8String])==0) {
                     cur_game_section=j;
-                    cur_game_row=[romlist[j] count]-1;
+                    cur_game_row=listSectionCount[j];
                 }
             }
             
+            listSortedList[i]=k;
+            listSectionCount[j]++;
         }
+        for (int i=1;i<listNbSection;i++) {
+            listSectionIndexes[i]=listSectionIndexes[i-1]+listSectionCount[i-1];
+        }
+        [romlistLblSorted release];
     }
     
     [burn_supportedRoms release];   
@@ -290,6 +349,7 @@ NSString *genreList[20]={
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    cur_game_section=-1;
     [self scanRomsDirs];
     [[self tabView] reloadData];
     if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
@@ -307,20 +367,26 @@ NSString *genreList[20]={
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-    for (int i=0;i<28;i++) {
-        if (romlist[i]) [romlist[i] release];
-        romlist[i]=nil;
-        if (romlistLbl[i]) [romlistLbl[i] release];
-        romlistLbl[i]=nil;
-        if (rompath[i]) [rompath[i] release];
-        rompath[i]=nil;
-        if (romavail[i]) [romavail[i] release];
-        romavail[i]=nil;
-        if (romlistSystem[i]) [romlistSystem[i] release];
-        romlistSystem[i]=nil;
-        if (romlistGenre[i]) [romlistGenre[i] release];
-        romlistGenre[i]=nil;
-    }
+    if (romlist) [romlist release];
+    romlist=nil;
+    if (romlistLbl) [romlistLbl release];
+    romlistLbl=nil;
+    if (rompath) [rompath release];
+    rompath=nil;
+    if (romavail) [romavail release];
+    romavail=nil;
+    if (romlistSystem) [romlistSystem release];
+    romlistSystem=nil;
+    if (romlistGenre) [romlistGenre release];
+    romlistGenre=nil;
+    if (listSectionCount) free(listSectionCount);
+    listSectionCount=NULL;
+    if (listSectionIndexes) free(listSectionIndexes);
+    listSectionIndexes=NULL;
+    if (sectionLbl) [sectionLbl release];
+    sectionLbl=nil;
+    if (sectionLblMin) [sectionLblMin release];
+    sectionLblMin=nil;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -343,23 +409,26 @@ NSString *genreList[20]={
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 27;
+	return listNbSection;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [romlistLbl[section] count];
+    return listSectionCount[section];
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    /*if ([romlistLbl[section] count]) return [indexTitles objectAtIndex:section];
-     else*/ return nil;
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {    
+    if (listSectionCount[section]) {
+        NSString *tmpStr=[romlistLbl objectAtIndex:listSortedList[listSectionIndexes[section]]];
+        return [tmpStr substringToIndex:[tmpStr rangeOfString:@"/"].location];
+    }
+    return nil;
 }
 
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return indexTitles;    
+    return sectionLblMin;
 }
 
 -(NSString*) genreStr:(int)genre {
@@ -432,8 +501,10 @@ NSString *genreList[20]={
 								tableView.bounds.size.width - 1.0 * cell.indentationWidth-40,
 								20);
     
+    int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
+    
     if (show_missing) {
-        NSNumber *nb=[romavail[indexPath.section] objectAtIndex:indexPath.row];
+        NSNumber *nb=[romavail objectAtIndex:index];
         if ([nb boolValue]==NO) {
             topLabel.textColor = [UIColor colorWithRed:.6 green:.6 blue:.6 alpha:1.0];
             bottomLabel.textColor = [UIColor colorWithRed:.8 green:.8 blue:.8 alpha:1.0];
@@ -447,8 +518,9 @@ NSString *genreList[20]={
     }
     
     
-    topLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];
-    bottomLabel.text=[NSString stringWithFormat:@"%@ - %@ - %@",[romlist[indexPath.section] objectAtIndex:indexPath.row],[romlistSystem[indexPath.section] objectAtIndex:indexPath.row],[self genreStr:[(NSNumber*)[romlistGenre[indexPath.section] objectAtIndex:indexPath.row] intValue]]   ];
+    NSString *tmpStr=[[romlistLbl objectAtIndex:index] stringByDeletingLastPathComponent];    
+    topLabel.text=[tmpStr substringFromIndex:[tmpStr rangeOfString:@"/"].location+1  ];
+    bottomLabel.text=[NSString stringWithFormat:@"%@ - %@ - %@",[romlist objectAtIndex:index],[romlistSystem objectAtIndex:index],[self genreStr:[(NSNumber*)[romlistGenre objectAtIndex:index] intValue]]   ];
     
     //cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
 	cell.accessoryType=UITableViewCellAccessoryNone;// DetailDisclosureButton;
@@ -458,16 +530,16 @@ NSString *genreList[20]={
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (show_missing) {
-        NSNumber *nb=[romavail[indexPath.section] objectAtIndex:indexPath.row];
+    int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
+    if (show_missing) {        
+        NSNumber *nb=[romavail objectAtIndex:index];
         if (![nb boolValue]) return;
     }
     
-    sprintf(gameName,"%s",[[(NSString *)[romlist[indexPath.section] objectAtIndex:indexPath.row] stringByDeletingPathExtension] UTF8String]);
-    //NSLog(@"gamename %s",gameName);
+    sprintf(gameName,"%s",[[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String]);
     launchGame=1;
     //change dir
-    [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath[indexPath.section] objectAtIndex:indexPath.row]];
+    [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath objectAtIndex:index]];
     
     [[self navigationController] popViewControllerAnimated:NO];
 }
@@ -486,16 +558,25 @@ NSString *genreList[20]={
     [alertMsg show];
 }
 -(IBAction) showGenres{
-    [self presentSemiModalViewController:selgenrevc];
+    [self presentSemiModalViewController:selgenrevc];    
     [tabView reloadData];            
+}
+-(IBAction) changeFilter:(id)sender {
+    filter_type++;
+    if (filter_type==MAX_FILTER) filter_type=0;
+    cur_game_section=-1;
+    [self scanRomsDirs];
+    [tabView reloadData];
+    if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
 }
 -(IBAction) showMissing:(id)sender{
     show_missing^=1;
     
     if (show_missing) [(UIBarButtonItem*)sender setStyle:UIBarButtonItemStyleDone];
     else [(UIBarButtonItem*)sender setStyle:UIBarButtonItemStyleBordered];
-    
+    cur_game_section=-1;
     [self scanRomsDirs];
     [tabView reloadData];
+    if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
 }
 @end

@@ -11,10 +11,12 @@
 ;@ OopsWare   2007.2
 ;@ http://oopsware.googlepages.com
 
-.align 4
-    .global _DrZ80Run
+      .global _DrZ80Run
       .global _DrZ80Ver
-                  
+
+;@      INTERRUPT_DOZE= 		1		;@0 = Use internal int handler, 1 = Use Doze int handler
+
+.align 4
 _DrZ80Ver: .long 0x0001
 
 ;@ --------------------------- Defines ----------------------------
@@ -28,75 +30,75 @@ _DrZ80Ver: .long 0x0001
      z80bc .req r9
      z80de .req r10
      z80hl .req r11
-     z80sp .req r12	
+     z80sp .req r12
      z80xx .req lr
 
-     z80a_pointer=            0                  ;@  0
-     z80f_pointer=            z80a_pointer+4     ;@  4
-     z80bc_pointer=           z80f_pointer+4     ;@  
-     z80de_pointer=           z80bc_pointer+4
-     z80hl_pointer=           z80de_pointer+4
-     z80pc_pointer=           z80hl_pointer+4
-     z80pc_base=              z80pc_pointer+4
-     z80sp_pointer=           z80pc_base+4
-     z80sp_base=              z80sp_pointer+4
-     z80ix=                   z80sp_base+4
-     z80iy=                   z80ix+4
-     z80i=                    z80iy+4
-     z80a2=                   z80i+4
-     z80f2=                   z80a2+4
-     z80bc2=                  z80f2+4
-     z80de2=                  z80bc2+4
-     z80hl2=                  z80de2+4     
-     z80irq=                  z80hl2+4   
-     z80if=                   z80irq+1
-     z80im=                   z80if+1
-	 z80spare=                z80im+1
-	 z80irqvector=            z80spare+1
+    z80a_pointer=            0                  ;@  0
+    z80f_pointer=            z80a_pointer+4     ;@  4
+    z80bc_pointer=           z80f_pointer+4     ;@
+    z80de_pointer=           z80bc_pointer+4
+    z80hl_pointer=           z80de_pointer+4
+    z80pc_pointer=           z80hl_pointer+4
+    z80pc_base=              z80pc_pointer+4
+    z80sp_pointer=           z80pc_base+4
+    z80sp_base=              z80sp_pointer+4
+    z80ix=                   z80sp_base+4
+    z80iy=                   z80ix+4
+    z80i=                    z80iy+4
+    z80a2=                   z80i+4
+    z80f2=                   z80a2+4
+    z80bc2=                  z80f2+4
+    z80de2=                  z80bc2+4
+    z80hl2=                  z80de2+4
+    z80irq=                  z80hl2+4
+    z80if=                   z80irq+1
+    z80im=                   z80if+1
+	z80spare=                z80im+1
+	z80irqvector=            z80spare+1
 
-     nEI=			 		  z80irqvector+4
-	 nCyclesLeft=		  	  nEI+4
-	 nCyclesTotal=	 		  nCyclesLeft+4
-	 nCyclesSegment=	 	  nCyclesTotal+4
-	 nInterruptLatch=	 	  nCyclesSegment+4
+    nEI=			 		  z80irqvector+4
+	nCyclesLeft=		  	  nEI+4
+	nCyclesTotal=	 		  nCyclesLeft+4
+	nCyclesSegment=	 	  nCyclesTotal+4
+	nInterruptLatch=	 	  nCyclesSegment+4
 
-	 z80irqcallback=          nInterruptLatch+4
-     z80_write8=              z80irqcallback+4
-     z80_write16=             z80_write8+4
-     z80_in=                  z80_write16+4
-     z80_out=                 z80_in+4
-     z80_read8=               z80_out+4
-     z80_read16=              z80_read8+4
-     z80_rebaseSP=            z80_read16+4
-     z80_rebasePC=            z80_rebaseSP+4
-    
-     ppMemFetch=			  z80_rebasePC+4
-     ppMemFetchData=		  ppMemFetch+4
-     ppMemRead=				  ppMemFetchData+4
-     ppMemWrite=			  ppMemRead+4
-     debugCallback=			  ppMemWrite+4
-    
-     VFlag= 0
-     CFlag= 1
-     ZFlag= 2
-     SFlag= 3
-     HFlag= 4
-     NFlag= 5
-     Flag3= 6
-     Flag5= 7
+	z80irqcallback=          nInterruptLatch+4
+    z80_write8=              z80irqcallback+4
+    z80_write16=             z80_write8+4
+    z80_in=                  z80_write16+4
+    z80_out=                 z80_in+4
+    z80_read8=               z80_out+4
+    z80_read16=              z80_read8+4
+    z80_rebaseSP=            z80_read16+4
+    z80_rebasePC=            z80_rebaseSP+4
 
-     Z80_CFlag= 0
-     Z80_NFlag= 1
-     Z80_VFlag= 2
-     Z80_Flag3= 3
-     Z80_HFlag= 4
-     Z80_Flag5= 5
-     Z80_ZFlag= 6
-     Z80_SFlag= 7
+    ppMemFetch=			  z80_rebasePC+4
+    ppMemFetchData=		  ppMemFetch+4
+    ppMemRead=				  ppMemFetchData+4
+    ppMemWrite=			  ppMemRead+4
+    debugCallback=			  ppMemWrite+4
 
-     Z80_IF1= 1
-     Z80_IF2= 2
-     Z80_HALT= 4
+    VFlag= 0
+    CFlag= 1
+    ZFlag= 2
+    SFlag= 3
+    HFlag= 4
+    NFlag= 5
+    Flag3= 6
+    Flag5= 7
+
+    Z80_CFlag= 0
+    Z80_NFlag= 1
+    Z80_VFlag= 2
+    Z80_Flag3= 3
+    Z80_HFlag= 4
+    Z80_Flag5= 5
+    Z80_ZFlag= 6
+    Z80_SFlag= 7
+
+    Z80_IF1=1 ;@1<<0
+    Z80_IF2=2 ;@1<<1
+    Z80_HALT=4 ;@1<<2
 
 .macro fetch cycs
      subs z80_icount,z80_icount,#\cycs
@@ -109,17 +111,17 @@ _DrZ80Ver: .long 0x0001
 .macro DAM_READ8 jpname
      ;@ r0 = addr
      stmdb sp!,{r3,r12}
-     
+
      ;@str z80pc,[cpucontext,#z80pc_pointer]	;@ save pc for debug only
-     
+
      ldr r3,[cpucontext,#ppMemRead]			;@ r3 point to ppMemRead[0]
-     mov r2,r0,lsr#8						
+     mov r2,r0,lsr#8
      ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemRead[addr >> 8]
-     
+
      cmp r3,#0
      ldrneb r0,[r3,r0]
      bne read8_end_\jpname
-     
+
      mov lr,pc								;@ call z80_read8(r0, r1)
      ldr pc,[cpucontext,#z80_read8]
 read8_end_\jpname:
@@ -130,13 +132,13 @@ read8_end_\jpname:
      ;@ r0 = addr
      stmdb sp!,{r0,r3,r12}
      ldr r3,[cpucontext,#ppMemRead]			;@ r3 point to ppMemRead[0]
-     mov r2,r0,lsr#8						
+     mov r2,r0,lsr#8
      ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemRead[addr >> 8]
-     
+
      cmp r3,#0
      ldrneb r0,[r3,r0]
      bne read8r1_end_\jpname
-     
+
      mov lr,pc								;@ call z80_read8(r0, r1)
      ldr pc,[cpucontext,#z80_read8]
 read8r1_end_\jpname:
@@ -146,14 +148,14 @@ read8r1_end_\jpname:
 .macro DAM_READ16 jpname
      ;@ r0 = addr
      stmdb sp!,{r3,r12}
-     
+
      ldr r3,[cpucontext,#ppMemRead]			;@ r3 point to ppMemRead[0]
-     mov r2,r0,lsr#8						
+     mov r2,r0,lsr#8
      ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemRead[addr >> 8]
-     
+
      cmp r3,#0
      beq read16_call_\jpname
-     
+
      add r3,r3,r0
      ldrb r0,[r3],#1
      ldrb r1,[r3]
@@ -163,7 +165,7 @@ read8r1_end_\jpname:
 read16_call_\jpname:
 
 ;@     str z80pc,[cpucontext,#z80pc_pointer]
-     
+
      mov lr,pc								;@ call z80_read8(r0, r1)
      ldr pc,[cpucontext,#z80_read16]
 read16_end_\jpname:
@@ -175,22 +177,22 @@ read16_end_\jpname:
      ;@ r0 = data, r1 = addr
      stmdb sp!,{r3,r12}
      ldr r3,[cpucontext,#ppMemWrite]		;@ r3 point to ppMemWrite[0]
-     mov r2,r1,lsr#8						
+     mov r2,r1,lsr#8
      ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemWrite[addr >> 8]
-     
+
      cmp r3,#0
      strneb r0,[r3,r1]
      bne write8_end_\jpname
-     
+
      mov r2,r1								;@ swp r1, r0
      mov r1,r0
      mov r0,r2
-     
+
      ;@str z80_icount,[cpucontext,#nCyclesLeft]
-     
+
      mov lr,pc								;@ call z80_write8(r0, r1)
      ldr pc,[cpucontext,#z80_write8]
-     
+
 write8_end_\jpname:
      ldmia sp!,{r3,r12}
 .endm
@@ -199,20 +201,20 @@ write8_end_\jpname:
      ;@ r0 = data, r1 = addr
      stmdb sp!,{r3,r12}
      ldr r3,[cpucontext,#ppMemWrite]		;@ r3 point to ppMemWrite[0]
-     mov r2,r1,lsr#8						
+     mov r2,r1,lsr#8
      ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemWrite[addr >> 8]
-     
+
      cmp r3,#0
      addne r3,r3,r1
      movne r2,r0,lsr#8
      strneb r0,[r3],#1
      strneb r2,[r3]
      bne write16_end_\jpname
-     
+
 ;@     str z80pc,[cpucontext,#z80pc_pointer]
      mov lr,pc								;@ call z80_write8(r0, r1)
      ldr pc,[cpucontext,#z80_write16]
-     
+
 write16_end_\jpname:
      ldmia sp!,{r3,r12}
 .endm
@@ -222,9 +224,9 @@ write16_end_\jpname:
      ldr r2,[cpucontext,#z80pc_base]		;@ r2 = z80 pc
      sub r2,z80pc,r2
      ldr r1,[cpucontext,#ppMemFetch]		;@ r1 point to ppMemFetchData[0]
-     mov r0,r2,lsr#8						
+     mov r0,r2,lsr#8
      ldr r1,[r1,r0,lsl#2]					;@ r1 = ppMemFetchData[addr >> 8]
-     
+
      ldrb r0,[r1,r2]
      add z80pc,z80pc,#1
 .endm
@@ -234,22 +236,22 @@ write16_end_\jpname:
      ldr r2,[cpucontext,#z80pc_base]		;@ r2 = z80 pc
      sub r2,z80pc,r2
      ldr r1,[cpucontext,#ppMemFetchData]	;@ r1 point to ppMemFetchData[0]
-     mov r0,r2,lsr#8						
+     mov r0,r2,lsr#8
      ldr r1,[r1,r0,lsl#2]					;@ r1 = ppMemFetchData[addr >> 8]
-     
+
      ldrb \reg,[r1,r2]
      add z80pc,z80pc,#1
 .endm
 
 .macro DAM_FETCH8D_S inc_pc
      ;@ldrb r0,[z80pc],#1
-     
+
      ldr r2,[cpucontext,#z80pc_base]		;@ r2 = z80 pc
      sub r2,z80pc,r2
      ldr r1,[cpucontext,#ppMemFetchData]	;@ r1 point to ppMemFetchData[0]
-     mov r0,r2,lsr#8						
+     mov r0,r2,lsr#8
      ldr r1,[r1,r0,lsl#2]					;@ r1 = ppMemFetchData[addr >> 8]
-     
+
      ldrsb r0,[r1,r2]
      add z80pc,z80pc,#\inc_pc
 .endm
@@ -262,9 +264,9 @@ write16_end_\jpname:
      ldr r2,[cpucontext,#z80pc_base]		;@ r2 = z80 pc
      sub r2,z80pc,r2
      ldr r1,[cpucontext,#ppMemFetchData]	;@ r1 point to ppMemFetchData[0]
-     mov r0,r2,lsr#8						
+     mov r0,r2,lsr#8
      ldr r1,[r1,r0,lsl#2]					;@ r1 = ppMemFetchData[addr >> 8]
-     
+
      ldrb r0,[r1,r2]
      add r2,r2,#1
      ldrb r1,[r1,r2]
@@ -278,25 +280,27 @@ write16_end_\jpname:
      ;@ldr pc,[cpucontext,#z80_rebasePC] ;@ r0=new pc - external function sets z80pc_base and returns new z80pc in r0
      ;@ldmia sp!,{r3,r12}
      ;@mov z80pc,r0
-     
+
      ldr r1,[cpucontext,#ppMemFetch]
      mov r2,r0,lsr#8
      ldr r1,[r1,r2,lsl#2]
-     
+
      str r1,[cpucontext,#z80pc_base]
      add z80pc,r1,r0
 .endm
 
 .macro PUSH_r0 dec_sp
      sub z80sp,z80sp,#\dec_sp
+     bic z80sp,#0xFF000000
+     bic z80sp,#0xFF0000
 
      ldr r2,[cpucontext,#ppMemWrite]
-     mov r1,z80sp,lsr#8						
+     mov r1,z80sp,lsr#8
      ldr r1,[r2,r1,lsl#2]
-     
+
      cmp r1,#0
      beq end_loop
-     
+
      add r1,r1,z80sp
      mov r2,r0,lsr#8
      strb r0,[r1],#1
@@ -305,42 +309,43 @@ write16_end_\jpname:
 
 .macro POP_r0 inc_sp
      ldr r2,[cpucontext,#ppMemRead]
-     mov r1,z80sp,lsr#8		
+     mov r1,z80sp,lsr#8
      ldr r1,[r2,r1,lsl#2]
-     
+
      cmp r1,#0
      beq end_loop
-     
+
      add r2,r1,z80sp
      ldrb r0,[r2],#1
      ldrb r1,[r2]
-     orr r0,r0,r1,lsl #8     
-     
+     orr r0,r0,r1,lsl #8
+
      add z80sp,z80sp,#\inc_sp
 .endm
 
 .macro POP_r0_r1
      ldr r2,[cpucontext,#ppMemRead]
-     mov r1,z80sp,lsr#8		
+     mov r1,z80sp,lsr#8
      ldr r1,[r2,r1,lsl#2]
-     
+
      cmp r1,#0
      beq end_loop
-     
+
      add r2,r1,z80sp
      ldrb r0,[r2],#1
      ldrb r1,[r2]
-     ;@orr r0,r0,r1,lsl #8     
-     
+     ;@orr r0,r0,r1,lsl #8
+
      add z80sp,z80sp,#2
 .endm
 
 ;@ --------------------------- Framework --------------------------
 
+.align 4
 _DrZ80Run:
      ;@ r0 = pointer to cpu context
-     ;@ r1 = ISTATES to execute  
-     ;@#########################################   
+     ;@ r1 = ISTATES to execute
+     ;@#########################################
      stmdb sp!,{r4-r12,lr}  ;@ save registers on stack
      mov cpucontext,r0       ;@ setup main memory pointer
      ldr z80a,[cpucontext,#z80a_pointer] ;@ load Z80 registers
@@ -351,17 +356,17 @@ _DrZ80Run:
      ldr z80sp,[cpucontext,#z80sp_pointer]
      ldr z80pc,[cpucontext,#z80pc_pointer]
 
-     
-     
+
+
      mov z80_icount,r1  ;@ setup number of Tstates to execute
      ldr opcodes,MAIN_opcodes_POINTER2
-	 	 
+
      ldrb r0,[z80pc],#1    ;@ get first op code
      ldr pc,[opcodes,r0, lsl #2]  ;@ execute op code
-     
+
 MAIN_opcodes_POINTER2: .word MAIN_opcodes
 
-     
+
 z80_execute_end:
      ;@ save registers in CPU context
      str z80a,[cpucontext,#z80a_pointer]
@@ -378,158 +383,158 @@ z80_execute_end:
 
 
 DAATable: .hword  (0x00<<8)|(1<<ZFlag)|(1<<VFlag)
-         .hword  (0x01<<8)                  
-         .hword  (0x02<<8)                  
+         .hword  (0x01<<8)
+         .hword  (0x02<<8)
          .hword  (0x03<<8)               |(1<<VFlag)
-         .hword  (0x04<<8)                  
+         .hword  (0x04<<8)
          .hword  (0x05<<8)               |(1<<VFlag)
          .hword  (0x06<<8)               |(1<<VFlag)
-         .hword  (0x07<<8)                  
-         .hword  (0x08<<8)               
+         .hword  (0x07<<8)
+         .hword  (0x08<<8)
          .hword  (0x09<<8)            |(1<<VFlag)
-         .hword  (0x10<<8)         |(1<<HFlag)      
+         .hword  (0x10<<8)         |(1<<HFlag)
          .hword  (0x11<<8)         |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x12<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x13<<8)         |(1<<HFlag)      
+         .hword  (0x13<<8)         |(1<<HFlag)
          .hword  (0x14<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x15<<8)         |(1<<HFlag)      
-         .hword  (0x10<<8)                  
+         .hword  (0x15<<8)         |(1<<HFlag)
+         .hword  (0x10<<8)
          .hword  (0x11<<8)               |(1<<VFlag)
          .hword  (0x12<<8)               |(1<<VFlag)
-         .hword  (0x13<<8)                  
+         .hword  (0x13<<8)
          .hword  (0x14<<8)               |(1<<VFlag)
-         .hword  (0x15<<8)                  
-         .hword  (0x16<<8)                  
+         .hword  (0x15<<8)
+         .hword  (0x16<<8)
          .hword  (0x17<<8)               |(1<<VFlag)
          .hword  (0x18<<8)            |(1<<VFlag)
-         .hword  (0x19<<8)               
-         .hword  (0x20<<8)      |(1<<HFlag)      
+         .hword  (0x19<<8)
+         .hword  (0x20<<8)      |(1<<HFlag)
          .hword  (0x21<<8)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x22<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x23<<8)      |(1<<HFlag)      
+         .hword  (0x23<<8)      |(1<<HFlag)
          .hword  (0x24<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x25<<8)      |(1<<HFlag)      
-         .hword  (0x20<<8)               
+         .hword  (0x25<<8)      |(1<<HFlag)
+         .hword  (0x20<<8)
          .hword  (0x21<<8)            |(1<<VFlag)
          .hword  (0x22<<8)            |(1<<VFlag)
-         .hword  (0x23<<8)               
+         .hword  (0x23<<8)
          .hword  (0x24<<8)            |(1<<VFlag)
-         .hword  (0x25<<8)               
-         .hword  (0x26<<8)               
+         .hword  (0x25<<8)
+         .hword  (0x26<<8)
          .hword  (0x27<<8)            |(1<<VFlag)
          .hword  (0x28<<8)         |(1<<VFlag)
-         .hword  (0x29<<8)            
+         .hword  (0x29<<8)
          .hword  (0x30<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x31<<8)      |(1<<HFlag)      
-         .hword  (0x32<<8)      |(1<<HFlag)      
+         .hword  (0x31<<8)      |(1<<HFlag)
+         .hword  (0x32<<8)      |(1<<HFlag)
          .hword  (0x33<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x34<<8)      |(1<<HFlag)      
+         .hword  (0x34<<8)      |(1<<HFlag)
          .hword  (0x35<<8)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x30<<8)            |(1<<VFlag)
-         .hword  (0x31<<8)               
-         .hword  (0x32<<8)               
+         .hword  (0x31<<8)
+         .hword  (0x32<<8)
          .hword  (0x33<<8)            |(1<<VFlag)
-         .hword  (0x34<<8)               
+         .hword  (0x34<<8)
          .hword  (0x35<<8)            |(1<<VFlag)
          .hword  (0x36<<8)            |(1<<VFlag)
-         .hword  (0x37<<8)               
-         .hword  (0x38<<8)            
+         .hword  (0x37<<8)
+         .hword  (0x38<<8)
          .hword  (0x39<<8)         |(1<<VFlag)
-         .hword  (0x40<<8)         |(1<<HFlag)      
+         .hword  (0x40<<8)         |(1<<HFlag)
          .hword  (0x41<<8)         |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x42<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x43<<8)         |(1<<HFlag)      
+         .hword  (0x43<<8)         |(1<<HFlag)
          .hword  (0x44<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x45<<8)         |(1<<HFlag)      
-         .hword  (0x40<<8)                  
+         .hword  (0x45<<8)         |(1<<HFlag)
+         .hword  (0x40<<8)
          .hword  (0x41<<8)               |(1<<VFlag)
          .hword  (0x42<<8)               |(1<<VFlag)
-         .hword  (0x43<<8)                  
+         .hword  (0x43<<8)
          .hword  (0x44<<8)               |(1<<VFlag)
-         .hword  (0x45<<8)                  
-         .hword  (0x46<<8)                  
+         .hword  (0x45<<8)
+         .hword  (0x46<<8)
          .hword  (0x47<<8)               |(1<<VFlag)
          .hword  (0x48<<8)            |(1<<VFlag)
-         .hword  (0x49<<8)               
+         .hword  (0x49<<8)
          .hword  (0x50<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x51<<8)         |(1<<HFlag)      
-         .hword  (0x52<<8)         |(1<<HFlag)      
+         .hword  (0x51<<8)         |(1<<HFlag)
+         .hword  (0x52<<8)         |(1<<HFlag)
          .hword  (0x53<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x54<<8)         |(1<<HFlag)      
+         .hword  (0x54<<8)         |(1<<HFlag)
          .hword  (0x55<<8)         |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x50<<8)               |(1<<VFlag)
-         .hword  (0x51<<8)                  
-         .hword  (0x52<<8)                  
+         .hword  (0x51<<8)
+         .hword  (0x52<<8)
          .hword  (0x53<<8)               |(1<<VFlag)
-         .hword  (0x54<<8)                  
+         .hword  (0x54<<8)
          .hword  (0x55<<8)               |(1<<VFlag)
          .hword  (0x56<<8)               |(1<<VFlag)
-         .hword  (0x57<<8)                  
-         .hword  (0x58<<8)               
+         .hword  (0x57<<8)
+         .hword  (0x58<<8)
          .hword  (0x59<<8)            |(1<<VFlag)
          .hword  (0x60<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x61<<8)      |(1<<HFlag)      
-         .hword  (0x62<<8)      |(1<<HFlag)      
+         .hword  (0x61<<8)      |(1<<HFlag)
+         .hword  (0x62<<8)      |(1<<HFlag)
          .hword  (0x63<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x64<<8)      |(1<<HFlag)      
+         .hword  (0x64<<8)      |(1<<HFlag)
          .hword  (0x65<<8)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x60<<8)            |(1<<VFlag)
-         .hword  (0x61<<8)               
-         .hword  (0x62<<8)               
+         .hword  (0x61<<8)
+         .hword  (0x62<<8)
          .hword  (0x63<<8)            |(1<<VFlag)
-         .hword  (0x64<<8)               
+         .hword  (0x64<<8)
          .hword  (0x65<<8)            |(1<<VFlag)
          .hword  (0x66<<8)            |(1<<VFlag)
-         .hword  (0x67<<8)               
-         .hword  (0x68<<8)            
+         .hword  (0x67<<8)
+         .hword  (0x68<<8)
          .hword  (0x69<<8)         |(1<<VFlag)
-         .hword  (0x70<<8)      |(1<<HFlag)      
+         .hword  (0x70<<8)      |(1<<HFlag)
          .hword  (0x71<<8)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x72<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x73<<8)      |(1<<HFlag)      
+         .hword  (0x73<<8)      |(1<<HFlag)
          .hword  (0x74<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x75<<8)      |(1<<HFlag)      
-         .hword  (0x70<<8)               
+         .hword  (0x75<<8)      |(1<<HFlag)
+         .hword  (0x70<<8)
          .hword  (0x71<<8)            |(1<<VFlag)
          .hword  (0x72<<8)            |(1<<VFlag)
-         .hword  (0x73<<8)               
+         .hword  (0x73<<8)
          .hword  (0x74<<8)            |(1<<VFlag)
-         .hword  (0x75<<8)               
-         .hword  (0x76<<8)               
+         .hword  (0x75<<8)
+         .hword  (0x76<<8)
          .hword  (0x77<<8)            |(1<<VFlag)
          .hword  (0x78<<8)         |(1<<VFlag)
-         .hword  (0x79<<8)            
-         .hword  (0x80<<8)|(1<<SFlag)      |(1<<HFlag)      
+         .hword  (0x79<<8)
+         .hword  (0x80<<8)|(1<<SFlag)      |(1<<HFlag)
          .hword  (0x81<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x82<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x83<<8)|(1<<SFlag)      |(1<<HFlag)      
+         .hword  (0x83<<8)|(1<<SFlag)      |(1<<HFlag)
          .hword  (0x84<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x85<<8)|(1<<SFlag)      |(1<<HFlag)      
-         .hword  (0x80<<8)|(1<<SFlag)               
+         .hword  (0x85<<8)|(1<<SFlag)      |(1<<HFlag)
+         .hword  (0x80<<8)|(1<<SFlag)
          .hword  (0x81<<8)|(1<<SFlag)            |(1<<VFlag)
          .hword  (0x82<<8)|(1<<SFlag)            |(1<<VFlag)
-         .hword  (0x83<<8)|(1<<SFlag)               
+         .hword  (0x83<<8)|(1<<SFlag)
          .hword  (0x84<<8)|(1<<SFlag)            |(1<<VFlag)
-         .hword  (0x85<<8)|(1<<SFlag)               
-         .hword  (0x86<<8)|(1<<SFlag)               
+         .hword  (0x85<<8)|(1<<SFlag)
+         .hword  (0x86<<8)|(1<<SFlag)
          .hword  (0x87<<8)|(1<<SFlag)            |(1<<VFlag)
          .hword  (0x88<<8)|(1<<SFlag)         |(1<<VFlag)
-         .hword  (0x89<<8)|(1<<SFlag)            
+         .hword  (0x89<<8)|(1<<SFlag)
          .hword  (0x90<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x91<<8)|(1<<SFlag)      |(1<<HFlag)      
-         .hword  (0x92<<8)|(1<<SFlag)      |(1<<HFlag)      
+         .hword  (0x91<<8)|(1<<SFlag)      |(1<<HFlag)
+         .hword  (0x92<<8)|(1<<SFlag)      |(1<<HFlag)
          .hword  (0x93<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x94<<8)|(1<<SFlag)      |(1<<HFlag)      
+         .hword  (0x94<<8)|(1<<SFlag)      |(1<<HFlag)
          .hword  (0x95<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x90<<8)|(1<<SFlag)            |(1<<VFlag)
-         .hword  (0x91<<8)|(1<<SFlag)               
-         .hword  (0x92<<8)|(1<<SFlag)               
+         .hword  (0x91<<8)|(1<<SFlag)
+         .hword  (0x92<<8)|(1<<SFlag)
          .hword  (0x93<<8)|(1<<SFlag)            |(1<<VFlag)
-         .hword  (0x94<<8)|(1<<SFlag)               
+         .hword  (0x94<<8)|(1<<SFlag)
          .hword  (0x95<<8)|(1<<SFlag)            |(1<<VFlag)
          .hword  (0x96<<8)|(1<<SFlag)            |(1<<VFlag)
-         .hword  (0x97<<8)|(1<<SFlag)               
-         .hword  (0x98<<8)|(1<<SFlag)            
+         .hword  (0x97<<8)|(1<<SFlag)
+         .hword  (0x98<<8)|(1<<SFlag)
          .hword  (0x99<<8)|(1<<SFlag)         |(1<<VFlag)
          .hword  (0x00<<8)   |(1<<ZFlag)   |(1<<HFlag)   |(1<<VFlag)   |(1<<CFlag)
          .hword  (0x01<<8)         |(1<<HFlag)         |(1<<CFlag)
@@ -890,158 +895,158 @@ DAATable: .hword  (0x00<<8)|(1<<ZFlag)|(1<<VFlag)
          .hword  (0x64<<8)      |(1<<HFlag)         |(1<<CFlag)
          .hword  (0x65<<8)      |(1<<HFlag)   |(1<<VFlag)   |(1<<CFlag)
          .hword  (0x06<<8)               |(1<<VFlag)
-         .hword  (0x07<<8)                  
-         .hword  (0x08<<8)               
+         .hword  (0x07<<8)
+         .hword  (0x08<<8)
          .hword  (0x09<<8)            |(1<<VFlag)
          .hword  (0x0A<<8)            |(1<<VFlag)
-         .hword  (0x0B<<8)               
+         .hword  (0x0B<<8)
          .hword  (0x0C<<8)            |(1<<VFlag)
-         .hword  (0x0D<<8)               
-         .hword  (0x0E<<8)               
+         .hword  (0x0D<<8)
+         .hword  (0x0E<<8)
          .hword  (0x0F<<8)            |(1<<VFlag)
-         .hword  (0x10<<8)         |(1<<HFlag)      
+         .hword  (0x10<<8)         |(1<<HFlag)
          .hword  (0x11<<8)         |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x12<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x13<<8)         |(1<<HFlag)      
+         .hword  (0x13<<8)         |(1<<HFlag)
          .hword  (0x14<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x15<<8)         |(1<<HFlag)      
-         .hword  (0x16<<8)                  
+         .hword  (0x15<<8)         |(1<<HFlag)
+         .hword  (0x16<<8)
          .hword  (0x17<<8)               |(1<<VFlag)
          .hword  (0x18<<8)            |(1<<VFlag)
-         .hword  (0x19<<8)               
-         .hword  (0x1A<<8)               
+         .hword  (0x19<<8)
+         .hword  (0x1A<<8)
          .hword  (0x1B<<8)            |(1<<VFlag)
-         .hword  (0x1C<<8)               
+         .hword  (0x1C<<8)
          .hword  (0x1D<<8)            |(1<<VFlag)
          .hword  (0x1E<<8)            |(1<<VFlag)
-         .hword  (0x1F<<8)               
-         .hword  (0x20<<8)      |(1<<HFlag)      
+         .hword  (0x1F<<8)
+         .hword  (0x20<<8)      |(1<<HFlag)
          .hword  (0x21<<8)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x22<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x23<<8)      |(1<<HFlag)      
+         .hword  (0x23<<8)      |(1<<HFlag)
          .hword  (0x24<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x25<<8)      |(1<<HFlag)      
-         .hword  (0x26<<8)               
+         .hword  (0x25<<8)      |(1<<HFlag)
+         .hword  (0x26<<8)
          .hword  (0x27<<8)            |(1<<VFlag)
          .hword  (0x28<<8)         |(1<<VFlag)
-         .hword  (0x29<<8)            
-         .hword  (0x2A<<8)            
+         .hword  (0x29<<8)
+         .hword  (0x2A<<8)
          .hword  (0x2B<<8)         |(1<<VFlag)
-         .hword  (0x2C<<8)            
+         .hword  (0x2C<<8)
          .hword  (0x2D<<8)         |(1<<VFlag)
          .hword  (0x2E<<8)         |(1<<VFlag)
-         .hword  (0x2F<<8)            
+         .hword  (0x2F<<8)
          .hword  (0x30<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x31<<8)      |(1<<HFlag)      
-         .hword  (0x32<<8)      |(1<<HFlag)      
+         .hword  (0x31<<8)      |(1<<HFlag)
+         .hword  (0x32<<8)      |(1<<HFlag)
          .hword  (0x33<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x34<<8)      |(1<<HFlag)      
+         .hword  (0x34<<8)      |(1<<HFlag)
          .hword  (0x35<<8)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x36<<8)            |(1<<VFlag)
-         .hword  (0x37<<8)               
-         .hword  (0x38<<8)            
+         .hword  (0x37<<8)
+         .hword  (0x38<<8)
          .hword  (0x39<<8)         |(1<<VFlag)
          .hword  (0x3A<<8)         |(1<<VFlag)
-         .hword  (0x3B<<8)            
+         .hword  (0x3B<<8)
          .hword  (0x3C<<8)         |(1<<VFlag)
-         .hword  (0x3D<<8)            
-         .hword  (0x3E<<8)            
+         .hword  (0x3D<<8)
+         .hword  (0x3E<<8)
          .hword  (0x3F<<8)         |(1<<VFlag)
-         .hword  (0x40<<8)         |(1<<HFlag)      
+         .hword  (0x40<<8)         |(1<<HFlag)
          .hword  (0x41<<8)         |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x42<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x43<<8)         |(1<<HFlag)      
+         .hword  (0x43<<8)         |(1<<HFlag)
          .hword  (0x44<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x45<<8)         |(1<<HFlag)      
-         .hword  (0x46<<8)                  
+         .hword  (0x45<<8)         |(1<<HFlag)
+         .hword  (0x46<<8)
          .hword  (0x47<<8)               |(1<<VFlag)
          .hword  (0x48<<8)            |(1<<VFlag)
-         .hword  (0x49<<8)               
-         .hword  (0x4A<<8)               
+         .hword  (0x49<<8)
+         .hword  (0x4A<<8)
          .hword  (0x4B<<8)            |(1<<VFlag)
-         .hword  (0x4C<<8)               
+         .hword  (0x4C<<8)
          .hword  (0x4D<<8)            |(1<<VFlag)
          .hword  (0x4E<<8)            |(1<<VFlag)
-         .hword  (0x4F<<8)               
+         .hword  (0x4F<<8)
          .hword  (0x50<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x51<<8)         |(1<<HFlag)      
-         .hword  (0x52<<8)         |(1<<HFlag)      
+         .hword  (0x51<<8)         |(1<<HFlag)
+         .hword  (0x52<<8)         |(1<<HFlag)
          .hword  (0x53<<8)         |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x54<<8)         |(1<<HFlag)      
+         .hword  (0x54<<8)         |(1<<HFlag)
          .hword  (0x55<<8)         |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x56<<8)               |(1<<VFlag)
-         .hword  (0x57<<8)                  
-         .hword  (0x58<<8)               
+         .hword  (0x57<<8)
+         .hword  (0x58<<8)
          .hword  (0x59<<8)            |(1<<VFlag)
          .hword  (0x5A<<8)            |(1<<VFlag)
-         .hword  (0x5B<<8)               
+         .hword  (0x5B<<8)
          .hword  (0x5C<<8)            |(1<<VFlag)
-         .hword  (0x5D<<8)               
-         .hword  (0x5E<<8)               
+         .hword  (0x5D<<8)
+         .hword  (0x5E<<8)
          .hword  (0x5F<<8)            |(1<<VFlag)
          .hword  (0x60<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x61<<8)      |(1<<HFlag)      
-         .hword  (0x62<<8)      |(1<<HFlag)      
+         .hword  (0x61<<8)      |(1<<HFlag)
+         .hword  (0x62<<8)      |(1<<HFlag)
          .hword  (0x63<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x64<<8)      |(1<<HFlag)      
+         .hword  (0x64<<8)      |(1<<HFlag)
          .hword  (0x65<<8)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x66<<8)            |(1<<VFlag)
-         .hword  (0x67<<8)               
-         .hword  (0x68<<8)            
+         .hword  (0x67<<8)
+         .hword  (0x68<<8)
          .hword  (0x69<<8)         |(1<<VFlag)
          .hword  (0x6A<<8)         |(1<<VFlag)
-         .hword  (0x6B<<8)            
+         .hword  (0x6B<<8)
          .hword  (0x6C<<8)         |(1<<VFlag)
-         .hword  (0x6D<<8)            
-         .hword  (0x6E<<8)            
+         .hword  (0x6D<<8)
+         .hword  (0x6E<<8)
          .hword  (0x6F<<8)         |(1<<VFlag)
-         .hword  (0x70<<8)      |(1<<HFlag)      
+         .hword  (0x70<<8)      |(1<<HFlag)
          .hword  (0x71<<8)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x72<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x73<<8)      |(1<<HFlag)      
+         .hword  (0x73<<8)      |(1<<HFlag)
          .hword  (0x74<<8)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x75<<8)      |(1<<HFlag)      
-         .hword  (0x76<<8)               
+         .hword  (0x75<<8)      |(1<<HFlag)
+         .hword  (0x76<<8)
          .hword  (0x77<<8)            |(1<<VFlag)
          .hword  (0x78<<8)         |(1<<VFlag)
-         .hword  (0x79<<8)            
-         .hword  (0x7A<<8)            
+         .hword  (0x79<<8)
+         .hword  (0x7A<<8)
          .hword  (0x7B<<8)         |(1<<VFlag)
-         .hword  (0x7C<<8)            
+         .hword  (0x7C<<8)
          .hword  (0x7D<<8)         |(1<<VFlag)
          .hword  (0x7E<<8)         |(1<<VFlag)
-         .hword  (0x7F<<8)            
-         .hword  (0x80<<8)|(1<<SFlag)      |(1<<HFlag)      
+         .hword  (0x7F<<8)
+         .hword  (0x80<<8)|(1<<SFlag)      |(1<<HFlag)
          .hword  (0x81<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x82<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x83<<8)|(1<<SFlag)      |(1<<HFlag)      
+         .hword  (0x83<<8)|(1<<SFlag)      |(1<<HFlag)
          .hword  (0x84<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x85<<8)|(1<<SFlag)      |(1<<HFlag)      
-         .hword  (0x86<<8)|(1<<SFlag)               
+         .hword  (0x85<<8)|(1<<SFlag)      |(1<<HFlag)
+         .hword  (0x86<<8)|(1<<SFlag)
          .hword  (0x87<<8)|(1<<SFlag)            |(1<<VFlag)
          .hword  (0x88<<8)|(1<<SFlag)         |(1<<VFlag)
-         .hword  (0x89<<8)|(1<<SFlag)            
-         .hword  (0x8A<<8)|(1<<SFlag)            
+         .hword  (0x89<<8)|(1<<SFlag)
+         .hword  (0x8A<<8)|(1<<SFlag)
          .hword  (0x8B<<8)|(1<<SFlag)         |(1<<VFlag)
-         .hword  (0x8C<<8)|(1<<SFlag)            
+         .hword  (0x8C<<8)|(1<<SFlag)
          .hword  (0x8D<<8)|(1<<SFlag)         |(1<<VFlag)
          .hword  (0x8E<<8)|(1<<SFlag)         |(1<<VFlag)
-         .hword  (0x8F<<8)|(1<<SFlag)            
+         .hword  (0x8F<<8)|(1<<SFlag)
          .hword  (0x90<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x91<<8)|(1<<SFlag)      |(1<<HFlag)      
-         .hword  (0x92<<8)|(1<<SFlag)      |(1<<HFlag)      
+         .hword  (0x91<<8)|(1<<SFlag)      |(1<<HFlag)
+         .hword  (0x92<<8)|(1<<SFlag)      |(1<<HFlag)
          .hword  (0x93<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
-         .hword  (0x94<<8)|(1<<SFlag)      |(1<<HFlag)      
+         .hword  (0x94<<8)|(1<<SFlag)      |(1<<HFlag)
          .hword  (0x95<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<VFlag)
          .hword  (0x96<<8)|(1<<SFlag)            |(1<<VFlag)
-         .hword  (0x97<<8)|(1<<SFlag)               
-         .hword  (0x98<<8)|(1<<SFlag)            
+         .hword  (0x97<<8)|(1<<SFlag)
+         .hword  (0x98<<8)|(1<<SFlag)
          .hword  (0x99<<8)|(1<<SFlag)         |(1<<VFlag)
          .hword  (0x9A<<8)|(1<<SFlag)         |(1<<VFlag)
-         .hword  (0x9B<<8)|(1<<SFlag)            
+         .hword  (0x9B<<8)|(1<<SFlag)
          .hword  (0x9C<<8)|(1<<SFlag)         |(1<<VFlag)
-         .hword  (0x9D<<8)|(1<<SFlag)            
-         .hword  (0x9E<<8)|(1<<SFlag)            
+         .hword  (0x9D<<8)|(1<<SFlag)
+         .hword  (0x9E<<8)|(1<<SFlag)
          .hword  (0x9F<<8)|(1<<SFlag)         |(1<<VFlag)
          .hword  (0x00<<8)   |(1<<ZFlag)   |(1<<HFlag)   |(1<<VFlag)   |(1<<CFlag)
          .hword  (0x01<<8)         |(1<<HFlag)         |(1<<CFlag)
@@ -1401,160 +1406,160 @@ DAATable: .hword  (0x00<<8)|(1<<ZFlag)|(1<<VFlag)
          .hword  (0x63<<8)      |(1<<HFlag)   |(1<<VFlag)   |(1<<CFlag)
          .hword  (0x64<<8)      |(1<<HFlag)         |(1<<CFlag)
          .hword  (0x65<<8)      |(1<<HFlag)   |(1<<VFlag)   |(1<<CFlag)
-         .hword  (0x00<<8)   |(1<<ZFlag)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x01<<8)                  |(1<<NFlag)   
-         .hword  (0x02<<8)                  |(1<<NFlag)   
-         .hword  (0x03<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x04<<8)                  |(1<<NFlag)   
-         .hword  (0x05<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x06<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x07<<8)                  |(1<<NFlag)   
-         .hword  (0x08<<8)               |(1<<NFlag)   
-         .hword  (0x09<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x04<<8)                  |(1<<NFlag)   
-         .hword  (0x05<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x06<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x07<<8)                  |(1<<NFlag)   
-         .hword  (0x08<<8)               |(1<<NFlag)   
-         .hword  (0x09<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x10<<8)                  |(1<<NFlag)   
-         .hword  (0x11<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x12<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x13<<8)                  |(1<<NFlag)   
-         .hword  (0x14<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x15<<8)                  |(1<<NFlag)   
-         .hword  (0x16<<8)                  |(1<<NFlag)   
-         .hword  (0x17<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x18<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x19<<8)               |(1<<NFlag)   
-         .hword  (0x14<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x15<<8)                  |(1<<NFlag)   
-         .hword  (0x16<<8)                  |(1<<NFlag)   
-         .hword  (0x17<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x18<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x19<<8)               |(1<<NFlag)   
-         .hword  (0x20<<8)               |(1<<NFlag)   
-         .hword  (0x21<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x22<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x23<<8)               |(1<<NFlag)   
-         .hword  (0x24<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x25<<8)               |(1<<NFlag)   
-         .hword  (0x26<<8)               |(1<<NFlag)   
-         .hword  (0x27<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x28<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x29<<8)            |(1<<NFlag)   
-         .hword  (0x24<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x25<<8)               |(1<<NFlag)   
-         .hword  (0x26<<8)               |(1<<NFlag)   
-         .hword  (0x27<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x28<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x29<<8)            |(1<<NFlag)   
-         .hword  (0x30<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x31<<8)               |(1<<NFlag)   
-         .hword  (0x32<<8)               |(1<<NFlag)   
-         .hword  (0x33<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x34<<8)               |(1<<NFlag)   
-         .hword  (0x35<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x36<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x37<<8)               |(1<<NFlag)   
-         .hword  (0x38<<8)            |(1<<NFlag)   
-         .hword  (0x39<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x34<<8)               |(1<<NFlag)   
-         .hword  (0x35<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x36<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x37<<8)               |(1<<NFlag)   
-         .hword  (0x38<<8)            |(1<<NFlag)   
-         .hword  (0x39<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x40<<8)                  |(1<<NFlag)   
-         .hword  (0x41<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x42<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x43<<8)                  |(1<<NFlag)   
-         .hword  (0x44<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x45<<8)                  |(1<<NFlag)   
-         .hword  (0x46<<8)                  |(1<<NFlag)   
-         .hword  (0x47<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x48<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x49<<8)               |(1<<NFlag)   
-         .hword  (0x44<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x45<<8)                  |(1<<NFlag)   
-         .hword  (0x46<<8)                  |(1<<NFlag)   
-         .hword  (0x47<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x48<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x49<<8)               |(1<<NFlag)   
-         .hword  (0x50<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x51<<8)                  |(1<<NFlag)   
-         .hword  (0x52<<8)                  |(1<<NFlag)   
-         .hword  (0x53<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x54<<8)                  |(1<<NFlag)   
-         .hword  (0x55<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x56<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x57<<8)                  |(1<<NFlag)   
-         .hword  (0x58<<8)               |(1<<NFlag)   
-         .hword  (0x59<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x54<<8)                  |(1<<NFlag)   
-         .hword  (0x55<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x56<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x57<<8)                  |(1<<NFlag)   
-         .hword  (0x58<<8)               |(1<<NFlag)   
-         .hword  (0x59<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x60<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x61<<8)               |(1<<NFlag)   
-         .hword  (0x62<<8)               |(1<<NFlag)   
-         .hword  (0x63<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x64<<8)               |(1<<NFlag)   
-         .hword  (0x65<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x66<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x67<<8)               |(1<<NFlag)   
-         .hword  (0x68<<8)            |(1<<NFlag)   
-         .hword  (0x69<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x64<<8)               |(1<<NFlag)   
-         .hword  (0x65<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x66<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x67<<8)               |(1<<NFlag)   
-         .hword  (0x68<<8)            |(1<<NFlag)   
-         .hword  (0x69<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x70<<8)               |(1<<NFlag)   
-         .hword  (0x71<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x72<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x73<<8)               |(1<<NFlag)   
-         .hword  (0x74<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x75<<8)               |(1<<NFlag)   
-         .hword  (0x76<<8)               |(1<<NFlag)   
-         .hword  (0x77<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x78<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x79<<8)            |(1<<NFlag)   
-         .hword  (0x74<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x75<<8)               |(1<<NFlag)   
-         .hword  (0x76<<8)               |(1<<NFlag)   
-         .hword  (0x77<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x78<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x79<<8)            |(1<<NFlag)   
-         .hword  (0x80<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x81<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x82<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x83<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x84<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x85<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x86<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x87<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x88<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x89<<8)|(1<<SFlag)            |(1<<NFlag)   
-         .hword  (0x84<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x85<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x86<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x87<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x88<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x89<<8)|(1<<SFlag)            |(1<<NFlag)   
-         .hword  (0x90<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x91<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x92<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x93<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x94<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x95<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x96<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x97<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x98<<8)|(1<<SFlag)            |(1<<NFlag)   
-         .hword  (0x99<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)   
+         .hword  (0x00<<8)   |(1<<ZFlag)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x01<<8)                  |(1<<NFlag)
+         .hword  (0x02<<8)                  |(1<<NFlag)
+         .hword  (0x03<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x04<<8)                  |(1<<NFlag)
+         .hword  (0x05<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x06<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x07<<8)                  |(1<<NFlag)
+         .hword  (0x08<<8)               |(1<<NFlag)
+         .hword  (0x09<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x04<<8)                  |(1<<NFlag)
+         .hword  (0x05<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x06<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x07<<8)                  |(1<<NFlag)
+         .hword  (0x08<<8)               |(1<<NFlag)
+         .hword  (0x09<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x10<<8)                  |(1<<NFlag)
+         .hword  (0x11<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x12<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x13<<8)                  |(1<<NFlag)
+         .hword  (0x14<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x15<<8)                  |(1<<NFlag)
+         .hword  (0x16<<8)                  |(1<<NFlag)
+         .hword  (0x17<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x18<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x19<<8)               |(1<<NFlag)
+         .hword  (0x14<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x15<<8)                  |(1<<NFlag)
+         .hword  (0x16<<8)                  |(1<<NFlag)
+         .hword  (0x17<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x18<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x19<<8)               |(1<<NFlag)
+         .hword  (0x20<<8)               |(1<<NFlag)
+         .hword  (0x21<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x22<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x23<<8)               |(1<<NFlag)
+         .hword  (0x24<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x25<<8)               |(1<<NFlag)
+         .hword  (0x26<<8)               |(1<<NFlag)
+         .hword  (0x27<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x28<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x29<<8)            |(1<<NFlag)
+         .hword  (0x24<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x25<<8)               |(1<<NFlag)
+         .hword  (0x26<<8)               |(1<<NFlag)
+         .hword  (0x27<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x28<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x29<<8)            |(1<<NFlag)
+         .hword  (0x30<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x31<<8)               |(1<<NFlag)
+         .hword  (0x32<<8)               |(1<<NFlag)
+         .hword  (0x33<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x34<<8)               |(1<<NFlag)
+         .hword  (0x35<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x36<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x37<<8)               |(1<<NFlag)
+         .hword  (0x38<<8)            |(1<<NFlag)
+         .hword  (0x39<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x34<<8)               |(1<<NFlag)
+         .hword  (0x35<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x36<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x37<<8)               |(1<<NFlag)
+         .hword  (0x38<<8)            |(1<<NFlag)
+         .hword  (0x39<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x40<<8)                  |(1<<NFlag)
+         .hword  (0x41<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x42<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x43<<8)                  |(1<<NFlag)
+         .hword  (0x44<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x45<<8)                  |(1<<NFlag)
+         .hword  (0x46<<8)                  |(1<<NFlag)
+         .hword  (0x47<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x48<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x49<<8)               |(1<<NFlag)
+         .hword  (0x44<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x45<<8)                  |(1<<NFlag)
+         .hword  (0x46<<8)                  |(1<<NFlag)
+         .hword  (0x47<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x48<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x49<<8)               |(1<<NFlag)
+         .hword  (0x50<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x51<<8)                  |(1<<NFlag)
+         .hword  (0x52<<8)                  |(1<<NFlag)
+         .hword  (0x53<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x54<<8)                  |(1<<NFlag)
+         .hword  (0x55<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x56<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x57<<8)                  |(1<<NFlag)
+         .hword  (0x58<<8)               |(1<<NFlag)
+         .hword  (0x59<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x54<<8)                  |(1<<NFlag)
+         .hword  (0x55<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x56<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x57<<8)                  |(1<<NFlag)
+         .hword  (0x58<<8)               |(1<<NFlag)
+         .hword  (0x59<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x60<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x61<<8)               |(1<<NFlag)
+         .hword  (0x62<<8)               |(1<<NFlag)
+         .hword  (0x63<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x64<<8)               |(1<<NFlag)
+         .hword  (0x65<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x66<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x67<<8)               |(1<<NFlag)
+         .hword  (0x68<<8)            |(1<<NFlag)
+         .hword  (0x69<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x64<<8)               |(1<<NFlag)
+         .hword  (0x65<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x66<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x67<<8)               |(1<<NFlag)
+         .hword  (0x68<<8)            |(1<<NFlag)
+         .hword  (0x69<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x70<<8)               |(1<<NFlag)
+         .hword  (0x71<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x72<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x73<<8)               |(1<<NFlag)
+         .hword  (0x74<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x75<<8)               |(1<<NFlag)
+         .hword  (0x76<<8)               |(1<<NFlag)
+         .hword  (0x77<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x78<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x79<<8)            |(1<<NFlag)
+         .hword  (0x74<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x75<<8)               |(1<<NFlag)
+         .hword  (0x76<<8)               |(1<<NFlag)
+         .hword  (0x77<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x78<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x79<<8)            |(1<<NFlag)
+         .hword  (0x80<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x81<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x82<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x83<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x84<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x85<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x86<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x87<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x88<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x89<<8)|(1<<SFlag)            |(1<<NFlag)
+         .hword  (0x84<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x85<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x86<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x87<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x88<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x89<<8)|(1<<SFlag)            |(1<<NFlag)
+         .hword  (0x90<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x91<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x92<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x93<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x94<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x95<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x96<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x97<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x98<<8)|(1<<SFlag)            |(1<<NFlag)
+         .hword  (0x99<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)
          .hword  (0x34<<8)               |(1<<NFlag)|(1<<CFlag)
          .hword  (0x35<<8)            |(1<<VFlag)|(1<<NFlag)|(1<<CFlag)
          .hword  (0x36<<8)            |(1<<VFlag)|(1<<NFlag)|(1<<CFlag)
@@ -1913,160 +1918,160 @@ DAATable: .hword  (0x00<<8)|(1<<ZFlag)|(1<<VFlag)
          .hword  (0x97<<8)|(1<<SFlag)               |(1<<NFlag)|(1<<CFlag)
          .hword  (0x98<<8)|(1<<SFlag)            |(1<<NFlag)|(1<<CFlag)
          .hword  (0x99<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)|(1<<CFlag)
-         .hword  (0xFA<<8)|(1<<SFlag)   |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0xFB<<8)|(1<<SFlag)   |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0xFC<<8)|(1<<SFlag)   |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0xFD<<8)|(1<<SFlag)   |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0xFE<<8)|(1<<SFlag)   |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0xFF<<8)|(1<<SFlag)   |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x00<<8)   |(1<<ZFlag)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x01<<8)                  |(1<<NFlag)   
-         .hword  (0x02<<8)                  |(1<<NFlag)   
-         .hword  (0x03<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x04<<8)                  |(1<<NFlag)   
-         .hword  (0x05<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x06<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x07<<8)                  |(1<<NFlag)   
-         .hword  (0x08<<8)               |(1<<NFlag)   
-         .hword  (0x09<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x0A<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x0B<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x0C<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x0D<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x0E<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x0F<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x10<<8)                  |(1<<NFlag)   
-         .hword  (0x11<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x12<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x13<<8)                  |(1<<NFlag)   
-         .hword  (0x14<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x15<<8)                  |(1<<NFlag)   
-         .hword  (0x16<<8)                  |(1<<NFlag)   
-         .hword  (0x17<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x18<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x19<<8)               |(1<<NFlag)   
-         .hword  (0x1A<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x1B<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x1C<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x1D<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x1E<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x1F<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x20<<8)               |(1<<NFlag)   
-         .hword  (0x21<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x22<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x23<<8)               |(1<<NFlag)   
-         .hword  (0x24<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x25<<8)               |(1<<NFlag)   
-         .hword  (0x26<<8)               |(1<<NFlag)   
-         .hword  (0x27<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x28<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x29<<8)            |(1<<NFlag)   
-         .hword  (0x2A<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x2B<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x2C<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x2D<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x2E<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x2F<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x30<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x31<<8)               |(1<<NFlag)   
-         .hword  (0x32<<8)               |(1<<NFlag)   
-         .hword  (0x33<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x34<<8)               |(1<<NFlag)   
-         .hword  (0x35<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x36<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x37<<8)               |(1<<NFlag)   
-         .hword  (0x38<<8)            |(1<<NFlag)   
-         .hword  (0x39<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x3A<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x3B<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x3C<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x3D<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x3E<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x3F<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x40<<8)                  |(1<<NFlag)   
-         .hword  (0x41<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x42<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x43<<8)                  |(1<<NFlag)   
-         .hword  (0x44<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x45<<8)                  |(1<<NFlag)   
-         .hword  (0x46<<8)                  |(1<<NFlag)   
-         .hword  (0x47<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x48<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x49<<8)               |(1<<NFlag)   
-         .hword  (0x4A<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x4B<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x4C<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x4D<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x4E<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x4F<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x50<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x51<<8)                  |(1<<NFlag)   
-         .hword  (0x52<<8)                  |(1<<NFlag)   
-         .hword  (0x53<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x54<<8)                  |(1<<NFlag)   
-         .hword  (0x55<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x56<<8)               |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x57<<8)                  |(1<<NFlag)   
-         .hword  (0x58<<8)               |(1<<NFlag)   
-         .hword  (0x59<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x5A<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x5B<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x5C<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x5D<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x5E<<8)         |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x5F<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x60<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x61<<8)               |(1<<NFlag)   
-         .hword  (0x62<<8)               |(1<<NFlag)   
-         .hword  (0x63<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x64<<8)               |(1<<NFlag)   
-         .hword  (0x65<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x66<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x67<<8)               |(1<<NFlag)   
-         .hword  (0x68<<8)            |(1<<NFlag)   
-         .hword  (0x69<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x6A<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x6B<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x6C<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x6D<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x6E<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x6F<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x70<<8)               |(1<<NFlag)   
-         .hword  (0x71<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x72<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x73<<8)               |(1<<NFlag)   
-         .hword  (0x74<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x75<<8)               |(1<<NFlag)   
-         .hword  (0x76<<8)               |(1<<NFlag)   
-         .hword  (0x77<<8)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x78<<8)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x79<<8)            |(1<<NFlag)   
-         .hword  (0x7A<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x7B<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x7C<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x7D<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x7E<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x7F<<8)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x80<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x81<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x82<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x83<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x84<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x85<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x86<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x87<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x88<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x89<<8)|(1<<SFlag)            |(1<<NFlag)   
-         .hword  (0x8A<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x8B<<8)|(1<<SFlag)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x8C<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x8D<<8)|(1<<SFlag)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x8E<<8)|(1<<SFlag)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x8F<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<NFlag)   
-         .hword  (0x90<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
-         .hword  (0x91<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x92<<8)|(1<<SFlag)               |(1<<NFlag)   
-         .hword  (0x93<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)   
+         .hword  (0xFA<<8)|(1<<SFlag)   |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0xFB<<8)|(1<<SFlag)   |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0xFC<<8)|(1<<SFlag)   |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0xFD<<8)|(1<<SFlag)   |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0xFE<<8)|(1<<SFlag)   |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0xFF<<8)|(1<<SFlag)   |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x00<<8)   |(1<<ZFlag)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x01<<8)                  |(1<<NFlag)
+         .hword  (0x02<<8)                  |(1<<NFlag)
+         .hword  (0x03<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x04<<8)                  |(1<<NFlag)
+         .hword  (0x05<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x06<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x07<<8)                  |(1<<NFlag)
+         .hword  (0x08<<8)               |(1<<NFlag)
+         .hword  (0x09<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x0A<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x0B<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x0C<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x0D<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x0E<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x0F<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x10<<8)                  |(1<<NFlag)
+         .hword  (0x11<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x12<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x13<<8)                  |(1<<NFlag)
+         .hword  (0x14<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x15<<8)                  |(1<<NFlag)
+         .hword  (0x16<<8)                  |(1<<NFlag)
+         .hword  (0x17<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x18<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x19<<8)               |(1<<NFlag)
+         .hword  (0x1A<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x1B<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x1C<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x1D<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x1E<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x1F<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x20<<8)               |(1<<NFlag)
+         .hword  (0x21<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x22<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x23<<8)               |(1<<NFlag)
+         .hword  (0x24<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x25<<8)               |(1<<NFlag)
+         .hword  (0x26<<8)               |(1<<NFlag)
+         .hword  (0x27<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x28<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x29<<8)            |(1<<NFlag)
+         .hword  (0x2A<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x2B<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x2C<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x2D<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x2E<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x2F<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x30<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x31<<8)               |(1<<NFlag)
+         .hword  (0x32<<8)               |(1<<NFlag)
+         .hword  (0x33<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x34<<8)               |(1<<NFlag)
+         .hword  (0x35<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x36<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x37<<8)               |(1<<NFlag)
+         .hword  (0x38<<8)            |(1<<NFlag)
+         .hword  (0x39<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x3A<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x3B<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x3C<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x3D<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x3E<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x3F<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x40<<8)                  |(1<<NFlag)
+         .hword  (0x41<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x42<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x43<<8)                  |(1<<NFlag)
+         .hword  (0x44<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x45<<8)                  |(1<<NFlag)
+         .hword  (0x46<<8)                  |(1<<NFlag)
+         .hword  (0x47<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x48<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x49<<8)               |(1<<NFlag)
+         .hword  (0x4A<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x4B<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x4C<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x4D<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x4E<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x4F<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x50<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x51<<8)                  |(1<<NFlag)
+         .hword  (0x52<<8)                  |(1<<NFlag)
+         .hword  (0x53<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x54<<8)                  |(1<<NFlag)
+         .hword  (0x55<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x56<<8)               |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x57<<8)                  |(1<<NFlag)
+         .hword  (0x58<<8)               |(1<<NFlag)
+         .hword  (0x59<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x5A<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x5B<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x5C<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x5D<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x5E<<8)         |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x5F<<8)         |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x60<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x61<<8)               |(1<<NFlag)
+         .hword  (0x62<<8)               |(1<<NFlag)
+         .hword  (0x63<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x64<<8)               |(1<<NFlag)
+         .hword  (0x65<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x66<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x67<<8)               |(1<<NFlag)
+         .hword  (0x68<<8)            |(1<<NFlag)
+         .hword  (0x69<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x6A<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x6B<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x6C<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x6D<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x6E<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x6F<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x70<<8)               |(1<<NFlag)
+         .hword  (0x71<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x72<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x73<<8)               |(1<<NFlag)
+         .hword  (0x74<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x75<<8)               |(1<<NFlag)
+         .hword  (0x76<<8)               |(1<<NFlag)
+         .hword  (0x77<<8)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x78<<8)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x79<<8)            |(1<<NFlag)
+         .hword  (0x7A<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x7B<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x7C<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x7D<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x7E<<8)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x7F<<8)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x80<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x81<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x82<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x83<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x84<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x85<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x86<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x87<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x88<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x89<<8)|(1<<SFlag)            |(1<<NFlag)
+         .hword  (0x8A<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x8B<<8)|(1<<SFlag)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x8C<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x8D<<8)|(1<<SFlag)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x8E<<8)|(1<<SFlag)      |(1<<HFlag)|(1<<VFlag)|(1<<NFlag)
+         .hword  (0x8F<<8)|(1<<SFlag)      |(1<<HFlag)   |(1<<NFlag)
+         .hword  (0x90<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
+         .hword  (0x91<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x92<<8)|(1<<SFlag)               |(1<<NFlag)
+         .hword  (0x93<<8)|(1<<SFlag)            |(1<<VFlag)|(1<<NFlag)
          .hword  (0x34<<8)               |(1<<NFlag)|(1<<CFlag)
          .hword  (0x35<<8)            |(1<<VFlag)|(1<<NFlag)|(1<<CFlag)
          .hword  (0x36<<8)            |(1<<VFlag)|(1<<NFlag)|(1<<CFlag)
@@ -2425,7 +2430,7 @@ DAATable: .hword  (0x00<<8)|(1<<ZFlag)|(1<<VFlag)
          .hword  (0x97<<8)|(1<<SFlag)               |(1<<NFlag)|(1<<CFlag)
          .hword  (0x98<<8)|(1<<SFlag)            |(1<<NFlag)|(1<<CFlag)
          .hword  (0x99<<8)|(1<<SFlag)         |(1<<VFlag)|(1<<NFlag)|(1<<CFlag)
-         
+
 AF_Z80:  .byte (0<<Z80_CFlag)|(0<<Z80_NFlag)|(0<<Z80_VFlag)|(0<<Z80_HFlag)|(0<<Z80_ZFlag)|(0<<Z80_SFlag) ;@ 0
          .byte (0<<Z80_CFlag)|(0<<Z80_NFlag)|(1<<Z80_VFlag)|(0<<Z80_HFlag)|(0<<Z80_ZFlag)|(0<<Z80_SFlag) ;@ 1
          .byte (1<<Z80_CFlag)|(0<<Z80_NFlag)|(0<<Z80_VFlag)|(0<<Z80_HFlag)|(0<<Z80_ZFlag)|(0<<Z80_SFlag) ;@ 2
@@ -2980,8 +2985,8 @@ PZSTable_data: .byte (1<<ZFlag)|(1<<VFlag),0,0,(1<<VFlag),0,(1<<VFlag),(1<<VFlag
 	.byte  (1<<SFlag)|(1<<VFlag),(1<<SFlag),(1<<SFlag),(1<<SFlag)|(1<<VFlag)
 	.byte  (1<<SFlag),(1<<SFlag)|(1<<VFlag),(1<<SFlag)|(1<<VFlag),(1<<SFlag)
 	.byte  (1<<SFlag),(1<<SFlag)|(1<<VFlag),(1<<SFlag)|(1<<VFlag),(1<<SFlag)
-	.byte  (1<<SFlag)|(1<<VFlag),(1<<SFlag),(1<<SFlag),(1<<SFlag)|(1<<VFlag)       
-MAIN_opcodes:	
+	.byte  (1<<SFlag)|(1<<VFlag),(1<<SFlag),(1<<SFlag),(1<<SFlag)|(1<<VFlag)
+MAIN_opcodes:
  	 .word opcode_0_0,opcode_0_1,opcode_0_2,opcode_0_3,opcode_0_4,opcode_0_5,opcode_0_6,opcode_0_7
      .word opcode_0_8,opcode_0_9,opcode_0_A,opcode_0_B,opcode_0_C,opcode_0_D,opcode_0_E,opcode_0_F
      .word opcode_1_0,opcode_1_1,opcode_1_2,opcode_1_3,opcode_1_4,opcode_1_5,opcode_1_6,opcode_1_7
@@ -3089,7 +3094,7 @@ opcode_0_7:
      orrcs z80a,z80a,#1<<24
      orrcs z80f,z80f,#1<<CFlag
      fetch 4
-;@EX AF,AF'     
+;@EX AF,AF'
 opcode_0_8:
      add r1,cpucontext,#z80a2
      swp z80a,z80a,[r1]
@@ -3173,7 +3178,7 @@ opcode_1_0:
      add z80pc,z80pc,r0
 opcode_1_0_skip:
      fetch 13
-    
+
 ;@LD DE,NN
 opcode_1_1:
      DAM_FETCH16D r0
@@ -3295,8 +3300,8 @@ opcode_1_E:
 opcode_1_F:
      mov z80a,z80a, lsr #24
      tst z80f,#1<<CFlag
-     orrne z80a,z80a,#1<<8 
-     bic z80f,z80f,#(1<<NFlag)|(1<<HFlag)|(1<<CFlag)  
+     orrne z80a,z80a,#1<<8
+     bic z80f,z80f,#(1<<NFlag)|(1<<HFlag)|(1<<CFlag)
      movs z80a,z80a, lsr #1
      orrcs z80f,z80f,#1<<CFlag
      mov z80a,z80a, lsl #24
@@ -3630,7 +3635,7 @@ opcode_4_A:
 opcode_4_B:
      and z80bc,z80bc,#0xFF<<24
      and r1,z80de,#0xFF<<16
-     orr z80bc,z80bc,r1 
+     orr z80bc,z80bc,r1
      fetch 4
 ;@LD C,H
 opcode_4_C:
@@ -3642,7 +3647,7 @@ opcode_4_C:
 opcode_4_D:
      and z80bc,z80bc,#0xFF<<24
      and r1,z80hl,#0xFF<<16
-     orr z80bc,z80bc,r1 
+     orr z80bc,z80bc,r1
      fetch 4
 ;@LD C,(HL)
 opcode_4_E:
@@ -3705,7 +3710,7 @@ opcode_5_8:
 opcode_5_9:
      and z80de,z80de,#0xFF<<24
      and r1,z80bc,#0xFF<<16
-     orr z80de,z80de,r1 
+     orr z80de,z80de,r1
      fetch 4
 ;@LD E,D
 opcode_5_A:
@@ -3722,7 +3727,7 @@ opcode_5_C:
 opcode_5_D:
      and z80de,z80de,#0xFF<<24
      and r1,z80hl,#0xFF<<16
-     orr z80de,z80de,r1 
+     orr z80de,z80de,r1
      fetch 4
 ;@LD E,(HL)
 opcode_5_E:
@@ -3785,7 +3790,7 @@ opcode_6_8:
 opcode_6_9:
      and z80hl,z80hl,#0xFF<<24
      and r1,z80bc,#0xFF<<16
-     orr z80hl,z80hl,r1 
+     orr z80hl,z80hl,r1
      fetch 4
 ;@LD L,D
 opcode_6_A:
@@ -3797,7 +3802,7 @@ opcode_6_A:
 opcode_6_B:
      and z80hl,z80hl,#0xFF<<24
      and r1,z80de,#0xFF<<16
-     orr z80hl,z80hl,r1 
+     orr z80hl,z80hl,r1
      fetch 4
 ;@LD L,H
 opcode_6_C:
@@ -3858,16 +3863,16 @@ opcode_7_5:
 ;@HALT
 opcode_7_6:
      sub z80pc,z80pc,#1
-     
+
      ;@ldrb r0,[cpucontext,#z80if]
      ;@orr r0,r0,#Z80_HALT
      ;@strb r0,[cpucontext,#z80if]
      ;@b z80_execute_end
-     
+
      ;@Reduce cycle counter to 1,2,3 or 4
      and z80_icount,z80_icount,#3
      fetch 4
-     
+
 ;@LD (HL),A
 opcode_7_7:
      mov r1,z80hl, lsr #16
@@ -3918,7 +3923,7 @@ opcode_8_0:
      fetch 4
 ;@ADD A,C
 opcode_8_1:
-     mov r0,z80a     
+     mov r0,z80a
      adds z80a,z80a,z80bc, lsl #8
      mrs z80f,CPSR
      mov z80f,z80f, lsr #28
@@ -4232,7 +4237,7 @@ opcode_9_7:
      orrne z80f,z80f,#1<<HFlag
      orr z80f,z80f,#1<<NFlag
      fetch 4
-;@SBC B 
+;@SBC B
 opcode_9_8:
      and r1,z80bc,#0xFF<<24
      mov r0,z80a
@@ -4382,7 +4387,7 @@ opcode_9_F:
      orr z80f,z80f,#1<<NFlag
      fetch 4
 
-;@AND B 
+;@AND B
 opcode_A_0:
      ands z80a,z80a,z80bc
      sub r0,opcodes,#0x100
@@ -4661,10 +4666,10 @@ opcode_C_1:
      ;@ldrb r2,[z80sp],#1
      ;@orr z80bc,r1,r2, lsl #8
      ;@mov z80bc,z80bc, lsl #16
-     
+
      POP_r0 2
      mov z80bc,r0, lsl #16
-     
+
      fetch 10
 ;@JP NZ,$+3
 opcode_C_2:
@@ -4683,17 +4688,17 @@ opcode_C_4:
      beq opcode_C_D   ;@unconditional CALL
      add z80pc,z80pc,#2
      fetch 10
-        
+
 ;@PUSH BC
 opcode_C_5:
      ;@mov r1,z80bc, lsr #24
      ;@strb r1,[z80sp,#-1]!
      ;@mov r1,z80bc, lsr #16
      ;@strb r1,[z80sp,#-1]!
-     
+
      mov r0,z80bc,lsr#16
      PUSH_r0 2
-     
+
      fetch 11
 ;@ADD A,N
 opcode_C_6:
@@ -4714,7 +4719,7 @@ opcode_C_7:
      ;@mov r0,z80pc, lsr #8
      ;@strb r0,[z80sp,#-1]!
      ;@strb z80pc,[z80sp,#-1]!
-     
+
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
      PUSH_r0 2
@@ -4733,7 +4738,7 @@ opcode_C_9:
      ;@ldrb r0,[z80sp],#1
      ;@ldrb r1,[z80sp],#1
      ;@orr r0,r0,r1, lsl #8
-     
+
      POP_r0 2
      REBASE_PC
 
@@ -4802,23 +4807,25 @@ opcode_C_D:
      ;@mov r0,r2
      ;@REBASE_PC
 
-;@DAM_FETCH16D r0						;@ fetch call addr
-ldr r2,[cpucontext,#z80pc_base]		;@ r2 = z80 pc
-sub r2,z80pc,r2
-ldr r1,[cpucontext,#ppMemFetchData]	;@ r1 point to ppMemFetchData[0]
-mov r0,r2,lsr#8						
-ldr r1,[r1,r0,lsl#2]					;@ r1 = ppMemFetchData[addr >> 8]
+     ;@DAM_FETCH16D r0						;@ fetch call addr
+     ldr r2,[cpucontext,#z80pc_base]		;@ r2 = z80 pc
+     sub r2,z80pc,r2
+     ldr r1,[cpucontext,#ppMemFetchData]	;@ r1 point to ppMemFetchData[0]
+     mov r0,r2,lsr#8
+     ldr r1,[r1,r0,lsl#2]					;@ r1 = ppMemFetchData[addr >> 8]
 
-ldrb r0,[r1,r2]
-add r2,r2,#1
-ldrb r1,[r1,r2]
-orr r0,r0,r1, lsl #8
-add z80pc,z80pc,#2
-
+     ldrb r0,[r1,r2]
+     add r2,r2,#1
+     ldrb r1,[r1,r2]
+     orr r0,r0,r1, lsl #8
+     add z80pc,z80pc,#2
+     
      stmdb sp!,{r0}							;@ push it (new pc) to r0
 
      ldr r0,[cpucontext,#z80pc_base]		;@ calc Z80 PC -> r1
      sub r0,z80pc,r0
+     @bic r0,#0xff000000
+     @bic r0,#0xff0000
      PUSH_r0 2
 
      ldmia sp!,{r0}     					;@ pop new pc
@@ -4848,7 +4855,7 @@ opcode_C_F:
      ;@mov r0,z80pc, lsr #8
      ;@strb r0,[z80sp,#-1]!
      ;@strb z80pc,[z80sp,#-1]!
-     
+
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
      PUSH_r0 2
@@ -4871,7 +4878,7 @@ opcode_D_1:
 
      POP_r0 2
      mov z80de,r0,lsl #16
-     
+
      fetch 10
 ;@JP NC, $+3
 opcode_D_2 :
@@ -4901,10 +4908,10 @@ opcode_D_5:
      ;@strb r1,[z80sp,#-1]!
      ;@mov r1,z80de, lsr #16
      ;@strb r1,[z80sp,#-1]!
-     
+
      mov r0,z80de,lsr#16
      PUSH_r0 2
-     
+
      fetch 11
 ;@SUB N
 opcode_D_6:
@@ -4928,11 +4935,11 @@ opcode_D_7:
      ;@mov r0,z80pc, lsr #8
      ;@strb r0,[z80sp,#-1]!
      ;@strb z80pc,[z80sp,#-1]!
-     
+
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
      PUSH_r0 2
-     
+
      mov r0,#0x10
      REBASE_PC
 
@@ -4983,7 +4990,7 @@ opcode_F_D:
 opcode_D_D_F_D:
      ldrb r1,[z80pc],#1
      ;@ DAM_FETCH8
-     ldr pc,[pc,r1, lsl #2]                       
+     ldr pc,[pc,r1, lsl #2]
 opcodes_DD:  .word 0x00000000
             .word opcode_0_0,  opcode_0_1,  opcode_0_2,  opcode_0_3,  opcode_0_4,  opcode_0_5,  opcode_0_6,  opcode_0_7
             .word opcode_0_8,  opcode_DD_09,opcode_0_A,  opcode_0_B,  opcode_0_C,  opcode_0_D,  opcode_0_E,  opcode_0_F
@@ -5018,7 +5025,7 @@ opcodes_DD:  .word 0x00000000
             .word opcode_F_0,  opcode_F_1,  opcode_F_2,  opcode_F_3,  opcode_F_4,  opcode_F_5,  opcode_F_6,  opcode_F_7
             .word opcode_F_8,  opcode_DD_F9,opcode_F_A,  opcode_F_B,  opcode_F_C,  opcode_F_D,  opcode_F_E,  opcode_F_F
 
-;@SBC A,N 
+;@SBC A,N
 opcode_D_E:
      DAM_FETCH8D r1
      mov r0,z80a
@@ -5044,7 +5051,7 @@ opcode_D_F:
      ;@mov r0,z80pc, lsr #8
      ;@strb r0,[z80sp,#-1]!
      ;@strb z80pc,[z80sp,#-1]!
-     
+
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
      PUSH_r0 2
@@ -5064,10 +5071,10 @@ opcode_E_1:
      ;@ldrb r2,[z80sp],#1
      ;@orr z80hl,r1,r2, lsl #8
      ;@mov z80hl,z80hl, lsl #16
-     
+
      POP_r0 2
      mov z80hl,r0, lsl #16
-     
+
      fetch 10
 ;@JP PO,$+3
 opcode_E_2:
@@ -5106,10 +5113,10 @@ opcode_E_5:
      ;@strb r1,[z80sp,#-1]!
      ;@mov r1,z80hl, lsr #16
      ;@strb r1,[z80sp,#-1]!
-     
+
      mov r0,z80hl,lsr #16
      PUSH_r0 2
-     
+
      fetch 11
 ;@AND N
 opcode_E_6:
@@ -5126,11 +5133,11 @@ opcode_E_7:
      ;@mov r0,z80pc, lsr #8
      ;@strb r0,[z80sp,#-1]!
      ;@strb z80pc,[z80sp,#-1]!
-     
+
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
      PUSH_r0 2
-     
+
      mov r0,#0x20
      REBASE_PC
 
@@ -5170,7 +5177,7 @@ opcode_E_D:
      ldrb r1,[z80pc],#1
      ;@ DAM_FETCH8
      ldr pc,[pc,r1, lsl #2]
-     
+
 opcodes_ED:  .word 0x00000000
 			.word opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF
 			.word opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF
@@ -5204,7 +5211,7 @@ opcodes_ED:  .word 0x00000000
 			.word opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF
 			.word opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF
 			.word opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF,opcode_ED_NF
-     
+
 ;@XOR N
 opcode_E_E:
      DAM_FETCH8D r1
@@ -5219,7 +5226,7 @@ opcode_E_F:
      ;@mov r0,z80pc, lsr #8
      ;@strb r0,[z80sp,#-1]!
      ;@strb z80pc,[z80sp,#-1]!
-     
+
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
      PUSH_r0 2
@@ -5240,13 +5247,13 @@ opcode_F_1:
      ;@ldrb z80f,[r0,z80f]
      ;@ldrb z80a,[z80sp],#1
      ;@mov z80a,z80a, lsl #24
-     
+
      POP_r0_r1
      mov z80a,r1,lsl #24
-     
+
      sub r1,opcodes,#0x200
      ldrb z80f,[r1,r0]
-     
+
      fetch 10
 ;@JP P,$+3
 opcode_F_2:
@@ -5273,15 +5280,15 @@ opcode_F_5:
      ;@sub r0,opcodes,#0x300
      ;@ldrb r1,[r0,z80f]
      ;@strb r1,[z80sp,#-1]!
-     
+
      mov r1,z80a, lsr #24
-     
+
      sub r0,opcodes,#0x300
      ldrb r0,[r0,z80f]
-     
+
      orr r0,r0,r1,lsl #8
      PUSH_r0 2
-     
+
      fetch 11
 ;@OR N
 opcode_F_6:
@@ -5297,7 +5304,7 @@ opcode_F_7:
      ;@mov r0,z80pc, lsr #8
      ;@strb r0,[z80sp,#-1]!
      ;@strb z80pc,[z80sp,#-1]!
-     
+
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
      PUSH_r0 2
@@ -5326,17 +5333,17 @@ MAIN_opcodes_POINTER: .word MAIN_opcodes
 
 ;@EI
 opcode_F_B:
-     
+
      ldr r1,[cpucontext,#nEI]
      ;@tst r1, #1
      ;@beq EiContinue
      cmp r1, #1
      bne EiContinue
-     
+
      ldrb r1,[cpucontext,#z80if]
      cmp r1,#(Z80_IF1)|(Z80_IF2)
      beq EiContinue
-     
+
      mov r1,#(Z80_IF1)|(Z80_IF2)
      strb r1,[cpucontext,#z80if]
      mov r1,#2
@@ -5350,7 +5357,7 @@ EiContinue:
      strb r1,[cpucontext,#z80if]
 
      fetch 4
-     
+
 
 ;@CALL M,NN
 opcode_F_C:
@@ -5385,13 +5392,13 @@ opcode_F_F:
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
      PUSH_r0 2
-     
+
      mov r0,#0x38
      REBASE_PC
 
      fetch 11
 
-     
+
 ;@##################################
 ;@##################################
 ;@###  opcodes CB  #########################
@@ -5406,7 +5413,7 @@ opcode_CB_00:
      orrcs r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<16
      orr z80bc,z80bc,r0
      fetch 8
@@ -5417,7 +5424,7 @@ opcode_CB_01:
      orrcs r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<24
      orr z80bc,z80bc,r0, lsr #8
      fetch 8
@@ -5428,7 +5435,7 @@ opcode_CB_02:
      orrcs r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<16
      orr z80de,z80de,r0
      fetch 8
@@ -5438,7 +5445,7 @@ opcode_CB_03:
      orrcs r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<24
      orr z80de,z80de,r0, lsr #8
      fetch 8
@@ -5449,7 +5456,7 @@ opcode_CB_04:
      orrcs r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<16
      orr z80hl,z80hl,r0
      fetch 8
@@ -5459,7 +5466,7 @@ opcode_CB_05:
      orrcs r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<24
      orr z80hl,z80hl,r0, lsr #8
      fetch 8
@@ -5471,7 +5478,7 @@ opcode_CB_06:
      orrcs r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r0,r0, lsr #24
      mov r1,z80hl, lsr #16
      DAM_WRITE8 OpCB06
@@ -5482,7 +5489,7 @@ opcode_CB_07:
      orrcs z80a,z80a,#1<<24
      sub r0,opcodes,#0x100
      ldrb z80f,[r0,z80a, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      fetch 8
 ;@RRC B
 opcode_CB_08:
@@ -5490,18 +5497,18 @@ opcode_CB_08:
      orrcs r0,r0,#1<<7
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<16
      orr z80bc,z80bc,r0, lsl #24
      fetch 8
 ;@RRC C
 opcode_CB_09:
-     and r0,z80bc,#0xFF<<16     
+     and r0,z80bc,#0xFF<<16
      movs r0,r0, lsr #17
      orrcs r0,r0,#1<<7
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<24
      orr z80bc,z80bc,r0, lsl #16
      fetch 8
@@ -5511,18 +5518,18 @@ opcode_CB_0A:
      orrcs r0,r0,#1<<7
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<16
      orr z80de,z80de,r0, lsl #24
      fetch 8
 ;@RRC E
 opcode_CB_0B:
-     and r0,z80de,#0xFF<<16     
+     and r0,z80de,#0xFF<<16
      movs r0,r0, lsr #17
      orrcs r0,r0,#1<<7
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<24
      orr z80de,z80de,r0, lsl #16
      fetch 8
@@ -5532,18 +5539,18 @@ opcode_CB_0C:
      orrcs r0,r0,#1<<7
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<16
      orr z80hl,z80hl,r0, lsl #24
      fetch 8
 ;@RRC L
 opcode_CB_0D:
-     and r0,z80hl,#0xFF<<16     
+     and r0,z80hl,#0xFF<<16
      movs r0,r0, lsr #17
      orrcs r0,r0,#1<<7
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<24
      orr z80hl,z80hl,r0, lsl #16
      fetch 8
@@ -5555,7 +5562,7 @@ opcode_CB_0E :
      orrcs r0,r0,#1<<7
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r1,z80hl, lsr #16
      DAM_WRITE8 OpCB0E
      fetch 15
@@ -5566,7 +5573,7 @@ opcode_CB_0F:
      sub r0,opcodes,#0x100
      ldrb z80f,[r0,z80a]
      orrcs z80f,z80f,#1<<CFlag
-     mov z80a,z80a, lsl #24 
+     mov z80a,z80a, lsl #24
      fetch 8
 ;@RL B
 opcode_CB_10:
@@ -5576,7 +5583,7 @@ opcode_CB_10:
      movs r0,r0, lsl #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<16
      orr z80bc,z80bc,r0
      fetch 8
@@ -5588,7 +5595,7 @@ opcode_CB_11:
      movs r0,r0, lsl #9
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<24
      orr z80bc,z80bc,r0, lsr #8
      fetch 8
@@ -5600,7 +5607,7 @@ opcode_CB_12:
      movs r0,r0, lsl #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<16
      orr z80de,z80de,r0
      fetch 8
@@ -5612,7 +5619,7 @@ opcode_CB_13:
      movs r0,r0, lsl #9
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<24
      orr z80de,z80de,r0, lsr #8
      fetch 8
@@ -5624,7 +5631,7 @@ opcode_CB_14:
      movs r0,r0, lsl #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<16
      orr z80hl,z80hl,r0
      fetch 8
@@ -5636,7 +5643,7 @@ opcode_CB_15:
      movs r0,r0, lsl #9
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<24
      orr z80hl,z80hl,r0, lsr #8
      fetch 8
@@ -5650,7 +5657,7 @@ opcode_CB_16:
      movs r0,r0, lsl #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r0,r0, lsr #24
      mov r1,z80hl, lsr #16
      DAM_WRITE8 OpCB16
@@ -5662,9 +5669,9 @@ opcode_CB_17:
      movs z80a,z80a, lsl #1
      sub r0,opcodes,#0x100
      ldrb z80f,[r0,z80a, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      fetch 8
-;@RR B 
+;@RR B
 opcode_CB_18:
      mov r0,z80bc, lsr #24
      tst z80f,#1<<CFlag
@@ -5672,7 +5679,7 @@ opcode_CB_18:
      movs r0,r0, lsr #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<16
      orr z80bc,z80bc,r0, lsl #24
     fetch 8
@@ -5684,7 +5691,7 @@ opcode_CB_19:
      movs r0,r0, lsr #17
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<24
      orr z80bc,z80bc,r0, lsl #16
      fetch 8
@@ -5696,7 +5703,7 @@ opcode_CB_1A:
      movs r0,r0, lsr #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<16
      orr z80de,z80de,r0, lsl #24
      fetch 8
@@ -5708,7 +5715,7 @@ opcode_CB_1B:
      movs r0,r0, lsr #17
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<24
      orr z80de,z80de,r0, lsl #16
      fetch 8
@@ -5720,7 +5727,7 @@ opcode_CB_1C:
      movs r0,r0, lsr #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<16
      orr z80hl,z80hl,r0, lsl #24
      fetch 8
@@ -5732,7 +5739,7 @@ opcode_CB_1D:
      movs r0,r0, lsr #17
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<24
      orr z80hl,z80hl,r0, lsl #16
      fetch 8
@@ -5745,7 +5752,7 @@ opcode_CB_1E:
      movs r0,r0, lsr #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r1,z80hl, lsr #16
      DAM_WRITE8 OpCB1E
      fetch 15
@@ -5757,7 +5764,7 @@ opcode_CB_1F:
      movs z80a,z80a, lsr #1
      sub r0,opcodes,#0x100
      ldrb z80f,[r0,z80a]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov z80a,z80a, lsl #24
      fetch 8
 ;@SLA B
@@ -5766,7 +5773,7 @@ opcode_CB_20:
      movs r0,r0, lsl #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<16
      orr z80bc,z80bc,r0
      fetch 8
@@ -5775,7 +5782,7 @@ opcode_CB_21:
      movs r0,z80bc, lsl #9
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<24
      orr z80bc,z80bc,r0, lsr #8
      fetch 8
@@ -5785,7 +5792,7 @@ opcode_CB_22:
      movs r0,r0, lsl #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<16
      orr z80de,z80de,r0
      fetch 8
@@ -5794,17 +5801,17 @@ opcode_CB_23:
      movs r0,z80de, lsl #9
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<24
      orr z80de,z80de,r0, lsr #8
      fetch 8
 ;@SLA H
 opcode_CB_24:
-     and r0,z80hl,#0xFF<<24  
+     and r0,z80hl,#0xFF<<24
      movs r0,r0, lsl #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<16
      orr z80hl,z80hl,r0
      fetch 8
@@ -5813,7 +5820,7 @@ opcode_CB_25:
      movs r0,z80hl, lsl #9
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<24
      orr z80hl,z80hl,r0, lsr #8
      fetch 8
@@ -5824,7 +5831,7 @@ opcode_CB_26:
      movs r0,r0, lsl #25
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r0,r0, lsr #24
      mov r1,z80hl, lsr #16
      DAM_WRITE8 OpCB26
@@ -5834,7 +5841,7 @@ opcode_CB_27:
      movs z80a,z80a, lsl #1
      sub r0,opcodes,#0x100
      ldrb z80f,[r0,z80a, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      fetch 8
 ;@SRA B
 opcode_CB_28:
@@ -5842,7 +5849,7 @@ opcode_CB_28:
      and r0,r0,#0xFF
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<16
      orr z80bc,z80bc,r0, lsl #24
      fetch 8
@@ -5853,7 +5860,7 @@ opcode_CB_29:
      and r0,r0,#0xFF
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80bc,z80bc,#0xFF<<24
      orr z80bc,z80bc,r0, lsl #16
      fetch 8
@@ -5863,7 +5870,7 @@ opcode_CB_2A:
      and r0,r0,#0xFF
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<16
      orr z80de,z80de,r0, lsl #24
      fetch 8
@@ -5875,7 +5882,7 @@ opcode_CB_2B:
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
      orrcs z80f,z80f,#1<<CFlag
-     and z80de,z80de,#0xFF<<24 
+     and z80de,z80de,#0xFF<<24
      orr z80de,z80de,r0, lsl #16
      fetch 8
 ;@SRA H
@@ -5884,7 +5891,7 @@ opcode_CB_2C:
      and r0,r0,#0xFF
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<16
      orr z80hl,z80hl,r0, lsl #24
      fetch 8
@@ -5895,7 +5902,7 @@ opcode_CB_2D:
      and r0,r0,#0xFF
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<24
      orr z80hl,z80hl,r0, lsl #16
      fetch 8
@@ -5908,7 +5915,7 @@ opcode_CB_2E:
      and r0,r0,#0xFF
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r1,z80hl, lsr #16
      DAM_WRITE8 OpCB2E
      fetch 15
@@ -5918,7 +5925,7 @@ opcode_CB_2F:
      and z80a,z80a,#0xFF
      sub r0,opcodes,#0x100
      ldrb z80f,[r0,z80a]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov z80a,z80a, lsl #24
      fetch 8
 
@@ -5950,7 +5957,7 @@ opcode_CB_32:
      orr r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<16
      orr z80de,z80de,r0
      fetch 8
@@ -6030,7 +6037,7 @@ opcode_CB_3A:
      movs r0,z80de, lsr #25
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<16
      orr z80de,z80de,r0, lsl #24
      fetch 8
@@ -6040,7 +6047,7 @@ opcode_CB_3B:
      movs r0,r0, lsr #17
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80de,z80de,#0xFF<<24
      orr z80de,z80de,r0, lsl #16
      fetch 8
@@ -6049,7 +6056,7 @@ opcode_CB_3C:
      movs r0,z80hl, lsr #25
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<16
      orr z80hl,z80hl,r0, lsl #24
      fetch 8
@@ -6059,18 +6066,18 @@ opcode_CB_3D:
      movs r0,r0, lsr #17
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      and z80hl,z80hl,#0xFF<<24
      orr z80hl,z80hl,r0, lsl #16
      fetch 8
 ;@SRL (HL)
-opcode_CB_3E:   
+opcode_CB_3E:
      mov r0,z80hl, lsr #16
      DAM_READ8 OpCB3E
      movs r0,r0, lsr #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r1,z80hl, lsr #16
      DAM_WRITE8 OpCB3E
      fetch 15
@@ -6079,7 +6086,7 @@ opcode_CB_3F:
      movs z80a,z80a, lsr #25
      sub r0,opcodes,#0x100
      ldrb z80f,[r0,z80a]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov z80a,z80a, lsl #24
      fetch 8
 ;@BIT 0,B
@@ -6537,7 +6544,7 @@ opcode_CB_7D:
      orrne z80f,z80f,#1<<SFlag
      fetch 8
 ;@BIT 7,(HL)
-opcode_CB_7E:   
+opcode_CB_7E:
      mov r0,z80hl, lsr #16
      DAM_READ8 OpCB7E
      and z80f,z80f,#1<<CFlag
@@ -7269,16 +7276,16 @@ opcode_DD_29:
 ;@LD IX,(NN)
 opcode_DD_2A:
      DAM_FETCH16D r0
-     
+
      ;@stmdb sp!,{r3,r12,lr}
      ;@mov lr,pc
      ;@ldr pc,[cpucontext,#z80_read16] ;@ r0=addr - data returned in r0
-     ;@ldmia sp!,{r3,r12,lr} 
-     
+     ;@ldmia sp!,{r3,r12,lr}
+
      stmdb sp!,{lr}
      DAM_READ16 OpDD2A
-     ldmia sp!,{lr} 
-     
+     ldmia sp!,{lr}
+
      mov r1,r0, lsl #16
      str r1,[cpucontext,z80xx]
      fetch 20
@@ -7373,7 +7380,7 @@ opcode_DD_36:
      stmdb sp!,{r0}
      DAM_FETCH8D r0
      ldmia sp!,{r2}
-     
+
      ldr r1,[cpucontext,z80xx]
      add r1,r2,r1, lsr #16
      DAM_WRITE8 OpDD36
@@ -7382,9 +7389,9 @@ opcode_DD_36:
 opcode_DD_39:
      ;@ldr r2,[cpucontext,#z80sp_base]
      ;@sub r2,z80sp,r2
-     
+
      mov r2,z80sp
-     
+
      ldr r0,[cpucontext,z80xx]
      mov r1,r0
      bic z80f,z80f,#(1<<NFlag)|(1<<CFlag)|(1<<HFlag)
@@ -7431,7 +7438,7 @@ opcode_DD_4D:
      and z80bc,z80bc,#0xFF<<24
      ldr r0,[cpucontext,z80xx]
      and r1,r0,#0xFF<<16
-     orr z80bc,z80bc,r1 
+     orr z80bc,z80bc,r1
      fetch 8
 ;@LD C,(IX,N)
 opcode_DD_4E:
@@ -7684,7 +7691,7 @@ opcode_DD_7E:
      fetch 19
 ;@ADD A,I   ( IX)
 opcode_DD_84:
-     ldr r1,[cpucontext,z80xx] 
+     ldr r1,[cpucontext,z80xx]
      and r1,r1,#0xFF<<24
      mov r0,z80a
      adds z80a,z80a,r1
@@ -8005,26 +8012,26 @@ opcode_DD_BE:
 
 opcodes_DD_CB_LOCAL: .word opcodes_DD_CB
 opcode_DD_CB:
-;@Looks up the opcode on the opcodes_DD_CB table and then 
+;@Looks up the opcode on the opcodes_DD_CB table and then
 ;@moves the PC to the location of the subroutine
      ;@ldrb r1,[z80pc,#1]
-     
+
      ldr r2,[cpucontext,#z80pc_base]		;@ r2 = z80 pc
      sub r2,z80pc,r2
      add r2,r2,#1
      ldr r1,[cpucontext,#ppMemFetchData]	;@ r1 point to ppMemFetchData[0]
-     mov r0,r2,lsr#8						
+     mov r0,r2,lsr#8
      ldr r1,[r1,r0,lsl#2]					;@ r1 = ppMemFetchData[addr >> 8]
      ldrb r1,[r1,r2]
-     
+
      ;@add z80pc,z80pc,#1
      ;@DAM_FETCH8D r1
      ;@sub z80pc,z80pc,#2
 
      ldr pc,[pc,r1, lsl #2]
-     
+
         .word 0x00
-opcodes_DD_CB:  
+opcodes_DD_CB:
         .word opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_CB_06,opcode_DD_NF2
         .word opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_CB_0E,opcode_DD_NF2
         .word opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_CB_16,opcode_DD_NF2
@@ -8058,7 +8065,7 @@ opcodes_DD_CB:
         .word opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_CB_F6,opcode_DD_NF2
         .word opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_NF2,opcode_DD_CB_FE,opcode_DD_NF2
 
-;@RLC (IX+N) 
+;@RLC (IX+N)
 opcode_DD_CB_06:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8068,11 +8075,11 @@ opcode_DD_CB_06:
      orrcs r0,r0,#1<<24
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r0,r0, lsr #24
      DAM_WRITE8 OpDDCB06
      fetch 23
-;@RRC (IX+N) 
+;@RRC (IX+N)
 opcode_DD_CB_0E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8082,10 +8089,10 @@ opcode_DD_CB_0E:
      orrcs r0,r0,#1<<7
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      DAM_WRITE8 OpDDCB0E
      fetch 23
-;@RL (IX+N) 
+;@RL (IX+N)
 opcode_DD_CB_16:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8093,15 +8100,15 @@ opcode_DD_CB_16:
      DAM_READ8R1 OpDDCB16
      mov r0,r0, lsl #24
      tst z80f,#1<<CFlag
-     orrne r0,r0,#1<<23       
+     orrne r0,r0,#1<<23
      movs r0,r0, lsl #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r0,r0, lsr #24
      DAM_WRITE8 OpDDCB16
      fetch 23
-;@RR (IX+N) 
+;@RR (IX+N)
 opcode_DD_CB_1E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8112,11 +8119,11 @@ opcode_DD_CB_1E:
      movs r0,r0, lsr #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      DAM_WRITE8 OpDDCB1E
      fetch 23
 
-;@SLA (IX+N) 
+;@SLA (IX+N)
 opcode_DD_CB_26:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8125,11 +8132,11 @@ opcode_DD_CB_26:
      movs r0,r0, lsl #25
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0, lsr #24]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      mov r0,r0, lsr #24
      DAM_WRITE8 OpDDCB26
      fetch 23
-;@SRA (IX+N) 
+;@SRA (IX+N)
 opcode_DD_CB_2E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8140,10 +8147,10 @@ opcode_DD_CB_2E:
      and r0,r0,#0xFF
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      DAM_WRITE8 OpDDCB2E
      fetch 23
-;@SLL (IX+N) 
+;@SLL (IX+N)
 opcode_DD_CB_36:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8166,11 +8173,11 @@ opcode_DD_CB_3E:
      movs r0,r0, lsr #1
      sub r2,opcodes,#0x100
      ldrb z80f,[r2,r0]
-     orrcs z80f,z80f,#1<<CFlag 
+     orrcs z80f,z80f,#1<<CFlag
      DAM_WRITE8 OpDDCB3E
      fetch 23
 
-;@BIT 0,(IX+N) 
+;@BIT 0,(IX+N)
 opcode_DD_CB_46:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8181,7 +8188,7 @@ opcode_DD_CB_46:
      tst r0,#1<<0
      orreq z80f,z80f,#(1<<ZFlag)|(1<<VFlag)
      fetch 20
-;@BIT 1,(IX+N) 
+;@BIT 1,(IX+N)
 opcode_DD_CB_4E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8192,7 +8199,7 @@ opcode_DD_CB_4E:
      tst r0,#1<<1
      orreq z80f,z80f,#(1<<ZFlag)|(1<<VFlag)
      fetch 20
-;@BIT 2,(IX+N) 
+;@BIT 2,(IX+N)
 opcode_DD_CB_56:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8203,7 +8210,7 @@ opcode_DD_CB_56:
      tst r0,#1<<2
      orreq z80f,z80f,#(1<<ZFlag)|(1<<VFlag)
      fetch 20
-;@BIT 3,(IX+N) 
+;@BIT 3,(IX+N)
 opcode_DD_CB_5E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8214,7 +8221,7 @@ opcode_DD_CB_5E:
      tst r0,#1<<3
      orreq z80f,z80f,#(1<<ZFlag)|(1<<VFlag)
      fetch 20
-;@BIT 4,(IX+N) 
+;@BIT 4,(IX+N)
 opcode_DD_CB_66:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8225,7 +8232,7 @@ opcode_DD_CB_66:
      tst r0,#1<<4
      orreq z80f,z80f,#(1<<ZFlag)|(1<<VFlag)
      fetch 20
-;@BIT 5,(IX+N) 
+;@BIT 5,(IX+N)
 opcode_DD_CB_6E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8236,7 +8243,7 @@ opcode_DD_CB_6E:
      tst r0,#1<<5
      orreq z80f,z80f,#(1<<ZFlag)|(1<<VFlag)
      fetch 20
-;@BIT 6,(IX+N) 
+;@BIT 6,(IX+N)
 opcode_DD_CB_76:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8247,7 +8254,7 @@ opcode_DD_CB_76:
      tst r0,#1<<6
      orreq z80f,z80f,#(1<<ZFlag)|(1<<VFlag)
      fetch 20
-;@BIT 7,(IX+N) 
+;@BIT 7,(IX+N)
 opcode_DD_CB_7E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8259,13 +8266,13 @@ opcode_DD_CB_7E:
      orreq z80f,z80f,#(1<<ZFlag)|(1<<VFlag)
      orrne z80f,z80f,#1<<SFlag
      fetch 20
-;@RES 0,(IX+N) 
+;@RES 0,(IX+N)
 opcode_DD_CB_86:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
      add r0,r0,r1, lsr #16
 
-     ;@stmdb sp!,{r3,r12}  
+     ;@stmdb sp!,{r3,r12}
      ;@stmdb sp!,{r0} ;@ save addr as well
      ;@mov lr,pc
      ;@ldr pc,[cpucontext,#z80_read8] ;@ r0=addr - data returned in r0
@@ -8274,12 +8281,12 @@ opcode_DD_CB_86:
      ;@mov lr,pc
      ;@ldr pc,[cpucontext,#z80_write8] ;@ r0=data r1=addr
      ;@ldmia sp!,{r3,r12}
-     
+
      DAM_READ8R1 OpDDCB86
      bic r0,r0,#1<<0
      DAM_WRITE8 OpDDCB86
      fetch 23
-;@RES 1,(IX+N) 
+;@RES 1,(IX+N)
 opcode_DD_CB_8E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8288,7 +8295,7 @@ opcode_DD_CB_8E:
      bic r0,r0,#1<<1
      DAM_WRITE8 OpDDCB8E
      fetch 23
-;@RES 2,(IX+N) 
+;@RES 2,(IX+N)
 opcode_DD_CB_96:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8297,7 +8304,7 @@ opcode_DD_CB_96:
      bic r0,r0,#1<<2
      DAM_WRITE8 OpDDCB96
      fetch 23
-;@RES 3,(IX+N) 
+;@RES 3,(IX+N)
 opcode_DD_CB_9E:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8306,7 +8313,7 @@ opcode_DD_CB_9E:
      bic r0,r0,#1<<3
      DAM_WRITE8 OpDDCB9E
      fetch 23
-;@RES 4,(IX+N) 
+;@RES 4,(IX+N)
 opcode_DD_CB_A6:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8315,7 +8322,7 @@ opcode_DD_CB_A6:
      bic r0,r0,#1<<4
      DAM_WRITE8 OpDDCBA6
      fetch 23
-;@RES 5,(IX+N) 
+;@RES 5,(IX+N)
 opcode_DD_CB_AE:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8324,7 +8331,7 @@ opcode_DD_CB_AE:
      bic r0,r0,#1<<5
      DAM_WRITE8 OpDDCBAE
      fetch 23
-;@RES 6,(IX+N) 
+;@RES 6,(IX+N)
 opcode_DD_CB_B6:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8333,7 +8340,7 @@ opcode_DD_CB_B6:
      bic r0,r0,#1<<6
      DAM_WRITE8 OpDDCBB0
      fetch 23
-;@RES 7,(IX+N) 
+;@RES 7,(IX+N)
 opcode_DD_CB_BE:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8342,7 +8349,7 @@ opcode_DD_CB_BE:
      bic r0,r0,#1<<7
      DAM_WRITE8 OpDDCBBE
      fetch 23
-;@SET 0,(IX+N) 
+;@SET 0,(IX+N)
 opcode_DD_CB_C6:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8351,7 +8358,7 @@ opcode_DD_CB_C6:
      orr r0,r0,#1<<0
      DAM_WRITE8 OpDDCBC6
      fetch 23
-;@SET 1,(IX+N) 
+;@SET 1,(IX+N)
 opcode_DD_CB_CE:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8360,7 +8367,7 @@ opcode_DD_CB_CE:
      orr r0,r0,#1<<1
      DAM_WRITE8 OpDDCBCE
      fetch 23
-;@SET 2,(IX+N) 
+;@SET 2,(IX+N)
 opcode_DD_CB_D6:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8369,7 +8376,7 @@ opcode_DD_CB_D6:
      orr r0,r0,#1<<2
      DAM_WRITE8 OpDDCBD6
      fetch 23
-;@SET 3,(IX+N) 
+;@SET 3,(IX+N)
 opcode_DD_CB_DE:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8378,7 +8385,7 @@ opcode_DD_CB_DE:
      orr r0,r0,#1<<3
      DAM_WRITE8 OpDDCBDE
      fetch 23
-;@SET 4,(IX+N) 
+;@SET 4,(IX+N)
 opcode_DD_CB_E6:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8387,7 +8394,7 @@ opcode_DD_CB_E6:
      orr r0,r0,#1<<4
      DAM_WRITE8 OpDDCBE6
      fetch 23
-;@SET 5,(IX+N) 
+;@SET 5,(IX+N)
 opcode_DD_CB_EE:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8396,7 +8403,7 @@ opcode_DD_CB_EE:
      orr r0,r0,#1<<5
      DAM_WRITE8 OpDDCBEE
      fetch 23
-;@SET 6,(IX+N) 
+;@SET 6,(IX+N)
 opcode_DD_CB_F6:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8405,7 +8412,7 @@ opcode_DD_CB_F6:
      orr r0,r0,#1<<6
      DAM_WRITE8 OpDDCBF6
      fetch 23
-;@SET 7,(IX+N) 
+;@SET 7,(IX+N)
 opcode_DD_CB_FE:
      DAM_FETCH8D_S 2
      ldr r1,[cpucontext,z80xx]
@@ -8436,29 +8443,29 @@ opcode_DD_E3:
      ;@strb r0,[z80sp]
      ;@mov r2,r2, lsl #16
      ;@str r2,[cpucontext,z80xx]
-     
+
      POP_r0 0
      stmdb sp!,{r0}
      ldr r0,[cpucontext,z80xx]
      mov r0,r0, lsr #16
      PUSH_r0 0
      ldmia sp!,{r0}
-     mov r0,r0,lsl #16     
+     mov r0,r0,lsl #16
      str r0,[cpucontext,z80xx]
-     
+
      fetch 23
 ;@PUSH IX
 opcode_DD_E5:
      ldr r0,[cpucontext,z80xx]
-     
+
      ;@mov r1,r0, lsr #24
      ;@strb r1,[z80sp,#-1]!
      ;@mov r1,r0, lsr #16
      ;@strb r1,[z80sp,#-1]!
-     
+
      mov r0,r0,lsr #16
      PUSH_r0 2
-     
+
      fetch 15
 ;@JP (IX)
 opcode_DD_E9:
@@ -8551,13 +8558,13 @@ opcode_ED_44:
      tst r0,#0x10<<24
      orrne z80f,z80f,#1<<HFlag
      fetch 8
- 
+
 ;@RETN
 opcode_ED_45:
      ;@ldrb r0,[z80sp],#1
      ;@ldrb r1,[z80sp],#1
      ;@orr r0,r0,r1, lsl #8
-     
+
      POP_r0 2
 
      REBASE_PC
@@ -8628,9 +8635,9 @@ opcode_ED_4D:
      ;@ldrb r0,[z80sp],#1
      ;@ldrb r1,[z80sp],#1
      ;@orr r0,r0,r1, lsl #8
-     
+
      POP_r0 2
-     
+
      REBASE_PC
 
      fetch 14
@@ -8904,14 +8911,14 @@ opcode_ED_71:
 	ldr pc,[cpucontext,#z80_out]			;@ r0=port r1=data
 	ldmia sp!,{r3,r12}
 	fetch 12
-     
+
 ;@SBC HL,SP
 opcode_ED_72:
      ;@ldr r0,[cpucontext,#z80sp_base]
      ;@sub r0,z80sp,r0
-     
+
      mov r0,z80sp
-     
+
      mov r0, r0, lsl #16
      eor z80f, z80f, #(1<<CFlag)
      tst r0, z80f, lsl #(32-CFlag)
@@ -8932,9 +8939,9 @@ opcode_ED_73:
      DAM_FETCH16D r1
      ;@ldr r0,[cpucontext,#z80sp_base]
      ;@sub r0,z80sp,r0
-     
+
      mov r0,z80sp
-     
+
      DAM_WRITE16 OpED73
      fetch 16
 ;@IN A,(C)
@@ -8965,9 +8972,9 @@ opcode_ED_79:
 opcode_ED_7A:
      ;@ldr r1,[cpucontext,#z80sp_base]
      ;@sub r1,z80sp,r1
-     
+
      mov r1,z80sp
-     
+
      tst r0, z80f, lsl #(32-CFlag)
      orrcs z80hl, z80hl, #0xFF
      orrcs z80hl, z80hl, #0xFF<<8
@@ -8990,7 +8997,7 @@ opcode_ED_7B:
 opcode_ED_A0:
      mov r0,z80hl, lsr #16
      DAM_READ8 OpEDA0
-     
+
    do_handler_ED_A0_end1:
      mov r1,z80de, lsr #16
      DAM_WRITE8 OpEDA0
@@ -9126,48 +9133,49 @@ opcode_ED_AB:
 ;@(DE)=(HL), HL=HL+1, till BC=0
 opcode_ED_B0:
      mov r0,z80hl, lsr #16
-;@DAM_READ8 OpEDB0						;@ read8 from (HL)
-;@ r0 = addr
-stmdb sp!,{r3,r12}
+     ;@DAM_READ8 OpEDB0						;@ read8 from (HL)
+    ;@ r0 = addr
+     stmdb sp!,{r3,r12}
 
-;@str z80pc,[cpucontext,#z80pc_pointer]	;@ save pc for debug only
+     ;@str z80pc,[cpucontext,#z80pc_pointer]	;@ save pc for debug only
 
-ldr r3,[cpucontext,#ppMemRead]			;@ r3 point to ppMemRead[0]
-mov r2,r0,lsr#8						
-ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemRead[addr >> 8]
+     ldr r3,[cpucontext,#ppMemRead]			;@ r3 point to ppMemRead[0]
+     mov r2,r0,lsr#8
+     ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemRead[addr >> 8]
 
-cmp r3,#0
-ldrneb r0,[r3,r0]
-bne read8_end_OpEDB0
-mov lr,pc								;@ call z80_read8(r0, r1)
-ldr pc,[cpucontext,#z80_read8]
+     cmp r3,#0
+     ldrneb r0,[r3,r0]
+     bne read8_end_OpEDB0
+
+     mov lr,pc								;@ call z80_read8(r0, r1)
+     ldr pc,[cpucontext,#z80_read8]
 read8_end_OpEDB0:
-ldmia sp!,{r3,r12}
-
+     ldmia sp!,{r3,r12} 
+     
      mov r1,z80de, lsr #16
-;@DAM_WRITE8	OpEDB0						;@ write to (DE)
-;@ r0 = data, r1 = addr
-stmdb sp!,{r3,r12}
-ldr r3,[cpucontext,#ppMemWrite]		;@ r3 point to ppMemWrite[0]
-mov r2,r1,lsr#8						
-ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemWrite[addr >> 8]
+     ;@DAM_WRITE8	OpEDB0						;@ write to (DE)
+     ;@ r0 = data, r1 = addr
+     stmdb sp!,{r3,r12}
+     ldr r3,[cpucontext,#ppMemWrite]		;@ r3 point to ppMemWrite[0]
+     mov r2,r1,lsr#8
+     ldr r3,[r3,r2,lsl#2]					;@ r3 = ppMemWrite[addr >> 8]
 
-cmp r3,#0
-strneb r0,[r3,r1]
-bne write8_end_OpEDB0
+     cmp r3,#0
+     strneb r0,[r3,r1]
+     bne write8_end_OpEDB0
 
-mov r2,r1								;@ swp r1, r0
-mov r1,r0
-mov r0,r2
+     mov r2,r1								;@ swp r1, r0
+     mov r1,r0
+     mov r0,r2
 
-;@str z80_icount,[cpucontext,#nCyclesLeft]
+     ;@str z80_icount,[cpucontext,#nCyclesLeft]
 
-mov lr,pc								;@ call z80_write8(r0, r1)
-ldr pc,[cpucontext,#z80_write8]
+     mov lr,pc								;@ call z80_write8(r0, r1)
+     ldr pc,[cpucontext,#z80_write8]
 
 write8_end_OpEDB0:
-ldmia sp!,{r3,r12}
-
+     ldmia sp!,{r3,r12}
+     
      bic z80f,z80f,#(1<<VFlag)|(1<<NFlag)|(1<<HFlag)
      add z80hl,z80hl,#1<<16
      add z80de,z80de,#1<<16
@@ -9189,7 +9197,7 @@ opcode_ED_B1:
      tst r0,#0x10<<24
      orrne z80f,z80f,#1<<HFlag
      orr z80f,z80f,#(1<<NFlag)|(1<<VFlag)
-     add z80hl,z80hl,#1<<16    
+     add z80hl,z80hl,#1<<16
      subs z80bc,z80bc,#1<<16
      bne opcode_ED_B1_decpc
      bic z80f,z80f,#1<<VFlag
@@ -9322,8 +9330,8 @@ opcode_ED_BB:
 
 end_loop:
      ;@b end_loop
-     
-     
+
+
      ldrb r0,[z80pc,#1]
 
      ldrb r1,[z80pc]
@@ -9334,14 +9342,14 @@ end_loop:
 
      ldrb r1,[z80pc,#-2]
      orr r1,r0,r1,lsl#24
-     
+
      ldr r0,[cpucontext,#z80pc_base]
      sub r0,z80pc,r0
-     
+
      stmdb sp!,{r3,r12}
      mov lr,pc
      ldr pc,[cpucontext,#debugCallback]
-     ldmia sp!,{r3,r12}     
-     
-end_loop2:  
+     ldmia sp!,{r3,r12}
+
+end_loop2:
      b end_loop2

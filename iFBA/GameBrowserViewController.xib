@@ -55,7 +55,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<array class="NSMutableArray" key="IBUIItems">
 							<object class="IBUIBarButtonItem" id="52808403">
-								<string key="IBUITitle">Favorites</string>
+								<string key="IBUITitle">Fav.</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="944489782"/>
@@ -67,13 +67,19 @@
 								<reference key="IBUIToolbar" ref="944489782"/>
 							</object>
 							<object class="IBUIBarButtonItem" id="111684821">
-								<string key="IBUITitle">Genres</string>
+								<string key="IBUITitle">Gen.</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="944489782"/>
 							</object>
 							<object class="IBUIBarButtonItem" id="687365941">
-								<string key="IBUITitle">Missing</string>
+								<string key="IBUITitle">Miss.</string>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<int key="IBUIStyle">1</int>
+								<reference key="IBUIToolbar" ref="944489782"/>
+							</object>
+							<object class="IBUIBarButtonItem" id="846296651">
+								<string key="IBUITitle">Filter</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="944489782"/>
@@ -199,6 +205,14 @@
 					</object>
 					<int key="connectionID">25</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">changeFilter:</string>
+						<reference key="source" ref="846296651"/>
+						<reference key="destination" ref="372490531"/>
+					</object>
+					<int key="connectionID">28</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -212,8 +226,8 @@
 						<int key="objectID">1</int>
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="117848350"/>
 							<reference ref="944489782"/>
+							<reference ref="117848350"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -246,6 +260,7 @@
 							<reference ref="982694"/>
 							<reference ref="111684821"/>
 							<reference ref="687365941"/>
+							<reference ref="846296651"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -269,6 +284,11 @@
 						<reference key="object" ref="687365941"/>
 						<reference key="parent" ref="944489782"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">26</int>
+						<reference key="object" ref="846296651"/>
+						<reference key="parent" ref="944489782"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -282,6 +302,7 @@
 				<string key="14.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="22.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
@@ -289,7 +310,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">25</int>
+			<int key="maxID">28</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -298,6 +319,7 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="backToEmu">id</string>
+						<string key="changeFilter:">id</string>
 						<string key="showFavorites">id</string>
 						<string key="showGenres">id</string>
 						<string key="showMissing:">id</string>
@@ -306,6 +328,10 @@
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="backToEmu">
 							<string key="name">backToEmu</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeFilter:">
+							<string key="name">changeFilter:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="showFavorites">

@@ -67,6 +67,10 @@ void tstfl_validateloadgame(char *name) {
     //    valNb=[prefs objectForKey:@"VERSION_MAJOR"];
     //    valNb=[prefs objectForKey:@"VERSION_MINOR"];
     
+    valStr=[prefs objectForKey:@"lastgame"];
+    if (valStr != nil) strcpy(gameName,[valStr UTF8String]);
+    else gameName[0]=0;
+    
     valNb=[prefs objectForKey:@"video_fskip"];
 	if ((valNb == nil)||reset_settings) ifba_conf.video_fskip=10; //AUTO
 	else ifba_conf.video_fskip = [valNb intValue];    
@@ -171,6 +175,9 @@ void tstfl_validateloadgame(char *name) {
     
     valNb=[[NSNumber alloc] initWithInt:VERSION_SETTINGS ];    
     [prefs setObject:valNb forKey:@"VERSION_SETTINGS"];[valNb autorelease];
+    
+    valStr=[NSString stringWithFormat:@"%s",gameName];
+    [prefs setObject:valStr forKey:@"lastgame"];
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_fskip ];
 	[prefs setObject:valNb forKey:@"video_fskip"];[valNb autorelease];    

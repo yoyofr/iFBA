@@ -23,6 +23,7 @@ bool bBurnUseMMX;
 //#if defined BUILD_A68K
 bool bBurnUseASMCPUEmulation = true;
 bool bBurnUseASMCPUVEZEmulation = false;
+bool bBurnUseASMCPUZ80Emulation=false;
 //#else
 //bool bBurnUseASMCPUEmulation = false;
 //#endif
