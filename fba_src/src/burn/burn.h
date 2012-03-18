@@ -174,7 +174,7 @@ struct BurnDIPInfo {
 // ---------------------------------------------------------------------------
 
 extern bool bBurnUseMMX;
-extern bool bBurnUseASMCPUEmulation;
+extern bool bBurnUseASMCPUEmulation,bBurnUseASMCPUVEZEmulation;
 
 extern UINT32 nFramesEmulated;
 extern UINT32 nFramesRendered;

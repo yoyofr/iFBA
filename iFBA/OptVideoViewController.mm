@@ -202,11 +202,8 @@ extern char gameName[64];
 }
 
 -(void)sliderFSkip:(id)sender {
-    //int refresh=0;
-    //if (ifba_conf.video_fskip!=((UISlider*)sender).value) refresh=1;
     ifba_conf.video_fskip=((MNEValueTrackingSlider*)sender).value;
     if (ifba_conf.video_fskip==10) [((MNEValueTrackingSlider*)sender) setValue:10 sValue:@"AUTO"];
-    //if (refresh) [tabView reloadData];
 }
 
 // Customize the appearance of table view cells.
@@ -300,14 +297,13 @@ extern char gameName[64];
             if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]==NO) sliderview.enabled=NO; 
             break;
         case 7://Frameskipping
-            if (ifba_conf.video_fskip<10) cell.textLabel.text=NSLocalizedString(@"Frame skipping",@"");
-            else cell.textLabel.text=[NSString stringWithFormat:@"%@ AUTO",NSLocalizedString(@"Frame skipping",@""),ifba_conf.video_fskip];
+            cell.textLabel.text=NSLocalizedString(@"Frameskip",@"");
             sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
             [sliderview setMaximumValue:10.0f];
             [sliderview setMinimumValue:0];
             [sliderview setContinuous:true];
-            if (ifba_conf.video_fskip<10) sliderview.value=ifba_conf.video_fskip;
-            else [sliderview setValue:10 sValue:@"AUTO"];
+            sliderview.value=ifba_conf.video_fskip;
+            if (ifba_conf.video_fskip==10) [sliderview setValue:10 sValue:@"AUTO"];
             [sliderview addTarget:self action:@selector(sliderFSkip:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = sliderview;
             [sliderview release];

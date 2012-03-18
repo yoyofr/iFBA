@@ -11,7 +11,8 @@ v0.4
 - mutiple bugs fixes
 - fixed "Fire 6" mapping issue for wiimotes & iCade
 - audio: allow ipod music playback
-- keep app in background when pushing home button
+- keep app in background when exiting
+- added a frameskip option
 
 v0.3 - 14/03/2012
 -----------------

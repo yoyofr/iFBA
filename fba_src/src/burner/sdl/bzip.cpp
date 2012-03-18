@@ -140,7 +140,7 @@ static int FindRom(int i)
 		char *szPossibleName = NULL;
 
 		nRet = BurnDrvGetRomName(&szPossibleName, i, nAka);
-        printf("szPossibleName:%s\n",szPossibleName);
+        //printf("szPossibleName:%s\n",szPossibleName);
 		if (nRet) {												// No more rom names
 			break;
 		}

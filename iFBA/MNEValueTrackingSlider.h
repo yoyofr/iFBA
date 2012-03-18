@@ -16,4 +16,6 @@
 
 @property (nonatomic, readonly) CGRect thumbRect;
 
+- (void)setValue:(float)aValue sValue:(NSString *)sValue;
+
 @end

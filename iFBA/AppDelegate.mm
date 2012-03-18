@@ -236,11 +236,8 @@ void tstfl_validateloadgame(char *name) {
     }
     
     for (int i=0;i<DIRS_MAX;i++) {        
-        NSLog(@"save : %d-%s",i,szAppRomPaths[i]);
         valStr=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
         keyStr=[NSString stringWithFormat:@"romspath%02X",i];
-        NSLog(@"%@",valStr);
-        NSLog(@"%@",keyStr);
         [prefs setObject:valStr forKey:keyStr];
     }	
 	

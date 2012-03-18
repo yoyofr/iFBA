@@ -2113,7 +2113,7 @@ static void scanline_interrupts(INT32 scanline)
 			nPreviousLine = scanline + 1;
 		}
 
-		VezSetIRQLineAndVector(0, (m72_irq_base + 8)/4, VEZ_IRQSTATUS_AUTO);
+		VezSetIRQLineAndVector(0, (m72_irq_base + 8)>>2, VEZ_IRQSTATUS_AUTO);
 	}
 	else if (scanline == 256) // vblank
 	{
@@ -2122,7 +2122,7 @@ static void scanline_interrupts(INT32 scanline)
 			nPreviousLine = 0;
 		}
 
-		VezSetIRQLineAndVector(0, (m72_irq_base + 0)/4, VEZ_IRQSTATUS_AUTO);
+		VezSetIRQLineAndVector(0, (m72_irq_base + 0)>>2, VEZ_IRQSTATUS_AUTO);
 	}
 
 	if (nPreviousLine >= nScreenHeight) nPreviousLine = 0;
@@ -2157,7 +2157,6 @@ static INT32 DrvFrame()
 	for (INT32 i = 0; i < nInterleave; i++)
 	{
 		nCurrentCycles = ((nCyclesTotal[0] / nInterleave) * 1) / 8; // scanline is 87.5% of scanline time
-
 		for (INT32 j = 0; j < 7; j++) { // increase cpu sync
 			nCyclesDone[0] += VezRun(nCurrentCycles);
 #ifdef OLD_SOUND_CPU_BEHAVIOUR
@@ -2167,7 +2166,6 @@ static INT32 DrvFrame()
 		}
 
 		scanline_interrupts(i);	// run at hblank?
-
 		nCurrentCycles = ((nCyclesTotal[0] / nInterleave) * 1) / 8; // horizontal blank is 12.5% of scanline
 
 		nCyclesDone[0] += VezRun(nCurrentCycles);

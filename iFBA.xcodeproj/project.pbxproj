@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		331082051514905700B6FD1A /* MNEValueTrackingSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 331082041514905400B6FD1A /* MNEValueTrackingSlider.m */; };
+		3310820E1514B6D700B6FD1A /* armV30.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3310820C1514B6D600B6FD1A /* armV30.o */; };
+		3310820F1514B6D700B6FD1A /* armV33.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3310820D1514B6D700B6FD1A /* armV33.o */; };
 		33132C36150884FB002F97BB /* OptROMSSetPathsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33132C34150884F9002F97BB /* OptROMSSetPathsViewController.mm */; };
 		33132C37150884FB002F97BB /* OptROMSSetPathsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33132C35150884FA002F97BB /* OptROMSSetPathsViewController.xib */; };
 		331D16AA15053B5C00327F74 /* OptDIPSWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 331D16A815053B5B00327F74 /* OptDIPSWViewController.mm */; };
@@ -632,6 +634,11 @@
 /* Begin PBXFileReference section */
 		331082031514905300B6FD1A /* MNEValueTrackingSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNEValueTrackingSlider.h; sourceTree = "<group>"; };
 		331082041514905400B6FD1A /* MNEValueTrackingSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNEValueTrackingSlider.m; sourceTree = "<group>"; };
+		331082071514B66400B6FD1A /* armnec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armnec.h; sourceTree = "<group>"; };
+		331082081514B66400B6FD1A /* armV30.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = armV30.S; sourceTree = "<group>"; };
+		331082091514B66400B6FD1A /* armV33.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = armV33.S; sourceTree = "<group>"; };
+		3310820C1514B6D600B6FD1A /* armV30.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = armV30.o; sourceTree = "<group>"; };
+		3310820D1514B6D700B6FD1A /* armV33.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = armV33.o; sourceTree = "<group>"; };
 		33132C33150884F9002F97BB /* OptROMSSetPathsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptROMSSetPathsViewController.h; sourceTree = "<group>"; };
 		33132C34150884F9002F97BB /* OptROMSSetPathsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptROMSSetPathsViewController.mm; sourceTree = "<group>"; };
 		33132C35150884FA002F97BB /* OptROMSSetPathsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptROMSSetPathsViewController.xib; sourceTree = "<group>"; };
@@ -1546,12 +1553,26 @@
 				33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */,
 				334F5FB614FC000900ED3CDB /* libBTstack.dylib in Frameworks */,
 				334F5FC314FC282E00ED3CDB /* DrZ80.o in Frameworks */,
+				3310820E1514B6D700B6FD1A /* armV30.o in Frameworks */,
+				3310820F1514B6D700B6FD1A /* armV33.o in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		331082061514B66400B6FD1A /* armnec */ = {
+			isa = PBXGroup;
+			children = (
+				331082071514B66400B6FD1A /* armnec.h */,
+				3310820C1514B6D600B6FD1A /* armV30.o */,
+				3310820D1514B6D700B6FD1A /* armV33.o */,
+				331082081514B66400B6FD1A /* armV30.S */,
+				331082091514B66400B6FD1A /* armV33.S */,
+			);
+			path = armnec;
+			sourceTree = "<group>";
+		};
 		33231BE614FBA67A00AD7823 /* BTstack */ = {
 			isa = PBXGroup;
 			children = (
@@ -2445,6 +2466,7 @@
 				336B528614F4439B00CE9A63 /* sekdebug.h */,
 				336B528714F4439B00CE9A63 /* zet.cpp */,
 				336B528814F4439B00CE9A63 /* zet.h */,
+				331082061514B66400B6FD1A /* armnec */,
 				336B528914F4439B00CE9A63 /* nec */,
 				336B529714F4439B00CE9A63 /* s2650 */,
 				336B529A14F4439B00CE9A63 /* s2650_intf.cpp */,

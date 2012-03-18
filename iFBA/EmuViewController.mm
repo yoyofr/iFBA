@@ -1232,6 +1232,8 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
         case 1: //Pressed            
             virtual_stick_on=1;
             if (vstick_update_status(x,y)>0) { //finger is on pad
+                //printf("padtouch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
+                
                 joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
                 joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
                 joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
@@ -1319,6 +1321,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
         case 0: //Release
             virtual_stick_on=1;
             if (virtual_stick_padfinger==touch_id) {
+                virtual_stick_padfinger=0;
                 virtual_stick_pad=0;
                 joy_analog_x[0]=0;joy_analog_y[0]=0;
                 joy_state[0][GN_UP]=0;

@@ -1,6 +1,8 @@
 #include "burnint.h"
 #include "eeprom.h"
 
+extern char debug_root_path[256];
+
 #define SERIAL_BUFFER_LENGTH 40
 #define MEMORY_SIZE 1024
 
@@ -91,7 +93,11 @@ void EEPROMInit(const eeprom_interface *interface)
 
 	char output[128];
 #ifdef IOS_BUILD
+#ifdef RELEASE_DEBUG
+    sprintf (output, "%s/%s.nv", debug_root_path, BurnDrvGetTextA(DRV_NAME));
+#else
     sprintf (output, "/var/mobile/Documents/iFBA/%s.nv", BurnDrvGetTextA(DRV_NAME));
+#endif
 #else
 	sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
 #endif
@@ -115,7 +121,11 @@ void EEPROMExit()
 
 	char output[128];
 #ifdef IOS_BUILD
+#ifdef RELEASE_DEBUG
+    sprintf (output, "%s/%s.nv", debug_root_path, BurnDrvGetTextA(DRV_NAME));
+#else
     sprintf (output, "/var/mobile/Documents/iFBA/%s.nv", BurnDrvGetTextA(DRV_NAME));
+#endif
 #else
 	sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
 #endif

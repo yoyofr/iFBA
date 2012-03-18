@@ -20,11 +20,12 @@ UINT32 nBurnDrvSelect[8] = { ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U }; // Which 
 
 int rom_force_len=0;
 bool bBurnUseMMX;
-#if defined BUILD_A68K
+//#if defined BUILD_A68K
 bool bBurnUseASMCPUEmulation = true;
-#else
-bool bBurnUseASMCPUEmulation = false;
-#endif
+bool bBurnUseASMCPUVEZEmulation = false;
+//#else
+//bool bBurnUseASMCPUEmulation = false;
+//#endif
 
 #if defined (FBA_DEBUG)
  clock_t starttime = 0;
