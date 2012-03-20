@@ -12,8 +12,8 @@
 
 static NSMutableArray *genreList;
 static int allnone;
-extern int genreFilter;
-static int newgenreFilter;
+static unsigned int newgenreFilter;
+static unsigned int newgenreFilter_first=1;
 
 @implementation OptSelGenresViewController
 @synthesize mnview,tabview;
@@ -60,10 +60,10 @@ static int newgenreFilter;
     
 }
 
--(void) viewWillAppear:(BOOL)animated {
+-(void) viewWillAppear:(BOOL)animated {  //Not called in iOS 4.3 simulator... BUG?
     [super viewWillAppear:animated];
     allnone=0;
-    newgenreFilter=genreFilter;
+    newgenreFilter=(ifba_conf.filter_genre);    
 }
 
 -(void) viewWillDisappear:(BOOL)animated {
@@ -112,6 +112,11 @@ static int newgenreFilter;
         cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
 		
     }
+    if (newgenreFilter_first) {  //Workaround for iOS 4.3 bug (not calling viewillappear, at least in simulator)
+        newgenreFilter=ifba_conf.filter_genre;
+        newgenreFilter_first=0;
+    }
+    
     cell.textLabel.text=[genreList objectAtIndex:indexPath.row];
 	cell.accessoryType=(newgenreFilter&(1<<indexPath.row)?UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
     
@@ -126,11 +131,13 @@ static int newgenreFilter;
 
 #pragma mark UI action
 -(IBAction) cancelInput {
+    newgenreFilter_first=1;//Workaround for iOS 4.3 bug (not calling viewillappear, at least in simulator)
     [self dismissSemiModalViewController:self];
     [tabview reloadData];
 }
 -(IBAction) okInput {
-    genreFilter=newgenreFilter;
+    newgenreFilter_first=1;//Workaround for iOS 4.3 bug (not calling viewillappear, at least in simulator)
+    ifba_conf.filter_genre=newgenreFilter;
     [self dismissSemiModalViewController:self];
 }
 

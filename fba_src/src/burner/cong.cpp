@@ -4,12 +4,12 @@
 const INT32 nConfigMinVersion = 0x020921;
 
 bool bSaveInputs = true;
-extern char debug_root_path[256];
+extern char debug_root_path[512];
 
 static TCHAR* GameConfigName()
 {
 	// Return the path of the config file for this game
-	static TCHAR szName[32];
+	static TCHAR szName[512];
 #ifdef IOS_BUILD
 #ifdef RELEASE_DEBUG
     sprintf(szName, "%s/%s.ini", debug_root_path,BurnDrvGetText(DRV_NAME));

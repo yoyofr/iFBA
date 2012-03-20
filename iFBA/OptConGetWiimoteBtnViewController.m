@@ -49,8 +49,8 @@ extern int wiimoteSelected;
         else if (pressedBtn&WII_JOY_F) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_F;
         else if (pressedBtn&WII_JOY_G) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_G;
         else if (pressedBtn&WII_JOY_H) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_H;
-        else if (pressedBtn&WII_JOY_START) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_SELECT;
-        else if (pressedBtn&WII_JOY_SELECT) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_START;
+        else if (pressedBtn&WII_JOY_START) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_START;
+        else if (pressedBtn&WII_JOY_SELECT) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_SELECT;
         else if (pressedBtn&WII_JOY_HOME) joymap_wiimote[wiimoteSelected][mOptWiimoteButtonSelected].dev_btn=WII_BUTTON_HOME;
         
         //remove older assignment (if exist)

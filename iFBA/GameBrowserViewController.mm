@@ -9,6 +9,7 @@
 #import "GameBrowserViewController.h"
 #include "string.h"
 #include "burner.h"
+#include "fbaconf.h"
 
 #define MAX_FILTER 3
 //0: game name
@@ -17,8 +18,6 @@
 
 #define min(a,b) (a<b?a:b)
 
-int genreFilter=0xFFFFFFFF^GBF_BIOS;
-
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
 
@@ -26,10 +25,6 @@ int *listSectionIndexes;
 int *listSortedList;
 int *listSectionCount;
 int listNbSection;
-
-static int show_missing=1;
-
-static int filter_type=1;
 
 extern char gameName[64];
 extern int launchGame;
@@ -103,8 +98,6 @@ NSMutableArray *filterEntries;
     
     selgenrevc=[[OptSelGenresViewController alloc] initWithNibName:@"OptSelGenresViewController" bundle:nil];
     
-    show_missing=0;
-    
     sectionLbl=nil;
     sectionLblMin=nil;
     romlist=nil;
@@ -116,7 +109,9 @@ NSMutableArray *filterEntries;
     listSectionIndexes=NULL;
     listSectionCount=NULL;
     listSortedList=NULL;
-    listNbSection=0;        
+    listNbSection=0;
+    
+    if (ifba_conf.filter_type>=MAX_FILTER) ifba_conf.filter_type=0;
 }
 
 
@@ -168,7 +163,7 @@ NSMutableArray *filterEntries;
     int saveActiveDrv=nBurnDrvActive;
     int currentIdx=0;
     
-    if (show_missing) {
+    if (ifba_conf.filter_missing) {
         int total_roms_nb=[burn_supportedRoms count];
         NSMutableArray *filelist,*filepath;
         
@@ -194,7 +189,7 @@ NSMutableArray *filterEntries;
         for (int i=0;i<total_roms_nb;i++) {
             nBurnDrvActive=i;
             int genre=BurnDrvGetGenreFlags();
-            if ((genre&genreFilter)!=0) {
+            if (genre&(ifba_conf.filter_genre)!=0) {
                 [romlist addObject:[burn_supportedRoms objectAtIndex:i]];
                 [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
                 [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
@@ -202,7 +197,7 @@ NSMutableArray *filterEntries;
                 
                 int tmpchar=BurnDrvGetTextA(DRV_FULLNAME)[0];
                 if (tmpchar<'A') tmpchar='#';
-                switch (filter_type) {
+                switch (ifba_conf.filter_type) {
                     case 2://genre
                         [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
                         break;
@@ -246,7 +241,7 @@ NSMutableArray *filterEntries;
                         if (ind!=NSNotFound) {
                             nBurnDrvActive=ind;
                             int genre=BurnDrvGetGenreFlags();
-                            if ((genre&genreFilter)!=0) {
+                            if ((genre&(ifba_conf.filter_genre))!=0) {
                                 int tmpchar=BurnDrvGetTextA(DRV_FULLNAME)[0];
                                 if (tmpchar<'A') tmpchar='#';
                                 [romlist addObject:file];
@@ -254,7 +249,7 @@ NSMutableArray *filterEntries;
                                 [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
                                 [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
                                 
-                                switch (filter_type) {
+                                switch (ifba_conf.filter_type) {
                                     case 2://genre
                                         [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
                                         break;
@@ -503,7 +498,7 @@ NSMutableArray *filterEntries;
     
     int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
     
-    if (show_missing) {
+    if (ifba_conf.filter_missing) {
         NSNumber *nb=[romavail objectAtIndex:index];
         if ([nb boolValue]==NO) {
             topLabel.textColor = [UIColor colorWithRed:.6 green:.6 blue:.6 alpha:1.0];
@@ -531,7 +526,7 @@ NSMutableArray *filterEntries;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
-    if (show_missing) {        
+    if (ifba_conf.filter_missing) {        
         NSNumber *nb=[romavail objectAtIndex:index];
         if (![nb boolValue]) return;
     }
@@ -541,8 +536,41 @@ NSMutableArray *filterEntries;
     //change dir
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath objectAtIndex:index]];
     
+//    NSLog(@"gamename: %s",gameName);
+//    NSLog(@"rompath: %@",[rompath objectAtIndex:index]);
+    
     [[self navigationController] popViewControllerAnimated:NO];
 }
+
+/*- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle==UITableViewCellEditingStyleDelete) {
+        char tmp_str[512];
+#ifdef RELEASE_DEBUG    
+        sprintf(tmp_str,"%s/%s_%02x", debug_root_path, gameName,indexPath.row);
+#else        
+        sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x",gameName,indexPath.row);
+#endif        
+        NSError *error;
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.fs",tmp_str] error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.png",tmp_str] error:&error];
+        
+        [self scanFiles];
+        //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView reloadData];
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.    
+    return NO;
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}*/
+
+#pragma Actions
 
 -(IBAction) backToEmu {
     launchGame=2;
@@ -562,17 +590,18 @@ NSMutableArray *filterEntries;
     [tabView reloadData];            
 }
 -(IBAction) changeFilter:(id)sender {
-    filter_type++;
-    if (filter_type==MAX_FILTER) filter_type=0;
+    ifba_conf.filter_type++;
+    if (ifba_conf.filter_type==MAX_FILTER) ifba_conf.filter_type=0;
     cur_game_section=-1;
     [self scanRomsDirs];
     [tabView reloadData];
     if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
 }
 -(IBAction) showMissing:(id)sender{
-    show_missing^=1;
+    if (ifba_conf.filter_missing) ifba_conf.filter_missing=0;
+    else ifba_conf.filter_missing=1;
     
-    if (show_missing) [(UIBarButtonItem*)sender setStyle:UIBarButtonItemStyleDone];
+    if (ifba_conf.filter_missing) [(UIBarButtonItem*)sender setStyle:UIBarButtonItemStyleDone];
     else [(UIBarButtonItem*)sender setStyle:UIBarButtonItemStyleBordered];
     cur_game_section=-1;
     [self scanRomsDirs];

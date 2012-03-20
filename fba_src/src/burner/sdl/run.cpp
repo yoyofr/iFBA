@@ -5,7 +5,7 @@
 #include "fbaconf.h"
 
 //#define NO_SOUND
-//#define BENCH
+#define BENCH_MODE 1
 
 void tstfl_validateloadgame(char *name);
 extern char gameName[64];
@@ -189,13 +189,13 @@ int RunIdle() {
 	}
     
     
-#ifdef BENCH
+#if BENCH_MODE
     timer = SDL_GetTicks();
     if(timer-tick>1000 && ifba_conf.show_fps) {
         sdl_fps = nFramesRendered;
         nFramesRendered = 0;
         tick = timer;
-        printf("fps:%d\n",sdl_fps);
+        //printf("fps:%d\n",sdl_fps);
     }
     now = timer;
     ticks=now-done;

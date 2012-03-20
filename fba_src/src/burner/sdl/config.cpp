@@ -2,7 +2,7 @@
 #include "burner.h"
 int nIniVersion = 0;
 
-extern char debug_root_path[256];
+extern char debug_root_path[512];
 
 static void CreateConfigName(char* szConfig)
 {

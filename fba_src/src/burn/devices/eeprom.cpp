@@ -1,7 +1,7 @@
 #include "burnint.h"
 #include "eeprom.h"
 
-extern char debug_root_path[256];
+extern char debug_root_path[512];
 
 #define SERIAL_BUFFER_LENGTH 40
 #define MEMORY_SIZE 1024
@@ -91,7 +91,7 @@ void EEPROMInit(const eeprom_interface *interface)
 	if (intf->cmd_unlock) locked = 1;
 	else locked = 0;
 
-	char output[128];
+	char output[512];
 #ifdef IOS_BUILD
 #ifdef RELEASE_DEBUG
     sprintf (output, "%s/%s.nv", debug_root_path, BurnDrvGetTextA(DRV_NAME));
@@ -119,7 +119,7 @@ void EEPROMExit()
 	if (!DebugDev_EEPROMInitted) bprintf(PRINT_ERROR, _T("EEPROMExit called without init\n"));
 #endif
 
-	char output[128];
+	char output[512];
 #ifdef IOS_BUILD
 #ifdef RELEASE_DEBUG
     sprintf (output, "%s/%s.nv", debug_root_path, BurnDrvGetTextA(DRV_NAME));

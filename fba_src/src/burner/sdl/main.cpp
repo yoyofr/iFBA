@@ -12,6 +12,8 @@ probably many other things.
 #include "burner.h"
 #include "fbaconf.h"
 
+#define BENCH_MODE 1
+
 extern bool bSoundOn;
 extern int rom_nocheck;
 
@@ -50,8 +52,12 @@ int fba_main(int argc, char *argv[])
 {
 	UINT32 i=0;
     
-    
+#if BENCH_MODE    
+    bSoundOn=0;
+    ifba_conf.show_fps=1;
+#else
     bSoundOn=ifba_conf.sound_on;
+#endif
     bForce60Hz=ifba_conf.video_60hz;
     rom_nocheck=0;  
     rom_force_len=0;

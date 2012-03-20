@@ -5,7 +5,7 @@
 //  Created by Yohann Magnien on 28/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
-extern char debug_root_path[256];
+extern char debug_root_path[512];
 #import <QuartzCore/QuartzCore.h>
 #import "OptSaveStateViewController.h"
 #import "OptROMSSetPathsViewController.h"
@@ -58,7 +58,7 @@ int StatedSave(int slot);
 }
 
 - (void)scanFiles {
-    char tmp_str[256];
+    char tmp_str[512];
     FILE *f;
     for (int i=0;i<10;i++) {
 #ifdef RELEASE_DEBUG    
@@ -137,7 +137,7 @@ int StatedSave(int slot);
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     current_slot=indexPath.row;
     if (slot[indexPath.row]) {
-        char tmp_str[256];
+        char tmp_str[512];
 #ifdef RELEASE_DEBUG    
         sprintf(tmp_str,"%s/%s_%02x.png", debug_root_path, gameName,indexPath.row);
 #else        
@@ -152,6 +152,37 @@ int StatedSave(int slot);
     }
     btn_save.hidden=NO;
 }
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle==UITableViewCellEditingStyleDelete) {
+        char tmp_str[512];
+#ifdef RELEASE_DEBUG    
+        sprintf(tmp_str,"%s/%s_%02x", debug_root_path, gameName,indexPath.row);
+#else        
+        sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x",gameName,indexPath.row);
+#endif        
+        NSError *error;
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.fs",tmp_str] error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.png",tmp_str] error:&error];
+        
+        [self scanFiles];
+        //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView reloadData];
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.    
+    return NO;
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (slot[indexPath.row]) return YES;
+    return NO;
+}
+
+#pragma Actions
 
 
 -(IBAction) backToEmu {
@@ -169,7 +200,7 @@ int StatedSave(int slot);
     [self scanFiles];
     [tabView reloadData];
     
-    char tmp_str[256];
+    char tmp_str[512];
     FILE *f;
 #ifdef RELEASE_DEBUG    
     sprintf(tmp_str,"%s/%s_%02x.png", debug_root_path, gameName,current_slot);

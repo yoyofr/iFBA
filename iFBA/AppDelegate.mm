@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-char debug_root_path[256];
+char debug_root_path[512];
 
 
 #define VERSION_SETTINGS 2
@@ -70,6 +70,16 @@ void tstfl_validateloadgame(char *name) {
     valStr=[prefs objectForKey:@"lastgame"];
     if (valStr != nil) strcpy(gameName,[valStr UTF8String]);
     else gameName[0]=0;
+    
+    valNb=[prefs objectForKey:@"filter_type"];
+	if ((valNb == nil)||reset_settings) ifba_conf.filter_type=0; //Default is list by name
+	else ifba_conf.filter_type = [valNb intValue];
+    valNb=[prefs objectForKey:@"filter_missing"];
+	if ((valNb == nil)||reset_settings) ifba_conf.filter_missing=0;
+	else ifba_conf.filter_missing = [valNb intValue];
+    valNb=[prefs objectForKey:@"filter_genre"];
+	if ((valNb == nil)||reset_settings) ifba_conf.filter_genre=0xFFFFFFFF^GBF_BIOS; //Default is everything but the BIOS
+	else ifba_conf.filter_genre = [valNb intValue];    
     
     valNb=[prefs objectForKey:@"video_fskip"];
 	if ((valNb == nil)||reset_settings) ifba_conf.video_fskip=10; //AUTO
@@ -176,12 +186,18 @@ void tstfl_validateloadgame(char *name) {
     valNb=[[NSNumber alloc] initWithInt:VERSION_SETTINGS ];    
     [prefs setObject:valNb forKey:@"VERSION_SETTINGS"];[valNb autorelease];
     
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_type ];
+	[prefs setObject:valNb forKey:@"filter_type"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_missing ];
+	[prefs setObject:valNb forKey:@"filter_missing"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_genre ];
+	[prefs setObject:valNb forKey:@"filter_genre"];[valNb autorelease];
+    
     valStr=[NSString stringWithFormat:@"%s",gameName];
     [prefs setObject:valStr forKey:@"lastgame"];
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_fskip ];
-	[prefs setObject:valNb forKey:@"video_fskip"];[valNb autorelease];    
-    
+	[prefs setObject:valNb forKey:@"video_fskip"];[valNb autorelease];        
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_60hz ];
 	[prefs setObject:valNb forKey:@"video_60hz"];[valNb autorelease];    
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.aspect_ratio ];

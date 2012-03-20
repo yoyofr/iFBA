@@ -15,6 +15,10 @@
 
 
 typedef struct {
+    //rom browser
+    unsigned int filter_genre;
+    unsigned char filter_type;
+    unsigned char filter_missing;
     //Video
     unsigned char aspect_ratio;
     unsigned char screen_mode;

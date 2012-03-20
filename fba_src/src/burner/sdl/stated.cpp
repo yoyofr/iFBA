@@ -1,14 +1,14 @@
 // State dialog module
 #include "burner.h"
 
-char szChoice[256];
-extern char debug_root_path[256];
+char szChoice[512];
+extern char debug_root_path[512];
 
 int bDrvSaveAll = 0;
 
 // The automatic save
 int StatedAuto(int bSave) {
-	static TCHAR szName[32] = "";
+	static TCHAR szName[512] = "";
 	int nRet;
 #ifdef RELEASE_DEBUG
     sprintf(szName, "%s/%s.fs", debug_root_path,BurnDrvGetText(DRV_NAME));

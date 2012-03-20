@@ -5,7 +5,7 @@
 #define SSHOT_LIBPNG_ERROR 2
 #define SSHOT_OTHER_ERROR 3
 
-extern char debug_root_path[256];
+extern char debug_root_path[512];
 
 //IOS_BUILD patch
 #define SSHOT_DIRECTORY "/var/mobile/Documents/iFBA/"

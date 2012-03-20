@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#define BENCH_MODE 1
+
 #import "MenuViewController.h"
 #import "EmuViewController.h"
 #import "GameBrowserViewController.h"
@@ -78,6 +80,13 @@ extern int device_isIpad;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+#if BENCH_MODE
+    strcpy(gameName,"sfiii3");
+    launchGame=1;
+    //change dir
+    [[NSFileManager defaultManager] changeCurrentDirectoryPath:@"/var/mobile/Documents/ROMS/"];    
+#endif
+    
     if (launchGame) {
         //[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
         [self.navigationController pushViewController:emuvc animated:NO];
