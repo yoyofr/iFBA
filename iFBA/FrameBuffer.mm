@@ -21,10 +21,9 @@ void FrameBufferUtils::Create(FrameBuffer& buffer, int width, int height)
 	
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, buffer.m_frameBufferHandle);
     glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);  
-	glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, buffer.m_depthBufferHandle);
+    //	glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, buffer.m_depthBufferHandle);
 	CHECK_GL_ERRORS();
 }
-
 
 void FrameBufferUtils::Create(FrameBuffer& buffer, EAGLContext* oglContext, id<EAGLDrawable> drawable)
 {
@@ -46,19 +45,43 @@ void FrameBufferUtils::Create(FrameBuffer& buffer, EAGLContext* oglContext, id<E
     }	
 }
 
+void FrameBufferUtils::Recreate(FrameBuffer& buffer, EAGLContext* oglContext, id<EAGLDrawable> drawable)
+{
+    if (buffer.m_colorBufferHandle) return;
+    
+    glGenRenderbuffersOES(1, &buffer.m_colorBufferHandle);
+     
+     glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);        
+     
+     [oglContext renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:drawable];
+     glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
+     
+     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &buffer.m_width);
+     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &buffer.m_height);        
+     
+     //NSLog(@"recreate %d %d",buffer.m_width,buffer.m_height);
+
+}
+
+
 void FrameBufferUtils::UpdateFrame(FrameBuffer& buffer, EAGLContext* oglContext, id<EAGLDrawable> drawable) {
-        glBindFramebufferOES(GL_FRAMEBUFFER_OES, buffer.m_frameBufferHandle);
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, 0);
-        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, 0);
-        glDeleteRenderbuffersOES(1, &buffer.m_colorBufferHandle);
-        
-        glGenRenderbuffersOES(1, &buffer.m_colorBufferHandle);
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
-        [oglContext renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:drawable];
-        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
-        
-        glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &buffer.m_width);
-        glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &buffer.m_height);        
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, 0);
+    
+    glDeleteRenderbuffersOES(1, &buffer.m_colorBufferHandle);
+    
+    buffer.m_colorBufferHandle=0;
+    
+/*    glGenRenderbuffersOES(1, &buffer.m_colorBufferHandle);
+    
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);        
+    
+    [oglContext renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:drawable];
+    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
+    
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &buffer.m_width);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &buffer.m_height);        
+    
+    NSLog(@"updateframe %d %d",buffer.m_width,buffer.m_height);*/
 }
 
 
@@ -66,12 +89,13 @@ void FrameBufferUtils::Destroy(FrameBuffer& buffer)
 {
 	glDeleteFramebuffersOES(1, &buffer.m_frameBufferHandle);
 	glDeleteRenderbuffersOES(1, &buffer.m_colorBufferHandle);
-	glDeleteRenderbuffersOES(1, &buffer.m_depthBufferHandle);
+    //	glDeleteRenderbuffersOES(1, &buffer.m_depthBufferHandle);
 }
 
 
-void FrameBufferUtils::Set(const FrameBuffer& buffer)
-{
+void FrameBufferUtils::Set(const FrameBuffer& buffer) {
+    
+    
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, buffer.m_frameBufferHandle);	
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, buffer.m_colorBufferHandle);
 	CHECK_GL_ERRORS();

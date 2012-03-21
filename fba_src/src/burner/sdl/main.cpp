@@ -12,7 +12,7 @@ probably many other things.
 #include "burner.h"
 #include "fbaconf.h"
 
-#define BENCH_MODE 1
+#define BENCH_MODE 0
 
 extern bool bSoundOn;
 extern int rom_nocheck;

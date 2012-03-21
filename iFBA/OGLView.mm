@@ -52,7 +52,6 @@ extern volatile int doFrame_inProgress;
 }
 
 - (void)layoutSubviews {
-    //NSLog(@"layout");
     [EAGLContext setCurrentContext:m_oglContext];
     //FrameBufferUtils::Destroy(m_frameBuffer);
 	//FrameBufferUtils::Create(m_frameBuffer, m_oglContext, (CAEAGLLayer*)self.layer);
@@ -64,6 +63,7 @@ extern volatile int doFrame_inProgress;
 }
 
 - (void)bind {
+    FrameBufferUtils::Recreate(m_frameBuffer, m_oglContext, (CAEAGLLayer*)self.layer);
 	FrameBufferUtils::Set(m_frameBuffer);
 }
 

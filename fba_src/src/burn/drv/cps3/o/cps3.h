@@ -23,7 +23,6 @@ extern UINT8 Cps3But1[16];
 extern UINT8 Cps3But2[16];
 extern UINT8 Cps3But3[16];
 
-
 INT32 cps3Init();
 INT32 cps3Exit();
 INT32 cps3Frame();

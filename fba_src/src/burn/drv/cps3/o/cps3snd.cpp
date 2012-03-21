@@ -22,7 +22,6 @@ typedef struct {
 
 } cps3snd_chip;
 
-
 static cps3snd_chip * chip;
 
 UINT8 __fastcall cps3SndReadByte(UINT32 addr)

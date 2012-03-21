@@ -1014,24 +1014,20 @@ INT32 SekScan(INT32 nAction) {
             //nSekCyclesTotal
             //nSekIRQPending[SEK_MAX]
             
-            if (nAction & ACB_READ) {
-                printf("rd1pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
+                //printf("rd1pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
                 PicoCpu[i].pc=PicoCpu[i].pc-PicoCpu[i].membase;
                 PicoCpu[i].prev_pc=PicoCpu[i].prev_pc-PicoCpu[i].membase;                
-                printf("rd2pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
-            }
+                //printf("rd2pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
             //if (nSekCPUType != 0) {
             ba.Data = &PicoCpu[i];
             ba.nLen = 24 * 4;
             ba.szName = szName;
             BurnAcb(&ba);
             
-            if (nAction & ACB_WRITE) {
-                printf("wr1pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
+                //printf("wr1pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
                 PicoCpu[i].pc=PicoCpu[i].pc+PicoCpu[i].membase;
                 PicoCpu[i].prev_pc=PicoCpu[i].prev_pc+PicoCpu[i].membase;                
-                printf("wr2pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
-            }
+                //printf("wr2pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
 
             //}
         } else {

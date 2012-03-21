@@ -5,7 +5,7 @@
 #include "fbaconf.h"
 
 //#define NO_SOUND
-#define BENCH_MODE 1
+#define BENCH_MODE 0
 
 void tstfl_validateloadgame(char *name);
 extern char gameName[64];

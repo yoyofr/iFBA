@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#define BENCH_MODE 1
+#define BENCH_MODE 0
 
 #import "MenuViewController.h"
 #import "EmuViewController.h"
