@@ -1228,6 +1228,7 @@ int vstick_update_status(int rx,int ry) {
 void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
     //printf("touch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
     int ret;
+    int xx,yy;
     switch (evt_type) {
         case 1: //Pressed            
             virtual_stick_on=1;
@@ -1243,10 +1244,16 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
                 joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
                 joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
                 virtual_stick_padfinger=touch_id;
-            } else { //check if finger is on a button
+            } else { //check if finger is on a button                
                 for (int i=0;i<vpad_button_nb;i++) {
-                    if ((x>virtual_stick[i].x)&&(x<virtual_stick[i].x+virtual_stick[i].w)&&
-                        (y>virtual_stick[i].y)&&(y<virtual_stick[i].y+virtual_stick[i].h)){
+                    if (i>=VPAD_SPECIALS_BUTTON_NB) {
+                        xx=x-ifba_conf.vpad_button_x;
+                        yy=y+ifba_conf.vpad_button_y;
+                    } else {
+                        xx=x;yy=y;
+                    }
+                    if ((xx>virtual_stick[i].x)&&(xx<virtual_stick[i].x+virtual_stick[i].w)&&
+                        (yy>virtual_stick[i].y)&&(yy<virtual_stick[i].y+virtual_stick[i].h)){
                         joy_state[0][virtual_stick[i].button_id]=1;
                         virtual_stick[i].finger_id=touch_id;
                         break;
@@ -1294,12 +1301,19 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
             }
             
             for (int i=0;i<vpad_button_nb;i++) {                    
+                if (i>=VPAD_SPECIALS_BUTTON_NB) {
+                    xx=x-ifba_conf.vpad_button_x;
+                    yy=y+ifba_conf.vpad_button_y;
+                } else {
+                    xx=x;yy=y;
+                }
                 //is there a button already pressed with this finger ?
                 if (virtual_stick[i].finger_id==touch_id) {
                     //a button was pressed and finger moved
                     //check if finger is still in button area
-                    if ((x>virtual_stick[i].x)&&(x<virtual_stick[i].x+virtual_stick[i].w)&&
-                        (y>virtual_stick[i].y)&&(y<virtual_stick[i].y+virtual_stick[i].h)){
+                    
+                    if ((xx>virtual_stick[i].x)&&(xx<virtual_stick[i].x+virtual_stick[i].w)&&
+                        (yy>virtual_stick[i].y)&&(yy<virtual_stick[i].y+virtual_stick[i].h)){
                         break;
                     } else {
                         //button not pressed anymore
@@ -1309,8 +1323,8 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
                     }
                 } else {
                     //did the finger move to a new button area ?
-                    if ((x>virtual_stick[i].x)&&(x<virtual_stick[i].x+virtual_stick[i].w)&&
-                        (y>virtual_stick[i].y)&&(y<virtual_stick[i].y+virtual_stick[i].h)){
+                    if ((xx>virtual_stick[i].x)&&(xx<virtual_stick[i].x+virtual_stick[i].w)&&
+                        (yy>virtual_stick[i].y)&&(yy<virtual_stick[i].y+virtual_stick[i].h)){
                         joy_state[0][virtual_stick[i].button_id]=1;
                         virtual_stick[i].finger_id=touch_id;
                     }
@@ -1420,7 +1434,11 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
             virtual_stick_posx = virtual_stick_maxdist;
             virtual_stick_posy = cur_height-virtual_stick_maxdist;
             break;
-    }    
+    }
+    
+    virtual_stick_posx+=ifba_conf.vpad_pad_x;
+    virtual_stick_posy-=ifba_conf.vpad_pad_y;
+    
     virtual_stick_maxdist2=virtual_stick_maxdist*virtual_stick_maxdist;
     virtual_stick_mindist2=virtual_stick_mindist*virtual_stick_mindist;
     
@@ -1435,20 +1453,25 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     texcoords[2][0]=0; texcoords[2][1]=1;
     texcoords[3][0]=1; texcoords[3][1]=1;
     
+    int button_ofsx=0;
+    int button_ofsy=0;
     for (int i=(ifba_conf.vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {            
         
         if (i<=VPAD_SPECIALS_BUTTON_NB) {
-        if (i==VPAD_SPECIALS_BUTTON_NB) glBindTexture(GL_TEXTURE_2D, vpad_button_texture);   
+            if (i==VPAD_SPECIALS_BUTTON_NB) { glBindTexture(GL_TEXTURE_2D, vpad_button_texture);
+                button_ofsx=ifba_conf.vpad_button_x;
+                button_ofsy=-ifba_conf.vpad_button_y;
+            }
         else glBindTexture(GL_TEXTURE_2D, vpad_button_spe_texture[i]);
         }
         
-        vertices[0][0]=(float)(virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
-        vertices[0][1]=(float)(virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
+        vertices[0][0]=(float)(button_ofsx+virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
+        vertices[0][1]=(float)(button_ofsy+virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
         
         vertices[1][0]=vertices[0][0]+(float)(virtual_stick[i].sw)/cur_width;
-        vertices[1][1]=(float)(virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
+        vertices[1][1]=(float)(button_ofsy+virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
         
-        vertices[2][0]=(float)(virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
+        vertices[2][0]=(float)(button_ofsx+virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
         vertices[2][1]=vertices[0][1]+(float)(virtual_stick[i].sh)/cur_height;
         
         vertices[3][0]=vertices[0][0]+(float)(virtual_stick[i].sw)/cur_width;

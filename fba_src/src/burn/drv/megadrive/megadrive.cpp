@@ -18,8 +18,6 @@
  ********************************************************************************
  Port by OopsWare
  ********************************************************************************/
-extern int rom_nocheck;
-
 #include "burnint.h"
 #include "burn_ym2612.h"
 #include "sn76496.h"
@@ -2894,7 +2892,6 @@ INT32 MegadriveInit()
 	memset(Mem, 0, nLen);
 	MemIndex();	
 
-    rom_nocheck=1;
 	MegadriveLoadRoms(0);
 	MegadriveLoadRoms(1);
 

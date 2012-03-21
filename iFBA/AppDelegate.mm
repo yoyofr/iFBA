@@ -139,7 +139,19 @@ void tstfl_validateloadgame(char *name) {
 	else ifba_conf.vpad_padsize = [valNb intValue];
     valNb=[prefs objectForKey:@"vpad_style"];
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_style=0;
-	else ifba_conf.vpad_style = [valNb intValue];    
+	else ifba_conf.vpad_style = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_pad_x"];
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_pad_x=0;
+	else ifba_conf.vpad_pad_x = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_pad_y"];
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_pad_y=0;
+	else ifba_conf.vpad_pad_y = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_button_x"];
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_button_x=0;
+	else ifba_conf.vpad_button_x = [valNb intValue];
+    valNb=[prefs objectForKey:@"vpad_button_y"];
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_button_y=0;
+	else ifba_conf.vpad_button_y = [valNb intValue];
     
     valNb=[prefs objectForKey:@"asm_68k"];
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_68k=1;
@@ -233,7 +245,15 @@ void tstfl_validateloadgame(char *name) {
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.btstack_on ];
 	[prefs setObject:valNb forKey:@"btstack_on"];[valNb autorelease];
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_style ];
-	[prefs setObject:valNb forKey:@"vpad_style"];[valNb autorelease];    
+	[prefs setObject:valNb forKey:@"vpad_style"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_pad_x ];
+	[prefs setObject:valNb forKey:@"vpad_pad_x"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_pad_y ];
+	[prefs setObject:valNb forKey:@"vpad_pad_y"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_x ];
+	[prefs setObject:valNb forKey:@"vpad_button_x"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_y ];
+	[prefs setObject:valNb forKey:@"vpad_button_y"];[valNb autorelease];
     
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_68k];

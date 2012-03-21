@@ -6,7 +6,14 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#define MAX_PAD_OFS_X 64
+#define MAX_PAD_OFS_Y 64
+
+#define MAX_BUTTON_OFS_X 64
+#define MAX_BUTTON_OFS_Y 64
+
 #import "OptVPadViewController.h"
+#import "MNEValueTrackingSlider.h"
 
 #import "fbaconf.h"
 
@@ -64,7 +71,7 @@ extern char gameName[64];
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 3;
+	return 4;
 }
 
 
@@ -73,7 +80,8 @@ extern char gameName[64];
     switch (section) {
         case 0:return 2;
         case 1:return 2;
-            case 2:return 1;
+        case 2:return 5;
+        case 3:return 1;
     }
     return 0;
 }
@@ -85,7 +93,9 @@ extern char gameName[64];
             break;
         case 1:title=NSLocalizedString(@"Size",@"");
             break;
-        case 2:title=@"";
+        case 2:title=NSLocalizedString(@"Position",@"");
+            break;
+        case 3:title=@"";
             break;
     }
     return title;
@@ -121,6 +131,19 @@ extern char gameName[64];
     ifba_conf.vpad_style=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
+- (void)sldActionPadX:(id)sender {
+    ifba_conf.vpad_pad_x=((UISlider *)sender).value;
+}
+- (void)sldActionPadY:(id)sender {
+    ifba_conf.vpad_pad_y=((UISlider *)sender).value;
+}
+- (void)sldActionButtonX:(id)sender {
+    ifba_conf.vpad_button_x=((UISlider *)sender).value;
+}
+- (void)sldActionButtonY:(id)sender {
+    ifba_conf.vpad_button_y=((UISlider *)sender).value;
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
@@ -130,6 +153,9 @@ extern char gameName[64];
         case 1://Size
             footer=NSLocalizedString(@"Change size",@"");
             break;
+        case 2://Position
+            footer=NSLocalizedString(@"Change position",@"");
+            break;
     }
     return footer;
 }
@@ -138,6 +164,7 @@ extern char gameName[64];
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UISwitch *switchview;
     UISegmentedControl *segconview;
+    MNEValueTrackingSlider *sliderview;
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -183,7 +210,60 @@ extern char gameName[64];
                 segconview.selectedSegmentIndex=ifba_conf.vpad_padsize;                
             }
             break;
-        case 2://skin
+        case 2://position
+            switch (indexPath.row) {
+                case 0://Pad X
+                    cell.textLabel.text=NSLocalizedString(@"Pad X",@"");
+                    sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                    [sliderview setMaximumValue:MAX_PAD_OFS_X];
+                    [sliderview setMinimumValue:-MAX_PAD_OFS_X];
+                    [sliderview setContinuous:true];
+                    sliderview.value=ifba_conf.vpad_pad_x;                    
+                    [sliderview addTarget:self action:@selector(sldActionPadX:) forControlEvents:UIControlEventValueChanged];
+                    cell.accessoryView = sliderview;
+                    [sliderview release];
+                    break;
+                case 1://Pad Y
+                    cell.textLabel.text=NSLocalizedString(@"Pad Y",@"");
+                    sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                    [sliderview setMaximumValue:MAX_PAD_OFS_Y];
+                    [sliderview setMinimumValue:-MAX_PAD_OFS_Y];
+                    [sliderview setContinuous:true];
+                    sliderview.value=ifba_conf.vpad_pad_y;                    
+                    [sliderview addTarget:self action:@selector(sldActionPadY:) forControlEvents:UIControlEventValueChanged];
+                    cell.accessoryView = sliderview;
+                    [sliderview release];
+                    break;
+                case 2://Button X
+                    cell.textLabel.text=NSLocalizedString(@"Buttons X",@"");
+                    sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                    [sliderview setMaximumValue:MAX_BUTTON_OFS_X];
+                    [sliderview setMinimumValue:-MAX_BUTTON_OFS_X];
+                    [sliderview setContinuous:true];
+                    sliderview.value=ifba_conf.vpad_button_x;                    
+                    [sliderview addTarget:self action:@selector(sldActionButtonX:) forControlEvents:UIControlEventValueChanged];
+                    cell.accessoryView = sliderview;
+                    [sliderview release];
+                    break;
+                case 3://Button Y
+                    cell.textLabel.text=NSLocalizedString(@"Buttons Y",@"");
+                    sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                    [sliderview setMaximumValue:MAX_BUTTON_OFS_Y];
+                    [sliderview setMinimumValue:-MAX_BUTTON_OFS_Y];
+                    [sliderview setContinuous:true];
+                    sliderview.value=ifba_conf.vpad_button_y;                    
+                    [sliderview addTarget:self action:@selector(sldActionButtonY:) forControlEvents:UIControlEventValueChanged];
+                    cell.accessoryView = sliderview;
+                    [sliderview release];
+                    break;
+                case 4://Default
+                    cell.textLabel.text=NSLocalizedString(@"Reset to default",@"");
+                    cell.textLabel.textAlignment=UITextAlignmentCenter;
+                    cell.accessoryView=nil;
+                    break;
+            }            
+            break;
+        case 3://skin
                 cell.textLabel.text=NSLocalizedString(@"Skin",@"");
                 segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
@@ -201,6 +281,15 @@ extern char gameName[64];
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section==2) {//Position
+        if (indexPath.row==4) {//Reset x,y ofs to default
+            ifba_conf.vpad_button_x=0;
+            ifba_conf.vpad_button_y=0;
+            ifba_conf.vpad_pad_x=0;
+            ifba_conf.vpad_pad_y=0;
+            [tableView reloadData];
+        }
+    }
 }
 
 

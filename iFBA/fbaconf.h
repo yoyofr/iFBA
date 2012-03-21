@@ -43,7 +43,7 @@ typedef struct {
     unsigned char btstack_on;
     unsigned char vpad_style;
     int vpad_pad_x,vpad_pad_y;
-    int vpad_buttons_x,vpad_buttons_y;
+    int vpad_button_x,vpad_button_y;
     
     //Emulation
     unsigned char asm_68k;

@@ -197,8 +197,8 @@ int StatedSave(int slot);
     launchGame=2;
     [self.navigationController popToRootViewControllerAnimated:NO];    
     
-    [self scanFiles];
-    [tabView reloadData];
+//    [self scanFiles];
+//    [tabView reloadData];
     
 /*    char tmp_str[512];
     FILE *f;

@@ -1,5 +1,4 @@
 #include "fbaconf.h"
-extern int rom_nocheck;
 
 /*
 

@@ -2,7 +2,6 @@
 #include "burner.h"
 
 int nBzipError = 0;												// non-zero if there is a problem with the opened romset
-int rom_nocheck=0;
 
 static TCHAR* szBzipName[BZIP_MAX] = { NULL, };					// Zip files to search through
 
@@ -113,7 +112,7 @@ static int FindRomByLen(unsigned int nLen)
 
 
 // Find rom number i from the pBzipDriver game
-static int FindRom(int i)
+ int FindRom(int i)
 {
 	struct BurnRomInfo ri;
 	int nRet;
@@ -150,7 +149,7 @@ static int FindRom(int i)
 		}
 	}
     
-    if (ri.nLen&&rom_nocheck) {												// Search by len
+    if (ri.nLen&&rom_force_len) {												// Search by len
 		nRet = FindRomByLen(ri.nLen);
 		if (nRet >= 0) {
 			return nRet;
@@ -421,10 +420,6 @@ int BzipOpen(bool bootApp)
 				BurnDrvGetRomInfo(&ri, i);						// Get info about the rom
                 
                 
-                /*if (rom_nocheck) {
-                    ri.nLen=List[i].nLen;                    
-                }*/
-
 				if ((ri.nType & 0x80) == 0)	{
 					nTotalSize += ri.nLen;
 				}

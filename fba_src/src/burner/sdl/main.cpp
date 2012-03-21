@@ -15,7 +15,6 @@ probably many other things.
 #define BENCH_MODE 0
 
 extern bool bSoundOn;
-extern int rom_nocheck;
 
 int nAppVirtualFps = 6000;			// App fps * 100
 bool bRunPause=0;
@@ -59,7 +58,6 @@ int fba_main(int argc, char *argv[])
     bSoundOn=ifba_conf.sound_on;
 #endif
     bForce60Hz=ifba_conf.video_60hz;
-    rom_nocheck=0;  
     rom_force_len=0;
 	
 	ConfigAppLoad(); 
@@ -103,7 +101,7 @@ int fba_main(int argc, char *argv[])
         for (int d = 0; d < DIRS_MAX; d++) {
             zipName = (char*)malloc(MAX_PATH);            
 			sprintf(zipName, "%s%s", szAppRomPaths[d], argv[1]);
-            //printf("check: %s\n",zipName);            
+            //printf("check: %s\n",zipName);
 			if (ZipOpen(zipName) == 0) {	// Open the rom zip file				
                 // Get the list of entries
                 ZipGetList(&List, &nListCount);						
@@ -114,8 +112,8 @@ int fba_main(int argc, char *argv[])
                     if (List[i].nLen>biggest_file_len) biggest_file_len=List[i].nLen;
                 }
                 
-                rom_force_len=biggest_file_len;
-                //printf("Forcing rom len: %d\n",rom_force_len);
+                rom_force_len=biggest_file_len;                
+//                printf("Forcing rom len: %d\n",rom_force_len);
                 //free zip list
                 if (List) {
                     for (int i = 0; i < nListCount; i++) {
@@ -132,6 +130,8 @@ int fba_main(int argc, char *argv[])
                 break;
             }
             free(zipName);
+            
+            //printf("biggest file: %08X\n",rom_force_len);
         }
     }
     //
