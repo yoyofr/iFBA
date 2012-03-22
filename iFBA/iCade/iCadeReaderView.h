@@ -63,4 +63,6 @@
 @property (nonatomic, assign) id<iCadeEventDelegate> delegate;
 @property (nonatomic, assign) BOOL active;
 
+-(void) changeLang:(int)lang;
+
 @end

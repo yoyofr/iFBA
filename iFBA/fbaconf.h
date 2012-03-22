@@ -13,6 +13,9 @@
 #define VPAD_SPECIALS_BUTTON_NB 5
 #define VSTICK_NB_BUTTON 11
 
+#define MAX_LANG 2
+extern char iCade_langStr[MAX_LANG][32];
+
 
 typedef struct {
     //rom browser
@@ -44,6 +47,7 @@ typedef struct {
     unsigned char vpad_style;
     int vpad_pad_x,vpad_pad_y;
     int vpad_button_x,vpad_button_y;
+    unsigned char icade_lang;
     
     //Emulation
     unsigned char asm_68k;

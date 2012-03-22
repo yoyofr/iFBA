@@ -95,6 +95,10 @@
 "Devices"="Appareils";
 "Warning wiimote not connected"="Wiimote non connectée";
 
+//iCade options
+"iCade Language"="Sélectionner la langue définie dans le système pour le clavier";
+"System keyboard: "="Langage clavier: ";
+
 //Audio options
 "Sound Output"="Audio";
 "Sound Output on"="Audio activé. Changement pris en compte au prochain lancement d'un jeu";

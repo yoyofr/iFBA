@@ -22,8 +22,16 @@
 
 #import "iCadeReaderView.h"
 
-static const char *ON_STATES  = "wdxayhujikol";
-static const char *OFF_STATES = "eczqtrfnmpgv";
+//english
+static const char *ON_STATES_EN  = "wdxayhujikol";
+static const char *OFF_STATES_EN = "eczqtrfnmpgv";
+//french
+static const char *ON_STATES_FR  = "zdxqyhujikol";
+static const char *OFF_STATES_FR = "ecwatrfn,pgv";
+
+static char *ON_STATES;
+static char *OFF_STATES;
+
 
 @interface iCadeReaderView()
 
@@ -36,12 +44,31 @@ static const char *OFF_STATES = "eczqtrfnmpgv";
 
 @synthesize iCadeState=_iCadeState, delegate=_delegate, active;
 
+- (void)changeLang:(int)lang {
+    switch (lang) {
+        default:
+        case 0:
+            ON_STATES=ON_STATES_EN;
+            OFF_STATES=OFF_STATES_EN;
+            break;
+        case 1:
+            ON_STATES=ON_STATES_FR;
+            OFF_STATES=OFF_STATES_FR;
+            break;
+    }
+}
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
+    
+    ON_STATES=ON_STATES_EN;
+    OFF_STATES=OFF_STATES_EN;
     inputView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+
     
     return self;
 }

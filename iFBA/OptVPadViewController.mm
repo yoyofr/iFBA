@@ -175,6 +175,7 @@ extern char gameName[64];
         case 0://Display
             if (indexPath.row==0) {//Opacity
             cell.textLabel.text=NSLocalizedString(@"Opacity",@"");
+                cell.textLabel.textAlignment=UITextAlignmentLeft;
             segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",@" 3 ",nil]];
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
             [segconview addTarget:self action:@selector(segActionOpacity:) forControlEvents:UIControlEventValueChanged];            
@@ -183,6 +184,7 @@ extern char gameName[64];
             segconview.selectedSegmentIndex=ifba_conf.vpad_alpha;
             } else if (indexPath.row==1) {//Display specials
                 cell.textLabel.text=NSLocalizedString(@"Display specials",@"");
+                cell.textLabel.textAlignment=UITextAlignmentLeft;
                 switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
                 [switchview addTarget:self action:@selector(switchDisplaySpecial:) forControlEvents:UIControlEventValueChanged];
                 cell.accessoryView = switchview;
@@ -194,6 +196,7 @@ extern char gameName[64];
         case 1://Size
             if (indexPath.row==0) {//Buttons
                 cell.textLabel.text=NSLocalizedString(@"Buttons",@"");
+                cell.textLabel.textAlignment=UITextAlignmentLeft;
                 segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
                 [segconview addTarget:self action:@selector(segActionBtnSize:) forControlEvents:UIControlEventValueChanged];            
@@ -202,6 +205,7 @@ extern char gameName[64];
                 segconview.selectedSegmentIndex=ifba_conf.vpad_btnsize;
             } else if (indexPath.row==1) {//Pad
                 cell.textLabel.text=NSLocalizedString(@"Pad",@"");
+                cell.textLabel.textAlignment=UITextAlignmentLeft;
                 segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
                 [segconview addTarget:self action:@selector(segActionPadSize:) forControlEvents:UIControlEventValueChanged];            
@@ -214,6 +218,7 @@ extern char gameName[64];
             switch (indexPath.row) {
                 case 0://Pad X
                     cell.textLabel.text=NSLocalizedString(@"Pad X",@"");
+                    cell.textLabel.textAlignment=UITextAlignmentLeft;
                     sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
                     [sliderview setMaximumValue:MAX_PAD_OFS_X];
                     [sliderview setMinimumValue:-MAX_PAD_OFS_X];
@@ -225,6 +230,7 @@ extern char gameName[64];
                     break;
                 case 1://Pad Y
                     cell.textLabel.text=NSLocalizedString(@"Pad Y",@"");
+                    cell.textLabel.textAlignment=UITextAlignmentLeft;
                     sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
                     [sliderview setMaximumValue:MAX_PAD_OFS_Y];
                     [sliderview setMinimumValue:-MAX_PAD_OFS_Y];
@@ -236,6 +242,7 @@ extern char gameName[64];
                     break;
                 case 2://Button X
                     cell.textLabel.text=NSLocalizedString(@"Buttons X",@"");
+                    cell.textLabel.textAlignment=UITextAlignmentLeft;
                     sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
                     [sliderview setMaximumValue:MAX_BUTTON_OFS_X];
                     [sliderview setMinimumValue:-MAX_BUTTON_OFS_X];
@@ -247,6 +254,7 @@ extern char gameName[64];
                     break;
                 case 3://Button Y
                     cell.textLabel.text=NSLocalizedString(@"Buttons Y",@"");
+                    cell.textLabel.textAlignment=UITextAlignmentLeft;
                     sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
                     [sliderview setMaximumValue:MAX_BUTTON_OFS_Y];
                     [sliderview setMinimumValue:-MAX_BUTTON_OFS_Y];
@@ -265,6 +273,7 @@ extern char gameName[64];
             break;
         case 3://skin
                 cell.textLabel.text=NSLocalizedString(@"Skin",@"");
+            cell.textLabel.textAlignment=UITextAlignmentLeft;
                 segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
                 [segconview addTarget:self action:@selector(segActionSkin:) forControlEvents:UIControlEventValueChanged];            

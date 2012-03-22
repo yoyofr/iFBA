@@ -152,6 +152,9 @@ void tstfl_validateloadgame(char *name) {
     valNb=[prefs objectForKey:@"vpad_button_y"];
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_button_y=0;
 	else ifba_conf.vpad_button_y = [valNb intValue];
+    valNb=[prefs objectForKey:@"icade_lang"];
+	if ((valNb == nil)||reset_settings) ifba_conf.icade_lang=0;
+	else ifba_conf.icade_lang = [valNb intValue];
     
     valNb=[prefs objectForKey:@"asm_68k"];
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_68k=1;
@@ -254,6 +257,8 @@ void tstfl_validateloadgame(char *name) {
 	[prefs setObject:valNb forKey:@"vpad_button_x"];[valNb autorelease];
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_y ];
 	[prefs setObject:valNb forKey:@"vpad_button_y"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.icade_lang ];
+	[prefs setObject:valNb forKey:@"icade_lang"];[valNb autorelease];
     
     
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_68k];

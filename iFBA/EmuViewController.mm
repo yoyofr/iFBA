@@ -591,6 +591,7 @@ static int statusLoadMsgUpdated=0;
     [self.view addSubview:control];
     control.active = YES;
     control.delegate = self;
+    [control changeLang:ifba_conf.icade_lang];
     [control release];    
     
     

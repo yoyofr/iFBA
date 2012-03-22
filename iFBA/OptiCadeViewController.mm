@@ -13,6 +13,10 @@
 #import "OptConGetiCadeViewController.h"
 #import "fbaconf.h"
 
+char iCade_langStr[MAX_LANG][32]={
+    "English",
+    "Français"
+};
 int mOptICadeButtonSelected;
 extern volatile int emuThread_running;
 extern int launchGame;
@@ -81,24 +85,18 @@ extern char gameName[64];
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 2;
+	return 3;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    if (section==0) return VSTICK_NB_BUTTON;
+    if (section==1) return VSTICK_NB_BUTTON;
     return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *title=nil;
-    switch (section) {
-        case 0:title=@"";
-            break;
-        case 1:title=@"";
-            break;
-    }
     return title;
 }
 
@@ -106,10 +104,13 @@ extern char gameName[64];
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
-        case 0://Mapping
+        case 0://Language
+            footer=NSLocalizedString(@"iCade Language",@"");
+            break;
+        case 1://Mapping
             footer=NSLocalizedString(@"Mapping info",@"");
             break;
-        case 1://Reset to Default
+        case 2://Reset to Default
             footer=@"";
             break;
     }
@@ -126,17 +127,22 @@ extern char gameName[64];
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
-        case 0://Mapping
+        case 0://Reset to default
+            cell.textLabel.text=[NSString stringWithFormat:@"%@%@",NSLocalizedString(@"System keyboard: ",@""),[NSString stringWithCString:iCade_langStr[ifba_conf.icade_lang] encoding:NSUTF8StringEncoding]];
+            cell.textLabel.textAlignment=UITextAlignmentLeft;
+            cell.accessoryView=nil;
+            break;
+        case 1://Mapping
             cell.textLabel.text=[NSString stringWithFormat:@"%s",joymap_iCade[indexPath.row].btn_name];
             lblview=[[UILabel alloc] initWithFrame:CGRectMake(0,0,100,30)];
-            if (joymap_iCade[indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %d",joymap_iCade[indexPath.row].dev_btn];
+            if (joymap_iCade[indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %c",'A'-1+joymap_iCade[indexPath.row].dev_btn];
             else lblview.text=@"/";
             lblview.backgroundColor=[UIColor clearColor];
             cell.accessoryView=lblview;
             [lblview release];
             cell.textLabel.textAlignment=UITextAlignmentLeft;
             break;
-        case 1://Reset to default
+        case 2://Reset to default
             cell.textLabel.text=NSLocalizedString(@"Reset to default",@"");
             cell.textLabel.textAlignment=UITextAlignmentCenter;
             cell.accessoryView=nil;
@@ -152,11 +158,16 @@ extern char gameName[64];
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.section) {
         case 0:
+            ifba_conf.icade_lang++;
+            if (ifba_conf.icade_lang==MAX_LANG) ifba_conf.icade_lang=0;
+            [tableView reloadData];
+            break;
+        case 1:
             mOptICadeButtonSelected=indexPath.row;
             [self presentSemiModalViewController:optgetButton];
             [tabView reloadData];            
             break;
-        case 1:
+        case 2:
             joymap_iCade[0].dev_btn=4;//Start
             joymap_iCade[1].dev_btn=8;//Select/Coin
             joymap_iCade[2].dev_btn=0;//Menu
