@@ -14,9 +14,10 @@ static NSMutableArray *genreList;
 static int allnone;
 static unsigned int newgenreFilter;
 static unsigned int newgenreFilter_first=1;
+static CAGradientLayer *gradientF,*gradientH;
 
 @implementation OptSelGenresViewController
-@synthesize mnview,tabview;
+@synthesize mnview,tabview,footer,header;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,7 +32,7 @@ static unsigned int newgenreFilter_first=1;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+        
     [[mnview layer] setCornerRadius:15.0];	
 	[[mnview layer] setBorderWidth:3.0];
 	[[mnview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
@@ -64,10 +65,24 @@ static unsigned int newgenreFilter_first=1;
     [super viewWillAppear:animated];
     allnone=0;
     newgenreFilter=(ifba_conf.filter_genre);    
+    
+    gradientF = [CAGradientLayer layer];
+    gradientF.frame = footer.bounds;
+    gradientF.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:0] CGColor], (id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:1] CGColor], nil];
+    [footer.layer insertSublayer:gradientF atIndex:0];
+    
+    gradientH = [CAGradientLayer layer];
+    gradientH.frame = footer.bounds;
+    gradientH.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:1] CGColor], (id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:0] CGColor], nil];
+    [header.layer insertSublayer:gradientH atIndex:0];        
 }
 
 -(void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [gradientF removeFromSuperlayer];
+    [gradientH removeFromSuperlayer];
+//    [gradientF release];
+ //   [gradientH release];
 }
 
 - (void)viewDidUnload
@@ -77,9 +92,16 @@ static unsigned int newgenreFilter_first=1;
     // e.g. self.myOutlet = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {    
     return YES;
 }
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    gradientF.frame = footer.bounds;
+    gradientH.frame = footer.bounds;
+    [self.mnview setNeedsLayout];
+}
+
 
 
 #pragma uitableview

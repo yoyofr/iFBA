@@ -2148,6 +2148,8 @@ DRV		BurnDrvmd_madd93ce;
 DRV		BurnDrvmd_madden;
 DRV		BurnDrvmd_maddenj;
 DRV		BurnDrvjoinem;
+DRV     BurnDrvJojoOld;
+DRV     BurnDrvJojobaOld;
 DRV		BurnDrvJojobaner1;
 DRV		BurnDrvJojobane;
 DRV		BurnDrvJojobar1;
@@ -7987,6 +7989,8 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_madden,			// John Madden Football (Euro, USA)
 	&BurnDrvmd_maddenj,			// John Madden Football - Pro Football (Jpn)
 	&BurnDrvjoinem,				// Joinem
+    &BurnDrvJojoOld,            // JoJo's Venture / JoJo no Kimyouna Bouken (USA 990128) (OLD DUMP)
+    &BurnDrvJojobaOld,          // JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927) (OLD DUMP)
 	&BurnDrvJojobaner1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro 990913, NO CD)
 	&BurnDrvJojobane,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro 990927, NO CD)
 	&BurnDrvJojobar1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913)

@@ -521,6 +521,52 @@ STD_ROM_PICK(sfiii3nr1)
 STD_ROM_FN(sfiii3nr1)
 
 // -------------------------------------------------
+// (OLD DUMP) JoJo no Kimyouna Bouken / JoJo's Venture (990128)
+// -------------------------------------------------
+
+#define JOJO_OLD_990128_FLASH \
+{ "jojo-simm1.0",			0x200000, 0xcfbc38d6, BRF_ESS | BRF_PRG }, \
+{ "jojo-simm1.1",			0x200000, 0x42578d94, BRF_ESS | BRF_PRG }, \
+{ "jojo-simm1.2",			0x200000, 0x1b40c566, BRF_ESS | BRF_PRG }, \
+{ "jojo-simm1.3",			0x200000, 0xbba709b4, BRF_ESS | BRF_PRG }, \
+{ "jojo-simm2.0",			0x200000, 0x417e5dc1, BRF_ESS | BRF_PRG }, \
+{ "jojo-simm2.1",			0x200000, 0xd3b3267d, BRF_ESS | BRF_PRG }, \
+{ "jojo-simm2.2",			0x200000, 0xc66d96b1, BRF_ESS | BRF_PRG }, \
+{ "jojo-simm2.3",			0x200000, 0xaa34cc85, BRF_ESS | BRF_PRG }, \
+{ "jojo-simm3.0",			0x200000, 0xde7fc9c1, BRF_GRA }, \
+{ "jojo-simm3.1",			0x200000, 0x43d053d3, BRF_GRA }, \
+{ "jojo-simm3.2",			0x200000, 0x2ffd7fa5, BRF_GRA }, \
+{ "jojo-simm3.3",			0x200000, 0x4da4985b, BRF_GRA }, \
+{ "jojo-simm3.4",			0x200000, 0xfde98d72, BRF_GRA }, \
+{ "jojo-simm3.5",			0x200000, 0xedb2a266, BRF_GRA }, \
+{ "jojo-simm3.6",			0x200000, 0xbe7cf319, BRF_GRA }, \
+{ "jojo-simm3.7",			0x200000, 0x56fe1a9f, BRF_GRA }, \
+{ "jojo-simm4.0",			0x200000, 0xc4e7bf68, BRF_GRA }, \
+{ "jojo-simm4.1",			0x200000, 0xb62b2719, BRF_GRA }, \
+{ "jojo-simm4.2",			0x200000, 0x18d15809, BRF_GRA }, \
+{ "jojo-simm4.3",			0x200000, 0x9af0ad79, BRF_GRA }, \
+{ "jojo-simm4.4",			0x200000, 0x4124c1f0, BRF_GRA }, \
+{ "jojo-simm4.5",			0x200000, 0x5e001fd1, BRF_GRA }, \
+{ "jojo-simm4.6",			0x200000, 0x9affa23b, BRF_GRA }, \
+{ "jojo-simm4.7",			0x200000, 0x2511572a, BRF_GRA }, \
+{ "jojo-simm5.0",			0x200000, 0x797615fc, BRF_GRA }, \
+{ "jojo-simm5.1",			0x200000, 0x734fd162, BRF_GRA },
+
+// -----------------------------------------------------
+// JoJo no Kimyouna Bouken / JoJo's Venture (USA 990128)
+// -----------------------------------------------------
+static struct BurnRomInfo jojo_oldRomDesc[] = {
+    
+	{ "jojo_usa.29f400.u2",				0x080000, 0x8d40f7be, BRF_ESS | BRF_BIOS },	// SH-2 Bios
+	
+	JOJO_OLD_990128_FLASH
+};
+
+STD_ROM_PICK(jojo_old)
+STD_ROM_FN(jojo_old)
+
+
+// -------------------------------------------------
 // JoJo no Kimyouna Bouken / JoJo's Venture (990128)
 // -------------------------------------------------
 
@@ -732,6 +778,58 @@ static struct BurnRomInfo jojonr2RomDesc[] = {
 
 STD_ROM_PICK(jojonr2)
 STD_ROM_FN(jojonr2)
+
+// ---------------------------------------------------------------------------
+// JoJo no Kimyouna Bouken: Miraie no Isan / JoJo's Bizarre Adventure (990913) (OLD DUMP)
+// ---------------------------------------------------------------------------
+
+#define JOJOBA_OLD_990913_FLASH \
+{ "jojoba-simm1.0",			0x200000, 0x76976231, BRF_ESS | BRF_PRG }, \
+{ "jojoba-simm1.1",			0x200000, 0xcedd78e7, BRF_ESS | BRF_PRG }, \
+{ "jojoba-simm1.2",			0x200000, 0x2955b77f, BRF_ESS | BRF_PRG }, \
+{ "jojoba-simm1.3",			0x200000, 0x280139d7, BRF_ESS | BRF_PRG }, \
+{ "jojoba-simm2.0",			0x200000, 0x305c4914, BRF_ESS | BRF_PRG }, \
+{ "jojoba-simm2.1",			0x200000, 0x18af4f3b, BRF_ESS | BRF_PRG }, \
+{ "jojoba-simm2.2",			0x200000, 0x397e5c9e, BRF_ESS | BRF_PRG }, \
+{ "jojoba-simm2.3",			0x200000, 0xa9d0a7d7, BRF_ESS | BRF_PRG }, \
+{ "jojoba-simm3.0",			0x200000, 0x4d16e111, BRF_GRA }, \
+{ "jojoba-simm3.1",			0x200000, 0x9b3406d3, BRF_GRA }, \
+{ "jojoba-simm3.2",			0x200000, 0xf2414997, BRF_GRA }, \
+{ "jojoba-simm3.3",			0x200000, 0x954b9c7d, BRF_GRA }, \
+{ "jojoba-simm3.4",			0x200000, 0x625adc1d, BRF_GRA }, \
+{ "jojoba-simm3.5",			0x200000, 0x20a70bb4, BRF_GRA }, \
+{ "jojoba-simm3.6",			0x200000, 0xa10ec5af, BRF_GRA }, \
+{ "jojoba-simm3.7",			0x200000, 0x0bd0de7a, BRF_GRA }, \
+{ "jojoba-simm4.0",			0x200000, 0x6ea14adc, BRF_GRA }, \
+{ "jojoba-simm4.1",			0x200000, 0x8f4c42fb, BRF_GRA }, \
+{ "jojoba-simm4.2",			0x200000, 0xef0586d1, BRF_GRA }, \
+{ "jojoba-simm4.3",			0x200000, 0x93ccc470, BRF_GRA }, \
+{ "jojoba-simm4.4",			0x200000, 0x3d9ec7d2, BRF_GRA }, \
+{ "jojoba-simm4.5",			0x200000, 0x03e66850, BRF_GRA }, \
+{ "jojoba-simm4.6",			0x200000, 0x01606ac3, BRF_GRA }, \
+{ "jojoba-simm4.7",			0x200000, 0x36392b87, BRF_GRA }, \
+{ "jojoba-simm5.0",			0x200000, 0x2ef8c60c, BRF_GRA }, \
+{ "jojoba-simm5.1",			0x200000, 0xcf7d7ca6, BRF_GRA }, \
+{ "jojoba-simm5.2",			0x200000, 0xb7815bfa, BRF_GRA }, \
+{ "jojoba-simm5.3",			0x200000, 0x9bfec049, BRF_GRA }, \
+{ "jojoba-simm5.4",			0x200000, 0xd167536b, BRF_GRA }, \
+{ "jojoba-simm5.5",			0x200000, 0x55e7a042, BRF_GRA }, \
+{ "jojoba-simm5.6",			0x200000, 0x4fb32906, BRF_GRA }, \
+{ "jojoba-simm5.7",			0x200000, 0x8c8be520, BRF_GRA },
+
+// ---------------------------------------------------------------------------------
+// JoJo no Kimyouna Bouken: Miraie no Isan / JoJo's Bizarre Adventure (Japan 990913)
+// ---------------------------------------------------------------------------------
+static struct BurnRomInfo jojoba_oldRomDesc[] = {
+    
+	{ "jojoba_japan.29f400.u2",			0x080000, 0x3085478c, BRF_ESS | BRF_BIOS },	// SH-2 Bios
+    
+	JOJOBA_OLD_990913_FLASH
+};
+
+STD_ROM_PICK(jojoba_old)
+STD_ROM_FN(jojoba_old)
+
 
 // ---------------------------------------------------------------------------
 // JoJo no Kimyouna Bouken: Miraie no Isan / JoJo's Bizarre Adventure (990927)
@@ -1255,6 +1353,17 @@ struct BurnDriver BurnDrvSfiii3nr1 = {
 	384, 224, 4, 3
 };
 
+struct BurnDriver BurnDrvJojoOld = {
+	"jojo_old", NULL, NULL, NULL, "1998",
+	"JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108) (OLD DUMP)\0", NULL, "Capcom", "CPS-3",
+	L"\u30B8\u30E7\u30B8\u30E7\u306E \u5947\u5999\u306A\u5192\u967A\0JoJo's Venture (USA 990108) (OLD DUMP)\0", NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_16BIT_ONLY, 2, HARDWARE_CAPCOM_CPS3, GBF_VSFIGHT, 0,
+	NULL, jojo_oldRomInfo, jojo_oldRomName, NULL, NULL, cps3InputInfo, usaDIPInfo,
+	jojor1Init, cps3Exit, cps3Frame, NULL, cps3Scan, &cps3_palette_change, 0x40000,
+	384, 224, 4, 3
+};
+
+
 struct BurnDriver BurnDrvJojo = {
 	"jojo", NULL, NULL, NULL, "1998",
 	"JoJo's Venture / JoJo no Kimyouna Bouken (USA 990128)\0", NULL, "Capcom", "CPS-3",
@@ -1344,6 +1453,17 @@ struct BurnDriver BurnDrvJojonr2 = {
 	jojor2Init, cps3Exit, cps3Frame, NULL, cps3Scan, &cps3_palette_change, 0x40000,
 	384, 224, 4, 3
 };
+
+struct BurnDriver BurnDrvJojobaOld = {
+	"jojoba_old", NULL, NULL, NULL, "1999",
+	"JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927) (OLD DUMP)\0", NULL, "Capcom", "CPS-3",
+	L"\u30B8\u30E7\u30B8\u30E7\u306E \u5947\u5999\u306A\u5192\u967A: \u672A\u6765\u3078\u306E\u907A\u7523\0JoJo's Bizarre Adventure (Japan 990927) (OLD DUMP)\0", NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_16BIT_ONLY, 2, HARDWARE_CAPCOM_CPS3, GBF_VSFIGHT, 0,
+	NULL, jojoba_oldRomInfo, jojoba_oldRomName, NULL, NULL, cps3InputInfo, jojobaDIPInfo,
+	jojobaInit, cps3Exit, cps3Frame, NULL, cps3Scan, &cps3_palette_change, 0x40000,
+	384, 224, 4, 3
+};
+
 
 struct BurnDriver BurnDrvJojoba = {
 	"jojoba", NULL, NULL, NULL, "1999",

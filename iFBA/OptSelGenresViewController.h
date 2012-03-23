@@ -13,12 +13,12 @@
 
 
 @interface OptSelGenresViewController : TDSemiModalViewController {
-    IBOutlet UIView *mnview;
+    IBOutlet UIView *mnview,*footer,*header;
     IBOutlet UITableView *tabview;
     CADisplayLink* m_displayLink;
 }
 
-@property (nonatomic,retain) IBOutlet UIView *mnview;
+@property (nonatomic,retain) IBOutlet UIView *mnview,*footer,*header;
 @property (nonatomic,retain) IBOutlet UITableView *tabview;
 
 -(IBAction) cancelInput;
