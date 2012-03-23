@@ -1,6 +1,4 @@
 TODO
-- customizable pad position
-- delete rom capabilities => popup to delete other files (state, png, nvram, ini)
 - pad restrictor: 2ways, 4ways, 8ways
 - buttons mapping / game or buttons nb ?
 
@@ -13,6 +11,7 @@ v0.4
 - audio: allow ipod music playback
 - keep app in background when exiting
 - added a frameskip option
+- customizable pad position
 
 v0.3 - 14/03/2012
 -----------------

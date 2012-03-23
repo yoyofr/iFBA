@@ -98,7 +98,7 @@ void tstfl_validateloadgame(char *name) {
 	else ifba_conf.filtering = [valNb intValue];
     valNb=[prefs objectForKey:@"brightness"];
 	if ((valNb == nil)||reset_settings) {
-        if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]) ifba_conf.brightness=[[UIScreen mainScreen] brightness];
+        if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]) ifba_conf.brightness=[[UIScreen mainScreen] brightness];
         else ifba_conf.brightness=0.5f;
     }
 	else ifba_conf.brightness = [valNb floatValue];        
@@ -307,7 +307,7 @@ void tstfl_validateloadgame(char *name) {
     
     int settings_reseted=[self loadSettings];
     
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)])  [[UIScreen mainScreen]setBrightness:ifba_conf.brightness];
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)])  [[UIScreen mainScreen]setBrightness:ifba_conf.brightness];
     
     /* Set working directory to resource path */
     //NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];

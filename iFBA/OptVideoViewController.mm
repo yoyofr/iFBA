@@ -192,8 +192,8 @@ extern char gameName[64];
     [tabView reloadData];
 }
 -(void)sliderBrightness:(id)sender {
-    ifba_conf.brightness=((UISlider*)sender).value;
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]) [[UIScreen mainScreen] setBrightness:ifba_conf.brightness];
+    ifba_conf.brightness=((MNEValueTrackingSlider*)sender).value;
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]) [[UIScreen mainScreen] setBrightness:ifba_conf.brightness];
     //    [tabView reloadData];
 }
 -(void)sliderFilterStrength:(id)sender {
@@ -250,7 +250,7 @@ extern char gameName[64];
             } else { //strength
                 cell.textLabel.text=NSLocalizedString(@"Video filter strength",@"");
                 sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];                
-                [sliderview setMaximumValue:255.0f];
+                [sliderview setMaximumValue:128];
                 [sliderview setMinimumValue:0];
                 [sliderview setContinuous:true];
                 [sliderview addTarget:self action:@selector(sliderFilterStrength:) forControlEvents:UIControlEventValueChanged];
@@ -286,15 +286,15 @@ extern char gameName[64];
         case 6://Brightness
             cell.textLabel.text=NSLocalizedString(@"Brightness",@"");
             sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
-            [sliderview setMaximumValue:1.0f];
-            [sliderview setMinimumValue:0];
+            //[sliderview setMaximumValue:1.0f];
+            //[sliderview setMinimumValue:0.0f];
             [sliderview setContinuous:true];
             sliderview.value=ifba_conf.brightness;            
             
             [sliderview addTarget:self action:@selector(sliderBrightness:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = sliderview;
             [sliderview release];
-            if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness)]==NO) sliderview.enabled=NO; 
+            if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]==NO) sliderview.enabled=NO; 
             break;
         case 7://Frameskipping
             cell.textLabel.text=NSLocalizedString(@"Frameskip",@"");

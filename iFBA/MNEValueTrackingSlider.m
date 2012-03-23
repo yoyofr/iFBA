@@ -123,7 +123,7 @@
     CGRect _thumbRect = self.thumbRect;
     CGRect popupRect = CGRectOffset(_thumbRect, -40, -floorf(_thumbRect.size.height * 0.6));
     valuePopupView.frame = CGRectInset(popupRect, -20, 2);
-    valuePopupView.value = (NSInteger)self.value;
+    valuePopupView.value = self.value;
 }
 
 #pragma mark - Memory management
