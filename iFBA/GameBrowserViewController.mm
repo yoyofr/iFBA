@@ -7,9 +7,11 @@
 //
 
 #import "GameBrowserViewController.h"
+#import "OptGameInfoViewController.h"
 #include "string.h"
 #include "burner.h"
 #include "fbaconf.h"
+#include "DBHelper.h"
 
 #define MAX_FILTER 3
 //0: game name
@@ -20,6 +22,8 @@
 
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
+extern char gameInfo[64*1024];
+
 
 int *listSectionIndexes;
 int *listSortedList;
@@ -77,18 +81,15 @@ NSMutableArray *filterEntries;
 - (void)buildFilters {
     char *szName,*szLname;
     burn_supportedRoms=[[NSMutableArray alloc] initWithCapacity:nBurnDrvCount];
-    //burn_supportedRomsNames=[[NSMutableArray alloc] initWithCapacity:nBurnDrvCount];
-    //szName=(char*)malloc(256);
     int saveActiveDrv=nBurnDrvActive;
     for (int i=0;i<nBurnDrvCount;i++) {
         nBurnDrvActive=i;
         BurnDrvGetZipName(&szName,0);
         [burn_supportedRoms addObject:[[NSString stringWithFormat:@"%s",szName] lowercaseString]];
-        //[burn_supportedRomsNames addObject:[[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_FULLNAME)] lowercaseString]];
-        //NSLog(@"%s;%s;%s",szName,BurnDrvGetTextA(DRV_FULLNAME),BurnDrvGetTextA(DRV_SYSTEM));
+        //NSLog(@"%s;%08X;%s;%s",szName,BurnDrvGetGenreFlags(),BurnDrvGetTextA(DRV_FULLNAME),BurnDrvGetTextA(DRV_SYSTEM));
+//        printf("cp %s.ico extract/\n",szName);
     }
     nBurnDrvActive=saveActiveDrv;
-    //free(szName);
 }
 
 #pragma mark - View lifecycle
@@ -130,8 +131,6 @@ NSMutableArray *filterEntries;
     NSString *cpath;
     NSString *file;
     NSArray *filetype_extROMFILE=[@"ZIP" componentsSeparatedByString:@","];    //,FBA ?
-    
-    [self buildFilters];
     
     if (listSortedList) free(listSortedList);
     if (listSectionIndexes) free(listSectionIndexes);
@@ -186,10 +185,13 @@ NSMutableArray *filterEntries;
             }
         }
         
+        
+        
         for (int i=0;i<total_roms_nb;i++) {
             nBurnDrvActive=i;
             int genre=BurnDrvGetGenreFlags();
-            if (genre&(ifba_conf.filter_genre)!=0) {
+
+            if (genre&(ifba_conf.filter_genre)) {
                 [romlist addObject:[burn_supportedRoms objectAtIndex:i]];
                 [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
                 [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
@@ -244,7 +246,7 @@ NSMutableArray *filterEntries;
                             if ((genre&(ifba_conf.filter_genre))!=0) {
                                 int tmpchar=BurnDrvGetTextA(DRV_FULLNAME)[0];
                                 if (tmpchar<'A') tmpchar='#';
-                                [romlist addObject:file];
+                                [romlist addObject:[file stringByDeletingPathExtension] ];
                                 [rompath addObject:cpath];                                                                
                                 [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
                                 [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
@@ -336,15 +338,15 @@ NSMutableArray *filterEntries;
         [romlistLblSorted release];
     }
     
-    [burn_supportedRoms release];   
-    //[burn_supportedRomsNames release];
-    
     nBurnDrvActive=saveActiveDrv;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     cur_game_section=-1;
+    
+    [self buildFilters];
+    
     [self scanRomsDirs];
     [[self tabView] reloadData];
     if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
@@ -362,6 +364,9 @@ NSMutableArray *filterEntries;
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
+    
+    [burn_supportedRoms release];
+    
     if (romlist) [romlist release];
     romlist=nil;
     if (romlistLbl) [romlistLbl release];
@@ -444,14 +449,15 @@ NSMutableArray *filterEntries;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     const NSInteger TOP_LABEL_TAG = 1001;
 	const NSInteger BOTTOM_LABEL_TAG = 1002;
+    const NSInteger ICON_TAG = 1003;
 	UILabel *topLabel;
 	UILabel *bottomLabel;
+    UIImageView *iconview;
 	
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
 		//
 		// Create the label for the top row of text
 		//
@@ -478,22 +484,29 @@ NSMutableArray *filterEntries;
 		//
 		bottomLabel.tag = BOTTOM_LABEL_TAG;
 		bottomLabel.backgroundColor = [UIColor clearColor];
-		bottomLabel.textColor = [UIColor colorWithRed:0.05 green:0 blue:0.2 alpha:1.0];
+		bottomLabel.textColor = [UIColor colorWithRed:0.0 green:0 blue:0.1 alpha:1.0];
 		bottomLabel.highlightedTextColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
 		bottomLabel.font = [UIFont systemFontOfSize:12];
         bottomLabel.lineBreakMode=UILineBreakModeMiddleTruncation;
+        
+        iconview=[[[UIImageView alloc] init] autorelease];
+        iconview.tag=ICON_TAG;
+        [cell.contentView addSubview:iconview];
     } else {
 		topLabel = (UILabel *)[cell viewWithTag:TOP_LABEL_TAG];
 		bottomLabel = (UILabel *)[cell viewWithTag:BOTTOM_LABEL_TAG];
+        iconview=(UIImageView*)[cell viewWithTag:ICON_TAG];
 	}
     
-    bottomLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+    iconview.frame=CGRectMake(0,0,32,32);    
+                                                          
+    bottomLabel.frame = CGRectMake( 32/*1.0 * cell.indentationWidth*/,
 								   24,
-								   tableView.bounds.size.width - 1.0 * cell.indentationWidth-40,
+								   tableView.bounds.size.width - 32-32/*1.0 * cell.indentationWidth*/-40,
 								   14);
-	topLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+	topLabel.frame = CGRectMake( 32/*1.0 * cell.indentationWidth*/,
 								2,
-								tableView.bounds.size.width - 1.0 * cell.indentationWidth-40,
+								tableView.bounds.size.width - 32-32/*1.0 * cell.indentationWidth*/-40,
 								20);
     
     int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
@@ -501,16 +514,29 @@ NSMutableArray *filterEntries;
     if (ifba_conf.filter_missing) {
         NSNumber *nb=[romavail objectAtIndex:index];
         if ([nb boolValue]==NO) {
-            topLabel.textColor = [UIColor colorWithRed:.6 green:.6 blue:.6 alpha:1.0];
-            bottomLabel.textColor = [UIColor colorWithRed:.8 green:.8 blue:.8 alpha:1.0];
+            topLabel.textColor = [UIColor colorWithRed:.4 green:.4 blue:.4 alpha:1.0];
+            bottomLabel.textColor = [UIColor colorWithRed:.4 green:.4 blue:.5 alpha:1.0];
         } else {
             topLabel.textColor = [UIColor colorWithRed:.0 green:.0 blue:.0 alpha:1.0];
-            bottomLabel.textColor = [UIColor colorWithRed:0.05 green:0 blue:0.2 alpha:1.0];
+            bottomLabel.textColor = [UIColor colorWithRed:0.0 green:0 blue:0.1 alpha:1.0];
         }
     } else {
         topLabel.textColor = [UIColor colorWithRed:.0 green:.0 blue:.0 alpha:1.0];
         bottomLabel.textColor = [UIColor colorWithRed:0.05 green:0 blue:0.2 alpha:1.0];
     }
+    UIImage *img=[UIImage imageNamed:[NSString stringWithFormat:@"%@.ico",[romlist objectAtIndex:index]]];
+    if (img==nil) {
+        if ([[romlist objectAtIndex:index] rangeOfString:@"md_"].location!=NSNotFound) {
+            img=[UIImage imageNamed:@"md_icon.gif"];
+        } else if ([[romlist objectAtIndex:index] rangeOfString:@"tg_"].location!=NSNotFound) {
+            img=[UIImage imageNamed:@"tg_icon.gif"];
+        } else if ([[romlist objectAtIndex:index] rangeOfString:@"pce_"].location!=NSNotFound) {
+            img=[UIImage imageNamed:@"pce_icon.png"];
+        } else if ([[romlist objectAtIndex:index] rangeOfString:@"sgx_"].location!=NSNotFound) {
+            img=[UIImage imageNamed:@"sgx_icon.gif"];
+        }
+    }
+    iconview.image=img;
     
     
     NSString *tmpStr=[[romlistLbl objectAtIndex:index] stringByDeletingLastPathComponent];    
@@ -518,11 +544,22 @@ NSMutableArray *filterEntries;
     bottomLabel.text=[NSString stringWithFormat:@"%@ - %@ - %@",[romlist objectAtIndex:index],[romlistSystem objectAtIndex:index],[self genreStr:[(NSNumber*)[romlistGenre objectAtIndex:index] intValue]]   ];
     
     //cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
-	cell.accessoryType=UITableViewCellAccessoryNone;// DetailDisclosureButton;
+	cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
     
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    ;
+    int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
+    DBHelper::getGameInfo([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], gameInfo);
+    if (gameInfo[0]) {
+        OptGameInfoViewController *infovc;
+        infovc = [[OptGameInfoViewController alloc] initWithNibName:@"OptGameInfoViewController" bundle:nil];
+        [self.navigationController pushViewController:infovc animated:YES];
+        [infovc release];        
+    }
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];

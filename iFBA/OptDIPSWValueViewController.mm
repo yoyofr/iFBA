@@ -47,7 +47,8 @@ int InpDIPSWSetCurrentValue(int dip_index,unsigned char dip_new_value);
     // in interface builder instead).
     //
     //self.tabView.style=UITableViewStyleGrouped;
-    
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 - (void)viewDidUnload

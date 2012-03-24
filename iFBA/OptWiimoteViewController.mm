@@ -63,6 +63,8 @@ extern char gameName[64];
     //self.tabView.style=UITableViewStyleGrouped;
     
 //        [bt addListener:self];     
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 - (void)viewDidUnload

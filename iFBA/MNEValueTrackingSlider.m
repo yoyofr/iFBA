@@ -22,6 +22,7 @@
 @synthesize font=_font;
 @synthesize text = _text;
 
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -93,6 +94,7 @@
 @implementation MNEValueTrackingSlider
 
 @synthesize thumbRect;
+@synthesize integerMode;
 
 #pragma mark - Private methods
 
@@ -105,6 +107,7 @@
     valuePopupView = [[MNESliderValuePopupView alloc] initWithFrame:CGRectZero];
     valuePopupView.backgroundColor = [UIColor clearColor];
     valuePopupView.alpha = 0.0;
+    integerMode=0;
     [self addSubview:valuePopupView];
 }
 
@@ -123,7 +126,8 @@
     CGRect _thumbRect = self.thumbRect;
     CGRect popupRect = CGRectOffset(_thumbRect, -40, -floorf(_thumbRect.size.height * 0.6));
     valuePopupView.frame = CGRectInset(popupRect, -20, 2);
-    valuePopupView.value = self.value;
+    if (integerMode) valuePopupView.value = (NSInteger)self.value;
+    else valuePopupView.value = self.value;
 }
 
 #pragma mark - Memory management

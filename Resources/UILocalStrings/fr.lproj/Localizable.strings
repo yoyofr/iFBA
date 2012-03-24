@@ -22,7 +22,7 @@
 "Donate"="Faire un don";
 
 //About
-"About_Msg"="iFBA v%@ - YoyoFR\n\nBasé sur FBA v0.2.97.23\n\nSupporte actuellement %d drivers\n\nGraphiques (pad/stick) : iMame4ALL de David Valdeita/Bryn Thomson\nN'oubliez pas d'essayer 'iMame4ALL Reloaded' par Seleuco";
+"About_Msg"="iFBA v%@ - YoyoFR\n\nBasé sur FBA v0.2.97.23\n\nSupporte actuellement %d drivers\n\nGraphiques (pad/stick) : iMame4ALL de David Valdeita/Bryn Thomson\nN'oubliez pas d'essayer 'iMame4ALL Reloaded' par Seleuco\n\nIcones: MAMu_'s Icons";
 
 //Options
 "Video"="Video";

@@ -48,6 +48,8 @@ int mOptWiimoteButtonSelected;
     //
     //self.tabView.style=UITableViewStyleGrouped;
     optgetButton=[[OptConGetWiimoteBtnViewController alloc] initWithNibName:@"OptConGetWiimoteBtnViewController" bundle:nil];
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 - (void)viewDidUnload {

@@ -43,7 +43,8 @@ extern char gameName[64];
     // in interface builder instead).
     //
     //self.tabView.style=UITableViewStyleGrouped;
-    
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 - (void)viewDidUnload
@@ -220,6 +221,7 @@ extern char gameName[64];
                     cell.textLabel.text=NSLocalizedString(@"Pad X",@"");
                     cell.textLabel.textAlignment=UITextAlignmentLeft;
                     sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                    sliderview.integerMode=1;
                     [sliderview setMaximumValue:MAX_PAD_OFS_X];
                     [sliderview setMinimumValue:-MAX_PAD_OFS_X];
                     [sliderview setContinuous:true];
@@ -232,6 +234,7 @@ extern char gameName[64];
                     cell.textLabel.text=NSLocalizedString(@"Pad Y",@"");
                     cell.textLabel.textAlignment=UITextAlignmentLeft;
                     sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                    sliderview.integerMode=1;
                     [sliderview setMaximumValue:MAX_PAD_OFS_Y];
                     [sliderview setMinimumValue:-MAX_PAD_OFS_Y];
                     [sliderview setContinuous:true];
@@ -244,6 +247,7 @@ extern char gameName[64];
                     cell.textLabel.text=NSLocalizedString(@"Buttons X",@"");
                     cell.textLabel.textAlignment=UITextAlignmentLeft;
                     sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                    sliderview.integerMode=1;
                     [sliderview setMaximumValue:MAX_BUTTON_OFS_X];
                     [sliderview setMinimumValue:-MAX_BUTTON_OFS_X];
                     [sliderview setContinuous:true];
@@ -256,6 +260,7 @@ extern char gameName[64];
                     cell.textLabel.text=NSLocalizedString(@"Buttons Y",@"");
                     cell.textLabel.textAlignment=UITextAlignmentLeft;
                     sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                    sliderview.integerMode=1;
                     [sliderview setMaximumValue:MAX_BUTTON_OFS_Y];
                     [sliderview setMinimumValue:-MAX_BUTTON_OFS_Y];
                     [sliderview setContinuous:true];

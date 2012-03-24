@@ -12,9 +12,11 @@
 
 @interface MNEValueTrackingSlider : UISlider {
     MNESliderValuePopupView *valuePopupView; 
+    int integerMode;
 }
 
 @property (nonatomic, readonly) CGRect thumbRect;
+@property (nonatomic) int integerMode;
 
 - (void)setValue:(float)aValue sValue:(NSString *)sValue;
 

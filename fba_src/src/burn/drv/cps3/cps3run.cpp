@@ -20,6 +20,8 @@ Port to FBA by OopsWare
 #include "cps3.h"
 #include "sh2.h"
 
+static int low_mem_hack;
+
 
 #define	BE_GFX		1
 //#define	FAST_BOOT	1
@@ -479,10 +481,18 @@ static INT32 MemIndex()
 	RamStart	= Next;
 	
 	RomGame 	= Next; Next += 0x1000000;
-	RomGame_D 	= Next; Next += 0x1000000;
+    if (low_mem_hack) {
+        RomGame_D 	= RomGame;
+    } else {
+        RomGame_D 	= Next; Next += 0x1000000;
+    }
 	
 	RamC000		= Next; Next += 0x0000400;
+    if (low_mem_hack) {
+        RamC000_D=RamC000;
+    } else {        
 	RamC000_D	= Next; Next += 0x0000400;
+            }
 
 	RamMain		= Next; Next += 0x0080000;
 
@@ -1085,11 +1095,19 @@ INT32 cps3Init()
 	
 	// CHD games 
 	if (cps3_data_rom_size == 0) cps3_data_rom_size = 0x5000000;	
+    Mem = NULL;
 	
-	Mem = NULL;
+    low_mem_hack=0;
+    //1st try
 	MemIndex();
 	INT32 nLen = MemEnd - (UINT8 *)0;
-	if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) return 1;
+	if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) {
+        //2nd try
+        low_mem_hack=1;
+        MemIndex();
+        nLen = MemEnd - (UINT8 *)0;
+        if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) return 1;
+    }
 	memset(Mem, 0, nLen);										// blank all memory
 	MemIndex();	
 	

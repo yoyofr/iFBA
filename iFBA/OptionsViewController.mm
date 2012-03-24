@@ -38,6 +38,8 @@ extern char gameName[64];
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 - (void)viewDidUnload

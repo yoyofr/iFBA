@@ -14,6 +14,10 @@
 #import "OptionsViewController.h"
 #import "OptDIPSWViewController.h"
 #import "OptSaveStateViewController.h"
+#import "OptGameInfoViewController.h"
+#include "DBHelper.h"
+
+extern char gameInfo[64*1024];
 
 #ifdef TESTFLIGHT
 #import "TestFlight.h"
@@ -58,7 +62,8 @@ extern int device_isIpad;
     
     emuvc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];
     
-    
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 
@@ -126,7 +131,7 @@ extern int device_isIpad;
     int nbRows=0;
     switch (section) {
         case 0:
-            if (emuThread_running) nbRows=5;
+            if (emuThread_running) nbRows=6;
             else nbRows=1;
             break;
         case 1:
@@ -158,8 +163,13 @@ extern int device_isIpad;
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-    cell.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
+    //cell.backgroundView.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f];
+    //cell.contentView.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f];
+/*    for (int i=0;i<[cell.subviews count];i++) {
+        [[cell.subviews objectAtIndex:i] setBackgroundColor:[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f]];
+    }*/
     cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+
 	switch (indexPath.section) {
         case 0:
             if (emuThread_running) {
@@ -177,6 +187,9 @@ extern int device_isIpad;
 //                    cell.backgroundColor=[UIColor colorWithRed:1.0f green:0.7f blue:0.7f alpha:1.0f];
                 }
                 if (indexPath.row==4) {
+                    cell.textLabel.text=NSLocalizedString(@"Information",@"");
+                }
+                if (indexPath.row==5) {
                     cell.textLabel.text=NSLocalizedString(@"Load game",@"");
 //                    cell.backgroundColor=[UIColor colorWithRed:0.8f green:1.0f blue:0.8f alpha:1.0f];
                 }
@@ -228,7 +241,16 @@ extern int device_isIpad;
                     //[tabView reloadData];
                     [self backToEmu];
                     break;
-                case 4: //game browser
+                case 4: //game info
+                    DBHelper::getGameInfo(gameName, gameInfo);
+                    if (gameInfo[0]) {
+                        OptGameInfoViewController *infovc;
+                        infovc = [[OptGameInfoViewController alloc] initWithNibName:@"OptGameInfoViewController" bundle:nil];
+                        [self.navigationController pushViewController:infovc animated:YES];
+                        [infovc release];        
+                    }
+                    break;
+                case 5: //game browser
                     gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];

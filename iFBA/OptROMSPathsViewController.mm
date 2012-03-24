@@ -39,8 +39,8 @@ int szAppRomPathsSelected;
     // in interface builder instead).
     //
     //self.tabView.style=UITableViewStyleGrouped;
-    
-}
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];}
 
 - (void)viewDidUnload
 {
@@ -112,6 +112,25 @@ int szAppRomPathsSelected;
     [self.navigationController pushViewController:romsetvc animated:YES];
     [romsetvc release];
 }
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle==UITableViewCellEditingStyleDelete) {                
+        szAppRomPaths[indexPath.row][0]=0;
+        [tableView reloadData];
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.    
+    return NO;
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (szAppRomPaths[indexPath.row][0]) return YES;
+    return NO;
+}
+
 
 
 -(IBAction) backToEmu {

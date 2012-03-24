@@ -37,6 +37,8 @@ extern char gameName[64];
     // in interface builder instead).
     //
     //self.tabView.style=UITableViewStyleGrouped;
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
     
 }
 
@@ -250,6 +252,7 @@ extern char gameName[64];
             } else { //strength
                 cell.textLabel.text=NSLocalizedString(@"Video filter strength",@"");
                 sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];                
+                sliderview.integerMode=1;
                 [sliderview setMaximumValue:128];
                 [sliderview setMinimumValue:0];
                 [sliderview setContinuous:true];
@@ -299,6 +302,7 @@ extern char gameName[64];
         case 7://Frameskipping
             cell.textLabel.text=NSLocalizedString(@"Frameskip",@"");
             sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+            sliderview.integerMode=1;
             [sliderview setMaximumValue:10.0f];
             [sliderview setMinimumValue:0];
             [sliderview setContinuous:true];

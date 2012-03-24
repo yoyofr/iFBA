@@ -47,6 +47,8 @@ extern char gameName[64];
     //
     //self.tabView.style=UITableViewStyleGrouped;
     optgetButton=[[OptConGetiCadeViewController alloc] initWithNibName:@"OptConGetiCadeViewController" bundle:nil];
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 - (void)viewDidUnload

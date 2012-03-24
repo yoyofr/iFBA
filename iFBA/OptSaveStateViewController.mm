@@ -48,6 +48,8 @@ int StatedSave(int slot);
     [[imgview layer] setCornerRadius:15.0];	
 	[[imgview layer] setBorderWidth:3.0];
 	[[imgview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 - (void)viewDidUnload

@@ -41,7 +41,8 @@ extern char gameName[64];
     // in interface builder instead).
     //
     //self.tabView.style=UITableViewStyleGrouped;
-    
+    tabView.backgroundView=nil;
+    tabView.backgroundView=[[[UIView alloc] init] autorelease];
 }
 
 - (void)viewDidUnload

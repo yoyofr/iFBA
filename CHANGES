@@ -2,6 +2,19 @@ TODO
 - pad restrictor: 2ways, 4ways, 8ways
 - buttons mapping / game or buttons nb ?
 
+v0.5 - xx/xx/2012
+-----------------
+- fixed an issue with filters in game browser
+- added mameu game icons
+- added mame history support
+- (re)added mem hack to help low mem device run large cps3 games
+- fixed a bug with iCade 'language' (keyboard layout) management
+- multiple bug fixes
+
+v0.4.1 - 24/03/2012
+-------------------
+- fixed paths issue (forgot debug flag in v0.4)
+
 v0.4 - 23/03/2012
 -----------------
 - improved game browser (filters, genres)

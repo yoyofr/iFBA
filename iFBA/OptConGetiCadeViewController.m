@@ -45,6 +45,7 @@ extern int mOptICadeButtonSelected;
     //ICADE
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:iCaderv];
+    [iCaderv changeLang:ifba_conf.icade_lang];
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv release];

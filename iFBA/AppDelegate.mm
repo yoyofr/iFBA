@@ -332,12 +332,11 @@ void tstfl_validateloadgame(char *name) {
         device_isIpad=0;
     } else {
         //menuvc = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPad" bundle:nil] autorelease];
-        menuvc = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPhone" bundle:nil] autorelease];
-        
+        menuvc = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPhone" bundle:nil] autorelease];        
         device_isIpad=1;
     }
     self.navController = [[[UINavigationController alloc] init] autorelease];
-    [[self.navController navigationBar] setBarStyle:UIBarStyleDefault];
+    [[self.navController navigationBar] setBarStyle:UIBarStyleBlack]; // UIBarStyleDefault];
     //    [[self.navController navigationBar] setTranslucent:YES];    
     [self.navController pushViewController:menuvc animated:YES];    
     self.window.rootViewController = self.navController;
