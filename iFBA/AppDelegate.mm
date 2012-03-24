@@ -320,8 +320,9 @@ void tstfl_validateloadgame(char *name) {
     [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory withIntermediateDirectories:TRUE attributes:nil error:nil];
     [[NSFileManager defaultManager] changeCurrentDirectoryPath: documentsDirectory];
     
+#if RELEASE_DEBUG
     strcpy(debug_root_path,[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] UTF8String]);
-    
+#endif
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
     // Override point for customization after application launch.
