@@ -15,12 +15,12 @@
     NSMutableArray *romlist,*romlistLbl,*rompath,*romlistSystem,*romlistGenre,*romavail,*sectionLbl,*sectionLblMin;
     NSMutableArray *indexTitles;
     NSMutableArray *burn_supportedRoms,*burn_supportedRomsNames;
-    IBOutlet UIBarButtonItem *btn_backToEmu;
+    IBOutlet UIBarButtonItem *btn_backToEmu,*btn_missing;
     OptSelGenresViewController *selgenrevc;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu,*btn_missing;
 @property (nonatomic, retain) OptSelGenresViewController *selgenrevc;
 
 -(IBAction) backToEmu;

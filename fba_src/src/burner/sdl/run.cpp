@@ -5,9 +5,7 @@
 #include "fbaconf.h"
 
 //#define NO_SOUND
-#define BENCH_MODE 0
 
-void tstfl_validateloadgame(char *name);
 extern char gameName[64];
 
 int video_fskipcounter=0;
@@ -312,8 +310,6 @@ int RunMessageLoop()
 		RunInit();
         
 		GameInpCheckMouse();															// Hide the cursor
-        
-        tstfl_validateloadgame(gameName);
         
         done=0;timer = 0;ticks=0;tick=0;sdl_fps = 0;
 		while (!finished) {

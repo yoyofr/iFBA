@@ -1715,9 +1715,179 @@ static void cps3_draw_tilemapsprite_line(INT32 drawline, UINT32 * regs )
 
 static INT32 WideScreenFrameDelay = 0;
 
+static void cps3_drawsprites(int fsz) {
+    INT32 bg_drawn[4] = { 0, 0, 0, 0 };
+    for (INT32 i=0x00000/4;i<0x2000/4;i+=4) {
+        INT32 xpos		= (RamSpr[i+1]&0x03ff0000)>>16;
+        INT32 ypos		= (RamSpr[i+1]&0x000003ff)>>0;
+        
+        INT32 gscroll		= (RamSpr[i+0]&0x70000000)>>28;
+        INT32 length		= (RamSpr[i+0]&0x01ff0000)>>14; // how many entries in the sprite table
+        UINT32 start		= (RamSpr[i+0]&0x00007ff0)>>4;
+        
+        INT32 whichbpp		= (RamSpr[i+2]&0x40000000)>>30; // not 100% sure if this is right, jojo title / characters
+        INT32 whichpal		= (RamSpr[i+2]&0x20000000)>>29;
+        INT32 global_xflip	= (RamSpr[i+2]&0x10000000)>>28;
+        INT32 global_yflip	= (RamSpr[i+2]&0x08000000)>>27;
+        INT32 global_alpha	= (RamSpr[i+2]&0x04000000)>>26; // alpha / shadow? set on sfiii2 shadows, and big black image in jojo intro
+        INT32 global_bpp	= (RamSpr[i+2]&0x02000000)>>25;
+        INT32 global_pal	= (RamSpr[i+2]&0x01ff0000)>>16;
+        
+        INT32 gscrollx		= (RamVReg[gscroll]&0x03ff0000)>>16;
+        INT32 gscrolly		= (RamVReg[gscroll]&0x000003ff)>>0;
+        
+        start = (start * 0x100) >> 2;
+        
+        if ((RamSpr[i+0]&0xf0000000) == 0x80000000) break;	
+		
+        for (INT32 j=0; j<length; j+=4) {
+            
+            UINT32 value1 = (RamSpr[start+j+0]);
+            UINT32 value2 = (RamSpr[start+j+1]);
+            UINT32 value3 = (RamSpr[start+j+2]);
+            UINT32 tileno = (value1&0xfffe0000)>>17;
+            INT32 count;
+            INT32 xpos2 = (value2 & 0x03ff0000)>>16;
+            INT32 ypos2 = (value2 & 0x000003ff)>>0;
+            INT32 flipx = (value1 & 0x00001000)>>12;
+            INT32 flipy = (value1 & 0x00000800)>>11;
+            INT32 alpha = (value1 & 0x00000400)>>10; //? this one is used for alpha effects on warzard
+            INT32 bpp =   (value1 & 0x00000200)>>9;
+            INT32 pal =   (value1 & 0x000001ff);
+            
+            INT32 ysizedraw2 = ((value3 & 0x7f000000)>>24);
+            INT32 xsizedraw2 = ((value3 & 0x007f0000)>>16);
+            INT32 xx,yy;
+            
+            INT32 tilestable[4] = { 8,1,2,4 };
+            INT32 ysize2 = ((value3 & 0x0000000c)>>2);
+            INT32 xsize2 = ((value3 & 0x00000003)>>0);
+            UINT32 xinc,yinc;
+            
+            if (ysize2==0) continue;
+            
+            if (xsize2==0)
+            {
+                if (nBurnLayer & 1)
+                {
+                    INT32 tilemapnum = ((value3 & 0x00000030)>>4);
+                    INT32 startline;
+                    INT32 endline;
+                    INT32 height = (value3 & 0x7f000000)>>24;
+                    UINT32 * regs;
+                    
+                    regs = RamVReg + 8 + tilemapnum * 4;
+                    endline = value2;
+                    startline = endline - height;
+                    
+                    startline &=0x3ff;
+                    endline &=0x3ff;
+                    
+                    if (bg_drawn[tilemapnum]==0)
+                    {
+                        UINT32 srcy = 0;
+                        for (INT32 ry = 0; ry < 224; ry++, srcy += fsz) {
+                            cps3_draw_tilemapsprite_line( srcy >> 16, regs );
+                        }
+                    }
+                    
+                    bg_drawn[tilemapnum] = 1;
+                }
+            } else {
+                if (~nSpriteEnable & 1) continue;
+                
+                ysize2 = tilestable[ysize2];
+                xsize2 = tilestable[xsize2];
+                
+                xinc = ((xsizedraw2+1)<<16) / ((xsize2*0x10));
+                yinc = ((ysizedraw2+1)<<16) / ((ysize2*0x10));
+                
+                xsize2-=1;
+                ysize2-=1;
+                
+                flipx ^= global_xflip;
+                flipy ^= global_yflip;
+                
+                if (!flipx) xpos2+=((xsizedraw2+1)/2);
+                else xpos2-=((xsizedraw2+1)/2);
+                
+                ypos2+=((ysizedraw2+1)/2);
+                
+                if (!flipx) xpos2-= (((xsize2+1)*16*xinc)>>16);
+                else  xpos2+= (((xsize2)*16*xinc)>>16);
+                
+                if (flipy) ypos2-= ((ysize2*16*yinc)>>16);
+                
+                {
+                    count = 0;
+                    for (xx=0;xx<xsize2+1;xx++) {
+                        INT32 current_xpos;
+                        
+                        if (!flipx) current_xpos = (xpos+xpos2+((xx*16*xinc)>>16)  );
+                        else current_xpos = (xpos+xpos2-((xx*16*xinc)>>16));
+                        
+                        current_xpos += gscrollx;
+                        current_xpos += 1;
+                        current_xpos &=0x3ff;
+                        if (current_xpos&0x200) current_xpos-=0x400;
+                        
+                        for (yy=0;yy<ysize2+1;yy++) {
+                            INT32 current_ypos;
+                            INT32 actualpal;
+                            
+                            if (flipy) current_ypos = (ypos+ypos2+((yy*16*yinc)>>16));
+                            else current_ypos = (ypos+ypos2-((yy*16*yinc)>>16));
+                            
+                            current_ypos += gscrolly;
+                            current_ypos = 0x3ff-current_ypos;
+                            current_ypos -= 17;
+                            current_ypos &=0x3ff;
+                            
+                            if (current_ypos&0x200) current_ypos-=0x400;
+                            
+                            /* use the palette value from the main list or the sublists? */
+                            if (whichpal) actualpal = global_pal;
+                            else actualpal = pal;
+                            
+                            /* use the bpp value from the main list or the sublists? */
+                            INT32 color_granularity;
+                            if (whichbpp) {
+                                if (!global_bpp) color_granularity = 8;
+                                else color_granularity = 6;
+                            } else {
+                                if (!bpp) color_granularity = 8;
+                                else color_granularity = 6;
+                            }
+                            actualpal <<= color_granularity;
+                            
+                            {
+                                INT32 realtileno = tileno+count;
+                                
+                                if ( realtileno ) {
+                                    if (global_alpha || alpha) {
+                                        // fix jojo's title in it's intro ???
+                                        if ( global_alpha && (global_pal & 0x100))
+                                            actualpal &= 0x0ffff;
+                                        
+                                        cps3_drawgfxzoom_2(realtileno,actualpal,flipx,flipy,current_xpos,current_ypos,xinc,yinc, color_granularity);
+                                        
+                                    } else {
+                                        cps3_drawgfxzoom_2(realtileno,actualpal,flipx,flipy,current_xpos,current_ypos,xinc,yinc, 0);
+                                    }
+                                }
+                                count++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 static void DrvDraw()
 {
-	INT32 bg_drawn[4] = { 0, 0, 0, 0 };
+	
 
 	UINT32 fullscreenzoom = RamVReg[ 6 * 4 + 3 ] & 0xff;
 	UINT32 fullscreenzoomwidecheck = RamVReg[6 * 4 + 1];
@@ -1768,174 +1938,7 @@ static void DrvDraw()
 	}
 	
 	// Draw Sprites
-	{
-		for (INT32 i=0x00000/4;i<0x2000/4;i+=4) {
-			INT32 xpos		= (RamSpr[i+1]&0x03ff0000)>>16;
-			INT32 ypos		= (RamSpr[i+1]&0x000003ff)>>0;
-
-			INT32 gscroll		= (RamSpr[i+0]&0x70000000)>>28;
-			INT32 length		= (RamSpr[i+0]&0x01ff0000)>>14; // how many entries in the sprite table
-			UINT32 start		= (RamSpr[i+0]&0x00007ff0)>>4;
-
-			INT32 whichbpp		= (RamSpr[i+2]&0x40000000)>>30; // not 100% sure if this is right, jojo title / characters
-			INT32 whichpal		= (RamSpr[i+2]&0x20000000)>>29;
-			INT32 global_xflip	= (RamSpr[i+2]&0x10000000)>>28;
-			INT32 global_yflip	= (RamSpr[i+2]&0x08000000)>>27;
-			INT32 global_alpha	= (RamSpr[i+2]&0x04000000)>>26; // alpha / shadow? set on sfiii2 shadows, and big black image in jojo intro
-			INT32 global_bpp	= (RamSpr[i+2]&0x02000000)>>25;
-			INT32 global_pal	= (RamSpr[i+2]&0x01ff0000)>>16;
-
-			INT32 gscrollx		= (RamVReg[gscroll]&0x03ff0000)>>16;
-			INT32 gscrolly		= (RamVReg[gscroll]&0x000003ff)>>0;
-			
-			start = (start * 0x100) >> 2;
-
-			if ((RamSpr[i+0]&0xf0000000) == 0x80000000) break;	
-		
-			for (INT32 j=0; j<length; j+=4) {
-				
-				UINT32 value1 = (RamSpr[start+j+0]);
-				UINT32 value2 = (RamSpr[start+j+1]);
-				UINT32 value3 = (RamSpr[start+j+2]);
-				UINT32 tileno = (value1&0xfffe0000)>>17;
-				INT32 count;
-				INT32 xpos2 = (value2 & 0x03ff0000)>>16;
-				INT32 ypos2 = (value2 & 0x000003ff)>>0;
-				INT32 flipx = (value1 & 0x00001000)>>12;
-				INT32 flipy = (value1 & 0x00000800)>>11;
-				INT32 alpha = (value1 & 0x00000400)>>10; //? this one is used for alpha effects on warzard
-				INT32 bpp =   (value1 & 0x00000200)>>9;
-				INT32 pal =   (value1 & 0x000001ff);
-
-				INT32 ysizedraw2 = ((value3 & 0x7f000000)>>24);
-				INT32 xsizedraw2 = ((value3 & 0x007f0000)>>16);
-				INT32 xx,yy;
-
-				INT32 tilestable[4] = { 8,1,2,4 };
-				INT32 ysize2 = ((value3 & 0x0000000c)>>2);
-				INT32 xsize2 = ((value3 & 0x00000003)>>0);
-				UINT32 xinc,yinc;
-
-				if (ysize2==0) continue;
-
-				if (xsize2==0)
-				{
-					if (nBurnLayer & 1)
-					{
-						INT32 tilemapnum = ((value3 & 0x00000030)>>4);
-						INT32 startline;
-						INT32 endline;
-						INT32 height = (value3 & 0x7f000000)>>24;
-						UINT32 * regs;
-
-						regs = RamVReg + 8 + tilemapnum * 4;
-						endline = value2;
-						startline = endline - height;
-
-						startline &=0x3ff;
-						endline &=0x3ff;
-
-						if (bg_drawn[tilemapnum]==0)
-						{
-							UINT32 srcy = 0;
-							for (INT32 ry = 0; ry < 224; ry++, srcy += fsz) {
-								cps3_draw_tilemapsprite_line( srcy >> 16, regs );
-							}
-						}
-
-						bg_drawn[tilemapnum] = 1;
-					}
-				} else {
-					if (~nSpriteEnable & 1) continue;
-
-					ysize2 = tilestable[ysize2];
-					xsize2 = tilestable[xsize2];
-
-					xinc = ((xsizedraw2+1)<<16) / ((xsize2*0x10));
-					yinc = ((ysizedraw2+1)<<16) / ((ysize2*0x10));
-
-					xsize2-=1;
-					ysize2-=1;
-
-					flipx ^= global_xflip;
-					flipy ^= global_yflip;
-
-					if (!flipx) xpos2+=((xsizedraw2+1)/2);
-					else xpos2-=((xsizedraw2+1)/2);
-
-					ypos2+=((ysizedraw2+1)/2);
-
-					if (!flipx) xpos2-= (((xsize2+1)*16*xinc)>>16);
-					else  xpos2+= (((xsize2)*16*xinc)>>16);
-
-					if (flipy) ypos2-= ((ysize2*16*yinc)>>16);
-
-					{
-						count = 0;
-						for (xx=0;xx<xsize2+1;xx++) {
-							INT32 current_xpos;
-
-							if (!flipx) current_xpos = (xpos+xpos2+((xx*16*xinc)>>16)  );
-							else current_xpos = (xpos+xpos2-((xx*16*xinc)>>16));
-
-							current_xpos += gscrollx;
-							current_xpos += 1;
-							current_xpos &=0x3ff;
-							if (current_xpos&0x200) current_xpos-=0x400;
-
-							for (yy=0;yy<ysize2+1;yy++) {
-								INT32 current_ypos;
-								INT32 actualpal;
-
-								if (flipy) current_ypos = (ypos+ypos2+((yy*16*yinc)>>16));
-								else current_ypos = (ypos+ypos2-((yy*16*yinc)>>16));
-
-								current_ypos += gscrolly;
-								current_ypos = 0x3ff-current_ypos;
-								current_ypos -= 17;
-								current_ypos &=0x3ff;
-
-								if (current_ypos&0x200) current_ypos-=0x400;
-
-								/* use the palette value from the main list or the sublists? */
-								if (whichpal) actualpal = global_pal;
-								else actualpal = pal;
-								
-								/* use the bpp value from the main list or the sublists? */
-								INT32 color_granularity;
-								if (whichbpp) {
-									if (!global_bpp) color_granularity = 8;
-									else color_granularity = 6;
-								} else {
-									if (!bpp) color_granularity = 8;
-									else color_granularity = 6;
-								}
-								actualpal <<= color_granularity;
-
-								{
-									INT32 realtileno = tileno+count;
-
-									if ( realtileno ) {
-										if (global_alpha || alpha) {
-											// fix jojo's title in it's intro ???
-											if ( global_alpha && (global_pal & 0x100))
-												actualpal &= 0x0ffff;
-												
-											cps3_drawgfxzoom_2(realtileno,actualpal,flipx,flipy,current_xpos,current_ypos,xinc,yinc, color_granularity);
-											
-										} else {
-											cps3_drawgfxzoom_2(realtileno,actualpal,flipx,flipy,current_xpos,current_ypos,xinc,yinc, 0);
-										}
-									}
-									count++;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	cps3_drawsprites(fsz);
 	
 	{
 		UINT32 srcx, srcy = 0;

@@ -12,8 +12,6 @@ probably many other things.
 #include "burner.h"
 #include "fbaconf.h"
 
-#define BENCH_MODE 0
-
 extern bool bSoundOn;
 
 int nAppVirtualFps = 6000;			// App fps * 100

@@ -7,6 +7,7 @@
 //
 
 char debug_root_path[512];
+char debug_bundle_path[512];
 
 static float sys_brightness;
 
@@ -20,11 +21,6 @@ static float sys_brightness;
 #import "fbaconf.h"
 #import "burner.h"
 
-
-#ifdef TESTFLIGHT
-#import "TestFlight.h"
-#endif
-
 extern int nShouldExit;
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern char gameName[64];
@@ -36,19 +32,6 @@ extern int device_isIpad;
 
 @synthesize window = _window;
 @synthesize navController = _navController;
-
-void tstfl_log(char *str) {
-#ifdef TESTFLIGHT    
-    TFLog(@"%s",str);
-#endif    
-}
-
-void tstfl_validateloadgame(char *name) {
-#ifdef TESTFLIGHT    
-    [TestFlight passCheckpoint:[NSString stringWithFormat:@"STARTEDGAME-%s",name]];
-#endif    
-}
-
 
 - (int)loadSettings {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -303,10 +286,6 @@ void tstfl_validateloadgame(char *name) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-#ifdef TESTFLIGHT
-    [TestFlight takeOff:@"2ffa7d1a4e9cbc814d66901ca319816a_NjYzOTkyMDEyLTAyLTI4IDAxOjM1OjE2LjcyOTEwMA"];
-#endif
-    
     int settings_reseted=[self loadSettings];
     
     if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]) {
@@ -322,6 +301,7 @@ void tstfl_validateloadgame(char *name) {
     
 #if RELEASE_DEBUG
     strcpy(debug_root_path,[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] UTF8String]);
+    strcpy(debug_bundle_path,[[[NSBundle mainBundle] resourcePath] UTF8String]);
 #endif
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     

@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#define BENCH_MODE 0
-
 #import "MenuViewController.h"
 #import "EmuViewController.h"
 #import "GameBrowserViewController.h"
@@ -19,15 +17,12 @@
 
 extern char gameInfo[64*1024];
 
-#ifdef TESTFLIGHT
-#import "TestFlight.h"
-#endif
-
 extern int pendingReset;
 extern unsigned int nBurnDrvCount;
 extern int launchGame;
 extern char gameName[64];
 extern volatile int emuThread_running;
+extern int nShouldExit;
 extern int device_isIpad;
 
 
@@ -122,7 +117,7 @@ extern int device_isIpad;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 4;
+	return 5;
 }
 
 
@@ -131,7 +126,7 @@ extern int device_isIpad;
     int nbRows=0;
     switch (section) {
         case 0:
-            if (emuThread_running) nbRows=6;
+            if (emuThread_running) nbRows=7;
             else nbRows=1;
             break;
         case 1:
@@ -139,11 +134,11 @@ extern int device_isIpad;
             break;
         case 2:
             nbRows=1;
-#ifdef TESTFLIGHT
-            nbRows++;
-#endif
             break;
         case 3:
+            nbRows=1;
+            break;
+        case 4:
             nbRows=1;
             break;
     }
@@ -165,33 +160,31 @@ extern int device_isIpad;
     }
     //cell.backgroundView.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f];
     //cell.contentView.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f];
-/*    for (int i=0;i<[cell.subviews count];i++) {
-        [[cell.subviews objectAtIndex:i] setBackgroundColor:[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f]];
-    }*/
+    /*    for (int i=0;i<[cell.subviews count];i++) {
+     [[cell.subviews objectAtIndex:i] setBackgroundColor:[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f]];
+     }*/
     cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
-
+    
 	switch (indexPath.section) {
         case 0:
             if (emuThread_running) {
                 if (indexPath.row==0) {
                     cell.textLabel.text=[NSString stringWithFormat:NSLocalizedString(@"Back to %s",@""),gameName];
-//                    cell.backgroundColor=[UIColor colorWithRed:0.95f green:1.0f blue:0.95f alpha:1.0f];
-                }
-                if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
-                if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"DIPSW",@"");
-                if (indexPath.row==3) {
-//                    if (pendingReset) cell.accessoryType=UITableViewCellAccessoryCheckmark;
-//                    else 
-                        cell.accessoryType=UITableViewCellAccessoryNone;
+                    //                    cell.backgroundColor=[UIColor colorWithRed:0.95f green:1.0f blue:0.95f alpha:1.0f];
+                } else if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Save State",@"");
+                else if (indexPath.row==2) cell.textLabel.text=NSLocalizedString(@"DIPSW",@"");
+                else if (indexPath.row==3) {
+                    //                    if (pendingReset) cell.accessoryType=UITableViewCellAccessoryCheckmark;
+                    //                    else 
+                    cell.accessoryType=UITableViewCellAccessoryNone;
                     cell.textLabel.text=@"Reset";
-//                    cell.backgroundColor=[UIColor colorWithRed:1.0f green:0.7f blue:0.7f alpha:1.0f];
-                }
-                if (indexPath.row==4) {
+                    //                    cell.backgroundColor=[UIColor colorWithRed:1.0f green:0.7f blue:0.7f alpha:1.0f];
+                } else if (indexPath.row==4) {
                     cell.textLabel.text=NSLocalizedString(@"Information",@"");
-                }
-                if (indexPath.row==5) {
+                } else if (indexPath.row==5) cell.textLabel.text=NSLocalizedString(@"Close game",@"");
+                else if (indexPath.row==6) {
                     cell.textLabel.text=NSLocalizedString(@"Load game",@"");
-//                    cell.backgroundColor=[UIColor colorWithRed:0.8f green:1.0f blue:0.8f alpha:1.0f];
+                    //                    cell.backgroundColor=[UIColor colorWithRed:0.8f green:1.0f blue:0.8f alpha:1.0f];
                 }
             } else {
                 if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");            
@@ -204,13 +197,12 @@ extern int device_isIpad;
             if (indexPath.row==0) {
                 cell.textLabel.text=NSLocalizedString(@"About",@"");                
             }
-#ifdef TESTFLIGHT
-            if (indexPath.row==1) cell.textLabel.text=NSLocalizedString(@"Feedback",@"");
-#endif
-            
             break;
         case 3:
             if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Donate",@"");
+            break;
+        case 4:
+            cell.textLabel.text=NSLocalizedString(@"Exit",@"");
             break;
 	}		
     
@@ -250,7 +242,16 @@ extern int device_isIpad;
                         [infovc release];        
                     }
                     break;
-                case 5: //game browser
+                case 5: //close current game
+                    nShouldExit=1;
+                    while (emuThread_running) {
+                        [NSThread sleepForTimeInterval:0.01]; //10ms        
+                    }
+                    [NSThread sleepForTimeInterval:0.1]; //100ms
+                    nShouldExit=0;
+                    [tableView reloadData];
+                    break;
+                case 6: //game browser
                     gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];
@@ -275,12 +276,17 @@ extern int device_isIpad;
             UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
             [aboutMsg show];
         } else if (indexPath.row==1) {//beta test-feedback
-#ifdef TESTFLIGHT
-            [TestFlight openFeedbackView];
-#endif
         }
     } else if (indexPath.section==3) { //Donate
-         [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GR6NNLLWD62BN"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GR6NNLLWD62BN"]];
+    } else if (indexPath.section==4) { //Exit
+        nShouldExit=1;
+        while (emuThread_running) {
+            [NSThread sleepForTimeInterval:0.01]; //10ms        
+        }
+        [NSThread sleepForTimeInterval:0.1]; //100ms
+        //exit(0);
+        [[UIApplication sharedApplication] terminateWithSuccess];
     }
 }
 

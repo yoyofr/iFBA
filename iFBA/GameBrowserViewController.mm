@@ -59,7 +59,7 @@ NSMutableArray *filterEntries;
 
 
 @implementation GameBrowserViewController
-@synthesize tabView,btn_backToEmu,selgenrevc;
+@synthesize tabView,btn_backToEmu,selgenrevc,btn_missing;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -345,6 +345,9 @@ NSMutableArray *filterEntries;
     [super viewWillAppear:animated];
     cur_game_section=-1;
     
+    if (ifba_conf.filter_missing) [btn_missing setStyle:UIBarButtonItemStyleDone];
+    else [btn_missing setStyle:UIBarButtonItemStyleBordered];
+    
     [self buildFilters];
     
     [self scanRomsDirs];
@@ -383,6 +386,9 @@ NSMutableArray *filterEntries;
     listSectionCount=NULL;
     if (listSectionIndexes) free(listSectionIndexes);
     listSectionIndexes=NULL;
+    if (listSortedList) free(listSortedList);
+    listSortedList=NULL;
+      
     if (sectionLbl) [sectionLbl release];
     sectionLbl=nil;
     if (sectionLblMin) [sectionLblMin release];

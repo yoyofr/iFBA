@@ -87,7 +87,7 @@ extern "C" INT32 BurnLibInit()
 
 extern "C" INT32 BurnLibExit()
 {
-	nBurnDrvCount = 0;
+	//nBurnDrvCount = 0;
 
 	return 0;
 }

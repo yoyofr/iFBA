@@ -7,6 +7,9 @@
 #include "m6800_intf.h"
 #include "s2650_intf.h"
 
+extern char debug_bundle_path[512];
+extern char debug_root_path[512];
+
 // A hiscore.dat support module for FBA - written by Treble Winner, Feb 2009
 // At some point we really need a CPU interface to track CPU types and numbers,
 // to make this module and the cheat engine foolproof
@@ -29,7 +32,7 @@ struct _HiscoreMemRange
 
 _HiscoreMemRange HiscoreMemRange[HISCORE_MAX_RANGES];
 
-INT32 EnableHiscores;
+INT32 EnableHiscores=0;
 static INT32 HiscoresInUse;
 
 static INT32 nCpuType;
@@ -358,7 +361,11 @@ void HiscoreInit()
 	HiscoresInUse = 0;
 	
 	TCHAR szDatFilename[MAX_PATH];
-	_stprintf(szDatFilename, _T("%shiscore.dat"), szAppHiscorePath);
+#ifdef RELEASE_DEBUG
+    sprintf(szDatFilename, "%s/hiscore.dat", debug_bundle_path);    
+#else
+    sprintf(szDatFilename, "/Applications/iFBA.app/hiscore.dat");
+#endif
 
 	FILE *fp = _tfopen(szDatFilename, _T("r"));
 	if (fp) {
@@ -409,7 +416,13 @@ void HiscoreInit()
 	if (nHiscoreNumRanges) HiscoresInUse = 1;
 	
 	TCHAR szFilename[MAX_PATH];
-	_stprintf(szFilename, _T("%s%s.hi"), szAppHiscorePath, BurnDrvGetText(DRV_NAME));
+//	_stprintf(szFilename, _T("%s%s.hi"), szAppHiscorePath, BurnDrvGetText(DRV_NAME));
+#ifdef RELEASE_DEBUG
+    sprintf(szFilename, "%s/%s.hi", debug_root_path, BurnDrvGetText(DRV_NAME));
+#else
+    sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.hi", BurnDrvGetText(DRV_NAME));
+#endif
+
 
 	fp = _tfopen(szFilename, _T("r"));
 	INT32 Offset = 0;
@@ -547,7 +560,13 @@ void HiscoreExit()
 	if (nCpuType == -1) set_cpu_type();
 	
 	TCHAR szFilename[MAX_PATH];
-	_stprintf(szFilename, _T("%s%s.hi"), szAppHiscorePath, BurnDrvGetText(DRV_NAME));
+#ifdef RELEASE_DEBUG
+    sprintf(szFilename, "%s/%s.hi", debug_root_path, BurnDrvGetText(DRV_NAME));
+#else
+    sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.hi", BurnDrvGetText(DRV_NAME));
+#endif
+    
+//	_stprintf(szFilename, _T("%s%s.hi"), szAppHiscorePath, BurnDrvGetText(DRV_NAME));
 
 	FILE *fp = _tfopen(szFilename, _T("w"));
 	if (fp) {

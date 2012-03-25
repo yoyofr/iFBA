@@ -12,6 +12,7 @@
 //Main menu
 "Save State"="Sauver/Charger état";
 "Load game"="Lancer un jeu";
+"Close game"="Fermer jeu en cours";
 "Options"="Options";
 "About"="A Propos";
 "Feedback"="Feedback";
@@ -20,6 +21,7 @@
 "DIPSW"="DIP Switches";
 "Change DIP Switches"="Changer les DIP switches. Un RESET est souvent nécessaire pour la prise en compte.";
 "Donate"="Faire un don";
+"Exit"="Quitter";
 
 //About
 "About_Msg"="iFBA v%@ - YoyoFR\n\nBasé sur FBA v0.2.97.23\n\nSupporte actuellement %d drivers\n\nGraphiques (pad/stick) : iMame4ALL de David Valdeita/Bryn Thomson\nN'oubliez pas d'essayer 'iMame4ALL Reloaded' par Seleuco\n\nIcones: MAMu_'s Icons";

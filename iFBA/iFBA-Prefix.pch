@@ -2,6 +2,8 @@
 // Prefix header for all source files of the 'iFBA' target in the 'iFBA' project
 //
 #include "TargetConditionals.h"
+//#define BENCH_MODE 1
+
 //#define TARGET_IPHONE_SIMULATOR 1
 #define RELEASE_DEBUG 1  //use to match usual directories structure when debugging (apple sandbox vs /var/mobile/Documents for cydia)
 
@@ -15,8 +17,6 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
-
-//#define TESTFLIGHT 1
 
 #define IOS_BUILD 1
 

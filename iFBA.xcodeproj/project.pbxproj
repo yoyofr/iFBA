@@ -2337,6 +2337,7 @@
 		336D5BC0151DE94A006D8984 /* DBHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 336D5BBF151DE94A006D8984 /* DBHelper.mm */; };
 		336D5BC4151E0B7E006D8984 /* OptGameInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 336D5BC2151E0B7D006D8984 /* OptGameInfoViewController.m */; };
 		336D5BC5151E0B7E006D8984 /* OptGameInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 336D5BC3151E0B7E006D8984 /* OptGameInfoViewController.xib */; };
+		338A9447151F1E1A00F3BC90 /* hiscore.dat in Resources */ = {isa = PBXBuildFile; fileRef = 338A9446151F1E1A00F3BC90 /* hiscore.dat */; };
 		339A94DA14F238E600225183 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94D914F238E600225183 /* Icon.png */; };
 		339A94DC14F238E900225183 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94DB14F238E900225183 /* Icon@2x.png */; };
 		339A94DE14F238EF00225183 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94DD14F238EF00225183 /* Default.png */; };
@@ -4984,6 +4985,7 @@
 		336D5BC1151E0B7D006D8984 /* OptGameInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptGameInfoViewController.h; sourceTree = "<group>"; };
 		336D5BC2151E0B7D006D8984 /* OptGameInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptGameInfoViewController.m; sourceTree = "<group>"; };
 		336D5BC3151E0B7E006D8984 /* OptGameInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptGameInfoViewController.xib; sourceTree = "<group>"; };
+		338A9446151F1E1A00F3BC90 /* hiscore.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hiscore.dat; sourceTree = "<group>"; };
 		339A94D914F238E600225183 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		339A94DB14F238E900225183 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		339A94DD14F238EF00225183 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -6402,6 +6404,15 @@
 			name = DB;
 			sourceTree = "<group>";
 		};
+		338A9445151F1E1A00F3BC90 /* Dat */ = {
+			isa = PBXGroup;
+			children = (
+				338A9446151F1E1A00F3BC90 /* hiscore.dat */,
+			);
+			name = Dat;
+			path = Resources/Dat;
+			sourceTree = "<group>";
+		};
 		339E5FA314F1851D006FB970 = {
 			isa = PBXGroup;
 			children = (
@@ -6554,6 +6565,7 @@
 				33A7D921151DCC9C00EDECE5 /* Icons */,
 				334F5FF514FD8E5C00ED3CDB /* Images */,
 				3354E97014F9573D001DAF9D /* Textures */,
+				338A9445151F1E1A00F3BC90 /* Dat */,
 				339E62D914F18B35006FB970 /* FBA */,
 				3354E93614F90ADE001DAF9D /* Localizable.strings */,
 			);
@@ -10256,6 +10268,7 @@
 				330EC724151DD29900F3A60E /* md_icon.gif in Resources */,
 				336D5BB9151DE8EF006D8984 /* iFBA.db in Resources */,
 				336D5BC5151E0B7E006D8984 /* OptGameInfoViewController.xib in Resources */,
+				338A9447151F1E1A00F3BC90 /* hiscore.dat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10864,7 +10877,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Lib\"",
-					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
 				);
 				LLVM_LTO = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
@@ -10919,7 +10931,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Lib\"",
-					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
 				);
 				LLVM_LTO = NO;
 				SDKROOT = iphoneos;
@@ -10949,7 +10960,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Lib\"",
-					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
 				);
 				LLVM_LTO = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
