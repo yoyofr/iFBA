@@ -15,10 +15,10 @@
 // CPU emulation interfaces
 
 // sek.cpp
-#include "sek.h"
+//#include "sek.h"
 
 // zet.cpp
-#include "zet.h"
+//#include "zet.h"
 
 #ifdef LSB_FIRST
 typedef union

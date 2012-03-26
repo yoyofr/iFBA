@@ -14,6 +14,7 @@
 #import "OptSaveStateViewController.h"
 #import "OptGameInfoViewController.h"
 #include "DBHelper.h"
+#include "fbaconf.h"
 
 extern char gameInfo[64*1024];
 
@@ -25,6 +26,11 @@ extern volatile int emuThread_running;
 extern int nShouldExit;
 extern int device_isIpad;
 
+
+//iCade
+#import "iCadeReaderView.h"
+static int ui_currentIndex_s,ui_currentIndex_r;
+static iCadeReaderView *iCaderv;
 
 @implementation MenuViewController
 @synthesize emuvc,gamebrowservc,optionsvc,dipswvc,statevc;
@@ -59,6 +65,15 @@ extern int device_isIpad;
     
     tabView.backgroundView=nil;
     tabView.backgroundView=[[[UIView alloc] init] autorelease];
+    
+    //ICADE 
+    ui_currentIndex_s=-1;
+    iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:iCaderv];
+    [iCaderv changeLang:ifba_conf.icade_lang];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv release];
 }
 
 
@@ -71,15 +86,28 @@ extern int device_isIpad;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     } 
+    
+    
+    
+            
     [tabView reloadData];
+    if (ui_currentIndex_s>=0) {
+        [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+    }
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv becomeFirstResponder];
+    
 #if BENCH_MODE
     strcpy(gameName,"sfiii3");
     launchGame=1;
@@ -249,6 +277,8 @@ extern int device_isIpad;
                     }
                     [NSThread sleepForTimeInterval:0.1]; //100ms
                     nShouldExit=0;
+                    ui_currentIndex_s=ui_currentIndex_r= 0;
+                    self.navigationItem.rightBarButtonItem = nil;
                     [tableView reloadData];
                     break;
                 case 6: //game browser
@@ -289,6 +319,54 @@ extern int device_isIpad;
         [[UIApplication sharedApplication] terminateWithSuccess];
     }
 }
+
+/*#pragma UIAlertView delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+}
+*/
+#pragma Icade support
+/****************************************************/
+/****************************************************/
+/*        ICADE                                     */
+/****************************************************/
+/****************************************************/
+- (void)buttonDown:(iCadeState)button {
+}
+- (void)buttonUp:(iCadeState)button {
+    if (ui_currentIndex_s==-1) {
+        ui_currentIndex_s=ui_currentIndex_r=0;
+    }
+    else {
+        if (button&iCadeJoystickDown) {            
+            if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
+            else { //next section
+                if (ui_currentIndex_s<[tabView numberOfSections]-1) {
+                    ui_currentIndex_s++;ui_currentIndex_r=0; //next section
+                } else {
+                    ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
+                }
+            }             
+        } else if (button&iCadeJoystickUp) {
+            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row            
+            else { //prev section
+                if (ui_currentIndex_s>0) {
+                    ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
+                } else {
+                    ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
+                }
+            }
+        } else if (button&iCadeButtonA) { //validate            
+            [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
+                                    
+        } else if (button&iCadeButtonB) { //back
+            if (emuThread_running) {
+                [self backToEmu];
+            } 
+        }
+    }
+    [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+}
+
 
 
 @end

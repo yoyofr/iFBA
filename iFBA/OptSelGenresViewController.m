@@ -16,6 +16,12 @@ static unsigned int newgenreFilter;
 static unsigned int newgenreFilter_first=1;
 static CAGradientLayer *gradientF,*gradientH;
 
+//iCade
+#import "iCadeReaderView.h"
+static iCadeReaderView *iCaderv;
+static int ui_currentIndex_s,ui_currentIndex_r;
+
+
 @implementation OptSelGenresViewController
 @synthesize mnview,tabview,footer,header;
 
@@ -59,10 +65,20 @@ static CAGradientLayer *gradientF,*gradientH;
     [genreList addObject:@"Racing"];
     [genreList addObject:@"Shoot"];
     
+    //ICADE 
+    ui_currentIndex_s=-1;
+    iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:iCaderv];
+    [iCaderv changeLang:ifba_conf.icade_lang];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv release];
+    
 }
 
 -(void) viewWillAppear:(BOOL)animated {  //Not called in iOS 4.3 simulator... BUG?
     [super viewWillAppear:animated];
+
     allnone=0;
     newgenreFilter=(ifba_conf.filter_genre);    
     
@@ -83,6 +99,14 @@ static CAGradientLayer *gradientF,*gradientH;
     [gradientH removeFromSuperlayer];
 //    [gradientF release];
  //   [gradientH release];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv becomeFirstResponder];
+    
 }
 
 - (void)viewDidUnload
@@ -169,5 +193,46 @@ static CAGradientLayer *gradientF,*gradientH;
     allnone^=1;    
     [tabview reloadData];
 }
+
+/****************************************************/
+/****************************************************/
+/*        ICADE                                     */
+/****************************************************/
+/****************************************************/
+- (void)buttonDown:(iCadeState)button {
+}
+- (void)buttonUp:(iCadeState)button {
+    if (ui_currentIndex_s==-1) {
+        ui_currentIndex_s=ui_currentIndex_r=0;
+    }
+    else {
+        if (button&iCadeJoystickDown) {            
+            if (ui_currentIndex_r<[tabview numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
+            else { //next section
+                if (ui_currentIndex_s<[tabview numberOfSections]-1) {
+                    ui_currentIndex_s++;ui_currentIndex_r=0; //next section
+                } else {
+                    ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
+                }
+            }             
+        } else if (button&iCadeJoystickUp) {
+            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row            
+            else { //prev section
+                if (ui_currentIndex_s>0) {
+                    ui_currentIndex_s--;ui_currentIndex_r=[tabview numberOfRowsInSection:ui_currentIndex_s]-1; //next section
+                } else {
+                    ui_currentIndex_s=[tabview numberOfSections]-1;ui_currentIndex_r=[tabview numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
+                }
+            }
+        } else if (button&iCadeButtonA) { //validate            
+            [self tableView:tabview didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
+            
+        } else if (button&iCadeButtonB) { //back
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+    [tabview selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+}
+
 
 @end

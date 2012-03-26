@@ -1326,18 +1326,18 @@ UINT8 __fastcall m92ReadPort(UINT32 port)
 
 static void set_pf_info(INT32 layer, INT32 data)
 {
-//	struct _m92_layer *ptr=m92_layers[layer];
+	struct _m92_layer *ptr = m92_layers[layer];
 
 	if (data & 0x10) {
-		m92_layers[layer]->enable = 0;
+		ptr->enable = 0;
 	} else {
-		m92_layers[layer]->enable = 1;
-		m92_layers[layer]->wide = (data & 0x04) ? 128 : 64;
+		ptr->enable = 1;
+		ptr->wide = (data & 0x04) ? 128 : 64;
 	}
 
-	m92_layers[layer]->enable_rowscroll = data & 0x40;
+	ptr->enable_rowscroll = data & 0x40;
 
-	m92_layers[layer]->vram = (UINT16*)(DrvVidRAM + ((data & 0x03) * 0x4000));
+	ptr->vram = (UINT16*)(DrvVidRAM + ((data & 0x03) * 0x4000));
 }
 
 static void set_pf_scroll(INT32 layer)

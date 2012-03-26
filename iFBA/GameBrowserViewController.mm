@@ -20,6 +20,12 @@
 
 #define min(a,b) (a<b?a:b)
 
+//iCade
+#import "iCadeReaderView.h"
+static iCadeReaderView *iCaderv;
+static int ui_currentIndex_s,ui_currentIndex_r;
+static int bypass_reinit_view;
+
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
 extern char gameInfo[64*1024];
@@ -61,6 +67,7 @@ NSMutableArray *filterEntries;
 @implementation GameBrowserViewController
 @synthesize tabView,btn_backToEmu,selgenrevc,btn_missing;
 
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -85,9 +92,10 @@ NSMutableArray *filterEntries;
     for (int i=0;i<nBurnDrvCount;i++) {
         nBurnDrvActive=i;
         BurnDrvGetZipName(&szName,0);
-        [burn_supportedRoms addObject:[[NSString stringWithFormat:@"%s",szName] lowercaseString]];
+        if (BurnDrvGetFlags()&BDF_GAME_WORKING) [burn_supportedRoms addObject:[[NSString stringWithFormat:@"%s",szName] lowercaseString]];
+        else [burn_supportedRoms addObject:@""];
         //NSLog(@"%s;%08X;%s;%s",szName,BurnDrvGetGenreFlags(),BurnDrvGetTextA(DRV_FULLNAME),BurnDrvGetTextA(DRV_SYSTEM));
-//        printf("cp %s.ico extract/\n",szName);
+        //        printf("cp %s.ico extract/\n",szName);
     }
     nBurnDrvActive=saveActiveDrv;
 }
@@ -112,7 +120,18 @@ NSMutableArray *filterEntries;
     listSortedList=NULL;
     listNbSection=0;
     
+    bypass_reinit_view=0;
+    
     if (ifba_conf.filter_type>=MAX_FILTER) ifba_conf.filter_type=0;
+    
+    //ICADE 
+    ui_currentIndex_s=-1;
+    iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:iCaderv];
+    [iCaderv changeLang:ifba_conf.icade_lang];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv release];
 }
 
 
@@ -157,7 +176,9 @@ NSMutableArray *filterEntries;
     sectionLbl=[[NSMutableArray alloc] initWithCapacity:0];
     sectionLblMin=[[NSMutableArray alloc] initWithCapacity:0];
     
-    cur_game_section=cur_game_row=-1;
+    if (!bypass_reinit_view) {
+        cur_game_section=cur_game_row=-1;
+    }
     
     int saveActiveDrv=nBurnDrvActive;
     int currentIdx=0;
@@ -190,7 +211,7 @@ NSMutableArray *filterEntries;
         for (int i=0;i<total_roms_nb;i++) {
             nBurnDrvActive=i;
             int genre=BurnDrvGetGenreFlags();
-
+            
             if (genre&(ifba_conf.filter_genre)) {
                 [romlist addObject:[burn_supportedRoms objectAtIndex:i]];
                 [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
@@ -312,16 +333,16 @@ NSMutableArray *filterEntries;
             
             //get section nb
             /*j=[[tmpStr stringByDeletingLastPathComponent] UTF8String][0];
-            if ((j>='a')&&(j<='z')) j+=1-'a';
-            else if ((j>='A')&&(j<='Z')) j+=1-'A';
-            else j=0;*/
+             if ((j>='a')&&(j<='z')) j+=1-'a';
+             else if ((j>='A')&&(j<='Z')) j+=1-'A';
+             else j=0;*/
             j=[sectionLbl indexOfObject:[tmpStr substringToIndex:[tmpStr rangeOfString:@"/"].location]];
             
             //get index in master list
             k=[[tmpStr lastPathComponent] intValue];
             
             //check if last game is found
-       
+            
             if ((cur_game_section==-1)&&gameName[0]) {
                 if (strcasecmp(gameName,[[[romlist objectAtIndex:k] stringByDeletingPathExtension] UTF8String])==0) {
                     cur_game_section=j;
@@ -343,26 +364,35 @@ NSMutableArray *filterEntries;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    cur_game_section=-1;
+//    cur_game_section=-1;
     
     if (ifba_conf.filter_missing) [btn_missing setStyle:UIBarButtonItemStyleDone];
     else [btn_missing setStyle:UIBarButtonItemStyleBordered];
     
-    [self buildFilters];
     
+    [self buildFilters];    
     [self scanRomsDirs];
     [[self tabView] reloadData];
-    if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
+    if (cur_game_section>=0) {[self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
+        ui_currentIndex_s=cur_game_section;
+        ui_currentIndex_r=cur_game_row;
+    }
     
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }    
+    
+    if (bypass_reinit_view) bypass_reinit_view=0;
+        
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv becomeFirstResponder];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -388,7 +418,7 @@ NSMutableArray *filterEntries;
     listSectionIndexes=NULL;
     if (listSortedList) free(listSortedList);
     listSortedList=NULL;
-      
+    
     if (sectionLbl) [sectionLbl release];
     sectionLbl=nil;
     if (sectionLblMin) [sectionLblMin release];
@@ -505,7 +535,7 @@ NSMutableArray *filterEntries;
 	}
     
     iconview.frame=CGRectMake(0,0,32,32);    
-                                                          
+    
     bottomLabel.frame = CGRectMake( 32/*1.0 * cell.indentationWidth*/,
 								   24,
 								   tableView.bounds.size.width - 32-32/*1.0 * cell.indentationWidth*/-40,
@@ -562,6 +592,7 @@ NSMutableArray *filterEntries;
     if (gameInfo[0]) {
         OptGameInfoViewController *infovc;
         infovc = [[OptGameInfoViewController alloc] initWithNibName:@"OptGameInfoViewController" bundle:nil];
+        bypass_reinit_view=1;
         [self.navigationController pushViewController:infovc animated:YES];
         [infovc release];        
     }
@@ -579,39 +610,39 @@ NSMutableArray *filterEntries;
     //change dir
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath objectAtIndex:index]];
     
-//    NSLog(@"gamename: %s",gameName);
-//    NSLog(@"rompath: %@",[rompath objectAtIndex:index]);
+    //    NSLog(@"gamename: %s",gameName);
+    //    NSLog(@"rompath: %@",[rompath objectAtIndex:index]);
     
     [[self navigationController] popViewControllerAnimated:NO];
 }
 
 /*- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle==UITableViewCellEditingStyleDelete) {
-        char tmp_str[512];
-#ifdef RELEASE_DEBUG    
-        sprintf(tmp_str,"%s/%s_%02x", debug_root_path, gameName,indexPath.row);
-#else        
-        sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x",gameName,indexPath.row);
-#endif        
-        NSError *error;
-        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.fs",tmp_str] error:&error];
-        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.png",tmp_str] error:&error];
-        
-        [self scanFiles];
-        //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [tableView reloadData];
-    }
-}
-
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.    
-    return NO;
-}
-
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}*/
+ if (editingStyle==UITableViewCellEditingStyleDelete) {
+ char tmp_str[512];
+ #ifdef RELEASE_DEBUG    
+ sprintf(tmp_str,"%s/%s_%02x", debug_root_path, gameName,indexPath.row);
+ #else        
+ sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x",gameName,indexPath.row);
+ #endif        
+ NSError *error;
+ [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.fs",tmp_str] error:&error];
+ [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.png",tmp_str] error:&error];
+ 
+ [self scanFiles];
+ //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ [tableView reloadData];
+ }
+ }
+ 
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+ // Return NO if you do not want the item to be re-orderable.    
+ return NO;
+ }
+ 
+ 
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+ return YES;
+ }*/
 
 #pragma Actions
 
@@ -650,5 +681,88 @@ NSMutableArray *filterEntries;
     [self scanRomsDirs];
     [tabView reloadData];
     if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
+}
+
+#pragma Icade support
+/****************************************************/
+/****************************************************/
+/*        ICADE                                     */
+/****************************************************/
+/****************************************************/
+- (void)buttonDown:(iCadeState)button {
+}
+- (void)buttonUp:(iCadeState)button {
+    if (ui_currentIndex_s==-1) {
+        if (cur_game_section>=0) {
+            ui_currentIndex_s=cur_game_section;
+            ui_currentIndex_r=cur_game_row;
+        } else {
+            ui_currentIndex_s=ui_currentIndex_r=0;
+        }
+    }
+    else {
+        if (button&iCadeJoystickDown) {            
+            if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
+            else { //next section
+                if (ui_currentIndex_s<[tabView numberOfSections]-1) {
+                    ui_currentIndex_s++;ui_currentIndex_r=0; //next section
+                } else {
+                    ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
+                }
+            }             
+        } else if (button&iCadeJoystickUp) {
+            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row            
+            else { //prev section
+                if (ui_currentIndex_s>0) {
+                    ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
+                } else {
+                    ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
+                }
+            }
+        } else if (button&iCadeJoystickRight) {
+            if (ui_currentIndex_s<[tabView numberOfSections]-1) {
+                ui_currentIndex_s++;ui_currentIndex_r=0; //next section
+            } else {
+                ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
+            }
+        } else if (button&iCadeJoystickLeft) {
+            if (ui_currentIndex_s>0) {
+                ui_currentIndex_s--;ui_currentIndex_r=0; //next section
+            } else {
+                ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=0;
+            }
+        } else if (button&iCadeButtonA) { //validate
+            [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
+        } else if (button&iCadeButtonB) { //back
+            [[self navigationController] popViewControllerAnimated:YES];
+        } else if (button&iCadeButtonC) { //history
+            cur_game_row=ui_currentIndex_r;
+            cur_game_section=ui_currentIndex_s;            
+            [self tableView:tabView accessoryButtonTappedForRowWithIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
+        } else if (button&iCadeButtonD) { //filters
+            cur_game_row=ui_currentIndex_r;
+            cur_game_section=ui_currentIndex_s;
+            
+            [self changeFilter:nil];
+            if (cur_game_section>=0) {
+                ui_currentIndex_s=cur_game_section;
+                ui_currentIndex_r=cur_game_row;
+            } else {
+                ui_currentIndex_s=ui_currentIndex_r=0;
+            }
+        } else if (button&iCadeButtonE) { //missing
+            cur_game_row=ui_currentIndex_r;
+            cur_game_section=ui_currentIndex_s;
+            
+            [self showMissing:btn_missing];
+            if (cur_game_section>=0) {
+                ui_currentIndex_s=cur_game_section;
+                ui_currentIndex_r=cur_game_row;
+            } else {
+                ui_currentIndex_s=ui_currentIndex_r=0;
+            }
+        }
+    }
+    [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
 }
 @end

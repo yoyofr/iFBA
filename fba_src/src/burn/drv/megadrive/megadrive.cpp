@@ -19,6 +19,8 @@
  Port by OopsWare
  ********************************************************************************/
 #include "burnint.h"
+#include "sek.h"
+#include "zet.h"
 #include "burn_ym2612.h"
 #include "sn76496.h"
 #include "megadrive.h"

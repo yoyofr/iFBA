@@ -15,6 +15,12 @@
 #import "OptConGetWiimoteBtnViewController.h"
 #import "fbaconf.h"
 
+//iCade
+#import "iCadeReaderView.h"
+static iCadeReaderView *iCaderv;
+static int ui_currentIndex_s,ui_currentIndex_r;
+
+
 extern volatile int emuThread_running;
 extern int launchGame;
 extern char gameName[64];
@@ -50,6 +56,14 @@ int mOptWiimoteButtonSelected;
     optgetButton=[[OptConGetWiimoteBtnViewController alloc] initWithNibName:@"OptConGetWiimoteBtnViewController" bundle:nil];
     tabView.backgroundView=nil;
     tabView.backgroundView=[[[UIView alloc] init] autorelease];
+    //ICADE 
+    ui_currentIndex_s=-1;
+    iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:iCaderv];
+    [iCaderv changeLang:ifba_conf.icade_lang];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv release];
 }
 
 - (void)viewDidUnload {
@@ -62,10 +76,16 @@ int mOptWiimoteButtonSelected;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     BTstackManager *bt = [BTstackManager sharedInstance];
-/*    if (ifba_conf.btstack_on&&bt) {
-        UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Warning iCade BTStack",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
-        [aboutMsg show];
-    }*/
+    
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv becomeFirstResponder];
+    
+    
+    /*    if (ifba_conf.btstack_on&&bt) {
+     UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Warning iCade BTStack",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+     [aboutMsg show];
+     }*/
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -187,5 +207,46 @@ int mOptWiimoteButtonSelected;
     launchGame=2;
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
+
+/****************************************************/
+/****************************************************/
+/*        ICADE                                     */
+/****************************************************/
+/****************************************************/
+- (void)buttonDown:(iCadeState)button {
+}
+- (void)buttonUp:(iCadeState)button {
+    if (ui_currentIndex_s==-1) {
+        ui_currentIndex_s=ui_currentIndex_r=0;
+    }
+    else {
+        if (button&iCadeJoystickDown) {            
+            if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
+            else { //next section
+                if (ui_currentIndex_s<[tabView numberOfSections]-1) {
+                    ui_currentIndex_s++;ui_currentIndex_r=0; //next section
+                } else {
+                    ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
+                }
+            }             
+        } else if (button&iCadeJoystickUp) {
+            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row            
+            else { //prev section
+                if (ui_currentIndex_s>0) {
+                    ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
+                } else {
+                    ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
+                }
+            }
+        } else if (button&iCadeButtonA) { //validate            
+            [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
+            
+        } else if (button&iCadeButtonB) { //back
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+    [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+}
+
 
 @end

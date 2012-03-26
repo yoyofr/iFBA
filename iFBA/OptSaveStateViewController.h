@@ -7,18 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iCadeReaderView.h"
 
 @interface OptSaveStateViewController : UIViewController {
     IBOutlet UITableView *tabView;
     IBOutlet UIImageView *imgview;
     IBOutlet UIBarButtonItem *btn_backToEmu;
     IBOutlet UIButton *btn_save,*btn_load;
+    
+    iCadeReaderView *iCaderv;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
 @property (nonatomic, retain) IBOutlet UIImageView *imgview;
 @property (nonatomic, retain) IBOutlet UIButton *btn_save,*btn_load;
+@property (readwrite) iCadeReaderView *iCaderv;
+
 
 -(IBAction) backToEmu;
 -(IBAction) saveState;

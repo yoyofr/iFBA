@@ -73,8 +73,9 @@ DRV		BurnDrvmd_16ton;
 DRV		BurnDrvmd_16zhan;
 DRV		BurnDrvsgx_1941;
 DRV		BurnDrvCps1941u;
-DRV		BurnDrvCps1941j;
 DRV		BurnDrvCps1941;
+DRV		BurnDrvCps1941j;
+DRV		BurnDrvCps1941r1;
 DRV		BurnDrvNineteen42b;
 DRV		BurnDrvNineteen42a;
 DRV		BurnDrvNineteen42abl;
@@ -90,6 +91,7 @@ DRV		BurnDrvNineteen43u;
 DRV		BurnDrvCps1944j;
 DRV		BurnDrvCps1944d;
 DRV		BurnDrvCps1944;
+DRV		BurnDrvBgareggabl;
 DRV		BurnDrv1945kiii;
 DRV		BurnDrvCps19xxa;
 DRV		BurnDrvCps19xxjr1;
@@ -303,6 +305,7 @@ DRV		BurnDrvarktayt2;
 DRV		BurnDrvarknoidu;
 DRV		BurnDrvarknoiuo;
 DRV		BurnDrvarkanoid;
+DRV		BurnDrvArknid2b;
 DRV		BurnDrvArknid2j;
 DRV		BurnDrvArknid2u;
 DRV		BurnDrvArknoid2;
@@ -495,11 +498,9 @@ DRV		BurnDrvbeastf;
 DRV		BurnDrvmd_beavis;
 DRV		BurnDrvmd_beavisu;
 DRV		BurnDrvmd_beavisup;
-#if defined FBA_DEBUG
-DRV		BurnDrvDdp2100;			// Incomplete Dump [NOT WORKING]
-DRV		BurnDrvDdp2101;			// Incomplete Dump [NOT WORKING]
-DRV		BurnDrvDdp2;			// Incomplete Dump [NOT WORKING]
-#endif
+DRV		BurnDrvDdp2100;
+DRV		BurnDrvDdp2101;
+DRV		BurnDrvDdp2;
 DRV		BurnDrvBlswhstl;
 #if defined FBA_DEBUG
 DRV		BurnDrvpce_benkei1;		// no comment [NOT WORKING]
@@ -579,6 +580,9 @@ DRV		BurnDrvBlueprnt;
 DRV		BurnDrvbjourney;
 DRV		BurnDrvbwcasino;
 DRV		BurnDrvBoblbobl;
+#if defined FBA_DEBUG
+DRV		BurnDrvBoblbobl2;		// no comment [NOT WORKING]
+#endif
 DRV		BurnDrvpce_bodycon2;
 DRV		BurnDrvmd_bodyco;
 DRV		BurnDrvmd_bodycop;
@@ -773,11 +777,11 @@ DRV		BurnDrvCatapult;		// Bad dump [NOT WORKING]
 DRV		BurnDrvctrpllrp;
 DRV		BurnDrvCatt;
 DRV		BurnDrvCavelon;
+DRV		BurnDrvCninjaa;
 DRV		BurnDrvCninjabl;
 DRV		BurnDrvCninjau;
 DRV		BurnDrvCninja1;
 DRV		BurnDrvCninja;
-DRV		BurnDrvCninja2;
 #if defined FBA_DEBUG
 DRV		BurnDrvpce_cdsysb;		// no comment [NOT WORKING]
 DRV		BurnDrvpce_cdsysa;		// no comment [NOT WORKING]
@@ -1122,6 +1126,7 @@ DRV		BurnDrvmd_decapatt;
 DRV		BurnDrvtg_deepblue;
 DRV		BurnDrvpce_deepblue;
 DRV		BurnDrvmd_deerhunt;
+DRV		BurnDrvDeerhund;
 DRV		BurnDrvDeerhunc;
 DRV		BurnDrvDeerhunb;
 DRV		BurnDrvDeerhuna;
@@ -1131,9 +1136,9 @@ DRV		BurnDrvRedufob;
 DRV		BurnDrvDefense;
 DRV		BurnDrvmd_demoman;
 DRV		BurnDrvmd_demomanp;
+DRV		BurnDrvdmnfrnta;
+DRV		BurnDrvDmnfrnt;
 #if defined FBA_DEBUG
-DRV		BurnDrvDmnfrnt;			// Incomplete Dump [NOT WORKING]
-DRV		BurnDrvDmnfrnt105;		// Incomplete Dump [NOT WORKING]
 DRV		BurnDrvDmnfrntpcb;		// Incomplete Dump [NOT WORKING]
 #endif
 DRV		BurnDrvDemonwld;
@@ -1212,6 +1217,7 @@ DRV		BurnDrvmd_divine;
 DRV		BurnDrvmd_djboy;
 DRV		BurnDrvmd_djboyj;
 DRV		BurnDrvmd_djboyu;
+DRV		BurnDrvDoDonpachijH;
 DRV		BurnDrvDoDonpachi;
 DRV		BurnDrvDoDonpachiJ;
 DRV		BurnDrvDdp3b;
@@ -1519,6 +1525,7 @@ DRV		BurnDrvmd_fantasia1;
 DRV		BurnDrvmd_fantasia;
 DRV		BurnDrvFantsia2;
 DRV		BurnDrvFantsia2a;
+DRV		BurnDrvFantastc;
 DRV		BurnDrvmd_fantdizz;
 DRV		BurnDrvmd_fantdizz1;
 DRV		BurnDrvFantsy95;
@@ -1712,6 +1719,7 @@ DRV		BurnDrvGalap4;
 DRV		BurnDrvGalapx;
 DRV		BurnDrvTstgalx;
 DRV		BurnDrvGalturbo;
+DRV		BurnDrvGalemp;
 DRV		BurnDrvgalaxyfg;
 DRV		BurnDrvGforce2;
 DRV		BurnDrvGforce2j;
@@ -2148,13 +2156,12 @@ DRV		BurnDrvmd_madd93ce;
 DRV		BurnDrvmd_madden;
 DRV		BurnDrvmd_maddenj;
 DRV		BurnDrvjoinem;
-DRV     BurnDrvJojoOld;
-DRV     BurnDrvJojobaOld;
 DRV		BurnDrvJojobaner1;
 DRV		BurnDrvJojobane;
 DRV		BurnDrvJojobar1;
 DRV		BurnDrvJojobanr1;
 DRV		BurnDrvJojoba;
+DRV		BurnDrvJojobaOld;
 DRV		BurnDrvJojoban;
 DRV		BurnDrvJojonr2;
 DRV		BurnDrvJojonr1;
@@ -2164,6 +2171,7 @@ DRV		BurnDrvJojojr1;
 DRV		BurnDrvJojoj;
 DRV		BurnDrvJojor2;
 DRV		BurnDrvJojor1;
+DRV		BurnDrvJojoOld;
 DRV		BurnDrvJojo;
 DRV		BurnDrvltorb1;
 DRV		BurnDrvmd_jordanb1;
@@ -2327,6 +2335,7 @@ DRV		BurnDrvmd_knucklp;
 DRV		BurnDrvEto;
 DRV		BurnDrvmd_kolobok;
 DRV		BurnDrvKonami88;
+DRV		BurnDrvKong;
 DRV		BurnDrvpce_proyak89;
 DRV		BurnDrvpce_proyak90;
 DRV		BurnDrvKorokoro;
@@ -3772,6 +3781,7 @@ DRV		BurnDrvSrdmissn;
 DRV		BurnDrvmd_manover;
 DRV		BurnDrvSsmissin;
 #if defined FBA_DEBUG
+DRV		BurnDrvSvgpcb;			// Incomplete Dump [NOT WORKING]
 DRV		BurnDrvSvg;				// Incomplete Dump [NOT WORKING]
 #endif
 DRV		BurnDrvSabotenb;
@@ -4367,8 +4377,9 @@ DRV		BurnDrvCpsSf2ceea;
 DRV		BurnDrvCpsSf2ceua;
 DRV		BurnDrvCpsSf2ceja;
 DRV		BurnDrvCpsSf2ce;
-DRV		BurnDrvCpsSf2cej;
+DRV		BurnDrvCpsSf2cejb;
 DRV		BurnDrvCpsSf2ceub;
+DRV		BurnDrvCpsSf2cejc;
 DRV		BurnDrvCpsSf2ceuc;
 DRV		BurnDrvCpsSf2hf;
 DRV		BurnDrvCpsSf2hfu;
@@ -4517,6 +4528,7 @@ DRV		BurnDrvSupbtime;
 DRV		BurnDrvSupbtimea;
 DRV		BurnDrvSbbros;
 DRV		BurnDrvsucasino;
+DRV		BurnDrvSuperchsj;
 DRV		BurnDrvSuperchs;
 DRV		BurnDrvScobra;
 DRV		BurnDrvScobrab;
@@ -4890,9 +4902,9 @@ DRV		BurnDrvmd_flint;
 DRV		BurnDrvmd_flintj;
 DRV		BurnDrvmd_flintu;
 #if defined FBA_DEBUG
-DRV		BurnDrvTheglad;			// Incomplete Dump [NOT WORKING]
 DRV		BurnDrvThegladpcb;		// Incomplete Dump [NOT WORKING]
-DRV		BurnDrvTheglad101;		// Incomplete Dump [NOT WORKING]
+DRV		BurnDrvTheglad;			// Incomplete Dump [NOT WORKING]
+DRV		BurnDrvtheglada;		// Incomplete Dump [NOT WORKING]
 #endif
 DRV		BurnDrvTheglob;
 DRV		BurnDrvTheglob2;
@@ -4922,6 +4934,7 @@ DRV		BurnDrvKillbldp;		// no comment [NOT WORKING]
 #endif
 DRV		BurnDrvmd_killshow;
 DRV		BurnDrvCpsKodr1;
+DRV		BurnDrvCpsKodda;
 DRV		BurnDrvCpsKod;
 #if defined FBA_DEBUG
 DRV		BurnDrvCpsKodb;			// No Sprites [NOT WORKING]
@@ -5914,8 +5927,9 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_16zhan,			// 16 Zhang Ma Jiang (Chi)
 	&BurnDrvsgx_1941,			// 1941 - Counter Attack
 	&BurnDrvCps1941u,			// 1941 - Counter Attack (900227 USA)
+	&BurnDrvCps1941,			// 1941 - Counter Attack (900227 World)
 	&BurnDrvCps1941j,			// 1941 - Counter Attack (Japan)
-	&BurnDrvCps1941,			// 1941 - Counter Attack (World)
+	&BurnDrvCps1941r1,			// 1941 - Counter Attack (World)
 	&BurnDrvNineteen42b,		// 1942 (First Version)
 	&BurnDrvNineteen42a,		// 1942 (Revision A)
 	&BurnDrvNineteen42abl,		// 1942 (Revision A, bootleg)
@@ -5931,6 +5945,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvCps1944j,			// 1944 - the loop master (000620 Japan)
 	&BurnDrvCps1944d,			// 1944 - the loop master (000620 USA Phoenix Edition)
 	&BurnDrvCps1944,			// 1944 - the loop master (000620 USA)
+	&BurnDrvBgareggabl,			// 1945 Part 2 (Battle Garaga hack)
 	&BurnDrv1945kiii,			// 1945k III
 	&BurnDrvCps19xxa,			// 19XX - the war against destiny (951207 Asia)
 	&BurnDrvCps19xxjr1,			// 19XX - the war against destiny (951207 Japan)
@@ -6144,6 +6159,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvarknoidu,			// Arkanoid (US)
 	&BurnDrvarknoiuo,			// Arkanoid (US, older)
 	&BurnDrvarkanoid,			// Arkanoid (World)
+	&BurnDrvArknid2b,			// Arkanoid - Revenge of DOH (Japan bootleg)
 	&BurnDrvArknid2j,			// Arkanoid - Revenge of DOH (Japan)
 	&BurnDrvArknid2u,			// Arkanoid - Revenge of DOH (US)
 	&BurnDrvArknoid2,			// Arkanoid - Revenge of DOH (World)
@@ -6336,11 +6352,9 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_beavis,			// Beavis and Butt-Head (Euro)
 	&BurnDrvmd_beavisu,			// Beavis and Butt-Head (USA)
 	&BurnDrvmd_beavisup,		// Beavis and Butt-Head (USA, Prototype)
-#if defined FBA_DEBUG
-	&BurnDrvDdp2100,			// Bee Storm - DoDonPachi II (V100) [Incomplete Dump, NOT WORKING]
-	&BurnDrvDdp2101,			// Bee Storm - DoDonPachi II (V101) [Incomplete Dump, NOT WORKING]
-	&BurnDrvDdp2,				// Bee Storm - DoDonPachi II (V102) [Incomplete Dump, NOT WORKING]
-#endif
+	&BurnDrvDdp2100,			// Bee Storm - DoDonPachi II (V100)
+	&BurnDrvDdp2101,			// Bee Storm - DoDonPachi II (V101)
+	&BurnDrvDdp2,				// Bee Storm - DoDonPachi II (V102)
 	&BurnDrvBlswhstl,			// Bells & Whistles (ver. L)
 #if defined FBA_DEBUG
 	&BurnDrvpce_benkei1,		// Benkei Gaiden (Alt) [no comment, NOT WORKING]
@@ -6419,7 +6433,10 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvBlueprnt,			// Blue Print (Midway)
 	&BurnDrvbjourney,			// Blue's Journey / Raguy (ALM-001)(ALH-001)
 	&BurnDrvbwcasino,			// Boardwalk Casino
-	&BurnDrvBoblbobl,			// Bobble Bobble
+	&BurnDrvBoblbobl,			// Bobble Bobble (set 1)
+#if defined FBA_DEBUG
+	&BurnDrvBoblbobl2,			// Bobble Bobble (set 2) [no comment, NOT WORKING]
+#endif
 	&BurnDrvpce_bodycon2,		// Body Conquest II
 	&BurnDrvmd_bodyco,			// Body Count (Euro)
 	&BurnDrvmd_bodycop,			// Body Count (Euro, Prototype)
@@ -6614,11 +6631,11 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvctrpllrp,			// Caterpillar Pacman Hack
 	&BurnDrvCatt,				// Catt (Japan)
 	&BurnDrvCavelon,			// Cavelon
+	&BurnDrvCninjaa,			// Caveman Ninja (alternate)
 	&BurnDrvCninjabl,			// Caveman Ninja (bootleg)
 	&BurnDrvCninjau,			// Caveman Ninja (US ver 4)
 	&BurnDrvCninja1,			// Caveman Ninja (World ver 1)
 	&BurnDrvCninja,				// Caveman Ninja (World ver 4)
-	&BurnDrvCninja2,			// Caveman Ninja (World, alt ver.)
 #if defined FBA_DEBUG
 	&BurnDrvpce_cdsysb,			// CD-Rom System Card (v1.0) [no comment, NOT WORKING]
 	&BurnDrvpce_cdsysa,			// CD-Rom System Card (v2.0) [no comment, NOT WORKING]
@@ -6963,7 +6980,8 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvtg_deepblue,		// Deep Blue
 	&BurnDrvpce_deepblue,		// Deep Blue - Kaitei Shinwa
 	&BurnDrvmd_deerhunt,		// Deer Hunter (Rus)
-	&BurnDrvDeerhunc,			// Deer Hunting USA V2
+	&BurnDrvDeerhund,			// Deer Hunting USA V2
+	&BurnDrvDeerhunc,			// Deer Hunting USA V3.0
 	&BurnDrvDeerhunb,			// Deer Hunting USA V4.0
 	&BurnDrvDeerhuna,			// Deer Hunting USA V4.2
 	&BurnDrvDeerhunt,			// Deer Hunting USA V4.3
@@ -6972,9 +6990,9 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvDefense,			// Defense (System 16B, FD1089A 317-0028)
 	&BurnDrvmd_demoman,			// Demolition Man (Euro, USA)
 	&BurnDrvmd_demomanp,		// Demolition Man (USA, Prototype)
+	&BurnDrvdmnfrnta,			// Demon Front (V102, China)
+	&BurnDrvDmnfrnt,			// Demon Front (V105)
 #if defined FBA_DEBUG
-	&BurnDrvDmnfrnt,			// Demon Front (V102) [Incomplete Dump, NOT WORKING]
-	&BurnDrvDmnfrnt105,			// Demon Front (V105, China) [Incomplete Dump, NOT WORKING]
 	&BurnDrvDmnfrntpcb,			// Demon Front (V107, Korea, Single PCB Version) [Incomplete Dump, NOT WORKING]
 #endif
 	&BurnDrvDemonwld,			// Demon's World / Horror Story (set 1)
@@ -7053,6 +7071,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_djboy,			// DJ Boy (Euro)
 	&BurnDrvmd_djboyj,			// DJ Boy (Jpn)
 	&BurnDrvmd_djboyu,			// DJ Boy (USA)
+	&BurnDrvDoDonpachijH,		// DoDonPachi (Arrange Mode version 1.1, hack by Trap15)
 	&BurnDrvDoDonpachi,			// DoDonPachi (International, master ver. 97/02/05)
 	&BurnDrvDoDonpachiJ,		// DoDonPachi (Japan, master ver. 97/02/05)
 	&BurnDrvDdp3b,				// DoDonPachi Dai-Ou-Jou (V100 (first version), Japan)
@@ -7360,6 +7379,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_fantasia,		// Fantasia (World, Rev. A)
 	&BurnDrvFantsia2,			// Fantasia II (Explicit)
 	&BurnDrvFantsia2a,			// Fantasia II (Less Explicit)
+	&BurnDrvFantastc,			// Fantastic
 	&BurnDrvmd_fantdizz,		// Fantastic Dizzy (Euro, USA)
 	&BurnDrvmd_fantdizz1,		// Fantastic Dizzy (Euro, USA, Alt)
 	&BurnDrvFantsy95,			// Fantasy '95
@@ -7553,6 +7573,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvGalapx,				// Galaxian Part X (moonaln hack)
 	&BurnDrvTstgalx,			// Galaxian Test ROM
 	&BurnDrvGalturbo,			// Galaxian Turbo (superg hack)
+	&BurnDrvGalemp,				// Galaxy Empire (bootleg?)
 	&BurnDrvgalaxyfg,			// Galaxy Fight - Universal Warriors
 	&BurnDrvGforce2,			// Galaxy Force 2
 	&BurnDrvGforce2j,			// Galaxy Force 2 (Japan)
@@ -7989,13 +8010,12 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_madden,			// John Madden Football (Euro, USA)
 	&BurnDrvmd_maddenj,			// John Madden Football - Pro Football (Jpn)
 	&BurnDrvjoinem,				// Joinem
-    &BurnDrvJojoOld,            // JoJo's Venture / JoJo no Kimyouna Bouken (USA 990128) (OLD DUMP)
-    &BurnDrvJojobaOld,          // JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927) (OLD DUMP)
 	&BurnDrvJojobaner1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro 990913, NO CD)
 	&BurnDrvJojobane,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro 990927, NO CD)
 	&BurnDrvJojobar1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913)
 	&BurnDrvJojobanr1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913, NO CD)
 	&BurnDrvJojoba,				// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927)
+	&BurnDrvJojobaOld,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927) (OLD DUMP)
 	&BurnDrvJojoban,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927, NO CD)
 	&BurnDrvJojonr2,			// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 981202, NO CD)
 	&BurnDrvJojonr1,			// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990108, NO CD)
@@ -8005,6 +8025,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvJojoj,				// JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990128)
 	&BurnDrvJojor2,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 981202)
 	&BurnDrvJojor1,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108)
+	&BurnDrvJojoOld,			// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108) (OLD DUMP)
 	&BurnDrvJojo,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990128)
 	&BurnDrvltorb1,				// Jonas Indiana and the Lost Temple of RA (20050717)
 	&BurnDrvmd_jordanb1,		// Jordan Vs Bird (Euro, USA)
@@ -8168,6 +8189,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvEto,				// Kokontouzai Eto Monogatari (Japan)
 	&BurnDrvmd_kolobok,			// Kolobok ~ Pyramid (Rus)
 	&BurnDrvKonami88,			// Konami '88
+	&BurnDrvKong,				// Kong (Brazil)
 	&BurnDrvpce_proyak89,		// Kore Ga Pro Yakyuu '89
 	&BurnDrvpce_proyak90,		// Kore Ga Pro Yakyuu '90
 	&BurnDrvKorokoro,			// Koro Koro Quest (Japan)
@@ -9613,6 +9635,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_manover,			// S.S. Lucifer - Man Overboard! (Euro)
 	&BurnDrvSsmissin,			// S.S. Mission
 #if defined FBA_DEBUG
+	&BurnDrvSvgpcb,				// S.V.G. - Spectral vs Generation (V100, Japan, Single PCB Version) [Incomplete Dump, NOT WORKING]
 	&BurnDrvSvg,				// S.V.G. - Spectral vs Generation (V200, China) [Incomplete Dump, NOT WORKING]
 #endif
 	&BurnDrvSabotenb,			// Saboten Bombers (set 1)
@@ -10208,8 +10231,9 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvCpsSf2ceua,			// Street Fighter II' - champion edition (street fighter 2' 920313 USA)
 	&BurnDrvCpsSf2ceja,			// Street Fighter II' - champion edition (street fighter 2' 920322 Japan)
 	&BurnDrvCpsSf2ce,			// Street Fighter II' - champion edition (street fighter 2' 920513 etc)
-	&BurnDrvCpsSf2cej,			// Street Fighter II' - champion edition (street fighter 2' 920513 Japan)
+	&BurnDrvCpsSf2cejb,			// Street Fighter II' - champion edition (street fighter 2' 920513 Japan)
 	&BurnDrvCpsSf2ceub,			// Street Fighter II' - champion edition (street fighter 2' 920513 USA)
+	&BurnDrvCpsSf2cejc,			// Street Fighter II' - champion edition (street fighter 2' 920803 Japan)
 	&BurnDrvCpsSf2ceuc,			// Street Fighter II' - champion edition (street fighter 2' 920803 USA)
 	&BurnDrvCpsSf2hf,			// Street Fighter II' - hyper fighting (street fighter 2' T 921209 ETC)
 	&BurnDrvCpsSf2hfu,			// Street Fighter II' - hyper fighting (street fighter 2' T 921209 USA)
@@ -10358,6 +10382,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvSupbtimea,			// Super Burger Time (World, set 2)
 	&BurnDrvSbbros,				// Super Buster Bros. (US 901001)
 	&BurnDrvsucasino,			// Super Casino
+	&BurnDrvSuperchsj,			// Super Chase - Criminal Termintation (Japan)
 	&BurnDrvSuperchs,			// Super Chase - Criminal Termintation (US)
 	&BurnDrvScobra,				// Super Cobra
 	&BurnDrvScobrab,			// Super Cobra (bootleg)
@@ -10731,9 +10756,9 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvmd_flintj,			// The Flintstones (Jpn)
 	&BurnDrvmd_flintu,			// The Flintstones (USA)
 #if defined FBA_DEBUG
-	&BurnDrvTheglad,			// The Gladiator / Shen Jian (V100) [Incomplete Dump, NOT WORKING]
 	&BurnDrvThegladpcb,			// The Gladiator / Shen Jian (V100, Japan, Single PCB Version) [Incomplete Dump, NOT WORKING]
-	&BurnDrvTheglad101,			// The Gladiator / Shen Jian (V101, Taiwan) [Incomplete Dump, NOT WORKING]
+	&BurnDrvTheglad,			// The Gladiator / Shen Jian (V101) [Incomplete Dump, NOT WORKING]
+	&BurnDrvtheglada,			// The Gladiator / Shen Jian (V101, Taiwan) [Incomplete Dump, NOT WORKING]
 #endif
 	&BurnDrvTheglob,			// The Glob
 	&BurnDrvTheglob2,			// The Glob (earlier)
@@ -10763,6 +10788,7 @@ static struct BurnDriver* pDriver[] = {
 #endif
 	&BurnDrvmd_killshow,		// The Killing Game Show (Jpn)
 	&BurnDrvCpsKodr1,			// The King of Dragons (910711 etc)
+	&BurnDrvCpsKodda,			// The King of Dragons (910731 etc Phoenix?)
 	&BurnDrvCpsKod,				// The King of Dragons (910805 etc)
 #if defined FBA_DEBUG
 	&BurnDrvCpsKodb,			// The King of Dragons (bootleg set 1) [No Sprites, NOT WORKING]

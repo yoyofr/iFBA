@@ -20,9 +20,6 @@ Port to FBA by OopsWare
 #include "cps3.h"
 #include "sh2.h"
 
-static int low_mem_hack;
-
-
 #define	BE_GFX		1
 //#define	FAST_BOOT	1
 #define SPEED_HACK	1		// Default should be 1, if not FPS would drop.
@@ -481,18 +478,10 @@ static INT32 MemIndex()
 	RamStart	= Next;
 	
 	RomGame 	= Next; Next += 0x1000000;
-    if (low_mem_hack) {
-        RomGame_D 	= RomGame;
-    } else {
-        RomGame_D 	= Next; Next += 0x1000000;
-    }
+	RomGame_D 	= Next; Next += 0x1000000;
 	
 	RamC000		= Next; Next += 0x0000400;
-    if (low_mem_hack) {
-        RamC000_D=RamC000;
-    } else {        
 	RamC000_D	= Next; Next += 0x0000400;
-            }
 
 	RamMain		= Next; Next += 0x0080000;
 
@@ -642,7 +631,7 @@ void __fastcall cps3WriteWord(UINT32 addr, UINT16 data)
 		if (cram_bank != data) {
 			cram_bank = data & 7;
 			//bprintf(PRINT_NORMAL, _T("CRAM bank set to %d\n"), data);
-			Sh2MapMemory(((UINT8 *)RamCRam) + (cram_bank << 20), 0x04100000, 0x041fffff, SM_RAM);
+			Sh2MapMemory(((UINT8 *)RamCRam) + (cram_bank << 20), 0x04100000, 0x041fffff, SH2_RAM);
 		}
 		break;
 
@@ -1038,7 +1027,7 @@ static INT32 Cps3Reset()
 {
 	// re-map cram_bank
 	cram_bank = 0;
-	Sh2MapMemory((UINT8 *)RamCRam, 0x04100000, 0x041fffff, SM_RAM);
+	Sh2MapMemory((UINT8 *)RamCRam, 0x04100000, 0x041fffff, SH2_RAM);
 
 	Cps3PatchRegion();
 	
@@ -1095,19 +1084,11 @@ INT32 cps3Init()
 	
 	// CHD games 
 	if (cps3_data_rom_size == 0) cps3_data_rom_size = 0x5000000;	
-    Mem = NULL;
 	
-    low_mem_hack=0;
-    //1st try
+	Mem = NULL;
 	MemIndex();
 	INT32 nLen = MemEnd - (UINT8 *)0;
-	if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) {
-        //2nd try
-        low_mem_hack=1;
-        MemIndex();
-        nLen = MemEnd - (UINT8 *)0;
-        if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) return 1;
-    }
+	if ((Mem = (UINT8 *)BurnMalloc(nLen)) == NULL) return 1;
 	memset(Mem, 0, nLen);										// blank all memory
 	MemIndex();	
 	
@@ -1164,12 +1145,12 @@ INT32 cps3Init()
 		Sh2Open(0);
 
 		// Map 68000 memory:
-		Sh2MapMemory(RomBios,		0x00000000, 0x0007ffff, SM_ROM);	// BIOS
-		Sh2MapMemory(RamMain,		0x02000000, 0x0207ffff, SM_RAM);	// Main RAM
-		Sh2MapMemory((UINT8 *) RamSpr,	0x04000000, 0x0407ffff, SM_RAM);
-//		Sh2MapMemory(RamCRam,		0x04100000, 0x041fffff, SM_RAM);	// map this while reset
-//		Sh2MapMemory(RamGfx,		0x04200000, 0x043fffff, SM_WRITE);
-		Sh2MapMemory((UINT8 *) RamSS,	0x05040000, 0x0504ffff, SM_RAM);	// 'SS' RAM (Score Screen) (text tilemap + toles)
+		Sh2MapMemory(RomBios,		0x00000000, 0x0007ffff, SH2_ROM);	// BIOS
+		Sh2MapMemory(RamMain,		0x02000000, 0x0207ffff, SH2_RAM);	// Main RAM
+		Sh2MapMemory((UINT8 *) RamSpr,	0x04000000, 0x0407ffff, SH2_RAM);
+//		Sh2MapMemory(RamCRam,		0x04100000, 0x041fffff, SH2_RAM);	// map this while reset
+//		Sh2MapMemory(RamGfx,		0x04200000, 0x043fffff, SH2_WRITE);
+		Sh2MapMemory((UINT8 *) RamSS,	0x05040000, 0x0504ffff, SH2_RAM);	// 'SS' RAM (Score Screen) (text tilemap + toles)
 		
 		Sh2SetReadByteHandler (0, cps3ReadByte);
 		Sh2SetReadWordHandler (0, cps3ReadWord);
@@ -1178,9 +1159,9 @@ INT32 cps3Init()
 		Sh2SetWriteWordHandler(0, cps3WriteWord);
 		Sh2SetWriteLongHandler(0, cps3WriteLong);
 
-		Sh2MapMemory(RamC000_D,		0xc0000000, 0xc00003ff, SM_FETCH);	// Executes code from here
-		Sh2MapMemory(RamC000,		0xc0000000, 0xc00003ff, SM_READ);
-		Sh2MapHandler(1,		0xc0000000, 0xc00003ff, SM_WRITE);
+		Sh2MapMemory(RamC000_D,		0xc0000000, 0xc00003ff, SH2_FETCH);	// Executes code from here
+		Sh2MapMemory(RamC000,		0xc0000000, 0xc00003ff, SH2_READ);
+		Sh2MapHandler(1,		0xc0000000, 0xc00003ff, SH2_WRITE);
 
 		Sh2SetWriteByteHandler(1, cps3C0WriteByte);
 		Sh2SetWriteWordHandler(1, cps3C0WriteWord);
@@ -1189,14 +1170,14 @@ INT32 cps3Init()
 		if( !BurnDrvGetHardwareCode() & HARDWARE_CAPCOM_CPS3_NO_CD ) 
 		{		
 			if (cps3_isSpecial) {
-				Sh2MapMemory(RomGame,	0x06000000, 0x06ffffff, SM_READ);	// Decrypted SH2 Code
-				Sh2MapMemory(RomGame_D,	0x06000000, 0x06ffffff, SM_FETCH);	// Decrypted SH2 Code
+				Sh2MapMemory(RomGame,	0x06000000, 0x06ffffff, SH2_READ);	// Decrypted SH2 Code
+				Sh2MapMemory(RomGame_D,	0x06000000, 0x06ffffff, SH2_FETCH);	// Decrypted SH2 Code
 			} else {
-				Sh2MapMemory(RomGame_D,	0x06000000, 0x06ffffff, SM_READ | SM_FETCH);	// Decrypted SH2 Code
+				Sh2MapMemory(RomGame_D,	0x06000000, 0x06ffffff, SH2_READ | SH2_FETCH);	// Decrypted SH2 Code
 			}
 		} else {
-			Sh2MapMemory(RomGame_D,		0x06000000, 0x06ffffff, SM_FETCH);	// Decrypted SH2 Code
-			Sh2MapHandler(2,		0x06000000, 0x06ffffff, SM_READ | SM_WRITE);
+			Sh2MapMemory(RomGame_D,		0x06000000, 0x06ffffff, SH2_FETCH);	// Decrypted SH2 Code
+			Sh2MapHandler(2,		0x06000000, 0x06ffffff, SH2_READ | SH2_WRITE);
 
 			if (cps3_isSpecial) {
 				Sh2SetReadByteHandler (2, cps3RomReadByteSpe);
@@ -1215,7 +1196,7 @@ INT32 cps3Init()
 			}
 		}
 
-		Sh2MapHandler(3,			0x040e0000, 0x040e02ff, SM_RAM);
+		Sh2MapHandler(3,			0x040e0000, 0x040e02ff, SH2_RAM);
 		Sh2SetReadByteHandler (3, cps3SndReadByte);
 		Sh2SetReadWordHandler (3, cps3SndReadWord);
 		Sh2SetReadLongHandler (3, cps3SndReadLong);
@@ -1223,8 +1204,8 @@ INT32 cps3Init()
 		Sh2SetWriteWordHandler(3, cps3SndWriteWord);
 		Sh2SetWriteLongHandler(3, cps3SndWriteLong);
 		
-		Sh2MapMemory((UINT8 *)RamPal,		0x04080000, 0x040bffff, SM_READ);	// 16bit BE Colors
-		Sh2MapHandler(4,			0x04080000, 0x040bffff, SM_WRITE);
+		Sh2MapMemory((UINT8 *)RamPal,		0x04080000, 0x040bffff, SH2_READ);	// 16bit BE Colors
+		Sh2MapHandler(4,			0x04080000, 0x040bffff, SH2_WRITE);
 
 		Sh2SetReadByteHandler (4, cps3VidReadByte);
 		Sh2SetReadWordHandler (4, cps3VidReadWord);
@@ -1236,7 +1217,7 @@ INT32 cps3Init()
 #ifdef SPEED_HACK
 		// install speedup read handler
 		Sh2MapHandler(5,			0x02000000 | (cps3_speedup_ram_address & 0x030000),
-							0x0200ffff | (cps3_speedup_ram_address & 0x030000), SM_READ);
+							0x0200ffff | (cps3_speedup_ram_address & 0x030000), SH2_READ);
 		Sh2SetReadByteHandler (5, cps3RamReadByte);
 		Sh2SetReadWordHandler (5, cps3RamReadWord);
 		Sh2SetReadLongHandler (5, cps3RamReadLong);
@@ -1715,179 +1696,9 @@ static void cps3_draw_tilemapsprite_line(INT32 drawline, UINT32 * regs )
 
 static INT32 WideScreenFrameDelay = 0;
 
-static void cps3_drawsprites(int fsz) {
-    INT32 bg_drawn[4] = { 0, 0, 0, 0 };
-    for (INT32 i=0x00000/4;i<0x2000/4;i+=4) {
-        INT32 xpos		= (RamSpr[i+1]&0x03ff0000)>>16;
-        INT32 ypos		= (RamSpr[i+1]&0x000003ff)>>0;
-        
-        INT32 gscroll		= (RamSpr[i+0]&0x70000000)>>28;
-        INT32 length		= (RamSpr[i+0]&0x01ff0000)>>14; // how many entries in the sprite table
-        UINT32 start		= (RamSpr[i+0]&0x00007ff0)>>4;
-        
-        INT32 whichbpp		= (RamSpr[i+2]&0x40000000)>>30; // not 100% sure if this is right, jojo title / characters
-        INT32 whichpal		= (RamSpr[i+2]&0x20000000)>>29;
-        INT32 global_xflip	= (RamSpr[i+2]&0x10000000)>>28;
-        INT32 global_yflip	= (RamSpr[i+2]&0x08000000)>>27;
-        INT32 global_alpha	= (RamSpr[i+2]&0x04000000)>>26; // alpha / shadow? set on sfiii2 shadows, and big black image in jojo intro
-        INT32 global_bpp	= (RamSpr[i+2]&0x02000000)>>25;
-        INT32 global_pal	= (RamSpr[i+2]&0x01ff0000)>>16;
-        
-        INT32 gscrollx		= (RamVReg[gscroll]&0x03ff0000)>>16;
-        INT32 gscrolly		= (RamVReg[gscroll]&0x000003ff)>>0;
-        
-        start = (start * 0x100) >> 2;
-        
-        if ((RamSpr[i+0]&0xf0000000) == 0x80000000) break;	
-		
-        for (INT32 j=0; j<length; j+=4) {
-            
-            UINT32 value1 = (RamSpr[start+j+0]);
-            UINT32 value2 = (RamSpr[start+j+1]);
-            UINT32 value3 = (RamSpr[start+j+2]);
-            UINT32 tileno = (value1&0xfffe0000)>>17;
-            INT32 count;
-            INT32 xpos2 = (value2 & 0x03ff0000)>>16;
-            INT32 ypos2 = (value2 & 0x000003ff)>>0;
-            INT32 flipx = (value1 & 0x00001000)>>12;
-            INT32 flipy = (value1 & 0x00000800)>>11;
-            INT32 alpha = (value1 & 0x00000400)>>10; //? this one is used for alpha effects on warzard
-            INT32 bpp =   (value1 & 0x00000200)>>9;
-            INT32 pal =   (value1 & 0x000001ff);
-            
-            INT32 ysizedraw2 = ((value3 & 0x7f000000)>>24);
-            INT32 xsizedraw2 = ((value3 & 0x007f0000)>>16);
-            INT32 xx,yy;
-            
-            INT32 tilestable[4] = { 8,1,2,4 };
-            INT32 ysize2 = ((value3 & 0x0000000c)>>2);
-            INT32 xsize2 = ((value3 & 0x00000003)>>0);
-            UINT32 xinc,yinc;
-            
-            if (ysize2==0) continue;
-            
-            if (xsize2==0)
-            {
-                if (nBurnLayer & 1)
-                {
-                    INT32 tilemapnum = ((value3 & 0x00000030)>>4);
-                    INT32 startline;
-                    INT32 endline;
-                    INT32 height = (value3 & 0x7f000000)>>24;
-                    UINT32 * regs;
-                    
-                    regs = RamVReg + 8 + tilemapnum * 4;
-                    endline = value2;
-                    startline = endline - height;
-                    
-                    startline &=0x3ff;
-                    endline &=0x3ff;
-                    
-                    if (bg_drawn[tilemapnum]==0)
-                    {
-                        UINT32 srcy = 0;
-                        for (INT32 ry = 0; ry < 224; ry++, srcy += fsz) {
-                            cps3_draw_tilemapsprite_line( srcy >> 16, regs );
-                        }
-                    }
-                    
-                    bg_drawn[tilemapnum] = 1;
-                }
-            } else {
-                if (~nSpriteEnable & 1) continue;
-                
-                ysize2 = tilestable[ysize2];
-                xsize2 = tilestable[xsize2];
-                
-                xinc = ((xsizedraw2+1)<<16) / ((xsize2*0x10));
-                yinc = ((ysizedraw2+1)<<16) / ((ysize2*0x10));
-                
-                xsize2-=1;
-                ysize2-=1;
-                
-                flipx ^= global_xflip;
-                flipy ^= global_yflip;
-                
-                if (!flipx) xpos2+=((xsizedraw2+1)/2);
-                else xpos2-=((xsizedraw2+1)/2);
-                
-                ypos2+=((ysizedraw2+1)/2);
-                
-                if (!flipx) xpos2-= (((xsize2+1)*16*xinc)>>16);
-                else  xpos2+= (((xsize2)*16*xinc)>>16);
-                
-                if (flipy) ypos2-= ((ysize2*16*yinc)>>16);
-                
-                {
-                    count = 0;
-                    for (xx=0;xx<xsize2+1;xx++) {
-                        INT32 current_xpos;
-                        
-                        if (!flipx) current_xpos = (xpos+xpos2+((xx*16*xinc)>>16)  );
-                        else current_xpos = (xpos+xpos2-((xx*16*xinc)>>16));
-                        
-                        current_xpos += gscrollx;
-                        current_xpos += 1;
-                        current_xpos &=0x3ff;
-                        if (current_xpos&0x200) current_xpos-=0x400;
-                        
-                        for (yy=0;yy<ysize2+1;yy++) {
-                            INT32 current_ypos;
-                            INT32 actualpal;
-                            
-                            if (flipy) current_ypos = (ypos+ypos2+((yy*16*yinc)>>16));
-                            else current_ypos = (ypos+ypos2-((yy*16*yinc)>>16));
-                            
-                            current_ypos += gscrolly;
-                            current_ypos = 0x3ff-current_ypos;
-                            current_ypos -= 17;
-                            current_ypos &=0x3ff;
-                            
-                            if (current_ypos&0x200) current_ypos-=0x400;
-                            
-                            /* use the palette value from the main list or the sublists? */
-                            if (whichpal) actualpal = global_pal;
-                            else actualpal = pal;
-                            
-                            /* use the bpp value from the main list or the sublists? */
-                            INT32 color_granularity;
-                            if (whichbpp) {
-                                if (!global_bpp) color_granularity = 8;
-                                else color_granularity = 6;
-                            } else {
-                                if (!bpp) color_granularity = 8;
-                                else color_granularity = 6;
-                            }
-                            actualpal <<= color_granularity;
-                            
-                            {
-                                INT32 realtileno = tileno+count;
-                                
-                                if ( realtileno ) {
-                                    if (global_alpha || alpha) {
-                                        // fix jojo's title in it's intro ???
-                                        if ( global_alpha && (global_pal & 0x100))
-                                            actualpal &= 0x0ffff;
-                                        
-                                        cps3_drawgfxzoom_2(realtileno,actualpal,flipx,flipy,current_xpos,current_ypos,xinc,yinc, color_granularity);
-                                        
-                                    } else {
-                                        cps3_drawgfxzoom_2(realtileno,actualpal,flipx,flipy,current_xpos,current_ypos,xinc,yinc, 0);
-                                    }
-                                }
-                                count++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 static void DrvDraw()
 {
-	
+	INT32 bg_drawn[4] = { 0, 0, 0, 0 };
 
 	UINT32 fullscreenzoom = RamVReg[ 6 * 4 + 3 ] & 0xff;
 	UINT32 fullscreenzoomwidecheck = RamVReg[6 * 4 + 1];
@@ -1938,7 +1749,174 @@ static void DrvDraw()
 	}
 	
 	// Draw Sprites
-	cps3_drawsprites(fsz);
+	{
+		for (INT32 i=0x00000/4;i<0x2000/4;i+=4) {
+			INT32 xpos		= (RamSpr[i+1]&0x03ff0000)>>16;
+			INT32 ypos		= (RamSpr[i+1]&0x000003ff)>>0;
+
+			INT32 gscroll		= (RamSpr[i+0]&0x70000000)>>28;
+			INT32 length		= (RamSpr[i+0]&0x01ff0000)>>14; // how many entries in the sprite table
+			UINT32 start		= (RamSpr[i+0]&0x00007ff0)>>4;
+
+			INT32 whichbpp		= (RamSpr[i+2]&0x40000000)>>30; // not 100% sure if this is right, jojo title / characters
+			INT32 whichpal		= (RamSpr[i+2]&0x20000000)>>29;
+			INT32 global_xflip	= (RamSpr[i+2]&0x10000000)>>28;
+			INT32 global_yflip	= (RamSpr[i+2]&0x08000000)>>27;
+			INT32 global_alpha	= (RamSpr[i+2]&0x04000000)>>26; // alpha / shadow? set on sfiii2 shadows, and big black image in jojo intro
+			INT32 global_bpp	= (RamSpr[i+2]&0x02000000)>>25;
+			INT32 global_pal	= (RamSpr[i+2]&0x01ff0000)>>16;
+
+			INT32 gscrollx		= (RamVReg[gscroll]&0x03ff0000)>>16;
+			INT32 gscrolly		= (RamVReg[gscroll]&0x000003ff)>>0;
+			
+			start = (start * 0x100) >> 2;
+
+			if ((RamSpr[i+0]&0xf0000000) == 0x80000000) break;	
+		
+			for (INT32 j=0; j<length; j+=4) {
+				
+				UINT32 value1 = (RamSpr[start+j+0]);
+				UINT32 value2 = (RamSpr[start+j+1]);
+				UINT32 value3 = (RamSpr[start+j+2]);
+				UINT32 tileno = (value1&0xfffe0000)>>17;
+				INT32 count;
+				INT32 xpos2 = (value2 & 0x03ff0000)>>16;
+				INT32 ypos2 = (value2 & 0x000003ff)>>0;
+				INT32 flipx = (value1 & 0x00001000)>>12;
+				INT32 flipy = (value1 & 0x00000800)>>11;
+				INT32 alpha = (value1 & 0x00000400)>>10; //? this one is used for alpha effects on warzard
+				INT32 bpp =   (value1 & 0x00000200)>>9;
+				INT32 pal =   (value1 & 0x000001ff);
+
+				INT32 ysizedraw2 = ((value3 & 0x7f000000)>>24);
+				INT32 xsizedraw2 = ((value3 & 0x007f0000)>>16);
+				INT32 xx,yy;
+
+				INT32 tilestable[4] = { 8,1,2,4 };
+				INT32 ysize2 = ((value3 & 0x0000000c)>>2);
+				INT32 xsize2 = ((value3 & 0x00000003)>>0);
+				UINT32 xinc,yinc;
+
+				if (ysize2==0) continue;
+
+				if (xsize2==0)
+				{
+					if (nBurnLayer & 1)
+					{
+						INT32 tilemapnum = ((value3 & 0x00000030)>>4);
+						INT32 startline;
+						INT32 endline;
+						INT32 height = (value3 & 0x7f000000)>>24;
+						UINT32 * regs;
+
+						regs = RamVReg + 8 + tilemapnum * 4;
+						endline = value2;
+						startline = endline - height;
+
+						startline &=0x3ff;
+						endline &=0x3ff;
+
+						if (bg_drawn[tilemapnum]==0)
+						{
+							UINT32 srcy = 0;
+							for (INT32 ry = 0; ry < 224; ry++, srcy += fsz) {
+								cps3_draw_tilemapsprite_line( srcy >> 16, regs );
+							}
+						}
+
+						bg_drawn[tilemapnum] = 1;
+					}
+				} else {
+					if (~nSpriteEnable & 1) continue;
+
+					ysize2 = tilestable[ysize2];
+					xsize2 = tilestable[xsize2];
+
+					xinc = ((xsizedraw2+1)<<16) / ((xsize2*0x10));
+					yinc = ((ysizedraw2+1)<<16) / ((ysize2*0x10));
+
+					xsize2-=1;
+					ysize2-=1;
+
+					flipx ^= global_xflip;
+					flipy ^= global_yflip;
+
+					if (!flipx) xpos2+=((xsizedraw2+1)/2);
+					else xpos2-=((xsizedraw2+1)/2);
+
+					ypos2+=((ysizedraw2+1)/2);
+
+					if (!flipx) xpos2-= (((xsize2+1)*16*xinc)>>16);
+					else  xpos2+= (((xsize2)*16*xinc)>>16);
+
+					if (flipy) ypos2-= ((ysize2*16*yinc)>>16);
+
+					{
+						count = 0;
+						for (xx=0;xx<xsize2+1;xx++) {
+							INT32 current_xpos;
+
+							if (!flipx) current_xpos = (xpos+xpos2+((xx*16*xinc)>>16)  );
+							else current_xpos = (xpos+xpos2-((xx*16*xinc)>>16));
+
+							current_xpos += gscrollx;
+							current_xpos += 1;
+							current_xpos &=0x3ff;
+							if (current_xpos&0x200) current_xpos-=0x400;
+
+							for (yy=0;yy<ysize2+1;yy++) {
+								INT32 current_ypos;
+								INT32 actualpal;
+
+								if (flipy) current_ypos = (ypos+ypos2+((yy*16*yinc)>>16));
+								else current_ypos = (ypos+ypos2-((yy*16*yinc)>>16));
+
+								current_ypos += gscrolly;
+								current_ypos = 0x3ff-current_ypos;
+								current_ypos -= 17;
+								current_ypos &=0x3ff;
+
+								if (current_ypos&0x200) current_ypos-=0x400;
+
+								/* use the palette value from the main list or the sublists? */
+								if (whichpal) actualpal = global_pal;
+								else actualpal = pal;
+								
+								/* use the bpp value from the main list or the sublists? */
+								INT32 color_granularity;
+								if (whichbpp) {
+									if (!global_bpp) color_granularity = 8;
+									else color_granularity = 6;
+								} else {
+									if (!bpp) color_granularity = 8;
+									else color_granularity = 6;
+								}
+								actualpal <<= color_granularity;
+
+								{
+									INT32 realtileno = tileno+count;
+
+									if ( realtileno ) {
+										if (global_alpha || alpha) {
+											// fix jojo's title in it's intro ???
+											if ( global_alpha && (global_pal & 0x100))
+												actualpal &= 0x0ffff;
+												
+											cps3_drawgfxzoom_2(realtileno,actualpal,flipx,flipy,current_xpos,current_ypos,xinc,yinc, color_granularity);
+											
+										} else {
+											cps3_drawgfxzoom_2(realtileno,actualpal,flipx,flipy,current_xpos,current_ypos,xinc,yinc, 0);
+										}
+									}
+									count++;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	
 	{
 		UINT32 srcx, srcy = 0;
@@ -2150,7 +2128,7 @@ INT32 cps3Scan(INT32 nAction, INT32 *pnMin)
 			cps3_palette_change = 1;
 			
 			// remap RamCRam
-			Sh2MapMemory(((UINT8 *)RamCRam) + (cram_bank << 20), 0x04100000, 0x041fffff, SM_RAM);
+			Sh2MapMemory(((UINT8 *)RamCRam) + (cram_bank << 20), 0x04100000, 0x041fffff, SH2_RAM);
 			
 		}
 		

@@ -1,4 +1,6 @@
 #include "burnint.h"
+#include "sek.h"
+#include "zet.h"
 #include "vez.h"
 #include "sh2.h"
 #include "m6502_intf.h"
@@ -6,9 +8,6 @@
 #include "hd6309_intf.h"
 #include "m6800_intf.h"
 #include "s2650_intf.h"
-
-extern char debug_bundle_path[512];
-extern char debug_root_path[512];
 
 // A hiscore.dat support module for FBA - written by Treble Winner, Feb 2009
 // At some point we really need a CPU interface to track CPU types and numbers,
@@ -361,11 +360,7 @@ void HiscoreInit()
 	HiscoresInUse = 0;
 	
 	TCHAR szDatFilename[MAX_PATH];
-#ifdef RELEASE_DEBUG
-    sprintf(szDatFilename, "%s/hiscore.dat", debug_bundle_path);    
-#else
-    sprintf(szDatFilename, "/Applications/iFBA.app/hiscore.dat");
-#endif
+	_stprintf(szDatFilename, _T("%shiscore.dat"), szAppHiscorePath);
 
 	FILE *fp = _tfopen(szDatFilename, _T("r"));
 	if (fp) {
@@ -416,13 +411,7 @@ void HiscoreInit()
 	if (nHiscoreNumRanges) HiscoresInUse = 1;
 	
 	TCHAR szFilename[MAX_PATH];
-//	_stprintf(szFilename, _T("%s%s.hi"), szAppHiscorePath, BurnDrvGetText(DRV_NAME));
-#ifdef RELEASE_DEBUG
-    sprintf(szFilename, "%s/%s.hi", debug_root_path, BurnDrvGetText(DRV_NAME));
-#else
-    sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.hi", BurnDrvGetText(DRV_NAME));
-#endif
-
+	_stprintf(szFilename, _T("%s%s.hi"), szAppHiscorePath, BurnDrvGetText(DRV_NAME));
 
 	fp = _tfopen(szFilename, _T("r"));
 	INT32 Offset = 0;
@@ -560,13 +549,7 @@ void HiscoreExit()
 	if (nCpuType == -1) set_cpu_type();
 	
 	TCHAR szFilename[MAX_PATH];
-#ifdef RELEASE_DEBUG
-    sprintf(szFilename, "%s/%s.hi", debug_root_path, BurnDrvGetText(DRV_NAME));
-#else
-    sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.hi", BurnDrvGetText(DRV_NAME));
-#endif
-    
-//	_stprintf(szFilename, _T("%s%s.hi"), szAppHiscorePath, BurnDrvGetText(DRV_NAME));
+	_stprintf(szFilename, _T("%s%s.hi"), szAppHiscorePath, BurnDrvGetText(DRV_NAME));
 
 	FILE *fp = _tfopen(szFilename, _T("w"));
 	if (fp) {

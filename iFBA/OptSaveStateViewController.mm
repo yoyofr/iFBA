@@ -15,16 +15,21 @@ extern volatile int emuThread_running;
 extern int launchGame;
 extern char gameName[64];
 static int slot[10];
-static int current_slot;
+static int current_slot,pad_action,cur_action;
 
 int MakeScreenShot(int index);
 int StatedLoad(int slot);
 int StatedSave(int slot);
 
+//iCade
+static int ui_currentIndex_s,ui_currentIndex_r;
+static int selectedSlot;
+
 
 @implementation OptSaveStateViewController
 @synthesize tabView,btn_backToEmu,imgview;
 @synthesize btn_load,btn_save;
+@synthesize iCaderv;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,6 +55,15 @@ int StatedSave(int slot);
 	[[imgview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
     tabView.backgroundView=nil;
     tabView.backgroundView=[[[UIView alloc] init] autorelease];
+    
+    //ICADE 
+    ui_currentIndex_s=-1;
+    iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:iCaderv];
+    [iCaderv changeLang:ifba_conf.icade_lang];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv release];
 }
 
 - (void)viewDidUnload
@@ -84,11 +98,21 @@ int StatedSave(int slot);
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }    
     current_slot=-1;
+    pad_action=0;
+    cur_action=0;
     btn_load.hidden=YES;
     btn_save.hidden=YES;
     
     [self scanFiles];
     [tabView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv becomeFirstResponder];
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -148,9 +172,22 @@ int StatedSave(int slot);
         [imgview setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%s",tmp_str]]];        
         
         btn_load.hidden=NO;
+        
+        if (pad_action) {
+            pad_action=2;
+            cur_action=2;
+            [btn_load setHighlighted:YES];
+            [btn_save setHighlighted:NO];
+        }
     } else {
         [imgview setImage:nil];
         btn_load.hidden=YES;
+        if (pad_action) {
+            pad_action=1;
+            cur_action=1;
+            [btn_load setHighlighted:NO];
+            [btn_save setHighlighted:YES];
+        }
     }
     btn_save.hidden=NO;
 }
@@ -219,6 +256,83 @@ int StatedSave(int slot);
     StatedLoad(current_slot);
     launchGame=2;
     [self.navigationController popToRootViewControllerAnimated:NO];
+}
+
+#pragma Icade support
+/****************************************************/
+/****************************************************/
+/*        ICADE                                     */
+/****************************************************/
+/****************************************************/
+- (void)buttonDown:(iCadeState)button {
+}
+- (void)buttonUp:(iCadeState)button {
+    if (ui_currentIndex_s==-1) {
+        ui_currentIndex_s=ui_currentIndex_r=0;
+    }
+    else {
+        if (button&iCadeJoystickDown) {            
+            if (pad_action) {
+            } else {
+            if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
+            else { //next section
+                if (ui_currentIndex_s<[tabView numberOfSections]-1) {
+                    ui_currentIndex_s++;ui_currentIndex_r=0; //next section
+                } else {
+                    ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
+                }
+            }
+            }
+        } else if (button&iCadeJoystickUp) {
+            if (pad_action) {                
+            } else {
+            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row            
+            else { //prev section
+                if (ui_currentIndex_s>0) {
+                    ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
+                } else {
+                    ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
+                }
+            }
+            }
+        } else if (button&iCadeButtonA) { //validate
+            if (pad_action) {
+                if (cur_action==2) {//load
+                    [self loadState];
+                } else if (cur_action==1) {//save
+                    [self saveState];
+                }
+            } else {
+            pad_action=1;            
+            [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];            
+            }
+        } else if (button&iCadeButtonB) { //back
+            if (pad_action) {
+                pad_action=cur_action=0;
+                [btn_load setHighlighted:NO];
+                [btn_save setHighlighted:NO];
+            } else [[self navigationController] popViewControllerAnimated:YES];
+        } else if (button&iCadeJoystickLeft) {
+            if (pad_action==2) {
+                if (cur_action==2) cur_action=1;
+                else cur_action=2;
+            }
+            if (cur_action==1) [btn_save setHighlighted:YES];
+            else [btn_save setHighlighted:NO];
+            if (cur_action==2) [btn_load setHighlighted:YES];
+            else [btn_load setHighlighted:NO];
+        } else if (button&iCadeJoystickRight) {
+            if (pad_action==2) {
+                if (cur_action==2) cur_action=1;
+                else cur_action=2;
+            }
+            if (cur_action==1) [btn_save setHighlighted:YES];
+            else [btn_save setHighlighted:NO];
+            if (cur_action==2) [btn_load setHighlighted:YES];
+            else [btn_load setHighlighted:NO];
+        }
+    }    
+    if (pad_action==0) [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
 }
 
 

@@ -51,6 +51,10 @@ extern int mOptICadeButtonSelected;
     [iCaderv release];
     
 }
+-(void) viewWillDisappear:(BOOL)animated {
+    iCaderv.active=NO;
+    [iCaderv removeFromSuperview];
+}
 
 - (void)viewDidUnload
 {
