@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/fbalpha/!svn/ver/13/trunk/src/cpu/arm7
+END
+arm7core.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/arm7/arm7core.c
+END
+arm7core.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/arm7/arm7core.h
+END
+arm7.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/13/trunk/src/cpu/arm7/arm7.cpp
+END
+arm7exec.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/arm7/arm7exec.c
+END

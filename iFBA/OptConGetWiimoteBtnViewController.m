@@ -68,7 +68,7 @@ extern int wiimoteSelected;
 
     
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
-    m_displayLink.frameInterval = 1; //60fps
+    m_displayLink.frameInterval = 3; //20fps
 	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
 }
 

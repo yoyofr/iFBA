@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/cps3
+END
+d_cps3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/405/trunk/src/burn/drv/cps3/d_cps3.cpp
+END
+cps3.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cps3/cps3.h
+END
+cps3run.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/cps3/cps3run.cpp
+END
+cps3snd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cps3/cps3snd.cpp
+END

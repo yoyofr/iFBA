@@ -15,6 +15,9 @@
 #import "OptGameInfoViewController.h"
 #include "DBHelper.h"
 #include "fbaconf.h"
+#include "burner.h"
+
+extern int device_retina;
 
 extern char gameInfo[64*1024];
 
@@ -27,10 +30,14 @@ extern int nShouldExit;
 extern int device_isIpad;
 
 
-//iCade
+//iCade & wiimote
 #import "iCadeReaderView.h"
+#include "wiimote.h"
 static int ui_currentIndex_s,ui_currentIndex_r;
+static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
+static CADisplayLink* m_displayLink;
+
 
 @implementation MenuViewController
 @synthesize emuvc,gamebrowservc,optionsvc,dipswvc,statevc;
@@ -66,7 +73,8 @@ static iCadeReaderView *iCaderv;
     tabView.backgroundView=nil;
     tabView.backgroundView=[[[UIView alloc] init] autorelease];
     
-    //ICADE 
+    
+    //ICADE & Wiimote
     ui_currentIndex_s=-1;
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:iCaderv];
@@ -74,6 +82,7 @@ static iCadeReaderView *iCaderv;
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv release];
+    wiimoteBtnState=0;
 }
 
 
@@ -86,13 +95,16 @@ static iCadeReaderView *iCaderv;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    /* Wiimote check => rely on cadisplaylink*/
+    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
+    m_displayLink.frameInterval = 3; //20fps
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
+    
     
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     } 
-    
-    
     
             
     [tabView reloadData];
@@ -116,13 +128,18 @@ static iCadeReaderView *iCaderv;
 #endif
     
     if (launchGame) {
+        if (m_displayLink) [m_displayLink invalidate];
+        m_displayLink=nil;
         //[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
         [self.navigationController pushViewController:emuvc animated:NO];
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];    
+	[super viewWillDisappear:animated];
+    
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -138,6 +155,8 @@ static iCadeReaderView *iCaderv;
 
 #pragma mark - UI Actions
 -(IBAction) backToEmu {        
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
     [self.navigationController pushViewController:emuvc animated:NO];
 }
 
@@ -185,12 +204,11 @@ static iCadeReaderView *iCaderv;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        /*cell.backgroundColor=[UIColor colorWithRed:1 green:1 blue:1 alpha:0.75f];
+        cell.textLabel.backgroundColor=[UIColor clearColor];*/
     }
-    //cell.backgroundView.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f];
-    //cell.contentView.backgroundColor=[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f];
-    /*    for (int i=0;i<[cell.subviews count];i++) {
-     [[cell.subviews objectAtIndex:i] setBackgroundColor:[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.5f]];
-     }*/
+
+    
     cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     
 	switch (indexPath.section) {
@@ -290,7 +308,7 @@ static iCadeReaderView *iCaderv;
         } else {
             switch (indexPath.row) {
                 case 0: //game browser
-                    gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
+                    gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];                    
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];
                     break;
@@ -324,6 +342,44 @@ static iCadeReaderView *iCaderv;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 }
 */
+
+#pragma Wiimote/iCP support
+#define WII_BUTTON_UP(A) (wiimoteBtnState&A)&& !(pressedBtn&A)
+-(void) checkWiimote {
+    if (num_of_joys==0) return;
+    int pressedBtn=iOS_wiimote_check(&(joys[0]));
+    
+    if (WII_BUTTON_UP(WII_JOY_DOWN)) {
+        [self buttonUp:iCadeJoystickDown];
+    } else if (WII_BUTTON_UP(WII_JOY_UP)) {
+        [self buttonUp:iCadeJoystickUp];
+    } else if (WII_BUTTON_UP(WII_JOY_LEFT)) {
+        [self buttonUp:iCadeJoystickLeft];
+    } else if (WII_BUTTON_UP(WII_JOY_RIGHT)) {
+        [self buttonUp:iCadeJoystickRight];
+    } else if (WII_BUTTON_UP(WII_JOY_A)) {
+        [self buttonUp:iCadeButtonA];
+    } else if (WII_BUTTON_UP(WII_JOY_B)) {
+        [self buttonUp:iCadeButtonB];
+    } else if (WII_BUTTON_UP(WII_JOY_C)) {
+        [self buttonUp:iCadeButtonC];
+    } else if (WII_BUTTON_UP(WII_JOY_D)) {
+        [self buttonUp:iCadeButtonD];
+    } else if (WII_BUTTON_UP(WII_JOY_E)) {
+        [self buttonUp:iCadeButtonE];
+    } else if (WII_BUTTON_UP(WII_JOY_F)) {
+        [self buttonUp:iCadeButtonF];
+    } else if (WII_BUTTON_UP(WII_JOY_G)) {
+        [self buttonUp:iCadeButtonG];
+    } else if (WII_BUTTON_UP(WII_JOY_H)) {
+        [self buttonUp:iCadeButtonH];
+    }
+    
+    
+    wiimoteBtnState=pressedBtn;
+}
+
+
 #pragma Icade support
 /****************************************************/
 /****************************************************/

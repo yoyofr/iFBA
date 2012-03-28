@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6809
+END
+m6809.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6809/m6809.cpp
+END
+6809ops.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6809/6809ops.c
+END
+6809tbl.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6809/6809tbl.c
+END
+m6809.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6809/m6809.h
+END

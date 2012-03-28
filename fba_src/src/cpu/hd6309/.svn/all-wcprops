@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/hd6309
+END
+hd6309.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/hd6309/hd6309.h
+END
+6309ops.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/hd6309/6309ops.c
+END
+6309tbl.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/hd6309/6309tbl.c
+END
+hd6309.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/hd6309/hd6309.cpp
+END

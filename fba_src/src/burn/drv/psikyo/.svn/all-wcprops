@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/psikyo
+END
+d_psikyo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/d_psikyo.cpp
+END
+psikyo_render.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/psikyo_render.h
+END
+psikyo.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/psikyo/psikyo.h
+END
+psikyo_sprite.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/psikyo_sprite.cpp
+END
+psikyo_sprite_func.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/psikyo_sprite_func.h
+END
+d_psikyo4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/psikyo/d_psikyo4.cpp
+END
+psikyosh_render.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/psikyosh_render.cpp
+END
+psikyo_tile.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/psikyo_tile.cpp
+END
+d_psikyosh.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/psikyo/d_psikyosh.cpp
+END
+psikyo_palette.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/psikyo_palette.cpp
+END
+psikyosh_render.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/psikyosh_render.h
+END

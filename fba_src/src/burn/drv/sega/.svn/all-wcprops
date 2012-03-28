@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/sega
+END
+d_bankp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/sega/d_bankp.cpp
+END
+genesis_vid.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/genesis_vid.cpp
+END
+d_outrun.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/308/trunk/src/burn/drv/sega/d_outrun.cpp
+END
+d_xbrd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/363/trunk/src/burn/drv/sega/d_xbrd.cpp
+END
+d_sys1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/sega/d_sys1.cpp
+END
+d_dotrikun.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/sega/d_dotrikun.cpp
+END
+d_ybrd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/d_ybrd.cpp
+END
+genesis_vid.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/genesis_vid.h
+END
+fd1094.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/fd1094.cpp
+END
+d_suprloco.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/sega/d_suprloco.cpp
+END
+sys16_run.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/415/trunk/src/burn/drv/sega/sys16_run.cpp
+END
+fd1089.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/388/trunk/src/burn/drv/sega/fd1089.cpp
+END
+fd1094.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/fd1094.h
+END
+sys16_fd1094.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/sys16_fd1094.cpp
+END
+d_hangon.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/d_hangon.cpp
+END
+mc8123.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/mc8123.cpp
+END
+mc8123.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/mc8123.h
+END
+d_sys16a.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/d_sys16a.cpp
+END
+sys16_gfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/sys16_gfx.cpp
+END
+d_sys18.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/sega/d_sys18.cpp
+END
+d_sys16b.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/372/trunk/src/burn/drv/sega/d_sys16b.cpp
+END
+sys16.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/sega/sys16.h
+END
+d_angelkds.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/sega/d_angelkds.cpp
+END

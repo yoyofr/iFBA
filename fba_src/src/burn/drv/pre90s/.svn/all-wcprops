@@ -1,0 +1,413 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/449/trunk/src/burn/drv/pre90s
+END
+d_mole.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pre90s/d_mole.cpp
+END
+d_rpunch.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_rpunch.cpp
+END
+d_madgear.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_madgear.cpp
+END
+d_higemaru.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_higemaru.cpp
+END
+d_wallc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_wallc.cpp
+END
+d_dynduke.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_dynduke.cpp
+END
+d_toki.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/449/trunk/src/burn/drv/pre90s/d_toki.cpp
+END
+d_snk68.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/449/trunk/src/burn/drv/pre90s/d_snk68.cpp
+END
+d_renegade.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pre90s/d_renegade.cpp
+END
+d_exedexes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_exedexes.cpp
+END
+d_gng.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_gng.cpp
+END
+d_meijinsn.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_meijinsn.cpp
+END
+d_marineb.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_marineb.cpp
+END
+d_wwfsstar.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_wwfsstar.cpp
+END
+d_wc90b.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_wc90b.cpp
+END
+d_ginganin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_ginganin.cpp
+END
+d_skykid.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pre90s/d_skykid.cpp
+END
+d_armedf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/pre90s/d_armedf.cpp
+END
+d_1942.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_1942.cpp
+END
+d_1943.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_1943.cpp
+END
+d_momoko.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_momoko.cpp
+END
+d_route16.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/pre90s/d_route16.cpp
+END
+d_bionicc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_bionicc.cpp
+END
+d_epos.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_epos.cpp
+END
+d_quizo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_quizo.cpp
+END
+d_sf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/449/trunk/src/burn/drv/pre90s/d_sf.cpp
+END
+d_jack.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_jack.cpp
+END
+d_scregg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/315/trunk/src/burn/drv/pre90s/d_scregg.cpp
+END
+d_ddragon.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_ddragon.cpp
+END
+d_blockout.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_blockout.cpp
+END
+d_skyfox.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_skyfox.cpp
+END
+d_gauntlet.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_gauntlet.cpp
+END
+d_vulgus.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_vulgus.cpp
+END
+d_aztarac.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_aztarac.cpp
+END
+d_solomon.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_solomon.cpp
+END
+d_gunsmoke.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_gunsmoke.cpp
+END
+d_srumbler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_srumbler.cpp
+END
+d_blueprnt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_blueprnt.cpp
+END
+d_arabian.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_arabian.cpp
+END
+d_tigeroad.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_tigeroad.cpp
+END
+d_kyugo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_kyugo.cpp
+END
+d_mystston.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/339/trunk/src/burn/drv/pre90s/d_mystston.cpp
+END
+d_mrdo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_mrdo.cpp
+END
+d_pacland.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pre90s/d_pacland.cpp
+END
+d_4enraya.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_4enraya.cpp
+END
+d_lwings.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_lwings.cpp
+END
+d_funkybee.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_funkybee.cpp
+END
+d_prehisle.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_prehisle.cpp
+END
+d_galaga.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_galaga.cpp
+END
+d_baraduke.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pre90s/d_baraduke.cpp
+END
+d_sonson.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pre90s/d_sonson.cpp
+END
+d_pac2650.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pre90s/d_pac2650.cpp
+END
+d_markham.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_markham.cpp
+END
+d_pkunwar.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_pkunwar.cpp
+END
+d_ikki.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_ikki.cpp
+END
+d_ladybug.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_ladybug.cpp
+END
+d_commando.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_commando.cpp
+END
+d_pacman.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_pacman.cpp
+END
+d_mitchell.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_mitchell.cpp
+END
+d_kangaroo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_kangaroo.cpp
+END
+d_blktiger.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_blktiger.cpp
+END
+d_mrflea.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_mrflea.cpp
+END
+d_terracre.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/pre90s/d_terracre.cpp
+END
+d_tecmo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_tecmo.cpp
+END
+d_bombjack.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_bombjack.cpp
+END
+d_rallyx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_rallyx.cpp
+END
+d_ambush.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_ambush.cpp
+END
+d_wc90.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pre90s/d_wc90.cpp
+END

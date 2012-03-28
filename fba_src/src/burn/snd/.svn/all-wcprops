@@ -1,0 +1,461 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/fbalpha/!svn/ver/448/trunk/src/burn/snd
+END
+es8712.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/es8712.h
+END
+ym2151.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ym2151.c
+END
+ym2413.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/340/trunk/src/burn/snd/ym2413.c
+END
+ay8910.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ay8910.h
+END
+burn_ym3526.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym3526.h
+END
+ym2151.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ym2151.h
+END
+ym2413.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/324/trunk/src/burn/snd/ym2413.h
+END
+c6280.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/261/trunk/src/burn/snd/c6280.h
+END
+msm5205.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/msm5205.cpp
+END
+samples.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/samples.h
+END
+iremga20.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/iremga20.h
+END
+fmopl.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/340/trunk/src/burn/snd/fmopl.c
+END
+x1010.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/x1010.h
+END
+msm6295.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/msm6295.cpp
+END
+fmopl.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/320/trunk/src/burn/snd/fmopl.h
+END
+burn_ym2151.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/249/trunk/src/burn/snd/burn_ym2151.cpp
+END
+burn_y8950.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/snd/burn_y8950.cpp
+END
+burn_ymf278b.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ymf278b.cpp
+END
+k051649.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k051649.h
+END
+k054539.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k054539.h
+END
+es8712.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/es8712.cpp
+END
+burn_ym3526.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/snd/burn_ym3526.cpp
+END
+ics2115.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ics2115.h
+END
+dac.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/431/trunk/src/burn/snd/dac.h
+END
+burn_ym3812.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym3812.h
+END
+burn_ym2608.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2608.h
+END
+fm.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/fm.c
+END
+namco_snd.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/namco_snd.h
+END
+fm.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/fm.h
+END
+x1010.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/x1010.cpp
+END
+k053260.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k053260.cpp
+END
+msm5205.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/msm5205.h
+END
+burn_ym2203.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2203.cpp
+END
+k051649.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k051649.cpp
+END
+msm6295.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/msm6295.h
+END
+ics2115.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/snd/ics2115.cpp
+END
+dac.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/448/trunk/src/burn/snd/dac.cpp
+END
+burn_ym2151.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2151.h
+END
+burn_y8950.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_y8950.h
+END
+burn_ym3812.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/snd/burn_ym3812.cpp
+END
+burn_ymf278b.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ymf278b.h
+END
+burn_ym2413.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/324/trunk/src/burn/snd/burn_ym2413.h
+END
+burn_ym2608.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2608.cpp
+END
+saa1099.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/saa1099.h
+END
+es5506.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/es5506.h
+END
+ymf278b.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymf278b.c
+END
+sn76496.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/sn76496.cpp
+END
+namco_snd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/namco_snd.cpp
+END
+ymf278b.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymf278b.h
+END
+k007232.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k007232.cpp
+END
+k053260.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k053260.h
+END
+ymz280b.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymz280b.h
+END
+rf5c68.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/rf5c68.h
+END
+upd7759.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/upd7759.cpp
+END
+segapcm.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/segapcm.h
+END
+burn_ym2610.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2610.cpp
+END
+burn_ym2413.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/324/trunk/src/burn/snd/burn_ym2413.cpp
+END
+burn_ym2612.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2612.cpp
+END
+saa1099.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/saa1099.cpp
+END
+burn_ym2203.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2203.h
+END
+es5506.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/es5506.cpp
+END
+c6280.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/285/trunk/src/burn/snd/c6280.cpp
+END
+samples.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/406/trunk/src/burn/snd/samples.cpp
+END
+sn76496.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/sn76496.h
+END
+iremga20.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/iremga20.cpp
+END
+ymz280b.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymz280b.cpp
+END
+rf5c68.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/rf5c68.cpp
+END
+k007232.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k007232.h
+END
+segapcm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/segapcm.cpp
+END
+ymdeltat.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymdeltat.c
+END
+k054539.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k054539.cpp
+END
+ymdeltat.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymdeltat.h
+END
+upd7759.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/upd7759.h
+END
+burn_ym2610.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2610.h
+END
+burn_ym2612.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2612.h
+END
+ay8910.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ay8910.c
+END

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fbalpha/!svn/ver/471/trunk/src/burn/drv/pgm
+END
+pgm_draw.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/467/trunk/src/burn/drv/pgm/pgm_draw.cpp
+END
+pgm_crypt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/455/trunk/src/burn/drv/pgm/pgm_crypt.cpp
+END
+d_pgm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/471/trunk/src/burn/drv/pgm/d_pgm.cpp
+END
+pgm_prot.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/463/trunk/src/burn/drv/pgm/pgm_prot.cpp
+END
+pgm_run.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/463/trunk/src/burn/drv/pgm/pgm_run.cpp
+END
+pgm.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/455/trunk/src/burn/drv/pgm/pgm.h
+END
+pgm_sprite_create.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pgm/pgm_sprite_create.cpp
+END

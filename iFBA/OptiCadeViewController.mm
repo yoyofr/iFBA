@@ -22,10 +22,15 @@ extern volatile int emuThread_running;
 extern int launchGame;
 extern char gameName[64];
 
-//iCade
+//iCade & wiimote
 #import "iCadeReaderView.h"
-static iCadeReaderView *iCaderv;
+#include "wiimote.h"
+#import <QuartzCore/CADisplayLink.h>
+#import <QuartzCore/QuartzCore.h>
 static int ui_currentIndex_s,ui_currentIndex_r;
+static int wiimoteBtnState;
+static iCadeReaderView *iCaderv;
+static CADisplayLink* m_displayLink;
 
 
 @implementation OptiCadeViewController
@@ -54,7 +59,7 @@ static int ui_currentIndex_s,ui_currentIndex_r;
     optgetButton=[[OptConGetiCadeViewController alloc] initWithNibName:@"OptConGetiCadeViewController" bundle:nil];
     tabView.backgroundView=nil;
     tabView.backgroundView=[[[UIView alloc] init] autorelease];
-    //ICADE 
+    //ICADE & Wiimote
     ui_currentIndex_s=-1;
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:iCaderv];
@@ -62,6 +67,7 @@ static int ui_currentIndex_s,ui_currentIndex_r;
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv release];
+    wiimoteBtnState=0;
 }
 
 - (void)viewDidUnload
@@ -94,6 +100,11 @@ static int ui_currentIndex_s,ui_currentIndex_r;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    /* Wiimote check => rely on cadisplaylink*/
+    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
+    m_displayLink.frameInterval = 3; //20fps
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
+    
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv becomeFirstResponder];
@@ -104,6 +115,11 @@ static int ui_currentIndex_s,ui_currentIndex_r;
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }    
     [tabView reloadData];
+}
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
 }
 
 #pragma mark - UITableView
@@ -215,6 +231,44 @@ static int ui_currentIndex_s,ui_currentIndex_r;
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
+#pragma Wiimote/iCP support
+#define WII_BUTTON_UP(A) (wiimoteBtnState&A)&& !(pressedBtn&A)
+-(void) checkWiimote {
+    if (num_of_joys==0) return;
+    int pressedBtn=iOS_wiimote_check(&(joys[0]));
+    
+    if (WII_BUTTON_UP(WII_JOY_DOWN)) {
+        [self buttonUp:iCadeJoystickDown];
+    } else if (WII_BUTTON_UP(WII_JOY_UP)) {
+        [self buttonUp:iCadeJoystickUp];
+    } else if (WII_BUTTON_UP(WII_JOY_LEFT)) {
+        [self buttonUp:iCadeJoystickLeft];
+    } else if (WII_BUTTON_UP(WII_JOY_RIGHT)) {
+        [self buttonUp:iCadeJoystickRight];
+    } else if (WII_BUTTON_UP(WII_JOY_A)) {
+        [self buttonUp:iCadeButtonA];
+    } else if (WII_BUTTON_UP(WII_JOY_B)) {
+        [self buttonUp:iCadeButtonB];
+    } else if (WII_BUTTON_UP(WII_JOY_C)) {
+        [self buttonUp:iCadeButtonC];
+    } else if (WII_BUTTON_UP(WII_JOY_D)) {
+        [self buttonUp:iCadeButtonD];
+    } else if (WII_BUTTON_UP(WII_JOY_E)) {
+        [self buttonUp:iCadeButtonE];
+    } else if (WII_BUTTON_UP(WII_JOY_F)) {
+        [self buttonUp:iCadeButtonF];
+    } else if (WII_BUTTON_UP(WII_JOY_G)) {
+        [self buttonUp:iCadeButtonG];
+    } else if (WII_BUTTON_UP(WII_JOY_H)) {
+        [self buttonUp:iCadeButtonH];
+    }
+    
+    
+    wiimoteBtnState=pressedBtn;
+}
+
+
+#pragma Icade support
 /****************************************************/
 /****************************************************/
 /*        ICADE                                     */

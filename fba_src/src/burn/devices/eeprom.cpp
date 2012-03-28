@@ -1,10 +1,13 @@
 #include "burnint.h"
 #include "eeprom.h"
 
-extern char debug_root_path[512];
-
 #define SERIAL_BUFFER_LENGTH 40
 #define MEMORY_SIZE 1024
+
+extern char debug_root_path[512];
+extern char debug_bundle_path[512];
+
+
 
 static const eeprom_interface *intf;
 
@@ -91,16 +94,15 @@ void EEPROMInit(const eeprom_interface *interface)
 	if (intf->cmd_unlock) locked = 1;
 	else locked = 0;
 
-	char output[512];
-#ifdef IOS_BUILD
+	char output[MAX_PATH];
+//	sprintf (, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
 #ifdef RELEASE_DEBUG
-    sprintf (output, "%s/%s.nv", debug_root_path, BurnDrvGetTextA(DRV_NAME));
-#else
-    sprintf (output, "/var/mobile/Documents/iFBA/%s.nv", BurnDrvGetTextA(DRV_NAME));
+    sprintf(output, "%s/%s.nv", debug_root_path,BurnDrvGetTextA(DRV_NAME));
+#else    
+    strcpy(output, "/var/mobile/Documents/iFBA/%s.nv",BurnDrvGetTextA(DRV_NAME));
 #endif
-#else
-	sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
-#endif
+    
+
 	neeprom_available = 0;
 
 	INT32 len = ((1 << intf->address_bits) * (intf->data_bits >> 3)) & (MEMORY_SIZE-1);
@@ -119,16 +121,14 @@ void EEPROMExit()
 	if (!DebugDev_EEPROMInitted) bprintf(PRINT_ERROR, _T("EEPROMExit called without init\n"));
 #endif
 
-	char output[512];
-#ifdef IOS_BUILD
+	char output[MAX_PATH];
+//	sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
 #ifdef RELEASE_DEBUG
-    sprintf (output, "%s/%s.nv", debug_root_path, BurnDrvGetTextA(DRV_NAME));
-#else
-    sprintf (output, "/var/mobile/Documents/iFBA/%s.nv", BurnDrvGetTextA(DRV_NAME));
+    sprintf(output, "%s/%s.nv", debug_root_path,BurnDrvGetTextA(DRV_NAME));
+#else    
+    strcpy(output, "/var/mobile/Documents/iFBA/%s.nv",BurnDrvGetTextA(DRV_NAME));
 #endif
-#else
-	sprintf (output, "config/games/%s.nv", BurnDrvGetTextA(DRV_NAME));
-#endif
+
 
 	neeprom_available = 0;
 

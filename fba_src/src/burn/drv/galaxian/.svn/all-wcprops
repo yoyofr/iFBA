@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/465/trunk/src/burn/drv/galaxian
+END
+gal_stars.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/galaxian/gal_stars.cpp
+END
+d_galaxian.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/465/trunk/src/burn/drv/galaxian/d_galaxian.cpp
+END
+gal_gfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/461/trunk/src/burn/drv/galaxian/gal_gfx.cpp
+END
+gal_run.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/461/trunk/src/burn/drv/galaxian/gal_run.cpp
+END
+gal.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/461/trunk/src/burn/drv/galaxian/gal.h
+END
+gal_sound.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/461/trunk/src/burn/drv/galaxian/gal_sound.cpp
+END

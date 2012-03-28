@@ -27,6 +27,7 @@ extern char gameName[64];
 extern t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
 
 extern int device_isIpad;
+extern int device_retina;
 
 @implementation AppDelegate
 
@@ -284,6 +285,18 @@ extern int device_isIpad;
     [super dealloc];
 }
 
+- (UIImage *)imageWithView:(UIView *)view
+{
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0.0);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return img;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     int settings_reseted=[self loadSettings];
@@ -315,14 +328,61 @@ extern int device_isIpad;
         menuvc = [[[MenuViewController alloc] initWithNibName:@"MenuViewController_iPhone" bundle:nil] autorelease];        
         device_isIpad=1;
     }
+    
+    //check if retina
+    device_retina=0;
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+        if ([[UIScreen mainScreen] scale]==2) device_retina=1;
+    }
+    
     self.navController = [[[UINavigationController alloc] init] autorelease];
     [[self.navController navigationBar] setBarStyle:UIBarStyleBlack]; // UIBarStyleDefault];
-    //    [[self.navController navigationBar] setTranslucent:YES];    
+    //    [[self.navController navigationBar] setTranslucent:YES];
+    
+    
+    
+    
+    
+    
+    //****************************************************
+    //Init background image with a mosaic of random titles
+    //****************************************************    
+    int bg_width=[UIScreen mainScreen].applicationFrame.size.width;
+    int bg_height=[UIScreen mainScreen].applicationFrame.size.height;
+    int bg_max=MAX(bg_width,bg_height);
+    UIView *bg_view=[[UIView alloc] initWithFrame:CGRectMake(0,0,bg_max,bg_max)];
+    int x,y;
+    x=y=0;
+    bg_view.backgroundColor=[UIColor blackColor];
+    bg_view.frame=CGRectMake(0,0,bg_max,bg_max);
+    while (y<bg_max) {
+        char *szName;
+        NSString *img_name;
+        UIImage *img_tmp=nil;
+        while (img_tmp==nil) {
+            nBurnDrvActive=arc4random()%nBurnDrvCount;
+            BurnDrvGetZipName(&szName,0);
+            img_name=[NSString stringWithFormat:@"%s.png",szName];
+            img_tmp=[UIImage imageNamed:img_name];
+            if (img_tmp&&device_retina) img_tmp=[UIImage imageWithCGImage:img_tmp.CGImage scale:2 orientation:img_tmp.imageOrientation];
+        }        
+        UIImageView *img=[[UIImageView alloc] initWithImage:img_tmp];
+        img.frame=CGRectMake(x,y,img_tmp.size.width,img_tmp.size.height);
+        x+=img_tmp.size.width;
+        if (x>=bg_max) {
+            x=0;
+            y+=32;
+        }
+        [bg_view addSubview:img];
+        [img release];
+    }
+    self.navController.view.backgroundColor=[UIColor colorWithPatternImage:[self imageWithView:bg_view]];
+    //*****************************************************
+    
     [self.navController pushViewController:menuvc animated:YES];    
-    self.window.rootViewController = self.navController;
-    
+    self.window.rootViewController = self.navController;    
     [self.window makeKeyAndVisible];
-    
+
     
     if (settings_reseted) {
         NSString *msgString=[NSString stringWithFormat:NSLocalizedString(@"Warning_Settings_Reset",@""),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];

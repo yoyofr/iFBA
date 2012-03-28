@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/fbalpha/!svn/ver/231/trunk/src/cpu/konami
+END
+konami.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/231/trunk/src/cpu/konami/konami.cpp
+END
+konami.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/konami/konami.h
+END
+konamops.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/konami/konamops.c
+END
+konamtbl.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/konami/konamtbl.c
+END

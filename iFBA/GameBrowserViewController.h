@@ -17,6 +17,7 @@
     NSMutableArray *burn_supportedRoms,*burn_supportedRomsNames;
     IBOutlet UIBarButtonItem *btn_backToEmu,*btn_missing;
     OptSelGenresViewController *selgenrevc;
+
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;

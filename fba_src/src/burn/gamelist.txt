@@ -1,6 +1,6 @@
 This list contains all games supported by FB Alpha.
 
-5691 games supported in total; X = excluded from build; D = included in debug build only; NW = not working
+5689 games supported in total; X = excluded from build; D = included in debug build only; NW = not working
 
   name		  status  full name						  parent	  year	  company	  hardware	  remarks
 +---------------+-------+-------------------------------------------------------+---------------+-------+---------------+---------------+---------------------------------------+
@@ -1094,8 +1094,8 @@ This list contains all games supported by FB Alpha.
 | defense	|  	| Defense (System 16B, FD1089A 317-0028)		| sdi		| 1987	| Sega		| System 16B	| 					|
 | md_demoman	|  	| Demolition Man (Euro, USA)				| 		| 1995	| Acclaim Entert| Sega Megadrive| 					|
 | md_demomanp	|  	| Demolition Man (USA, Prototype)			| md_demoman	| 1995	| Acclaim Entert| Sega Megadrive| 					|
-| dmnfrnta	|  	| Demon Front (V102, China)				| dmnfrnt	| 2002	| IGS		| PolyGameMaster| Incomplete Dump			|
-| dmnfrnt	|  	| Demon Front (V105)					| 		| 2002	| IGS		| PolyGameMaster| Incomplete Dump			|
+| dmnfrnta	|  	| Demon Front (V102, China)				| dmnfrnt	| 2002	| IGS		| PolyGameMaster| 					|
+| dmnfrnt	|  	| Demon Front (V105)					| 		| 2002	| IGS		| PolyGameMaster| 					|
 | dmnfrntpcb	| D NW	| Demon Front (V107, Korea, Single PCB Version)		| dmnfrnt	| 2002	| IGS		| PolyGameMaster| Incomplete Dump			|
 | demonwld	|  	| Demon's World / Horror Story (set 1)			| 		| 1990	| Toaplan	| Toaplan BCU-2 | 					|
 | demonwld2	|  	| Demon's World / Horror Story (set 3)			| demonwld	| 1989	| Toaplan	| Toaplan BCU-2 | 					|
@@ -1174,10 +1174,10 @@ This list contains all games supported by FB Alpha.
 | ddonpachjh	|  	| DoDonPachi (Arrange Mode version 1.1, hack by Trap15)	| ddonpach	| 1997	| hack / Trap15	| Cave		| 					|
 | ddonpach	|  	| DoDonPachi (International, master ver. 97/02/05)	| 		| 1997	| Atlus / Cave	| Cave		| 					|
 | ddonpachj	|  	| DoDonPachi (Japan, master ver. 97/02/05)		| ddonpach	| 1997	| Atlus / Cave	| Cave		| 					|
-| ddpdojb	|  	| DoDonPachi Dai-Ou-Jou (V100 (first version), Japan)	| ddpdoj	| 2002	| Cave / AMI	| PolyGameMaster| Incomplete Protection Simulation	|
-| ddpdoja	|  	| DoDonPachi Dai-Ou-Jou (V100 (second version), Japan)	| ddpdoj	| 2002	| Cave / AMI	| PolyGameMaster| Incomplete Protection Simulation	|
-| ddpdoj	|  	| DoDonPachi Dai-Ou-Jou (V101, Japan)			| 		| 2002	| Cave / AMI	| PolyGameMaster| Incomplete Protection Simulation	|
-| ddpdojblk	|  	| DoDonPachi Dai-Ou-Jou Black Label (V100, Japan)	| ddpdoj	| 2002	| Cave / AMI	| PolyGameMaster| Incomplete Protection Simulation	|
+| ddpdojb	|  	| DoDonPachi Dai-Ou-Jou (V100 (first version), Japan)	| ddpdoj	| 2002	| Cave / AMI	| PolyGameMaster| 					|
+| ddpdoja	|  	| DoDonPachi Dai-Ou-Jou (V100 (second version), Japan)	| ddpdoj	| 2002	| Cave / AMI	| PolyGameMaster| 					|
+| ddpdoj	|  	| DoDonPachi Dai-Ou-Jou (V101, Japan)			| 		| 2002	| Cave / AMI	| PolyGameMaster| 					|
+| ddpdojblk	|  	| DoDonPachi Dai-Ou-Jou Black Label (V100, Japan)	| ddpdoj	| 2002	| Cave / AMI	| PolyGameMaster| 					|
 | dogyuun	|  	| Dogyuun						| 		| 1992	| Toaplan	| Dual Toaplan G| 					|
 | dogyuuna	|  	| Dogyuun (Licensed to Unite Trading For Korea)		| dogyuun	| 1992	| Toaplan	| Dual Toaplan G| 					|
 | dogyuunt	|  	| Dogyuun (test location version)			| dogyuun	| 1992	| Toaplan	| Dual Toaplan G| 					|
@@ -2099,7 +2099,6 @@ This list contains all games supported by FB Alpha.
 | jojobar1	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| jojoba	| 1999	| Capcom	| CPS-3		| 					|
 | jojobanr1	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| jojoba	| 1999	| Capcom	| CPS-3		| 					|
 | jojoba	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| 		| 1999	| Capcom	| CPS-3		| 					|
-| jojoba_old	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| 		| 1999	| Capcom	| CPS-3		| 					|
 | jojoban	|  	| JoJo's Bizarre Adventure: Heritage for the Future / Jo| jojoba	| 1999	| Capcom	| CPS-3		| 					|
 | jojonr2	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Asia 981202,| jojo		| 1998	| Capcom	| CPS-3		| 					|
 | jojonr1	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990108,| jojo		| 1998	| Capcom	| CPS-3		| 					|
@@ -2109,7 +2108,6 @@ This list contains all games supported by FB Alpha.
 | jojoj		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990128| jojo		| 1998	| Capcom	| CPS-3		| 					|
 | jojor2	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 981202)	| jojo		| 1998	| Capcom	| CPS-3		| 					|
 | jojor1	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108)	| jojo		| 1998	| Capcom	| CPS-3		| 					|
-| jojo_old	|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108) | 		| 1998	| Capcom	| CPS-3		| 					|
 | jojo		|  	| JoJo's Venture / JoJo no Kimyouna Bouken (USA 990128)	| 		| 1998	| Capcom	| CPS-3		| 					|
 | ltorb1	|  	| Jonas Indiana and the Lost Temple of RA (20050717)	| 		| 2005	| blastar@gmx.ne| Neo Geo MVS	| 					|
 | md_jordanb1	|  	| Jordan Vs Bird (Euro, USA)				| md_jordanb	| 1992	| Electronic Art| Sega Megadrive| 					|
@@ -2242,18 +2240,18 @@ This list contains all games supported by FB Alpha.
 | kov2103	|  	| Knights of Valour 2 (V103, 101, 100, Hong Kong)	| kov2		| 2000	| IGS		| PolyGameMaster| 					|
 | kov2106	|  	| Knights of Valour 2 (V106, 102, 100 Hong Kong)	| kov2		| 2000	| IGS		| PolyGameMaster| 					|
 | kov2		|  	| Knights of Valour 2 (V107, 102, 100, Hong Kong)	| 		| 2000	| IGS		| PolyGameMaster| 					|
-| kov2p		|  	| Knights of Valour 2 Plus - Nine Dragons (VM204XX)	| 		| 2001	| IGS		| PolyGameMaster| Incorrect Asic dump			|
-| kov2p205	|  	| Knights of Valour 2 Plus - Nine Dragons (VM205XX, Chin| kov2p		| 2001	| IGS		| PolyGameMaster| Incorrect Asic dump			|
+| kov2p		|  	| Knights of Valour 2 Plus - Nine Dragons (VM204XX)	| 		| 2001	| IGS		| PolyGameMaster| 					|
+| kov2p205	|  	| Knights of Valour 2 Plus - Nine Dragons (VM205XX, Chin| kov2p		| 2001	| IGS		| PolyGameMaster| 					|
 | kovplusa	|  	| Knights of Valour Plus - Sangoku Senki Plus (V119 alt)| kovplus	| 1999	| IGS		| PolyGameMaster| 					|
 | kovplus	|  	| Knights of Valour Plus - Sangoku Senki Plus (V119)	| 		| 1999	| IGS		| PolyGameMaster| 					|
 | kovsh103	|  	| Knights of Valour Superheroes / Sangoku Senki Superher| kovsh		| 1999	| IGS		| PolyGameMaster| 					|
 | kovsh		|  	| Knights of Valour Superheroes / Sangoku Senki Superher| 		| 1999	| IGS		| PolyGameMaster| 					|
-| kovassg	| D NW	| Knights of Valour: Ao Shi San Guo / Sangoku Senki: Ao | kovshp	| 2009	| IGS		| PolyGameMaster| 					|
+| kovassg	| D NW	| Knights of Valour: Ao Shi San Guo / Sangoku Senki: Ao | kovshp	| 2009	| IGS		| PolyGameMaster| Incomplete dump			|
 | kovshxas	| D NW	| Knights of Valour: Aoshi Sanguo / Sangoku Senki: Aoshi| kovshp	| 2004	| IGS		| PolyGameMaster| Incomplete dump			|
-| kovlsjba	| D NW	| Knights of Valour: Luan Shi Jie Ba / Sangoku Senki: Lu| kovshp	| 2009	| IGS		| PolyGameMaster| 					|
+| kovlsjba	| D NW	| Knights of Valour: Luan Shi Jie Ba / Sangoku Senki: Lu| kovshp	| 2009	| IGS		| PolyGameMaster| Incomplete dump			|
 | kovlsjb	| D NW	| Knights of Valour: Luan Shi Jie Ba / Sangoku Senki: Lu| kovshp	| 2009	| IGS		| PolyGameMaster| 					|
-| kovlsqh	| D NW	| Knights of Valour: Luan Shi Quan Huang / Sangoku Senki| kovshp	| 2009	| IGS		| PolyGameMaster| 					|
-| kovlsqh2	| D NW	| Knights of Valour: Luan Shi Quan Huang 2 / Sangoku Sen| kovshp	| 2009	| IGS		| PolyGameMaster| 					|
+| kovlsqh	| D NW	| Knights of Valour: Luan Shi Quan Huang / Sangoku Senki| kovshp	| 2009	| IGS		| PolyGameMaster| Incomplete dump			|
+| kovlsqh2	| D NW	| Knights of Valour: Luan Shi Quan Huang 2 / Sangoku Sen| kovshp	| 2009	| IGS		| PolyGameMaster| Incomplete dump			|
 | kovqhsgs	|  	| Knights of Valour: Quan Huang San Guo Special / Sangok| kovsh		| 1999	| IGS		| PolyGameMaster| 					|
 | kovsgqyz	|  	| Knights of Valour: SanGuo QunYingZhuan / Sangoku Senki| kovplus	| 1999	| IGS		| PolyGameMaster| 					|
 | kovsgqyza	|  	| Knights of Valour: SanGuo QunYingZhuan / Sangoku Senki| kovplus	| 1999	| IGS		| PolyGameMaster| 					|
@@ -3250,7 +3248,7 @@ This list contains all games supported by FB Alpha.
 | phoenxp2	|  	| Phoenix Part 2					| phoenix	| 1981	| bootleg	| Galaxian	| 					|
 | photoy2k104	|  	| Photo Y2K / Real and Fake (V104)			| photoy2k	| 1999	| IGS		| PolyGameMaster| 					|
 | photoy2k	|  	| Photo Y2K / Real and Fake (V105)			| 		| 1999	| IGS		| PolyGameMaster| 					|
-| py2k2		| D NW	| Photo Y2K 2						| 		| 2001	| IGS		| PolyGameMaster| 					|
+| py2k2		| D NW	| Photo Y2K 2						| 		| 2001	| IGS		| PolyGameMaster| Incomplete dump			|
 | md_pink	|  	| Pink Goes to Hollywood (Euro, USA)			| 		| 1993	| TecMagik	| Sega Megadrive| 					|
 | md_pinkp	|  	| Pink Goes to Hollywood (USA, Prototype)		| md_pink	| 1993	| TecMagik	| Sega Megadrive| 					|
 | md_pinoc	|  	| Pinocchio (Euro)					| 		| 1995	| Sega		| Sega Megadrive| 					|
@@ -3434,7 +3432,7 @@ This list contains all games supported by FB Alpha.
 | puzzledp	|  	| Puzzle De Pon!					| 		| 1995	| Taito (Visco l| Neo Geo MVS	| 					|
 | puzzldpr	|  	| Puzzle De Pon! R!					| puzzledp	| 1997	| Taito (Visco l| Neo Geo MVS	| 					|
 | 4in1boot	|  	| Puzzle King						| 		| 2002	| K1 Soft	| Kaneko Pandora| 					|
-| puzlstar	|  	| Puzzle Star (V100MG)					| 		| 1999	| IGS		| PolyGameMaster| Incomplete Protection Emulation	|
+| puzlstar	|  	| Puzzle Star (V100MG)					| 		| 1999	| IGS		| PolyGameMaster| Incomplete dump			|
 | uopoko	|  	| Puzzle Uo Poko (International, ver. 98/02/06)		| 		| 1999	| Cave / Jaleco	| Cave		| 					|
 | uopokoj	|  	| Puzzle Uo Poko (Japan, ver. 98/02/06)			| uopoko	| 1999	| Cave / Jaleco	| Cave		| 					|
 | joyjoy	|  	| Puzzled / Joy Joy Kid (NGM-021)(NGH-021)		| 		| 1990	| SNK		| Neo Geo MVS	| 					|
@@ -4805,7 +4803,7 @@ This list contains all games supported by FB Alpha.
 | md_kickbox	|  	| The Kick Boxing (Jpn, Kor)				| md_bestof	| 1993	| Micro World	| Sega Megadrive| 					|
 | killbld104	|  	| The Killing Blade (V104)				| killbld	| 1998	| IGS		| PolyGameMaster| 					|
 | killbld	|  	| The Killing Blade (V109, China)			| 		| 1998	| IGS		| PolyGameMaster| 					|
-| killbldp	| D NW	| The Killing Blade Plus (V300)				| 		| 2005	| IGS		| PolyGameMaster| 					|
+| killbldp	| D NW	| The Killing Blade Plus (V300)				| 		| 2005	| IGS		| PolyGameMaster| Incomplete Dump			|
 | md_killshow	|  	| The Killing Game Show (Jpn)				| md_fatalrew	| 1993	| Electronic Art| Sega Megadrive| 					|
 | kodr1		|  	| The King of Dragons (910711 etc)			| kod		| 1991	| Capcom	| CPS1		| 					|
 | kodda		|  	| The King of Dragons (910731 etc Phoenix?)		| kod		| 1991	| Capcom	| CPS1		| 					|

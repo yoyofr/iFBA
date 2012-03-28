@@ -1,0 +1,161 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/457/trunk/src/burn/drv/capcom
+END
+ps_m.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/ps_m.cpp
+END
+cps2_crpt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/374/trunk/src/burn/drv/capcom/cps2_crpt.cpp
+END
+cps_draw.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/350/trunk/src/burn/drv/capcom/cps_draw.cpp
+END
+kabuki.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/kabuki.cpp
+END
+cpsr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/279/trunk/src/burn/drv/capcom/cpsr.cpp
+END
+cpst.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/cpst.cpp
+END
+cps_run.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/442/trunk/src/burn/drv/capcom/cps_run.cpp
+END
+d_cps1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/457/trunk/src/burn/drv/capcom/d_cps1.cpp
+END
+cps_config.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/351/trunk/src/burn/drv/capcom/cps_config.cpp
+END
+d_cps2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/385/trunk/src/burn/drv/capcom/d_cps2.cpp
+END
+cpsrd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/279/trunk/src/burn/drv/capcom/cpsrd.cpp
+END
+ps_z.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/ps_z.cpp
+END
+qs_z.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/qs_z.cpp
+END
+cps_obj.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/355/trunk/src/burn/drv/capcom/cps_obj.cpp
+END
+cps_pal.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/352/trunk/src/burn/drv/capcom/cps_pal.cpp
+END
+ps.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/ps.cpp
+END
+ctv_do.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/ctv_do.h
+END
+cps_mem.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/cps_mem.cpp
+END
+qs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/qs.cpp
+END
+cps.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/385/trunk/src/burn/drv/capcom/cps.cpp
+END
+qs_c.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/qs_c.cpp
+END
+ctv_make.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/ctv_make.cpp
+END
+cps.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/capcom/cps.h
+END
+ctv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/capcom/ctv.cpp
+END
+cps_scr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/279/trunk/src/burn/drv/capcom/cps_scr.cpp
+END
+cps_rw.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/350/trunk/src/burn/drv/capcom/cps_rw.cpp
+END

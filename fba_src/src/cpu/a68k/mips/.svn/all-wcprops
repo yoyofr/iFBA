@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/157/trunk/src/cpu/a68k/mips
+END
+fba_make68k.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/157/trunk/src/cpu/a68k/mips/fba_make68k.c
+END
+a68ktbl.inc
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/157/trunk/src/cpu/a68k/mips/a68ktbl.inc
+END
+a68k.s
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/157/trunk/src/cpu/a68k/mips/a68k.s
+END
+builda68k.bat
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/157/trunk/src/cpu/a68k/mips/builda68k.bat
+END

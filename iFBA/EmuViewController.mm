@@ -35,6 +35,7 @@ int iOS_inGame;
 int iOS_waysStick=8;
 float joy_analog_x[MAX_JOYSTICKS];
 float joy_analog_y[MAX_JOYSTICKS];
+float joy_analog_z[MAX_JOYSTICKS];
 float joy_analog_l[MAX_JOYSTICKS];
 float joy_analog_r[MAX_JOYSTICKS];
 int wm_joy_pl[MAX_JOYSTICKS];
@@ -135,7 +136,7 @@ static volatile int pb_total;
 static char pb_msg[256];
 
 
-int device_isIpad;
+int device_isIpad,device_retina;
 unsigned int virtual_stick_buttons_alpha=75;
 unsigned int virtual_stick_buttons_alpha2=150;
 int virtual_stick_on;
@@ -527,6 +528,7 @@ static int statusLoadMsgUpdated=0;
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden=YES;    
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    
     
     missedFrame=0;
     

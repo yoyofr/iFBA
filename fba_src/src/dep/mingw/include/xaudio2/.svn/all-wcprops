@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/xaudio2
+END
+xaudio2fx.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/xaudio2/xaudio2fx.h
+END
+xma2defs.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/xaudio2/xma2defs.h
+END
+xaudio2.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/xaudio2/xaudio2.h
+END
+sal.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/xaudio2/sal.h
+END
+audiodefs.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/xaudio2/audiodefs.h
+END

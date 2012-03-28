@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/kaillera/client
+END
+net.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/kaillera/client/net.cpp
+END
+kailleraclient.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/kaillera/client/kailleraclient.h
+END
+net.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/kaillera/client/net.h
+END

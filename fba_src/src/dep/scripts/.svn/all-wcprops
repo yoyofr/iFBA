@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts
+END
+gamelist.pl
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/gamelist.pl
+END
+cave_tile_func.pl
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/cave_tile_func.pl
+END
+psikyo_tile_func.pl
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/psikyo_tile_func.pl
+END
+build_details.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/build_details.cpp
+END
+fixrc.pl
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/fixrc.pl
+END
+toa_gp9001_func.pl
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/toa_gp9001_func.pl
+END
+cave_sprite_func.pl
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/cave_sprite_func.pl
+END
+license2rtf.pl
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/license2rtf.pl
+END
+neo_sprite_func.pl
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/neo_sprite_func.pl
+END

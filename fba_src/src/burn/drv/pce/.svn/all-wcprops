@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fbalpha/!svn/ver/354/trunk/src/burn/drv/pce
+END
+pce.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/346/trunk/src/burn/drv/pce/pce.cpp
+END
+d_pce.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/354/trunk/src/burn/drv/pce/d_pce.cpp
+END
+pce.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/346/trunk/src/burn/drv/pce/pce.h
+END

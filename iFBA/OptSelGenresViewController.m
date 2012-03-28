@@ -16,10 +16,15 @@ static unsigned int newgenreFilter;
 static unsigned int newgenreFilter_first=1;
 static CAGradientLayer *gradientF,*gradientH;
 
-//iCade
+//iCade & wiimote
 #import "iCadeReaderView.h"
-static iCadeReaderView *iCaderv;
+#include "wiimote.h"
+#import <QuartzCore/CADisplayLink.h>
+#import <QuartzCore/QuartzCore.h>
 static int ui_currentIndex_s,ui_currentIndex_r;
+static int wiimoteBtnState;
+static iCadeReaderView *iCaderv;
+static CADisplayLink* m_displayLink;
 
 
 @implementation OptSelGenresViewController
@@ -38,7 +43,7 @@ static int ui_currentIndex_s,ui_currentIndex_r;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-        
+    
     [[mnview layer] setCornerRadius:15.0];	
 	[[mnview layer] setBorderWidth:3.0];
 	[[mnview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
@@ -65,7 +70,7 @@ static int ui_currentIndex_s,ui_currentIndex_r;
     [genreList addObject:@"Racing"];
     [genreList addObject:@"Shoot"];
     
-    //ICADE 
+    //ICADE & Wiimote
     ui_currentIndex_s=-1;
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:iCaderv];
@@ -73,12 +78,18 @@ static int ui_currentIndex_s,ui_currentIndex_r;
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv release];
+    wiimoteBtnState=0;
     
 }
 
 -(void) viewWillAppear:(BOOL)animated {  //Not called in iOS 4.3 simulator... BUG?
     [super viewWillAppear:animated];
-
+    
+    /* Wiimote check => rely on cadisplaylink*/
+    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
+    m_displayLink.frameInterval = 3; //20fps
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
+    
     allnone=0;
     newgenreFilter=(ifba_conf.filter_genre);    
     
@@ -97,8 +108,10 @@ static int ui_currentIndex_s,ui_currentIndex_r;
     [super viewWillDisappear:animated];
     [gradientF removeFromSuperlayer];
     [gradientH removeFromSuperlayer];
-//    [gradientF release];
- //   [gradientH release];
+    //    [gradientF release];
+    //   [gradientH release];
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -146,9 +159,9 @@ static int ui_currentIndex_s,ui_currentIndex_r;
 }
 
 /*
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return nil;    
-}*/
+ - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+ return nil;    
+ }*/
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -194,6 +207,44 @@ static int ui_currentIndex_s,ui_currentIndex_r;
     [tabview reloadData];
 }
 
+#pragma Wiimote/iCP support
+#define WII_BUTTON_UP(A) (wiimoteBtnState&A)&& !(pressedBtn&A)
+-(void) checkWiimote {
+    if (num_of_joys==0) return;
+    int pressedBtn=iOS_wiimote_check(&(joys[0]));
+    
+    if (WII_BUTTON_UP(WII_JOY_DOWN)) {
+        [self buttonUp:iCadeJoystickDown];
+    } else if (WII_BUTTON_UP(WII_JOY_UP)) {
+        [self buttonUp:iCadeJoystickUp];
+    } else if (WII_BUTTON_UP(WII_JOY_LEFT)) {
+        [self buttonUp:iCadeJoystickLeft];
+    } else if (WII_BUTTON_UP(WII_JOY_RIGHT)) {
+        [self buttonUp:iCadeJoystickRight];
+    } else if (WII_BUTTON_UP(WII_JOY_A)) {
+        [self buttonUp:iCadeButtonA];
+    } else if (WII_BUTTON_UP(WII_JOY_B)) {
+        [self buttonUp:iCadeButtonB];
+    } else if (WII_BUTTON_UP(WII_JOY_C)) {
+        [self buttonUp:iCadeButtonC];
+    } else if (WII_BUTTON_UP(WII_JOY_D)) {
+        [self buttonUp:iCadeButtonD];
+    } else if (WII_BUTTON_UP(WII_JOY_E)) {
+        [self buttonUp:iCadeButtonE];
+    } else if (WII_BUTTON_UP(WII_JOY_F)) {
+        [self buttonUp:iCadeButtonF];
+    } else if (WII_BUTTON_UP(WII_JOY_G)) {
+        [self buttonUp:iCadeButtonG];
+    } else if (WII_BUTTON_UP(WII_JOY_H)) {
+        [self buttonUp:iCadeButtonH];
+    }
+    
+    
+    wiimoteBtnState=pressedBtn;
+}
+
+
+#pragma Icade support
 /****************************************************/
 /****************************************************/
 /*        ICADE                                     */

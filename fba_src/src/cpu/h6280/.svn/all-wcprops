@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/fbalpha/!svn/ver/289/trunk/src/cpu/h6280
+END
+h6280ops.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/252/trunk/src/cpu/h6280/h6280ops.h
+END
+h6280.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/289/trunk/src/cpu/h6280/h6280.cpp
+END
+tblh6280.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/h6280/tblh6280.c
+END
+h6280.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/287/trunk/src/cpu/h6280/h6280.h
+END

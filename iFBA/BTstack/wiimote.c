@@ -703,11 +703,15 @@ void calc_joystick_state(struct joystick_t* js, float x, float y) {
 
 extern float joy_analog_x[4];
 extern float joy_analog_y[4];
+extern float joy_analog_l[4];
+extern float joy_analog_r[4];
 
 int iOS_wiimote_check (struct  wiimote_t  *wm){
     //printf("check %d\n",wm->unid);
     joy_analog_x[wm->unid]=0.0f;
     joy_analog_y[wm->unid]=0.0f;
+    joy_analog_l[wm->unid]=0.0f;
+    joy_analog_r[wm->unid]=0.0f;
     int joyExKey = 0;
     if (IS_PRESSED(wm, WIIMOTE_BUTTON_A))		{joyExKey |= WII_JOY_C;}
     if (IS_PRESSED(wm, WIIMOTE_BUTTON_B))		{joyExKey |= WII_JOY_D;}
@@ -858,7 +862,10 @@ int iOS_wiimote_check (struct  wiimote_t  *wm){
                 }
             }
         }
-        
+
+        joy_analog_l[wm->unid] = cc->rjs.rx;
+        joy_analog_r[wm->unid] = cc->rjs.ry;
+
 #ifdef RIGHT_STICK_EMULATE_BUTTONS
 #ifdef NO_SQRT_MAG
         if(cc->rjs.mag >= deadZone*deadZone)
@@ -866,8 +873,9 @@ int iOS_wiimote_check (struct  wiimote_t  *wm){
             if(cc->rjs.mag >= deadZone)
 #endif
 
-        {
+        {                        
             float v = cc->rjs.ang;
+            
             
             if( v >= 330 || v < 30){
                 joyExKey |= WII_JOY_A;

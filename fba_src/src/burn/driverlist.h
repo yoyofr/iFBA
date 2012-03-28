@@ -2161,7 +2161,6 @@ DRV		BurnDrvJojobane;
 DRV		BurnDrvJojobar1;
 DRV		BurnDrvJojobanr1;
 DRV		BurnDrvJojoba;
-DRV		BurnDrvJojobaOld;
 DRV		BurnDrvJojoban;
 DRV		BurnDrvJojonr2;
 DRV		BurnDrvJojonr1;
@@ -2171,7 +2170,6 @@ DRV		BurnDrvJojojr1;
 DRV		BurnDrvJojoj;
 DRV		BurnDrvJojor2;
 DRV		BurnDrvJojor1;
-DRV		BurnDrvJojoOld;
 DRV		BurnDrvJojo;
 DRV		BurnDrvltorb1;
 DRV		BurnDrvmd_jordanb1;
@@ -2317,12 +2315,12 @@ DRV		BurnDrvKovplus;
 DRV		BurnDrvKovsh103;
 DRV		BurnDrvKovsh;
 #if defined FBA_DEBUG
-DRV		BurnDrvkovassg;			// no comment [NOT WORKING]
+DRV		BurnDrvkovassg;			// Incomplete dump [NOT WORKING]
 DRV		BurnDrvkovshxas;		// Incomplete dump [NOT WORKING]
-DRV		BurnDrvkovlsjba;		// no comment [NOT WORKING]
+DRV		BurnDrvkovlsjba;		// Incomplete dump [NOT WORKING]
 DRV		BurnDrvkovlsjb;			// no comment [NOT WORKING]
-DRV		BurnDrvkovlsqh;			// no comment [NOT WORKING]
-DRV		BurnDrvkovlsqh2;		// no comment [NOT WORKING]
+DRV		BurnDrvkovlsqh;			// Incomplete dump [NOT WORKING]
+DRV		BurnDrvkovlsqh2;		// Incomplete dump [NOT WORKING]
 #endif
 DRV		BurnDrvkovqhsgs;
 DRV		BurnDrvKovsgqyz;
@@ -3331,7 +3329,7 @@ DRV		BurnDrvPhoenxp2;
 DRV		BurnDrvPhotoy2k104;
 DRV		BurnDrvPhotoy2k;
 #if defined FBA_DEBUG
-DRV		BurnDrvPy2k2;			// no comment [NOT WORKING]
+DRV		BurnDrvPy2k2;			// Incomplete dump [NOT WORKING]
 #endif
 DRV		BurnDrvmd_pink;
 DRV		BurnDrvmd_pinkp;
@@ -4930,7 +4928,7 @@ DRV		BurnDrvmd_kickbox;
 DRV		BurnDrvKillbld104;
 DRV		BurnDrvKillbld;
 #if defined FBA_DEBUG
-DRV		BurnDrvKillbldp;		// no comment [NOT WORKING]
+DRV		BurnDrvKillbldp;		// Incomplete Dump [NOT WORKING]
 #endif
 DRV		BurnDrvmd_killshow;
 DRV		BurnDrvCpsKodr1;
@@ -8015,7 +8013,6 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvJojobar1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913)
 	&BurnDrvJojobanr1,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913, NO CD)
 	&BurnDrvJojoba,				// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927)
-	&BurnDrvJojobaOld,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927) (OLD DUMP)
 	&BurnDrvJojoban,			// JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927, NO CD)
 	&BurnDrvJojonr2,			// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 981202, NO CD)
 	&BurnDrvJojonr1,			// JoJo's Venture / JoJo no Kimyouna Bouken (Asia 990108, NO CD)
@@ -8025,7 +8022,6 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvJojoj,				// JoJo's Venture / JoJo no Kimyouna Bouken (Japan 990128)
 	&BurnDrvJojor2,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 981202)
 	&BurnDrvJojor1,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108)
-	&BurnDrvJojoOld,			// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990108) (OLD DUMP)
 	&BurnDrvJojo,				// JoJo's Venture / JoJo no Kimyouna Bouken (USA 990128)
 	&BurnDrvltorb1,				// Jonas Indiana and the Lost Temple of RA (20050717)
 	&BurnDrvmd_jordanb1,		// Jordan Vs Bird (Euro, USA)
@@ -8171,12 +8167,12 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvKovsh103,			// Knights of Valour Superheroes / Sangoku Senki Superheroes (V103)
 	&BurnDrvKovsh,				// Knights of Valour Superheroes / Sangoku Senki Superheroes (V104, China)
 #if defined FBA_DEBUG
-	&BurnDrvkovassg,			// Knights of Valour: Ao Shi San Guo / Sangoku Senki: Ao Shi San Guo (ver. 315CN) [no comment, NOT WORKING]
+	&BurnDrvkovassg,			// Knights of Valour: Ao Shi San Guo / Sangoku Senki: Ao Shi San Guo (ver. 315CN) [Incomplete dump, NOT WORKING]
 	&BurnDrvkovshxas,			// Knights of Valour: Aoshi Sanguo / Sangoku Senki: Aoshi Sanguo (ver. 202CN) [Incomplete dump, NOT WORKING]
-	&BurnDrvkovlsjba,			// Knights of Valour: Luan Shi Jie Ba / Sangoku Senki: Luan Shi Jie Ba (alt ver. 200CN) [no comment, NOT WORKING]
+	&BurnDrvkovlsjba,			// Knights of Valour: Luan Shi Jie Ba / Sangoku Senki: Luan Shi Jie Ba (alt ver. 200CN) [Incomplete dump, NOT WORKING]
 	&BurnDrvkovlsjb,			// Knights of Valour: Luan Shi Jie Ba / Sangoku Senki: Luan Shi Jie Ba (ver. 200CN) [no comment, NOT WORKING]
-	&BurnDrvkovlsqh,			// Knights of Valour: Luan Shi Quan Huang / Sangoku Senki: Luan Shi Quan Huang (ver. 200CN) [no comment, NOT WORKING]
-	&BurnDrvkovlsqh2,			// Knights of Valour: Luan Shi Quan Huang 2 / Sangoku Senki: Luan Shi Quan Huang 2 (ver. 200CN) [no comment, NOT WORKING]
+	&BurnDrvkovlsqh,			// Knights of Valour: Luan Shi Quan Huang / Sangoku Senki: Luan Shi Quan Huang (ver. 200CN) [Incomplete dump, NOT WORKING]
+	&BurnDrvkovlsqh2,			// Knights of Valour: Luan Shi Quan Huang 2 / Sangoku Senki: Luan Shi Quan Huang 2 (ver. 200CN) [Incomplete dump, NOT WORKING]
 #endif
 	&BurnDrvkovqhsgs,			// Knights of Valour: Quan Huang San Guo Special / Sangoku Senki: Quan Huang San Guo Special (ver. 303CN)
 	&BurnDrvKovsgqyz,			// Knights of Valour: SanGuo QunYingZhuan / Sangoku Senki: SanGuo QunYingZhuan (set 1)
@@ -9185,7 +9181,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvPhotoy2k104,		// Photo Y2K / Real and Fake (V104)
 	&BurnDrvPhotoy2k,			// Photo Y2K / Real and Fake (V105)
 #if defined FBA_DEBUG
-	&BurnDrvPy2k2,				// Photo Y2K 2 [no comment, NOT WORKING]
+	&BurnDrvPy2k2,				// Photo Y2K 2 [Incomplete dump, NOT WORKING]
 #endif
 	&BurnDrvmd_pink,			// Pink Goes to Hollywood (Euro, USA)
 	&BurnDrvmd_pinkp,			// Pink Goes to Hollywood (USA, Prototype)
@@ -10784,7 +10780,7 @@ static struct BurnDriver* pDriver[] = {
 	&BurnDrvKillbld104,			// The Killing Blade (V104)
 	&BurnDrvKillbld,			// The Killing Blade (V109, China)
 #if defined FBA_DEBUG
-	&BurnDrvKillbldp,			// The Killing Blade Plus (V300) [no comment, NOT WORKING]
+	&BurnDrvKillbldp,			// The Killing Blade Plus (V300) [Incomplete Dump, NOT WORKING]
 #endif
 	&BurnDrvmd_killshow,		// The Killing Game Show (Jpn)
 	&BurnDrvCpsKodr1,			// The King of Dragons (910711 etc)

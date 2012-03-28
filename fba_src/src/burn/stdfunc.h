@@ -27,8 +27,8 @@ static struct BurnRomInfo* Name##PickRom(UINT32 i)						\
 	}																	\
 }
 
-//IOS_BUILD patch
 // Standard rom functions for returning Length, Crc, Type and one one Name
+//IOS_BUILD PATCH
 #define STD_ROM_FN(Name)												\
 static INT32 Name##RomInfo(struct BurnRomInfo* pri, UINT32 i)			\
 {																		\
@@ -37,7 +37,7 @@ static INT32 Name##RomInfo(struct BurnRomInfo* pri, UINT32 i)			\
 		return 1;														\
 	}																	\
 	if (pri) {															\
-        pri->nLen = (rom_force_len?rom_force_len:por->nLen);			\
+		pri->nLen = (rom_force_len?rom_force_len:por->nLen);			\
 		pri->nCrc = por->nCrc;											\
 		pri->nType = por->nType;										\
 	}																	\

@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/neogeo
+END
+d_neogeo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/405/trunk/src/burn/drv/neogeo/d_neogeo.cpp
+END
+neo_palette.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neo_palette.cpp
+END
+neo_upd4990a.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neo_upd4990a.cpp
+END
+neogeo.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/neogeo/neogeo.h
+END
+neo_run.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/399/trunk/src/burn/drv/neogeo/neo_run.cpp
+END
+neo_text.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neo_text.cpp
+END
+neo_sprite.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neo_sprite.cpp
+END
+neo_text_render.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neo_text_render.h
+END
+neo_decrypt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neo_decrypt.cpp
+END
+neo_sprite_render.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neo_sprite_render.h
+END
+neogeo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neogeo.cpp
+END

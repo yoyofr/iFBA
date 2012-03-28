@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/irem
+END
+d_vigilant.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/irem/d_vigilant.cpp
+END
+irem_cpu.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/irem/irem_cpu.cpp
+END
+d_m62.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/irem/d_m62.cpp
+END
+d_m63.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/irem/d_m63.cpp
+END
+d_m72.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/irem/d_m72.cpp
+END
+d_m90.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/irem/d_m90.cpp
+END
+irem_cpu.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/irem/irem_cpu.h
+END
+d_m92.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/305/trunk/src/burn/drv/irem/d_m92.cpp
+END

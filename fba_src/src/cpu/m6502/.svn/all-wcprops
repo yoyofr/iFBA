@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502
+END
+m6502.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/m6502.h
+END
+t6502.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/t6502.c
+END
+t65c02.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/t65c02.c
+END
+tdeco16.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/tdeco16.c
+END
+t65sc02.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/t65sc02.c
+END
+ill02.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/ill02.h
+END
+tn2a03.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/tn2a03.c
+END
+ops02.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/ops02.h
+END
+m6502.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/m6502.cpp
+END
+opsn2a03.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/opsn2a03.h
+END
+opsc02.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m6502/opsc02.h
+END

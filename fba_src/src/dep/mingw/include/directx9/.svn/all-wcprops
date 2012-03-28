@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9
+END
+d3dx9.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9.h
+END
+d3dx9shape.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9shape.h
+END
+d3dx9tex.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9tex.h
+END
+d3dx9anim.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9anim.h
+END
+d3dx9math.inl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9math.inl
+END
+d3dx9shader.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9shader.h
+END
+d3dx9core.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9core.h
+END
+d3dx9math.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9math.h
+END
+d3dx9effect.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9effect.h
+END
+d3dx9mesh.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9mesh.h
+END
+d3dx9xof.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/mingw/include/directx9/d3dx9xof.h
+END

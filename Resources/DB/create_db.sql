@@ -17,3 +17,6 @@ WHERE info_type="info";
 CREATE INDEX idx_hg_name on history_game (game_name);
 CREATE INDEX idx_hi_id on history_info (game_id);
 
+CREATE TABLE play_stats (game_name text,play_count integer,last_play date,fav integer);
+CREATE INDEX idx_ps_name on play_stats (game_name);
+CREATE INDEX idx_ps_fav on play_stats (fav);

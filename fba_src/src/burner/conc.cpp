@@ -1,5 +1,10 @@
 #include "burner.h"
 
+extern char debug_root_path[512];
+extern char debug_bundle_path[512];
+
+
+
 static bool SkipComma(TCHAR** s)
 {
 	while (**s && **s != _T(',')) {
@@ -86,10 +91,22 @@ static INT32 ConfigParseFile(TCHAR* pszFilename)
 			TCHAR* szQuote = NULL;
 			QuoteRead(&szQuote, NULL, s);
 
-			_stprintf(szFilename, _T("%s%s.dat"), szAppCheatsPath, szQuote);
+//			_stprintf(szFilename, _T("%s%s.dat"), szAppCheatsPath, szQuote);
+#ifdef RELEASE_DEBUG
+            sprintf(szFilename, "%s/%s.dat", debug_root_path,szQuote);
+#else    
+            strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.dat",szQuote);
+#endif
+
 
 			if (ConfigParseFile(szFilename)) {
-				_stprintf(szFilename, _T("%s%s.ini"), szAppCheatsPath, szQuote);
+//				_stprintf(szFilename, _T("%s%s.ini"), szAppCheatsPath, szQuote);
+#ifdef RELEASE_DEBUG
+                sprintf(szFilename, "%s/%s.cht", debug_root_path,szQuote);
+#else    
+                strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.cht",szQuote);
+#endif
+
 				if (ConfigParseFile(szFilename)) {
 					CheatError(pszFilename, nLine, NULL, _T("included file doesn't exist"), szLine);
 				}
@@ -432,7 +449,13 @@ static INT32 ConfigParseMAMEFile()
 	tmp[c0[a+1] - (c0[a]+1)] = '\0';				\
 
 	TCHAR szFileName[MAX_PATH] = _T("");
-	_stprintf(szFileName, _T("%scheat.dat"), szAppCheatsPath);
+//	_stprintf(szFileName, _T("%scheat.dat"), szAppCheatsPath);
+#ifdef RELEASE_DEBUG
+    sprintf(szFilename, "%s/cheat.cht", debug_root_path);
+#else    
+    strcpy(szFilename, "/var/mobile/Documents/iFBA/cheat.cht");
+#endif
+
 	
 	FILE *fz = _tfopen(szFileName, _T("rt"));
 	if (fz == NULL) {
@@ -566,9 +589,21 @@ INT32 ConfigCheatLoad()
 {
 	TCHAR szFilename[MAX_PATH] = _T("");
 
-	_stprintf(szFilename, _T("%s%s.ini"), szAppCheatsPath, BurnDrvGetText(DRV_NAME));
+//	_stprintf(szFilename, _T("%s%s.ini"), szAppCheatsPath, BurnDrvGetText(DRV_NAME));
+#ifdef RELEASE_DEBUG
+    sprintf(szFilename, "%s/%s.cht", debug_root_path,BurnDrvGetText(DRV_NAME));
+#else    
+    strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.cht",BurnDrvGetText(DRV_NAME));
+#endif
+
 	if (ConfigParseFile(szFilename)) {
-		_stprintf(szFilename, _T("%s%s.dat"), szAppCheatsPath, BurnDrvGetText(DRV_NAME));
+//		_stprintf(szFilename, _T("%s%s.dat"), szAppCheatsPath, BurnDrvGetText(DRV_NAME));
+#ifdef RELEASE_DEBUG
+        sprintf(szFilename, "%s/%s.dat", debug_root_path,BurnDrvGetText(DRV_NAME));
+#else    
+        strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.dat",BurnDrvGetText(DRV_NAME));
+#endif
+
 		if (ConfigParseNebulaFile(szFilename)) {
 			if (ConfigParseMAMEFile()) {
 				return 1;

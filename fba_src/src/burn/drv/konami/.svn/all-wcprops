@@ -1,0 +1,239 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/konami
+END
+konamiic.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/konamiic.h
+END
+k054000.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/k054000.cpp
+END
+d_thunderx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_thunderx.cpp
+END
+d_crimfght.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_crimfght.cpp
+END
+d_pooyan.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_pooyan.cpp
+END
+k051316.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/k051316.cpp
+END
+d_xmen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_xmen.cpp
+END
+k053251.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/k053251.cpp
+END
+k052109.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/k052109.cpp
+END
+d_gberet.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_gberet.cpp
+END
+k051733.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/k051733.cpp
+END
+d_surpratk.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/d_surpratk.cpp
+END
+d_simpsons.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_simpsons.cpp
+END
+d_88games.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_88games.cpp
+END
+d_blockhl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_blockhl.cpp
+END
+d_gradius3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_gradius3.cpp
+END
+k053936.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/k053936.cpp
+END
+d_ajax.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_ajax.cpp
+END
+d_contra.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/d_contra.cpp
+END
+konamiic.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/388/trunk/src/burn/drv/konami/konamiic.cpp
+END
+d_twin16.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_twin16.cpp
+END
+d_hexion.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_hexion.cpp
+END
+d_gyruss.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_gyruss.cpp
+END
+d_bottom9.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_bottom9.cpp
+END
+d_gbusters.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_gbusters.cpp
+END
+d_mainevt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_mainevt.cpp
+END
+d_rollerg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_rollerg.cpp
+END
+d_scotrsht.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_scotrsht.cpp
+END
+d_vendetta.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_vendetta.cpp
+END
+k053245.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/388/trunk/src/burn/drv/konami/k053245.cpp
+END
+d_spy.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_spy.cpp
+END
+d_aliens.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_aliens.cpp
+END
+k051960.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/konami/k051960.cpp
+END
+k053247.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/388/trunk/src/burn/drv/konami/k053247.cpp
+END
+d_tmnt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_tmnt.cpp
+END
+d_ultraman.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_ultraman.cpp
+END
+d_hcastle.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_hcastle.cpp
+END
+d_parodius.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/konami/d_parodius.cpp
+END
+d_mogura.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/konami/d_mogura.cpp
+END

@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/devices
+END
+sknsspr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/313/trunk/src/burn/devices/sknsspr.cpp
+END
+sknsspr.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/182/trunk/src/burn/devices/sknsspr.h
+END
+v3021.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/53/trunk/src/burn/devices/v3021.cpp
+END
+timekpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/12/trunk/src/burn/devices/timekpr.cpp
+END
+vdc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/253/trunk/src/burn/devices/vdc.cpp
+END
+seibusnd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/422/trunk/src/burn/devices/seibusnd.cpp
+END
+8255ppi.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/12/trunk/src/burn/devices/8255ppi.cpp
+END
+v3021.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/53/trunk/src/burn/devices/v3021.h
+END
+timekpr.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/timekpr.h
+END
+vdc.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/253/trunk/src/burn/devices/vdc.h
+END
+seibusnd.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/seibusnd.h
+END
+8255ppi.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/8255ppi.h
+END
+pandora.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/12/trunk/src/burn/devices/pandora.cpp
+END
+eeprom.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/95/trunk/src/burn/devices/eeprom.cpp
+END
+pandora.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/pandora.h
+END
+eeprom.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/eeprom.h
+END

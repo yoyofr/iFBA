@@ -11,7 +11,6 @@
 #define V25_TYPE (V20_TYPE|(1<<16))
 #define V35_TYPE (V30_TYPE|(1<<16))
 
-
 UINT8 cpu_readmem20(UINT32 a);
 void cpu_writemem20(UINT32 a, UINT8 d);
 
@@ -52,8 +51,6 @@ INT32 VezPc(INT32 n);
 INT32 VezScan(INT32 nAction);
 
 INT32 VezRun(INT32 nCycles);
-
-void VezDecryptOpcode(unsigned char * tbl);
 
 #define NEC_INPUT_LINE_INTP0 10
 #define NEC_INPUT_LINE_INTP1 11

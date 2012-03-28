@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/fbalpha/!svn/ver/370/trunk/src/cpu/nec
+END
+necea.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/nec/necea.h
+END
+v25instr.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/nec/v25instr.h
+END
+v25priv.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/286/trunk/src/cpu/nec/v25priv.h
+END
+nec.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/370/trunk/src/cpu/nec/nec.cpp
+END
+necinstr.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/nec/necinstr.c
+END
+v25sfr.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/309/trunk/src/cpu/nec/v25sfr.c
+END
+necmodrm.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/nec/necmodrm.h
+END
+nec.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/nec/nec.h
+END
+necinstr.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/nec/necinstr.h
+END
+necpriv.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/286/trunk/src/cpu/nec/necpriv.h
+END
+necmacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/nec/necmacro.h
+END
+v25.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/309/trunk/src/cpu/nec/v25.cpp
+END
+v25instr.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/nec/v25instr.c
+END

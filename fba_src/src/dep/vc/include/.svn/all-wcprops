@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/vc/include
+END
+d3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/vc/include/d3d.h
+END
+d3dtypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/vc/include/d3dtypes.h
+END
+d3dcaps.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/vc/include/d3dcaps.h
+END
+d3dvec.inl
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/vc/include/d3dvec.inl
+END
+afxres.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/vc/include/afxres.h
+END

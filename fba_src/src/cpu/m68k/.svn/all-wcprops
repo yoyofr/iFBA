@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k
+END
+m68kconf.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68kconf.h
+END
+m68kcpu.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68kcpu.h
+END
+m68kmake.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68kmake.c
+END
+m68k.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68k.h
+END
+m68kdasm.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68kdasm.c
+END
+m68k_in.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68k_in.c
+END
+m68kcpu.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68kcpu.c
+END

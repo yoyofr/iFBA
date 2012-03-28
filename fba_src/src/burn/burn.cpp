@@ -13,20 +13,16 @@ INT32 (__cdecl *bprintf)(INT32 nStatus, TCHAR* szFormat, ...) = BurnbprintfFille
 INT32 nBurnVer = BURN_VERSION;		// Version number of the library
 
 //IOS_BUILD PATCH
-UINT32 nBurnDrvCount = sizeof(pDriver) / sizeof(pDriver[0]);//0;		// Count of game drivers
+UINT32 nBurnDrvCount = sizeof(pDriver) / sizeof(pDriver[0]);		// Count of game drivers
 UINT32 nBurnDrvActive = ~0U;	// Which game driver is selected
 UINT32 nBurnDrvSelect[8] = { ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U, ~0U }; // Which games are selected (i.e. loaded but not necessarily active)
-		
-
-int rom_force_len=0;
+									
 bool bBurnUseMMX;
-//#if defined BUILD_A68K
+#if defined BUILD_A68K
 bool bBurnUseASMCPUEmulation = true;
-bool bBurnUseASMCPUVEZEmulation = false;
-bool bBurnUseASMCPUZ80Emulation=false;
-//#else
-//bool bBurnUseASMCPUEmulation = false;
-//#endif
+#else
+bool bBurnUseASMCPUEmulation = false;
+#endif
 
 #if defined (FBA_DEBUG)
  clock_t starttime = 0;
@@ -36,7 +32,7 @@ UINT32 nCurrentFrame;			// Framecount for emulated game
 
 UINT32 nFramesEmulated;		// Counters for FPS	display
 UINT32 nFramesRendered;		//
-bool bForce60Hz = true;  //IOS_BUILD => ios is tied to 60fps
+bool bForce60Hz = false;
 INT32 nBurnFPS = 6000;
 INT32 nBurnCPUSpeedAdjust = 0x0100;	// CPU speed adjustment (clock * nBurnCPUSpeedAdjust / 0x0100)
 
@@ -87,6 +83,7 @@ extern "C" INT32 BurnLibInit()
 
 extern "C" INT32 BurnLibExit()
 {
+//IOS_BUILD PATCH
 	//nBurnDrvCount = 0;
 
 	return 0;

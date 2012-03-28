@@ -20,10 +20,13 @@
 
 #define min(a,b) (a<b?a:b)
 
-//iCade
+//iCade & wiimote
 #import "iCadeReaderView.h"
-static iCadeReaderView *iCaderv;
+#include "wiimote.h"
 static int ui_currentIndex_s,ui_currentIndex_r;
+static int wiimoteBtnState;
+static iCadeReaderView *iCaderv;
+static CADisplayLink* m_displayLink;
 static int bypass_reinit_view;
 
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
@@ -124,7 +127,7 @@ NSMutableArray *filterEntries;
     
     if (ifba_conf.filter_type>=MAX_FILTER) ifba_conf.filter_type=0;
     
-    //ICADE 
+    //ICADE & Wiimote
     ui_currentIndex_s=-1;
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:iCaderv];
@@ -132,6 +135,7 @@ NSMutableArray *filterEntries;
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv release];
+    wiimoteBtnState=0;
 }
 
 
@@ -366,6 +370,11 @@ NSMutableArray *filterEntries;
     [super viewWillAppear:animated];
 //    cur_game_section=-1;
     
+    /* Wiimote check => rely on cadisplaylink*/
+    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
+    m_displayLink.frameInterval = 3; //20fps
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
+    
     if (ifba_conf.filter_missing) [btn_missing setStyle:UIBarButtonItemStyleDone];
     else [btn_missing setStyle:UIBarButtonItemStyleBordered];
     
@@ -397,6 +406,9 @@ NSMutableArray *filterEntries;
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
+    
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
     
     [burn_supportedRoms release];
     
@@ -588,6 +600,10 @@ NSMutableArray *filterEntries;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     ;
     int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
+    
+    cur_game_row=indexPath.row;
+    cur_game_section=indexPath.section;
+    
     DBHelper::getGameInfo([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], gameInfo);
     if (gameInfo[0]) {
         OptGameInfoViewController *infovc;
@@ -683,6 +699,43 @@ NSMutableArray *filterEntries;
     if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
 }
 
+#pragma Wiimote/iCP support
+#define WII_BUTTON_UP(A) (wiimoteBtnState&A)&& !(pressedBtn&A)
+-(void) checkWiimote {
+    if (num_of_joys==0) return;
+    int pressedBtn=iOS_wiimote_check(&(joys[0]));
+    
+    if (WII_BUTTON_UP(WII_JOY_DOWN)) {
+        [self buttonUp:iCadeJoystickDown];
+    } else if (WII_BUTTON_UP(WII_JOY_UP)) {
+        [self buttonUp:iCadeJoystickUp];
+    } else if (WII_BUTTON_UP(WII_JOY_LEFT)) {
+        [self buttonUp:iCadeJoystickLeft];
+    } else if (WII_BUTTON_UP(WII_JOY_RIGHT)) {
+        [self buttonUp:iCadeJoystickRight];
+    } else if (WII_BUTTON_UP(WII_JOY_A)) {
+        [self buttonUp:iCadeButtonA];
+    } else if (WII_BUTTON_UP(WII_JOY_B)) {
+        [self buttonUp:iCadeButtonB];
+    } else if (WII_BUTTON_UP(WII_JOY_C)) {
+        [self buttonUp:iCadeButtonC];
+    } else if (WII_BUTTON_UP(WII_JOY_D)) {
+        [self buttonUp:iCadeButtonD];
+    } else if (WII_BUTTON_UP(WII_JOY_E)) {
+        [self buttonUp:iCadeButtonE];
+    } else if (WII_BUTTON_UP(WII_JOY_F)) {
+        [self buttonUp:iCadeButtonF];
+    } else if (WII_BUTTON_UP(WII_JOY_G)) {
+        [self buttonUp:iCadeButtonG];
+    } else if (WII_BUTTON_UP(WII_JOY_H)) {
+        [self buttonUp:iCadeButtonH];
+    }
+    
+    
+    wiimoteBtnState=pressedBtn;
+}
+
+
 #pragma Icade support
 /****************************************************/
 /****************************************************/
@@ -735,9 +788,7 @@ NSMutableArray *filterEntries;
             [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
         } else if (button&iCadeButtonB) { //back
             [[self navigationController] popViewControllerAnimated:YES];
-        } else if (button&iCadeButtonC) { //history
-            cur_game_row=ui_currentIndex_r;
-            cur_game_section=ui_currentIndex_s;            
+        } else if (button&iCadeButtonC) { //history            
             [self tableView:tabView accessoryButtonTappedForRowWithIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
         } else if (button&iCadeButtonD) { //filters
             cur_game_row=ui_currentIndex_r;

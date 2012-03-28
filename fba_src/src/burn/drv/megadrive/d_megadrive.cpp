@@ -169,7 +169,7 @@ INT32 MegadriveGetZipName(char** pszName, UINT32 i)
 	}
 
 	// remove the "md_"
-/*	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
+	/*for (UINT32 j = 0; j < strlen(pszGameName); j++) {
 		szFilename[j] = pszGameName[j + 3];
 	}*/
     strcpy(szFilename,pszGameName);

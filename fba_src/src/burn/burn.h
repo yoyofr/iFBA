@@ -99,10 +99,10 @@ extern UINT32 (__cdecl *BurnHighCol) (INT32 r, INT32 g, INT32 b, INT32 i);
 
 // ---------------------------------------------------------------------------
 
-extern UINT32 nCurrentFrame;
-
-//IOS_BUILD Patch
+//IOS_BUILD PATCH
 extern int rom_force_len;
+
+extern UINT32 nCurrentFrame;
 
 inline static INT32 GetCurrentFrame() {
 	return nCurrentFrame;
@@ -174,8 +174,7 @@ struct BurnDIPInfo {
 // ---------------------------------------------------------------------------
 
 extern bool bBurnUseMMX;
-extern bool bBurnUseASMCPUEmulation,bBurnUseASMCPUVEZEmulation;
-extern bool bBurnUseASMCPUZ80Emulation;
+extern bool bBurnUseASMCPUEmulation;
 
 extern UINT32 nFramesEmulated;
 extern UINT32 nFramesRendered;

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/fbalpha/!svn/ver/422/trunk/src/cpu/i8039
+END
+i8039.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/408/trunk/src/cpu/i8039/i8039.h
+END
+i8039.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/422/trunk/src/cpu/i8039/i8039.cpp
+END

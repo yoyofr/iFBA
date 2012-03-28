@@ -2,6 +2,10 @@ TODO
 - pad restrictor: 2ways, 4ways, 8ways
 - buttons mapping / game or buttons nb ?
 
+- check forgotten worlds main dump => garbage in bg gfx
+	+ rotary stick support ? (2axis?)
+	
+
 v0.5 - xx/xx/2012
 -----------------
 - fixed an issue with filters in game browser

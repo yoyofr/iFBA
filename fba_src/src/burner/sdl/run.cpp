@@ -8,6 +8,8 @@
 
 extern char gameName[64];
 
+int rom_force_len;
+
 int video_fskipcounter=0;
 bool bAltPause = 0;
 bool bSoundOn=1;
