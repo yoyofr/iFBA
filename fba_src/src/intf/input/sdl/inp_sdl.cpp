@@ -118,7 +118,7 @@ int SDLinpJoyAxis(int i, int nAxis)
 		return 0;
 	}
     
-    if (nAxis > 2) return 0;
+    if (nAxis > 3) return 0;
     
     switch (nAxis) {
         case 0:
@@ -130,7 +130,7 @@ int SDLinpJoyAxis(int i, int nAxis)
         case 2: //also used by forgotten worlds
 //            return joy_analog_z[i];//forgotten worlds
             
-            return joy_analog_l[i]*4*32767;
+            return joy_analog_l[i]*32767;
             /*test_tmp+=10;
             test_tmp&=0xFFFF;
             return test_tmp;*/

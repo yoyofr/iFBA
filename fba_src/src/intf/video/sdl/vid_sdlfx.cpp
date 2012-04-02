@@ -200,7 +200,7 @@ static int vidScale(RECT* , int, int)
 
 static int MemToSurf()
 {
-    if (ifba_conf.show_fps) {
+    if (cur_ifba_conf->show_fps) {
         char buf[10];
         int x;
         sprintf(buf, "FPS:%2d", sdl_fps);

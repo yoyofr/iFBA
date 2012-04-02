@@ -19,6 +19,8 @@ static void* org_vc;
 	UIView* modalView = vc.view;
 	UIView* coverView = vc.coverView;
     
+    [vc viewWillAppear:NO]; //iOS 4.3 patch
+    
     org_vc=self;
 
 	//UIWindow* mainWindow = [(id)[[UIApplication sharedApplication] delegate] window];
@@ -90,7 +92,8 @@ static void* org_vc;
 	[UIView commitAnimations];
 
 	[coverView performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:animationDelay];
-
+    
+    [vc viewWillDisappear:NO];  //iOS 4.3 patch
 }
 
 - (void) dismissSemiModalViewControllerEnded:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {

@@ -7,9 +7,6 @@
 //
 
 #import "OptWiimoteBtnViewController.h"
-#import "BTstack/BTstackManager.h"
-#import "BTstack/BTDiscoveryViewController.h"
-#import "BTstackManager.h"
 #import "wiimote.h"
 
 #import "OptConGetWiimoteBtnViewController.h"
@@ -79,17 +76,12 @@ int mOptWiimoteButtonSelected;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    BTstackManager *bt = [BTstackManager sharedInstance];
     
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv becomeFirstResponder];
     
     
-    /*    if (ifba_conf.btstack_on&&bt) {
-     UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Warning iCade BTStack",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
-     [aboutMsg show];
-     }*/
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -169,9 +161,9 @@ int mOptWiimoteButtonSelected;
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
         case 0://Mapping
-            cell.textLabel.text=[NSString stringWithFormat:@"%s",joymap_wiimote[wiimoteSelected][indexPath.row].btn_name];
+            cell.textLabel.text=[NSString stringWithFormat:@"%s",cur_ifba_conf->joymap_wiimote[wiimoteSelected][indexPath.row].btn_name];
             lblview=[[UILabel alloc] initWithFrame:CGRectMake(0,0,100,30)];
-            if (joymap_wiimote[wiimoteSelected][indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %d",joymap_wiimote[wiimoteSelected][indexPath.row].dev_btn];
+            if (cur_ifba_conf->joymap_wiimote[wiimoteSelected][indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %d",cur_ifba_conf->joymap_wiimote[wiimoteSelected][indexPath.row].dev_btn];
             else lblview.text=@"/";
             lblview.backgroundColor=[UIColor clearColor];
             cell.accessoryView=lblview;
@@ -204,17 +196,7 @@ int mOptWiimoteButtonSelected;
             }
             break;
         case 1:            
-            joymap_wiimote[wiimoteSelected][0].dev_btn=WII_BUTTON_START;//Start
-            joymap_wiimote[wiimoteSelected][1].dev_btn=WII_BUTTON_SELECT;//Select/Coin
-            joymap_wiimote[wiimoteSelected][2].dev_btn=WII_BUTTON_HOME;//Menu
-            joymap_wiimote[wiimoteSelected][3].dev_btn=WII_BUTTON_G;//Turbo
-            joymap_wiimote[wiimoteSelected][4].dev_btn=WII_BUTTON_G;//Service
-            joymap_wiimote[wiimoteSelected][5].dev_btn=WII_BUTTON_A;//Fire 1
-            joymap_wiimote[wiimoteSelected][6].dev_btn=WII_BUTTON_B;//Fire 2
-            joymap_wiimote[wiimoteSelected][7].dev_btn=WII_BUTTON_C;//...
-            joymap_wiimote[wiimoteSelected][8].dev_btn=WII_BUTTON_D;//
-            joymap_wiimote[wiimoteSelected][9].dev_btn=WII_BUTTON_E;//
-            joymap_wiimote[wiimoteSelected][10].dev_btn=WII_BUTTON_F;//Fire 6
+            memcpy(cur_ifba_conf->joymap_wiimote,default_joymap_wiimote,sizeof(default_joymap_wiimote));
             [tabView reloadData];            
             break;
     }

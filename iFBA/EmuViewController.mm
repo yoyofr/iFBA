@@ -9,7 +9,11 @@
 #define min(a,b) (a<b?a:b)
 
 #import "fbaconf.h"
+ifba_game_conf_t *cur_ifba_conf;
 ifba_conf_t ifba_conf;
+ifba_game_conf_t ifba_game_conf;
+int optionScope; //0:default, 1:current game
+int game_has_options;
 
 static int missedFrame;
 
@@ -41,7 +45,7 @@ float joy_analog_r[MAX_JOYSTICKS];
 int wm_joy_pl[MAX_JOYSTICKS];
 int wm_prev_joy_pl[MAX_JOYSTICKS];
 
-t_button_map joymap_iCade[]={
+t_button_map default_joymap_iCade[]={
     {"Start",4},
     {"Select/Coin",8},
     {"Menu",0},
@@ -54,6 +58,7 @@ t_button_map joymap_iCade[]={
     {"Fire 5",6},
     {"Fire 6",7},    
 };
+
 int joymap_dir_iCade[8];
 
 // Wiimote: 1,2,+,-,A,B and home => 6+1 buttons
@@ -70,7 +75,7 @@ int joymap_dir_iCade[8];
 //  9        /      LT     Fire 5
 // 10        /      RT     Fire 6
 
-t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON]={
+t_button_map default_joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON]={
     {{"Start",WII_BUTTON_START},
         {"Select/Coin",WII_BUTTON_SELECT},
         {"Menu",WII_BUTTON_HOME},
@@ -403,8 +408,8 @@ static int statusLoadMsgUpdated=0;
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 	
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST) );
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST) );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST));
 	
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -457,8 +462,8 @@ static int statusLoadMsgUpdated=0;
     glGenTextures(1, &txt_vbuffer);               /* Create 1 Texture */
     glBindTexture(GL_TEXTURE_2D, txt_vbuffer);    /* Bind The Texture */
 	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST) );
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST) );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST));
     
 	glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -545,7 +550,7 @@ static int statusLoadMsgUpdated=0;
     //icade map
     memset(joymap_dir_iCade,0,sizeof(joymap_dir_iCade));
     for (int i=0;i<VSTICK_NB_BUTTON;i++) {
-        int j=joymap_iCade[i].dev_btn;
+        int j=cur_ifba_conf->joymap_iCade[i].dev_btn;
         if (j) {
             switch (i) {
                 case 0:joymap_dir_iCade[j-1]=GN_START;break;
@@ -566,7 +571,7 @@ static int statusLoadMsgUpdated=0;
     memset(joymap_dir_wiimote,0,sizeof(joymap_dir_wiimote));
     for (int joy=0;joy<MAX_JOYSTICKS;joy++)
         for (int i=0;i<VSTICK_NB_BUTTON;i++) {
-            int j=joymap_wiimote[joy][i].dev_btn;
+            int j=cur_ifba_conf->joymap_wiimote[joy][i].dev_btn;
             if (j) {
                 switch (i) {
                     case 0:joymap_dir_wiimote[joy][j-1]=GN_START;break;
@@ -1246,8 +1251,8 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
             } else { //check if finger is on a button                
                 for (int i=0;i<vpad_button_nb;i++) {
                     if (i>=VPAD_SPECIALS_BUTTON_NB) {
-                        xx=x-ifba_conf.vpad_button_x;
-                        yy=y+ifba_conf.vpad_button_y;
+                        xx=x-cur_ifba_conf->vpad_button_x;
+                        yy=y+cur_ifba_conf->vpad_button_y;
                     } else {
                         xx=x;yy=y;
                     }
@@ -1301,8 +1306,8 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
             
             for (int i=0;i<vpad_button_nb;i++) {                    
                 if (i>=VPAD_SPECIALS_BUTTON_NB) {
-                    xx=x-ifba_conf.vpad_button_x;
-                    yy=y+ifba_conf.vpad_button_y;
+                    xx=x-cur_ifba_conf->vpad_button_x;
+                    yy=y+cur_ifba_conf->vpad_button_y;
                 } else {
                     xx=x;yy=y;
                 }
@@ -1396,21 +1401,21 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     
     if (device_isIpad) {
         virtual_stick=(cur_width>cur_height?virtual_stick_ipad_landscape:virtual_stick_ipad_portrait);        
-        computeButtonLayout(ifba_conf.vpad_btnsize*16+64,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
+        computeButtonLayout(cur_ifba_conf->vpad_btnsize*16+64,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
     } else {
         virtual_stick=(cur_width>cur_height?virtual_stick_iphone_landscape:virtual_stick_iphone_portrait);
-        computeButtonLayout(ifba_conf.vpad_btnsize*16+48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
+        computeButtonLayout(cur_ifba_conf->vpad_btnsize*16+48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
     }
     
     
-    virtual_stick_buttons_alpha=64*ifba_conf.vpad_alpha;
-    virtual_stick_buttons_alpha2=96*ifba_conf.vpad_alpha;
+    virtual_stick_buttons_alpha=64*cur_ifba_conf->vpad_alpha;
+    virtual_stick_buttons_alpha2=96*cur_ifba_conf->vpad_alpha;
     if (virtual_stick_buttons_alpha>255) virtual_stick_buttons_alpha=255;
     if (virtual_stick_buttons_alpha2>255) virtual_stick_buttons_alpha2=255;
     
-    if (ifba_conf.vpad_padsize==0) virtual_stick_maxdist=64;
-    else if (ifba_conf.vpad_padsize==1) virtual_stick_maxdist=80;
-    else if (ifba_conf.vpad_padsize==2) virtual_stick_maxdist=96;
+    if (cur_ifba_conf->vpad_padsize==0) virtual_stick_maxdist=64;
+    else if (cur_ifba_conf->vpad_padsize==1) virtual_stick_maxdist=80;
+    else if (cur_ifba_conf->vpad_padsize==2) virtual_stick_maxdist=96;
     
     switch (cur_height) {
         case 320:
@@ -1435,8 +1440,8 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
             break;
     }
     
-    virtual_stick_posx+=ifba_conf.vpad_pad_x;
-    virtual_stick_posy-=ifba_conf.vpad_pad_y;
+    virtual_stick_posx+=cur_ifba_conf->vpad_pad_x;
+    virtual_stick_posy-=cur_ifba_conf->vpad_pad_y;
     
     virtual_stick_maxdist2=virtual_stick_maxdist*virtual_stick_maxdist;
     virtual_stick_mindist2=virtual_stick_mindist*virtual_stick_mindist;
@@ -1454,12 +1459,12 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     
     int button_ofsx=0;
     int button_ofsy=0;
-    for (int i=(ifba_conf.vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {            
+    for (int i=(cur_ifba_conf->vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {            
         
         if (i<=VPAD_SPECIALS_BUTTON_NB) {
             if (i==VPAD_SPECIALS_BUTTON_NB) { glBindTexture(GL_TEXTURE_2D, vpad_button_texture);
-                button_ofsx=ifba_conf.vpad_button_x;
-                button_ofsy=-ifba_conf.vpad_button_y;
+                button_ofsx=cur_ifba_conf->vpad_button_x;
+                button_ofsy=-cur_ifba_conf->vpad_button_y;
             }
         else glBindTexture(GL_TEXTURE_2D, vpad_button_spe_texture[i]);
         }
@@ -1492,7 +1497,7 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     }
     //now the stick
     
-    switch (ifba_conf.vpad_style) {
+    switch (cur_ifba_conf->vpad_style) {
         case 0: //animated pad
             glBindTexture(GL_TEXTURE_2D, vpad_animated_dpad[virtual_stick_pad]);    /* Bind The Texture */
             vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
@@ -1619,7 +1624,7 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     
     glDisable(GL_TEXTURE_2D);
     
-    if (ifba_conf.vpad_style==2) { //highlight direction
+    if (cur_ifba_conf->vpad_style==2) { //highlight direction
         for (int i=0;i<4;i++) {
             vertices[0][0]=(float)(virtual_stick_posx+0.9f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
             vertices[0][1]=(float)(virtual_stick_posy-0.9f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
@@ -1773,8 +1778,8 @@ volatile int doFrame_inProgress=0;
     
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, txt_vbuffer);    /* Bind The Texture */
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST) );
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (ifba_conf.filtering?GL_LINEAR:GL_NEAREST));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST) );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST));
     
     
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, TEXTURE_W, TEXTURE_H, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, vbuffer);
@@ -1819,35 +1824,35 @@ volatile int doFrame_inProgress=0;
     float ios_aspect=(float)width/(float)height;
     float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        
     
-    switch (ifba_conf.screen_mode) {
+    switch (cur_ifba_conf->screen_mode) {
         case 0://org
             if (ios_aspect>game_aspect) {
                 rh=min(height,visible_area_h);
-                rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
                 
             } else {
                 rw=min(width,visible_area_w);
-                rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
                 
             }
             break;
         case 1://max with room for vpad
             if (ios_aspect>game_aspect) {                    
                 rh=height-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f);
-                rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);                    
+                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);                    
             } else {
                 rw=width-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f)*vid_aspectX/vid_aspectY;
-                rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
             }
             break;
         case 2://full
             if (ios_aspect>game_aspect) {
                 rh=height;
-                rw=rh*(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
                 
             } else {
                 rw=width;
-                rh=rw/(ifba_conf.aspect_ratio?game_aspect:ios_aspect);
+                rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
             }
             break;
     }
@@ -1866,7 +1871,7 @@ volatile int doFrame_inProgress=0;
     }
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
-    switch (ifba_conf.video_filter) {
+    switch (cur_ifba_conf->video_filter) {
         case 0:break;
         case 1:
             glEnable(GL_BLEND);
@@ -1877,7 +1882,7 @@ volatile int doFrame_inProgress=0;
             texcoords[2][0]=0; texcoords[2][1]=1.0f*rh/32.0f;
             texcoords[3][0]=1.0f*rw/32.0f; texcoords[3][1]=1.0f*rh/32.0f;
             glBindTexture(GL_TEXTURE_2D, filter_scanline_texture);    /* Bind The Texture */    
-            glColor4ub(255,255,255,ifba_conf.video_filter_strength);
+            glColor4ub(255,255,255,cur_ifba_conf->video_filter_strength);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glDisable(GL_BLEND);
             break;
@@ -1890,7 +1895,7 @@ volatile int doFrame_inProgress=0;
             texcoords[2][0]=0; texcoords[2][1]=1.0f*rh*4/32.0f;
             texcoords[3][0]=1.0f*rw*4/32.0f; texcoords[3][1]=1.0f*rh*4/32.0f;
             glBindTexture(GL_TEXTURE_2D, filter_crt_texture);    /* Bind The Texture */    
-            glColor4ub(255,255,255,ifba_conf.video_filter_strength);
+            glColor4ub(255,255,255,cur_ifba_conf->video_filter_strength);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glDisable(GL_BLEND);
             break;

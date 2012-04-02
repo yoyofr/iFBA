@@ -1,18 +1,24 @@
 //
-//  OptEmuViewController.m
+//  OptOptionsViewController.m
 //  iFBA
 //
-//  Created by Yohann Magnien on 28/02/12.
+//  Created by Yohann Magnien on 27/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import "OptOptionsViewController.h"
+#import "OptVideoViewController.h"
+#import "OptControlsViewController.h"
 #import "OptEmuViewController.h"
+#import "OptAudioViewController.h"
 
 #import "fbaconf.h"
+#import "string.h"
 
 extern volatile int emuThread_running;
 extern int launchGame;
 extern char gameName[64];
+extern int optionScope; //0:default, 1:current game
 
 //iCade & wiimote
 #import "iCadeReaderView.h"
@@ -24,11 +30,8 @@ static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
-extern int optionScope;
-#define OPTION(a) (optionScope?ifba_game_conf.a:ifba_conf.a)
 
-
-@implementation OptEmuViewController
+@implementation OptOptionsViewController
 @synthesize tabView,btn_backToEmu;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -36,7 +39,7 @@ extern int optionScope;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title=NSLocalizedString(@"Emulation",@"");
+        self.title=NSLocalizedString(@"Options",@"");
     }
     return self;
 }
@@ -45,11 +48,6 @@ extern int optionScope;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    //
-    // Change the properties of the imageView and tableView (these could be set
-    // in interface builder instead).
-    //
-    //self.tabView.style=UITableViewStyleGrouped;
     tabView.backgroundView=nil;
     tabView.backgroundView=[[[UIView alloc] init] autorelease];
     //ICADE & Wiimote
@@ -74,20 +72,23 @@ extern int optionScope;
     [super viewWillAppear:animated];
     
     /* Wiimote check => rely on cadisplaylink*/
-    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
+    m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];    
     m_displayLink.frameInterval = 3; //20fps
 	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
-
+    
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }    
+    [tabView reloadData];
+    
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
 }
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     iCaderv.active = YES;
@@ -105,65 +106,87 @@ extern int optionScope;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 1;//4;
+    if (optionScope==1) return 2;
+	return 1;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 1;
+    if (section==0) return 4;
+    if (section==1) return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSString *title=nil;
-    return title;
-}
-
-- (void)switch68k:(id)sender {
-    OPTION(asm_68k) =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-    NSString *footer=nil;
-    switch (section) {
-        case 0://68k
-            if (OPTION(asm_68k)) {
-                footer=NSLocalizedString(@"asm cpu core, faster but less compatible",@"");
-            } else {
-                footer=NSLocalizedString(@"C cpu core, slower but more compatible",@"");
-            }
-            break;
-    }
-    return footer;
+    return @"";
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UISwitch *switchview;
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];                
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-    cell.accessoryType=UITableViewCellAccessoryNone;
-    switch (indexPath.section) {
-        case 0://68k
-            cell.textLabel.text=NSLocalizedString(@"68k_core",@"");
-            switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-            [switchview addTarget:self action:@selector(switch68k:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchview;
-            [switchview release];
-            switchview.on=OPTION(asm_68k);
+
+    if (indexPath.section==0) {
+    switch (indexPath.row) {
+        case 0:cell.textLabel.text=NSLocalizedString(@"Video",@"");
+            break;
+        case 1:cell.textLabel.text=NSLocalizedString(@"Audio",@"");
+            break;
+        case 2:cell.textLabel.text=NSLocalizedString(@"Controllers",@"");
+            break;
+        case 3:cell.textLabel.text=NSLocalizedString(@"Emulation",@"");
             break;
     }
+        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+        cell.textLabel.textAlignment=UITextAlignmentLeft;
+    } else if (indexPath.section==1) {
+        cell.textLabel.text=NSLocalizedString(@"Reset to default settings",@"");
+        cell.accessoryType=UITableViewCellAccessoryNone;
+        cell.textLabel.textAlignment=UITextAlignmentCenter;
+    }
+    	
+	
+    
     return cell;
 }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIViewController *vc;
+    if (indexPath.section==0) {
+    switch (indexPath.row) {
+        case 0://video
+            vc=[[OptVideoViewController alloc] initWithNibName:@"OptVideoViewController" bundle:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
+            break;
+        case 1://audio
+            vc=[[OptAudioViewController alloc] initWithNibName:@"OptAudioViewController" bundle:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
+            break;
+        case 2://controllers
+            vc=[[OptControlsViewController alloc] initWithNibName:@"OptControlsViewController" bundle:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
+            break;
+        case 3://emulation
+            vc=[[OptEmuViewController alloc] initWithNibName:@"OptEmuViewController" bundle:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
+            break;
+    }
+    } else if (indexPath.section==1) {
+        //reset to default value: delete specific settings
+        game_has_options=0;
+        [[[UIApplication sharedApplication] delegate] removeSettings:[NSString stringWithFormat:@"%s",gameName]];
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
-
 
 -(IBAction) backToEmu {
     launchGame=2;

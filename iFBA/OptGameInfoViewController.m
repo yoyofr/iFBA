@@ -167,7 +167,7 @@ static CADisplayLink* m_displayLink;
         [txtview scrollRectToVisible:CGRectMake(0,ui_current_pos,txtview.frame.size.width,txtview.frame.size.height) animated:YES];
         [txtview showsVerticalScrollIndicator];
     } else if (button&iCadeJoystickRight) {
-        ui_current_pos=txtview.contentSize.height;        
+        ui_current_pos=txtview.contentSize.height-1;        
         [txtview scrollRectToVisible:CGRectMake(0,ui_current_pos,txtview.frame.size.width,txtview.frame.size.height) animated:YES];
         [txtview showsVerticalScrollIndicator];
     }else if (button&iCadeButtonA) { //validate            

@@ -83,6 +83,9 @@ static CADisplayLink* m_displayLink;
     iCaderv.delegate = self;
     [iCaderv release];
     wiimoteBtnState=0;
+    
+    //
+    game_has_options=0;
 }
 
 
@@ -106,12 +109,12 @@ static CADisplayLink* m_displayLink;
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     } 
     
-            
+    
     [tabView reloadData];
     if (ui_currentIndex_s>=0) {
         [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
     }
-
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -127,7 +130,28 @@ static CADisplayLink* m_displayLink;
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:@"/var/mobile/Documents/ROMS/"];    
 #endif
     
-    if (launchGame) {
+    if (launchGame==1) {
+        game_has_options=0;
+        memcpy(&ifba_game_conf,&ifba_conf,sizeof(ifba_game_conf_t));
+    }
+    
+    //check if game settings should be changed
+    if (game_has_options) { //settings already loaded, ensure any modification are saved
+        [[[UIApplication sharedApplication] delegate] saveSettings:[NSString stringWithFormat:@"%s",gameName]];
+    }
+    
+    if (launchGame) { //a game is selected
+        if (game_has_options==0) { //no settings loaded yet    
+            //check if settings exist for current game
+            if ([[[UIApplication sharedApplication] delegate] loadSettings:[NSString stringWithFormat:@"%s",gameName]]==0) { //yes, apply settings
+                game_has_options=1;
+                cur_ifba_conf=(ifba_game_conf_t*)&ifba_game_conf;
+            }
+            else {//no, use default settings
+                cur_ifba_conf=(ifba_game_conf_t*)&ifba_conf;
+            }
+        }
+        
         if (m_displayLink) [m_displayLink invalidate];
         m_displayLink=nil;
         //[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
@@ -205,9 +229,9 @@ static CADisplayLink* m_displayLink;
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         /*cell.backgroundColor=[UIColor colorWithRed:1 green:1 blue:1 alpha:0.75f];
-        cell.textLabel.backgroundColor=[UIColor clearColor];*/
+         cell.textLabel.backgroundColor=[UIColor clearColor];*/
     }
-
+    
     
     cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     
@@ -339,9 +363,9 @@ static CADisplayLink* m_displayLink;
 }
 
 /*#pragma UIAlertView delegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-}
-*/
+ - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+ }
+ */
 
 #pragma Wiimote/iCP support
 #define WII_BUTTON_UP(A) (wiimoteBtnState&A)&& !(pressedBtn&A)
@@ -413,7 +437,7 @@ static CADisplayLink* m_displayLink;
             }
         } else if (button&iCadeButtonA) { //validate            
             [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
-                                    
+            
         } else if (button&iCadeButtonB) { //back
             if (emuThread_running) {
                 [self backToEmu];

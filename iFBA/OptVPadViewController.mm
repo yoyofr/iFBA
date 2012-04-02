@@ -27,6 +27,9 @@ static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
+extern int optionScope;
+#define OPTION(a) (optionScope?ifba_game_conf.a:ifba_conf.a)
+
 
 extern volatile int emuThread_running;
 extern int launchGame;
@@ -142,45 +145,45 @@ extern char gameName[64];
 
 - (void)segActionOpacity:(id)sender {
     int refresh=0;
-    if (ifba_conf.vpad_alpha!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.vpad_alpha=[sender selectedSegmentIndex];
+    if (OPTION(vpad_alpha)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(vpad_alpha)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
 
 - (void)switchDisplaySpecial:(id)sender {
-    ifba_conf.vpad_showSpecial =((UISwitch*)sender).on;
+    OPTION(vpad_showSpecial) =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 
 - (void)segActionBtnSize:(id)sender {
     int refresh=0;
-    if (ifba_conf.vpad_btnsize!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.vpad_btnsize=[sender selectedSegmentIndex];
+    if (OPTION(vpad_btnsize)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(vpad_btnsize)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
 - (void)segActionPadSize:(id)sender {
     int refresh=0;
-    if (ifba_conf.vpad_padsize!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.vpad_padsize=[sender selectedSegmentIndex];
+    if (OPTION(vpad_padsize)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(vpad_padsize)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
 - (void)segActionSkin:(id)sender {
     int refresh=0;
-    if (ifba_conf.vpad_style!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.vpad_style=[sender selectedSegmentIndex];
+    if (OPTION(vpad_style)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(vpad_style)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
 - (void)sldActionPadX:(id)sender {
-    ifba_conf.vpad_pad_x=((UISlider *)sender).value;
+    OPTION(vpad_pad_x)=((UISlider *)sender).value;
 }
 - (void)sldActionPadY:(id)sender {
-    ifba_conf.vpad_pad_y=((UISlider *)sender).value;
+    OPTION(vpad_pad_y)=((UISlider *)sender).value;
 }
 - (void)sldActionButtonX:(id)sender {
-    ifba_conf.vpad_button_x=((UISlider *)sender).value;
+    OPTION(vpad_button_x)=((UISlider *)sender).value;
 }
 - (void)sldActionButtonY:(id)sender {
-    ifba_conf.vpad_button_y=((UISlider *)sender).value;
+    OPTION(vpad_button_y)=((UISlider *)sender).value;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
@@ -220,7 +223,7 @@ extern char gameName[64];
             [segconview addTarget:self action:@selector(segActionOpacity:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;
             [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.vpad_alpha;
+            segconview.selectedSegmentIndex=OPTION(vpad_alpha);
             } else if (indexPath.row==1) {//Display specials
                 cell.textLabel.text=NSLocalizedString(@"Display specials",@"");
                 cell.textLabel.textAlignment=UITextAlignmentLeft;
@@ -228,7 +231,7 @@ extern char gameName[64];
                 [switchview addTarget:self action:@selector(switchDisplaySpecial:) forControlEvents:UIControlEventValueChanged];
                 cell.accessoryView = switchview;
                 [switchview release];
-                switchview.on=ifba_conf.vpad_showSpecial;
+                switchview.on=OPTION(vpad_showSpecial);
 
             }
             break;
@@ -241,7 +244,7 @@ extern char gameName[64];
                 [segconview addTarget:self action:@selector(segActionBtnSize:) forControlEvents:UIControlEventValueChanged];            
                 cell.accessoryView = segconview;
                 [segconview release];
-                segconview.selectedSegmentIndex=ifba_conf.vpad_btnsize;
+                segconview.selectedSegmentIndex=OPTION(vpad_btnsize);
             } else if (indexPath.row==1) {//Pad
                 cell.textLabel.text=NSLocalizedString(@"Pad",@"");
                 cell.textLabel.textAlignment=UITextAlignmentLeft;
@@ -250,7 +253,7 @@ extern char gameName[64];
                 [segconview addTarget:self action:@selector(segActionPadSize:) forControlEvents:UIControlEventValueChanged];            
                 cell.accessoryView = segconview;
                 [segconview release];
-                segconview.selectedSegmentIndex=ifba_conf.vpad_padsize;                
+                segconview.selectedSegmentIndex=OPTION(vpad_padsize);                
             }
             break;
         case 2://position
@@ -263,7 +266,7 @@ extern char gameName[64];
                     [sliderview setMaximumValue:MAX_PAD_OFS_X];
                     [sliderview setMinimumValue:-MAX_PAD_OFS_X];
                     [sliderview setContinuous:true];
-                    sliderview.value=ifba_conf.vpad_pad_x;                    
+                    sliderview.value=OPTION(vpad_pad_x);                    
                     [sliderview addTarget:self action:@selector(sldActionPadX:) forControlEvents:UIControlEventValueChanged];
                     cell.accessoryView = sliderview;
                     [sliderview release];
@@ -276,7 +279,7 @@ extern char gameName[64];
                     [sliderview setMaximumValue:MAX_PAD_OFS_Y];
                     [sliderview setMinimumValue:-MAX_PAD_OFS_Y];
                     [sliderview setContinuous:true];
-                    sliderview.value=ifba_conf.vpad_pad_y;                    
+                    sliderview.value=OPTION(vpad_pad_y);                    
                     [sliderview addTarget:self action:@selector(sldActionPadY:) forControlEvents:UIControlEventValueChanged];
                     cell.accessoryView = sliderview;
                     [sliderview release];
@@ -289,7 +292,7 @@ extern char gameName[64];
                     [sliderview setMaximumValue:MAX_BUTTON_OFS_X];
                     [sliderview setMinimumValue:-MAX_BUTTON_OFS_X];
                     [sliderview setContinuous:true];
-                    sliderview.value=ifba_conf.vpad_button_x;                    
+                    sliderview.value=OPTION(vpad_button_x);                    
                     [sliderview addTarget:self action:@selector(sldActionButtonX:) forControlEvents:UIControlEventValueChanged];
                     cell.accessoryView = sliderview;
                     [sliderview release];
@@ -302,7 +305,7 @@ extern char gameName[64];
                     [sliderview setMaximumValue:MAX_BUTTON_OFS_Y];
                     [sliderview setMinimumValue:-MAX_BUTTON_OFS_Y];
                     [sliderview setContinuous:true];
-                    sliderview.value=ifba_conf.vpad_button_y;                    
+                    sliderview.value=OPTION(vpad_button_y);                    
                     [sliderview addTarget:self action:@selector(sldActionButtonY:) forControlEvents:UIControlEventValueChanged];
                     cell.accessoryView = sliderview;
                     [sliderview release];
@@ -322,7 +325,7 @@ extern char gameName[64];
                 [segconview addTarget:self action:@selector(segActionSkin:) forControlEvents:UIControlEventValueChanged];            
                 cell.accessoryView = segconview;
                 [segconview release];
-                segconview.selectedSegmentIndex=ifba_conf.vpad_style;
+                segconview.selectedSegmentIndex=OPTION(vpad_style);
             break;
     }
     
@@ -335,10 +338,10 @@ extern char gameName[64];
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==2) {//Position
         if (indexPath.row==4) {//Reset x,y ofs to default
-            ifba_conf.vpad_button_x=0;
-            ifba_conf.vpad_button_y=0;
-            ifba_conf.vpad_pad_x=0;
-            ifba_conf.vpad_pad_y=0;
+            OPTION(vpad_button_x)=0;
+            OPTION(vpad_button_y)=0;
+            OPTION(vpad_pad_x)=0;
+            OPTION(vpad_pad_y)=0;
             [tableView reloadData];
         }
     }

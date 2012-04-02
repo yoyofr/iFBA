@@ -13,7 +13,7 @@
 "Save State"="Load/Save State";
 "Load game"="Load game";
 "Close game"="Close current game";
-"Options"="Options";
+"Options"="Settings";
 "About"="About";
 "Feedback"="Feedback";
 "Select a game"="Select a game";
@@ -32,6 +32,9 @@
 "Controllers"="Controllers";
 "Emulation"="Emulation";
 "ROMS Paths"="ROMS Paths";
+"Default Options"="Default Settings";
+"Game Options"="Current game Settings";
+"Reset to default settings"="Reset to default settings";
 
 //ROMS Paths
 "Choose ROMS Path"="Choose ROMS Path";
@@ -98,7 +101,7 @@
 "Warning wiimote not connected"="Wiimote not connected";
 
 //iCade options
-"iCade Language"="Choose the langage selected in system options for keyboard input";
+"iCade Language"="Choose the langage selected in system settings for keyboard input";
 "System keyboard: "="System keyboard: ";
 
 //Audio options
@@ -116,10 +119,10 @@
 "Sound Latency2"="High latency, reduce even more potential sound issue. Changes are applied at next game launch";
 
 //Emulation options
-"68k_core"="68k core";
-"z80_core"="z80 core";
-"sh2_core"="sh2 core";
-"nec_core"="nec core";
+"68k_core"="arm 68k core";
+"z80_core"="arm z80 core";
+"sh2_core"="arm sh2 core";
+"nec_core"="arm nec core";
 "asm cpu core, faster but less compatible"="asm cpu core, faster. Use C core if you encounter issues";
 "C cpu core, slower but more compatible"="C cpu core, slower but (usually) more compatible";
 "Do not check ROMs CRC. Might allow older ROM to run"="Do not check ROMs CRC. Might allow older ROM to run";

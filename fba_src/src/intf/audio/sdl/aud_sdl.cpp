@@ -72,14 +72,14 @@ static int SDLSoundCheck() {
 	}
     
     //		dprintf(_T("Filling seg %i at %i\n"), nSDLFillSeg, nSDLFillSeg * (nAudSegLen << 2));
-    if (ifba_conf.video_fskip==10) {//AUTO Frame skip
+    if (cur_ifba_conf->video_fskip==10) {//AUTO Frame skip
         int diff_buf=buffer_ana_gen_ofs-buffer_ana_play_ofs;
         if (diff_buf<0) diff_buf+=nAudSegCount;
         if (diff_buf>=nAudSegCount/2) drawframe=1;
         //if (drawframe==0) printf("yo\n");
     } else {
         video_fskipcounter++;
-        if (video_fskipcounter>ifba_conf.video_fskip) {
+        if (video_fskipcounter>cur_ifba_conf->video_fskip) {
             video_fskipcounter=0;
             drawframe=1;
         } else drawframe=0;
@@ -210,7 +210,7 @@ static int SDLSoundInit()
     AudioStreamBasicDescription mDataFormat;
     UInt32 err;
     
-    switch (ifba_conf.sound_freq) {
+    switch (cur_ifba_conf->sound_freq) {
         case 0:
             nAudSampleRate[0]=22050;
             break;
@@ -219,7 +219,7 @@ static int SDLSoundInit()
             nAudSampleRate[0]=44100;
             break;
     }    
-    switch (ifba_conf.sound_latency) {  //TODO: maybe should depend how sound_frequency
+    switch (cur_ifba_conf->sound_latency) {  //TODO: maybe should depend how sound_frequency
         case 0:
             nAudSegCount=2;
             break;

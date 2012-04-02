@@ -1,7 +1,10 @@
 TODO
+- multiplayer
+- hiscore (hitotxt like) / google app ?
+- cheats
+- icon (border/bg)
+- 2 buttons press with 1 finger
 - pad restrictor: 2ways, 4ways, 8ways
-- buttons mapping / game or buttons nb ?
-
 - check forgotten worlds main dump => garbage in bg gfx
 	+ rotary stick support ? (2axis?)
 	
@@ -14,6 +17,11 @@ v0.5 - xx/xx/2012
 - (re)added mem hack to help low mem device run large cps3 games
 - fixed a bug with iCade 'language' (keyboard layout) management
 - multiple bug fixes
+- update to latest FBA. Add support for Demon Front(v102) & Bee Storm(v120)
+- wiimote/icade/icp can be used in menu
+- settings/game
+- random background image
+- fixed issue with iOS 4.3 and buttons mapping
 
 v0.4.1 - 24/03/2012
 -------------------

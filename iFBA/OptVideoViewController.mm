@@ -25,6 +25,8 @@ static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
+extern int optionScope;
+#define OPTION(a) (optionScope?ifba_game_conf.a:ifba_conf.a)
 
 @implementation OptVideoViewController
 @synthesize tabView,btn_backToEmu;
@@ -127,7 +129,7 @@ static CADisplayLink* m_displayLink;
     NSString *footer=nil;
     switch (section) {
         case 0://Screen mode
-            switch (ifba_conf.screen_mode) {
+            switch (OPTION(screen_mode)) {
                 case 0:
                     footer=NSLocalizedString(@"Original resolution",@"");
                     break;
@@ -143,7 +145,7 @@ static CADisplayLink* m_displayLink;
             footer=nil;
             break;
         case 2://Aspect Ratio
-            if (ifba_conf.aspect_ratio) {
+            if (OPTION(aspect_ratio)) {
                 footer=NSLocalizedString(@"Respect original game's aspect ratio",@"");
             } else {
                 footer=NSLocalizedString(@"Don't respect original game's aspect ratio",@"");
@@ -151,7 +153,7 @@ static CADisplayLink* m_displayLink;
             break;
             
         case 3://Video Filter
-            switch (ifba_conf.video_filter) {
+            switch (OPTION(video_filter)) {
                 case 0:
                     footer=NSLocalizedString(@"No filter",@"");
                     break;
@@ -164,7 +166,7 @@ static CADisplayLink* m_displayLink;
             }
             break;
         case 4://Filtering
-            switch (ifba_conf.filtering) {
+            switch (OPTION(filtering)) {
                 case 0:
                     footer=NSLocalizedString(@"No filtering",@"");
                     break;
@@ -174,7 +176,7 @@ static CADisplayLink* m_displayLink;
             }
             break;
         case 5://60Hz
-            switch (ifba_conf.video_60hz) {
+            switch (OPTION(video_60hz)) {
                 case 0:
                     footer=NSLocalizedString(@"Correct timing",@"");
                     break;
@@ -184,7 +186,7 @@ static CADisplayLink* m_displayLink;
             }
             break;
         case 6://show fps
-            switch (ifba_conf.show_fps) {
+            switch (OPTION(show_fps)) {
                 case 0:
                     footer=NSLocalizedString(@"Do not display fps",@"");
                     break;
@@ -203,47 +205,47 @@ static CADisplayLink* m_displayLink;
 
 - (void)segActionVideoMode:(id)sender {
     int refresh=0;
-    if (ifba_conf.screen_mode!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.screen_mode=[sender selectedSegmentIndex];
+    if (OPTION(screen_mode)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(screen_mode)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
 - (void)segActionVideoFilter:(id)sender {
     int refresh=0;
-    if (ifba_conf.video_filter!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.video_filter=[sender selectedSegmentIndex];
+    if (OPTION(video_filter)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(video_filter)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
 
 - (void)switch60Hz:(id)sender {
-    ifba_conf.video_60hz =((UISwitch*)sender).on;
+    OPTION(video_60hz) =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 
 - (void)switchAspectRatio:(id)sender {
-    ifba_conf.aspect_ratio =((UISwitch*)sender).on;
+    OPTION(aspect_ratio) =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 - (void)switchFiltering:(id)sender {
-    ifba_conf.filtering =((UISwitch*)sender).on;
+    OPTION(filtering) =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 - (void)switchShowFPS:(id)sender {
-    ifba_conf.show_fps =((UISwitch*)sender).on;
+    OPTION(show_fps) =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 -(void)sliderBrightness:(id)sender {
-    ifba_conf.brightness=((MNEValueTrackingSlider*)sender).value;
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]) [[UIScreen mainScreen] setBrightness:ifba_conf.brightness];
+    OPTION(brightness)=((MNEValueTrackingSlider*)sender).value;
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]) [[UIScreen mainScreen] setBrightness:OPTION(brightness)];
     //    [tabView reloadData];
 }
 -(void)sliderFilterStrength:(id)sender {
-    ifba_conf.video_filter_strength=((UISlider*)sender).value;
+    OPTION(video_filter_strength)=((UISlider*)sender).value;
     //    [tabView reloadData];
 }
 
 -(void)sliderFSkip:(id)sender {
-    ifba_conf.video_fskip=((MNEValueTrackingSlider*)sender).value;
-    if (ifba_conf.video_fskip==10) [((MNEValueTrackingSlider*)sender) setValue:10 sValue:@"AUTO"];
+    OPTION(video_fskip)=((MNEValueTrackingSlider*)sender).value;
+    if (OPTION(video_fskip)==10) [((MNEValueTrackingSlider*)sender) setValue:10 sValue:@"AUTO"];
 }
 
 // Customize the appearance of table view cells.
@@ -262,7 +264,7 @@ static CADisplayLink* m_displayLink;
             cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
             
             segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 1 ", @" 2 ", @" 3 ", nil]];
-            segconview.selectedSegmentIndex=ifba_conf.screen_mode;
+            segconview.selectedSegmentIndex=OPTION(screen_mode);
             
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
             [segconview addTarget:self action:@selector(segActionVideoMode:) forControlEvents:UIControlEventValueChanged];            
@@ -277,8 +279,8 @@ static CADisplayLink* m_displayLink;
             [sliderview setMaximumValue:10.0f];
             [sliderview setMinimumValue:0];
             [sliderview setContinuous:true];
-            sliderview.value=ifba_conf.video_fskip;
-            if (ifba_conf.video_fskip==10) [sliderview setValue:10 sValue:@"AUTO"];
+            sliderview.value=OPTION(video_fskip);
+            if (OPTION(video_fskip)==10) [sliderview setValue:10 sValue:@"AUTO"];
             [sliderview addTarget:self action:@selector(sliderFSkip:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = sliderview;
             [sliderview release];
@@ -289,7 +291,7 @@ static CADisplayLink* m_displayLink;
             [switchview addTarget:self action:@selector(switchAspectRatio:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.aspect_ratio;
+            switchview.on=OPTION(aspect_ratio);
             break;
         case 3://Video Filters
             if (indexPath.row==0) {
@@ -299,7 +301,7 @@ static CADisplayLink* m_displayLink;
             [segconview addTarget:self action:@selector(segActionVideoFilter:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;
             [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.video_filter;
+            segconview.selectedSegmentIndex=OPTION(video_filter);
             } else { //strength
                 cell.textLabel.text=NSLocalizedString(@"Video filter strength",@"");
                 sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];                
@@ -310,7 +312,7 @@ static CADisplayLink* m_displayLink;
                 [sliderview addTarget:self action:@selector(sliderFilterStrength:) forControlEvents:UIControlEventValueChanged];
                 cell.accessoryView = sliderview;
                 [sliderview release];
-                sliderview.value=ifba_conf.video_filter_strength;
+                sliderview.value=OPTION(video_filter_strength);
             }
             break;
         case 4://Filtering
@@ -319,7 +321,7 @@ static CADisplayLink* m_displayLink;
             [switchview addTarget:self action:@selector(switchFiltering:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.filtering;
+            switchview.on=OPTION(filtering);
             break;
         case 5://60Hz
             cell.textLabel.text=NSLocalizedString(@"60Hz",@"");
@@ -327,7 +329,7 @@ static CADisplayLink* m_displayLink;
             [switchview addTarget:self action:@selector(switch60Hz:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.video_60hz;
+            switchview.on=OPTION(video_60hz);
             break;
         case 6://Show FPS
             cell.textLabel.text=NSLocalizedString(@"Show FPS",@"");
@@ -335,7 +337,7 @@ static CADisplayLink* m_displayLink;
             [switchview addTarget:self action:@selector(switchShowFPS:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.show_fps;
+            switchview.on=OPTION(show_fps);
             break;
         
         case 7://Brightness
@@ -344,7 +346,7 @@ static CADisplayLink* m_displayLink;
             //[sliderview setMaximumValue:1.0f];
             //[sliderview setMinimumValue:0.0f];
             [sliderview setContinuous:true];
-            sliderview.value=ifba_conf.brightness;            
+            sliderview.value=OPTION(brightness);
             
             [sliderview addTarget:self action:@selector(sliderBrightness:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = sliderview;

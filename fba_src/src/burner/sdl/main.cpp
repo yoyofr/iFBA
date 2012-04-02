@@ -28,7 +28,7 @@ void init_emu(int gamenum) {
 #if TARGET_IPHONE_SIMULATOR
     bBurnUseASMCPUEmulation=0;
 #else
-	bBurnUseASMCPUEmulation=ifba_conf.asm_68k;
+	bBurnUseASMCPUEmulation=cur_ifba_conf->asm_68k;
 #endif    
 
     
@@ -51,11 +51,11 @@ int fba_main(int argc, char *argv[])
     
 #if BENCH_MODE    
     bSoundOn=0;
-    ifba_conf.show_fps=1;
+    cur_ifba_conf->show_fps=1;
 #else
-    bSoundOn=ifba_conf.sound_on;
+    bSoundOn=cur_ifba_conf->sound_on;
 #endif
-    bForce60Hz=ifba_conf.video_60hz;
+    bForce60Hz=cur_ifba_conf->video_60hz;
     rom_force_len=0;
 	
 	ConfigAppLoad(); 

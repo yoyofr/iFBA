@@ -32,6 +32,7 @@ static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
 
+
 @implementation OptWiimoteViewController
 @synthesize tabView,btn_backToEmu;
 @synthesize showIcons;
@@ -210,6 +211,11 @@ static CADisplayLink* m_displayLink;
             break;
         case 2://Bluetooth devices
             // Set up the cell...
+            cell.textLabel.text=[NSString stringWithFormat:@"Wiimote detected: %d",num_of_joys];
+            cell.accessoryView = nil;
+            cell.accessoryType=UITableViewCellAccessoryNone;
+            break;
+#if 0            
             NSString *theLabel = nil;
             UIImage *theImage = nil;
             UIFont *theFont = nil;
@@ -326,6 +332,7 @@ static CADisplayLink* m_displayLink;
             if (theLabel) cell.textLabel.text =  theLabel;
             if (theFont)  cell.textLabel.font =  theFont;
             if (theImage) cell.imageView.image = theImage; 
+#endif            
     }
     
 	
@@ -341,7 +348,9 @@ static CADisplayLink* m_displayLink;
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
         [tabView reloadData];
-    } else if (indexPath.section==2) {
+    } 
+#if 0    
+    else if (indexPath.section==2) {
         int idx = [indexPath indexAtPosition:1];
         if (idx >= [bt numberOfDevicesFound]) {
             if (customActivityText) {
@@ -374,6 +383,7 @@ static CADisplayLink* m_displayLink;
             }
         }
     }
+#endif
 }
 
 -(void) reload{
@@ -383,38 +393,38 @@ static CADisplayLink* m_displayLink;
 
 // BTstackManagerListenerDelegate
 -(void) activatedBTstackManager:(BTstackManager*) manager{
-	[self reload];
+//	[self reload];
 }
 -(void) btstackManager:(BTstackManager*)manager activationFailed:(BTstackError)error {
-	[self reload];
+//	[self reload];
 }
 -(void) discoveryInquiryBTstackManager:(BTstackManager*) manager {
 	inquiryState = kInquiryActive;
-	[self reload];
+//	[self reload];
 }
 -(void) btstackManager:(BTstackManager*)manager discoveryQueryRemoteName:(int)deviceIndex {
 	inquiryState = kInquiryRemoteName;
 	remoteNameIndex = deviceIndex;
-	[self reload];
+//	[self reload];
 }
 -(void) discoveryStoppedBTstackManager:(BTstackManager*) manager {
 	inquiryState = kInquiryInactive;
-	[self reload];
+//	[self reload];
 }
 -(void) btstackManager:(BTstackManager*)manager deviceInfo:(BTDevice*)device {
-	[self reload];
+//	[self reload];
 }
 
 -(void) markConnecting:(int)index; {
 	connectingIndex = index;
-	[self reload];
+//	[self reload];
 }
 
 -(void) setCustomActivityText:(NSString*) text{
 	[text retain];
 	[customActivityText release];
 	customActivityText = text;
-	[self reload];
+//	[self reload];
 }
 
 // MARK: Table view methods

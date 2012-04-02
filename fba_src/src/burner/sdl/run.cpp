@@ -161,7 +161,7 @@ static int RunGetNextSound(int bDraw) {
         video_fskipcounter=0;
 	} else {        
         timer = SDL_GetTicks()/frametime; //track how many frames are drawn
-        if(timer-tick>frame_limit && ifba_conf.show_fps) {
+        if(timer-tick>frame_limit && cur_ifba_conf->show_fps) {
             sdl_fps = nFramesRendered;
             nFramesRendered = 0;
             tick = timer;            
@@ -191,7 +191,7 @@ int RunIdle() {
     
 #if BENCH_MODE
     timer = SDL_GetTicks();
-    if(timer-tick>1000 && ifba_conf.show_fps) {
+    if(timer-tick>1000 && cur_ifba_conf->show_fps) {
         sdl_fps = nFramesRendered;
         nFramesRendered = 0;
         tick = timer;
@@ -203,7 +203,7 @@ int RunIdle() {
 #else
     if (!bAppDoFast) {  //Normal
         timer = SDL_GetTicks()/frametime;
-        if(timer-tick>frame_limit && ifba_conf.show_fps) {
+        if(timer-tick>frame_limit && cur_ifba_conf->show_fps) {
             sdl_fps = nFramesRendered;
             nFramesRendered = 0;
             tick = timer;
@@ -217,7 +217,7 @@ int RunIdle() {
             return 0;
         }
         
-        if (ifba_conf.video_fskip==10) {//AUTO FSKIP        
+        if (cur_ifba_conf->video_fskip==10) {//AUTO FSKIP        
             if(ticks>10) ticks=10;
             for (int i=0; i<ticks-1; i++) {
                 RunFrame(0,0);	
@@ -225,7 +225,7 @@ int RunIdle() {
             RunFrame(1,0);
         } else {
             video_fskipcounter++;
-            if (video_fskipcounter>ifba_conf.video_fskip) {
+            if (video_fskipcounter>cur_ifba_conf->video_fskip) {
                 video_fskipcounter=0;
                 RunFrame(1,0);
             } else RunFrame(0,0);

@@ -24,6 +24,10 @@ static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
+extern int optionScope;
+#define OPTION(a) (optionScope?ifba_game_conf.a:ifba_conf.a)
+
+
 
 @implementation OptAudioViewController
 @synthesize tabView,btn_backToEmu;
@@ -126,18 +130,18 @@ static CADisplayLink* m_displayLink;
 
 - (void)segActionLatency:(id)sender {
     int refresh=0;
-    if (ifba_conf.sound_latency!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.sound_latency=[sender selectedSegmentIndex];
+    if (OPTION(sound_latency)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(sound_latency)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
 - (void)switchSoundOutput:(id)sender {
-    ifba_conf.sound_on =((UISwitch*)sender).on;
+    OPTION(sound_on) =((UISwitch*)sender).on;
     [tabView reloadData];
 }
 - (void)segActionFrequency:(id)sender {
     int refresh=0;
-    if (ifba_conf.sound_freq!=[sender selectedSegmentIndex]) refresh=1;
-    ifba_conf.sound_freq=[sender selectedSegmentIndex];
+    if (OPTION(sound_freq)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(sound_freq)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
 
@@ -145,14 +149,14 @@ static CADisplayLink* m_displayLink;
     NSString *footer=nil;
     switch (section) {
         case 0://Output
-            if (ifba_conf.sound_on) {
+            if (OPTION(sound_on)) {
                 footer=NSLocalizedString(@"Sound Output on",@"");
             } else {
                 footer=NSLocalizedString(@"Sound Output off",@"");
             }
             break;
         case 1://Frequency
-            switch (ifba_conf.sound_freq) {
+            switch (OPTION(sound_freq)) {
                 case 0:
                     footer=NSLocalizedString(@"Sound Freq22",@"");
                     break;
@@ -162,7 +166,7 @@ static CADisplayLink* m_displayLink;
             }
             break;
         case 2://Latency
-            switch (ifba_conf.sound_latency) {
+            switch (OPTION(sound_latency)) {
                 case 0:
                     footer=NSLocalizedString(@"Sound Latency0",@"");
                     break;
@@ -195,7 +199,7 @@ static CADisplayLink* m_displayLink;
             [switchview addTarget:self action:@selector(switchSoundOutput:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchview;
             [switchview release];
-            switchview.on=ifba_conf.sound_on;
+            switchview.on=OPTION(sound_on);
             break;
         case 1://Sound Frequency
             cell.textLabel.text=NSLocalizedString(@"Sound Frequency",@"");
@@ -204,7 +208,7 @@ static CADisplayLink* m_displayLink;
             [segconview addTarget:self action:@selector(segActionFrequency:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;
             [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.sound_freq;
+            segconview.selectedSegmentIndex=OPTION(sound_freq);
             break;
         case 2://Sound Latency
             cell.textLabel.text=NSLocalizedString(@"Sound Latency",@"");
@@ -213,7 +217,7 @@ static CADisplayLink* m_displayLink;
             [segconview addTarget:self action:@selector(segActionLatency:) forControlEvents:UIControlEventValueChanged];            
             cell.accessoryView = segconview;
             [segconview release];
-            segconview.selectedSegmentIndex=ifba_conf.sound_latency;
+            segconview.selectedSegmentIndex=OPTION(sound_latency);
             break;
     }
     

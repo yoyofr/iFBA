@@ -7,10 +7,7 @@
 //
 
 #import "OptionsViewController.h"
-#import "OptVideoViewController.h"
-#import "OptControlsViewController.h"
-#import "OptEmuViewController.h"
-#import "OptAudioViewController.h"
+#import "OptOptionsViewController.h"
 #import "OptROMSPathsViewController.h"
 
 #import "fbaconf.h"
@@ -30,10 +27,11 @@ static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
-
 @implementation OptionsViewController
-@synthesize optVideo,optAudio,optControl,optEmulation,optROMSpaths;
 @synthesize tabView,btn_backToEmu;
+
+extern int optionScope; //0:default, 1:current game
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -113,7 +111,8 @@ static CADisplayLink* m_displayLink;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 5;
+    if (emuThread_running) return 3;
+    else return 2;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -130,16 +129,13 @@ static CADisplayLink* m_displayLink;
     }
 
     switch (indexPath.row) {
-        case 0:cell.textLabel.text=NSLocalizedString(@"Video",@"");
+        case 0:cell.textLabel.text=NSLocalizedString(@"ROMS Paths",@"");
             break;
-        case 1:cell.textLabel.text=NSLocalizedString(@"Audio",@"");
+        case 1:cell.textLabel.text=NSLocalizedString(@"Default Options",@"");
             break;
-        case 2:cell.textLabel.text=NSLocalizedString(@"Controllers",@"");
+        case 2:cell.textLabel.text=NSLocalizedString(@"Game Options",@"");
             break;
-        case 3:cell.textLabel.text=NSLocalizedString(@"Emulation",@"");
-            break;
-        case 4:cell.textLabel.text=NSLocalizedString(@"ROMS Paths",@"");
-            break;
+        
     }
     	
 	cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
@@ -149,31 +145,31 @@ static CADisplayLink* m_displayLink;
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIViewController *vc;
     switch (indexPath.row) {
-        case 0://video
-            optVideo=[[OptVideoViewController alloc] initWithNibName:@"OptVideoViewController" bundle:nil];
-            [self.navigationController pushViewController:optVideo animated:YES];
-            [optVideo release];
+        case 0://roms paths
+            vc=[[OptROMSPathsViewController alloc] initWithNibName:@"OptROMSPathsViewController" bundle:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
             break;
-        case 1://audio
-            optAudio=[[OptAudioViewController alloc] initWithNibName:@"OptAudioViewController" bundle:nil];
-            [self.navigationController pushViewController:optAudio animated:YES];
-            [optAudio release];
+            
+        case 1://default options
+            optionScope=0;
+            cur_ifba_conf=(ifba_game_conf_t*)&ifba_conf;
+            vc=[[OptOptionsViewController alloc] initWithNibName:@"OptOptionsViewController" bundle:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
             break;
-        case 2://controllers
-            optControl=[[OptControlsViewController alloc] initWithNibName:@"OptControlsViewController" bundle:nil];
-            [self.navigationController pushViewController:optControl animated:YES];
-            [optControl release];
-            break;
-        case 3://emulation
-            optEmulation=[[OptEmuViewController alloc] initWithNibName:@"OptEmuViewController" bundle:nil];
-            [self.navigationController pushViewController:optEmulation animated:YES];
-            [optEmulation release];
-            break;
-        case 4://roms paths
-            optROMSpaths=[[OptROMSPathsViewController alloc] initWithNibName:@"OptROMSPathsViewController" bundle:nil];
-            [self.navigationController pushViewController:optROMSpaths animated:YES];
-            [optROMSpaths release];
+        case 2://game options
+            optionScope=1;
+            if (!game_has_options) {
+                memcpy(&ifba_game_conf,&ifba_conf,sizeof(ifba_game_conf_t));
+                game_has_options=1;
+                cur_ifba_conf=&ifba_game_conf;
+            } else cur_ifba_conf=(ifba_game_conf_t*)&ifba_game_conf;
+            vc=[[OptOptionsViewController alloc] initWithNibName:@"OptOptionsViewController" bundle:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
             break;
     }
 }

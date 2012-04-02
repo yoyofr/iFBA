@@ -1,5 +1,5 @@
 //
-//  OptionsViewController.h
+//  OptOptionsViewController.h
 //  iFBA
 //
 //  Created by Yohann Magnien on 27/02/12.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OptionsViewController : UIViewController {
+@interface OptOptionsViewController : UIViewController {
     IBOutlet UITableView *tabView;
     IBOutlet UIBarButtonItem *btn_backToEmu;
 }

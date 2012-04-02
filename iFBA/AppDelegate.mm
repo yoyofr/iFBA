@@ -37,147 +37,304 @@ extern int device_retina;
 - (int)loadSettings {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSNumber *valNb;
-    NSString *valStr;
+    NSString *valStr,*keyStr;
     int reset_settings=0;
-    
-    
-    gameName[0]=0;
-    
-    memset(&ifba_conf,0,sizeof(ifba_conf_t));
     
     valNb=[prefs objectForKey:@"VERSION_SETTINGS"];
 	if (valNb == nil) reset_settings=1;
     else if ([valNb intValue]!=VERSION_SETTINGS) reset_settings=1;
+#define GET_VALNB(a) \
+valNb=[prefs objectForKey:a];
 	
-	
-    //    valNb=[prefs objectForKey:@"VERSION_MAJOR"];
-    //    valNb=[prefs objectForKey:@"VERSION_MINOR"];
     
+    //Last game
+    gameName[0]=0;    
+    memset(&ifba_conf,0,sizeof(ifba_conf_t));        
     valStr=[prefs objectForKey:@"lastgame"];
     if (valStr != nil) strcpy(gameName,[valStr UTF8String]);
     else gameName[0]=0;
     
+    //Gamebrowser settings
     valNb=[prefs objectForKey:@"filter_type"];
-	if ((valNb == nil)||reset_settings) ifba_conf.filter_type=0; //Default is list by name
-	else ifba_conf.filter_type = [valNb intValue];
+    if ((valNb == nil)||reset_settings) ifba_conf.filter_type=0; //Default is list by name
+    else ifba_conf.filter_type = [valNb intValue];
     valNb=[prefs objectForKey:@"filter_missing"];
-	if ((valNb == nil)||reset_settings) ifba_conf.filter_missing=0;
-	else ifba_conf.filter_missing = [valNb intValue];
+    if ((valNb == nil)||reset_settings) ifba_conf.filter_missing=0;
+    else ifba_conf.filter_missing = [valNb intValue];
     valNb=[prefs objectForKey:@"filter_genre"];
-	if ((valNb == nil)||reset_settings) ifba_conf.filter_genre=0xFFFFFFFF^GBF_BIOS; //Default is everything but the BIOS
-	else ifba_conf.filter_genre = [valNb intValue];    
+    if ((valNb == nil)||reset_settings) ifba_conf.filter_genre=0xFFFFFFFF^GBF_BIOS; //Default is everything but the BIOS
+    else ifba_conf.filter_genre = [valNb intValue];  
     
-    valNb=[prefs objectForKey:@"video_fskip"];
+    //Roms paths
+    for (int i=0;i<DIRS_MAX;i++) {        
+        valStr=[prefs objectForKey:[NSString stringWithFormat:@"romspath%02X",i]];
+        if (valStr != nil) strcpy(szAppRomPaths[i],[valStr UTF8String]);
+        else szAppRomPaths[i][0]=0;
+        //Recreate dir if not existing
+        if (szAppRomPaths[i][0]) {
+            //NSLog(@"%s",szAppRomPaths[i]);
+            [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%s",szAppRomPaths[i]] withIntermediateDirectories:TRUE attributes:nil error:nil];
+            
+        }
+    }
+    GET_VALNB(@"btstack_on")
+	if ((valNb == nil)||reset_settings) ifba_conf.btstack_on=0;
+	else ifba_conf.btstack_on = [valNb intValue];
+    GET_VALNB(@"icade_lang")
+	if ((valNb == nil)||reset_settings) ifba_conf.icade_lang=0;
+	else ifba_conf.icade_lang = [valNb intValue];
+    
+    
+    //Video settings
+    GET_VALNB(@"video_fskip")
 	if ((valNb == nil)||reset_settings) ifba_conf.video_fskip=10; //AUTO
-	else ifba_conf.video_fskip = [valNb intValue];    
-    valNb=[prefs objectForKey:@"video_60hz"];
+	else ifba_conf.video_fskip = [valNb intValue];
+    GET_VALNB(@"video_60hz")
 	if ((valNb == nil)||reset_settings) ifba_conf.video_60hz=0;
 	else ifba_conf.video_60hz = [valNb intValue];    
-    valNb=[prefs objectForKey:@"aspect_ratio"];
+    GET_VALNB(@"aspect_ratio")
 	if ((valNb == nil)||reset_settings) ifba_conf.aspect_ratio=1;
 	else ifba_conf.aspect_ratio = [valNb intValue];
-    valNb=[prefs objectForKey:@"screen_mode"];
+    GET_VALNB(@"screen_mode")
 	if ((valNb == nil)||reset_settings) ifba_conf.screen_mode=2;
 	else ifba_conf.screen_mode = [valNb intValue];
-    valNb=[prefs objectForKey:@"filtering"];
+    GET_VALNB(@"filtering")
 	if ((valNb == nil)||reset_settings) ifba_conf.filtering=1;
 	else ifba_conf.filtering = [valNb intValue];
-    valNb=[prefs objectForKey:@"brightness"];
+    GET_VALNB(@"brightness")
 	if ((valNb == nil)||reset_settings) {
         if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]) ifba_conf.brightness=[UIScreen mainScreen].brightness;
         else ifba_conf.brightness=0.5f;
     }
 	else ifba_conf.brightness = [valNb floatValue];        
-    valNb=[prefs objectForKey:@"show_fps"];
+    GET_VALNB(@"show_fps")
 	if ((valNb == nil)||reset_settings) ifba_conf.show_fps=0;
 	else ifba_conf.show_fps = [valNb intValue];
-    valNb=[prefs objectForKey:@"video_filter"];
+    GET_VALNB(@"video_filter")
 	if ((valNb == nil)||reset_settings) ifba_conf.video_filter=0;
 	else ifba_conf.video_filter = [valNb intValue];
-    valNb=[prefs objectForKey:@"video_filter_strength"];
+    GET_VALNB(@"video_filter_strength")
 	if ((valNb == nil)||reset_settings) ifba_conf.video_filter_strength=32;
 	else ifba_conf.video_filter_strength = [valNb intValue];
     
-    valNb=[prefs objectForKey:@"sound_on"];
+    
+    //Sound settings
+    GET_VALNB(@"sound_on")
 	if ((valNb == nil)||reset_settings) ifba_conf.sound_on=1;
 	else ifba_conf.sound_on = [valNb intValue];
-    valNb=[prefs objectForKey:@"sound_freq"];
+    GET_VALNB(@"sound_freq")
 	if ((valNb == nil)||reset_settings) ifba_conf.sound_freq=0;
 	else ifba_conf.sound_freq = [valNb intValue];
-    valNb=[prefs objectForKey:@"sound_latency"];
+    GET_VALNB(@"sound_latency")
 	if ((valNb == nil)||reset_settings) ifba_conf.sound_latency=1;
 	else ifba_conf.sound_latency = [valNb intValue];
     
-    valNb=[prefs objectForKey:@"btstack_on"];
-	if ((valNb == nil)||reset_settings) ifba_conf.btstack_on=0;
-	else ifba_conf.btstack_on = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_alpha"];
+    //Controls settings
+    GET_VALNB(@"vpad_alpha")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_alpha=2;
 	else ifba_conf.vpad_alpha = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_showSpecial"];
+    GET_VALNB(@"vpad_showSpecial")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_showSpecial=1;
 	else ifba_conf.vpad_showSpecial = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_btnsize"];
+    GET_VALNB(@"vpad_btnsize")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_btnsize=1;
 	else ifba_conf.vpad_btnsize = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_padsize"];
+    GET_VALNB(@"vpad_padsize")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_padsize=1;
 	else ifba_conf.vpad_padsize = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_style"];
+    GET_VALNB(@"vpad_style")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_style=0;
 	else ifba_conf.vpad_style = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_pad_x"];
+    GET_VALNB(@"vpad_pad_x")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_pad_x=0;
 	else ifba_conf.vpad_pad_x = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_pad_y"];
+    GET_VALNB(@"vpad_pad_y")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_pad_y=0;
 	else ifba_conf.vpad_pad_y = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_button_x"];
+    GET_VALNB(@"vpad_button_x")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_button_x=0;
 	else ifba_conf.vpad_button_x = [valNb intValue];
-    valNb=[prefs objectForKey:@"vpad_button_y"];
+    GET_VALNB(@"vpad_button_y")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_button_y=0;
 	else ifba_conf.vpad_button_y = [valNb intValue];
-    valNb=[prefs objectForKey:@"icade_lang"];
-	if ((valNb == nil)||reset_settings) ifba_conf.icade_lang=0;
-	else ifba_conf.icade_lang = [valNb intValue];
     
-    valNb=[prefs objectForKey:@"asm_68k"];
+    //Emulation settings
+    GET_VALNB(@"asm_68k")
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_68k=1;
 	else ifba_conf.asm_68k = [valNb intValue];
-    valNb=[prefs objectForKey:@"asm_z80"];
+    GET_VALNB(@"asm_z80")
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_z80=0;
 	else ifba_conf.asm_z80 = [valNb intValue];
-    valNb=[prefs objectForKey:@"asm_nec"];
+    GET_VALNB(@"asm_nec")
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_nec=0;
 	else ifba_conf.asm_nec = [valNb intValue];
-    valNb=[prefs objectForKey:@"asm_sh2"];
+    GET_VALNB(@"asm_sh2")
 	if ((valNb == nil)||reset_settings) ifba_conf.asm_sh2=0;
 	else ifba_conf.asm_sh2 = [valNb intValue];
     
+    //Controls mapping
     for (int i=0;i<MAX_JOYSTICKS;i++) 
         for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-            valNb=[prefs objectForKey:[NSString stringWithFormat:@"wiimap%02X%02X",i,j]];
-            if (valNb != nil) joymap_wiimote[i][j].dev_btn=[valNb intValue];
+            keyStr=[NSString stringWithFormat:@"wiimap%02X%02X",i,j];
+            valNb=[prefs objectForKey:keyStr];
+            if (valNb != nil) ifba_conf.joymap_wiimote[i][j].dev_btn=[valNb intValue];
+            else ifba_conf.joymap_wiimote[i][j].dev_btn=default_joymap_wiimote[i][j].dev_btn;
+            
+            keyStr=[NSString stringWithFormat:@"%wiimap_str%02X%02X",i,j];
+            valStr=[prefs objectForKey:keyStr];            
+            if (valStr != nil) strncpy(ifba_conf.joymap_wiimote[i][j].btn_name,[valStr UTF8String],sizeof(ifba_conf.joymap_wiimote[i][j].btn_name)-1);
+            else strcpy(ifba_conf.joymap_wiimote[i][j].btn_name,default_joymap_wiimote[i][j].btn_name);
         }
     for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-        valNb=[prefs objectForKey:[NSString stringWithFormat:@"icademap%02X",j]];
-        if (valNb != nil) joymap_iCade[j].dev_btn=[valNb intValue];
+        keyStr=[NSString stringWithFormat:@"icademap%02X",j];
+        valNb=[prefs objectForKey:keyStr];
+        if (valNb != nil) ifba_conf.joymap_iCade[j].dev_btn=[valNb intValue];
+        else ifba_conf.joymap_iCade[j].dev_btn=default_joymap_iCade[j].dev_btn;
+        
+        keyStr=[NSString stringWithFormat:@"%icademap_str%02X",j];
+        valStr=[prefs objectForKey:keyStr];        
+        if (valStr != nil) strncpy(ifba_conf.joymap_iCade[j].btn_name,[valStr UTF8String],sizeof(ifba_conf.joymap_iCade[j].btn_name)-1);
+        else strcpy(ifba_conf.joymap_iCade[j].btn_name,default_joymap_iCade[j].btn_name);
     }
-    
-    for (int i=0;i<DIRS_MAX;i++) {        
-        valStr=[prefs objectForKey:[NSString stringWithFormat:@"romspath%02X",i]];
-        if (valStr != nil) strcpy(szAppRomPaths[i],[valStr UTF8String]);
-        else szAppRomPaths[i][0]=0;
-    //Recreate dir if not existing
-        if (szAppRomPaths[i][0]) {
-            //NSLog(@"%s",szAppRomPaths[i]);
-            [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%s",szAppRomPaths[i]] withIntermediateDirectories:TRUE attributes:nil error:nil];
-
-        }
-    }
+#undef GET_VALNB    
     return reset_settings;
 }
+
+- (int)loadSettings:(NSString*)gameStr {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSNumber *valNb;
+    NSString *valStr,*keyStr;
+    
+    if (gameStr==nil) return 1;
+    
+    keyStr=[NSString stringWithFormat:@"%@_VERSION_SETTINGS",gameStr];
+    valNb=[prefs objectForKey:keyStr];
+	if (valNb == nil) return 2;
+    else if ([valNb intValue]!=VERSION_SETTINGS) return 3;
+#define GET_VALNB(a) \
+keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
+valNb=[prefs objectForKey:keyStr];
+	
+    
+    //gameStr not null, check if settings exist for game
+    GET_VALNB(@"video_fskip")
+    if (valNb == nil) return 4; //no setting        
+    
+    //Video settings
+    GET_VALNB(@"video_fskip")
+	if ((valNb == nil)) ifba_game_conf.video_fskip=10; //AUTO
+	else ifba_game_conf.video_fskip = [valNb intValue];
+    GET_VALNB(@"video_60hz")
+	if ((valNb == nil)) ifba_game_conf.video_60hz=0;
+	else ifba_game_conf.video_60hz = [valNb intValue];    
+    GET_VALNB(@"aspect_ratio")
+	if ((valNb == nil)) ifba_game_conf.aspect_ratio=1;
+	else ifba_game_conf.aspect_ratio = [valNb intValue];
+    GET_VALNB(@"screen_mode")
+	if ((valNb == nil)) ifba_game_conf.screen_mode=2;
+	else ifba_game_conf.screen_mode = [valNb intValue];
+    GET_VALNB(@"filtering")
+	if ((valNb == nil)) ifba_game_conf.filtering=1;
+	else ifba_game_conf.filtering = [valNb intValue];
+    GET_VALNB(@"brightness")
+	if ((valNb == nil)) {
+        if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]) ifba_game_conf.brightness=[UIScreen mainScreen].brightness;
+        else ifba_game_conf.brightness=0.5f;
+    }
+	else ifba_game_conf.brightness = [valNb floatValue];        
+    GET_VALNB(@"show_fps")
+	if ((valNb == nil)) ifba_game_conf.show_fps=0;
+	else ifba_game_conf.show_fps = [valNb intValue];
+    GET_VALNB(@"video_filter")
+	if ((valNb == nil)) ifba_game_conf.video_filter=0;
+	else ifba_game_conf.video_filter = [valNb intValue];
+    GET_VALNB(@"video_filter_strength")
+	if ((valNb == nil)) ifba_game_conf.video_filter_strength=32;
+	else ifba_game_conf.video_filter_strength = [valNb intValue];
+    
+    
+    //Sound settings
+    GET_VALNB(@"sound_on")
+	if ((valNb == nil)) ifba_game_conf.sound_on=1;
+	else ifba_game_conf.sound_on = [valNb intValue];
+    GET_VALNB(@"sound_freq")
+	if ((valNb == nil)) ifba_game_conf.sound_freq=0;
+	else ifba_game_conf.sound_freq = [valNb intValue];
+    GET_VALNB(@"sound_latency")
+	if ((valNb == nil)) ifba_game_conf.sound_latency=1;
+	else ifba_game_conf.sound_latency = [valNb intValue];
+    
+    //Controls settings
+    GET_VALNB(@"vpad_alpha")
+	if ((valNb == nil)) ifba_game_conf.vpad_alpha=2;
+	else ifba_game_conf.vpad_alpha = [valNb intValue];
+    GET_VALNB(@"vpad_showSpecial")
+	if ((valNb == nil)) ifba_game_conf.vpad_showSpecial=1;
+	else ifba_game_conf.vpad_showSpecial = [valNb intValue];
+    GET_VALNB(@"vpad_btnsize")
+	if ((valNb == nil)) ifba_game_conf.vpad_btnsize=1;
+	else ifba_game_conf.vpad_btnsize = [valNb intValue];
+    GET_VALNB(@"vpad_padsize")
+	if ((valNb == nil)) ifba_game_conf.vpad_padsize=1;
+	else ifba_game_conf.vpad_padsize = [valNb intValue];
+    GET_VALNB(@"vpad_style")
+	if ((valNb == nil)) ifba_game_conf.vpad_style=0;
+	else ifba_game_conf.vpad_style = [valNb intValue];
+    GET_VALNB(@"vpad_pad_x")
+	if ((valNb == nil)) ifba_game_conf.vpad_pad_x=0;
+	else ifba_game_conf.vpad_pad_x = [valNb intValue];
+    GET_VALNB(@"vpad_pad_y")
+	if ((valNb == nil)) ifba_game_conf.vpad_pad_y=0;
+	else ifba_game_conf.vpad_pad_y = [valNb intValue];
+    GET_VALNB(@"vpad_button_x")
+	if ((valNb == nil)) ifba_game_conf.vpad_button_x=0;
+	else ifba_game_conf.vpad_button_x = [valNb intValue];
+    GET_VALNB(@"vpad_button_y")
+	if ((valNb == nil)) ifba_game_conf.vpad_button_y=0;
+	else ifba_game_conf.vpad_button_y = [valNb intValue];
+    
+    //Emulation settings
+    GET_VALNB(@"asm_68k")
+	if ((valNb == nil)) ifba_game_conf.asm_68k=1;
+	else ifba_game_conf.asm_68k = [valNb intValue];
+    GET_VALNB(@"asm_z80")
+	if ((valNb == nil)) ifba_game_conf.asm_z80=0;
+	else ifba_game_conf.asm_z80 = [valNb intValue];
+    GET_VALNB(@"asm_nec")
+	if ((valNb == nil)) ifba_game_conf.asm_nec=0;
+	else ifba_game_conf.asm_nec = [valNb intValue];
+    GET_VALNB(@"asm_sh2")
+	if ((valNb == nil)) ifba_game_conf.asm_sh2=0;
+	else ifba_game_conf.asm_sh2 = [valNb intValue];
+    
+    //Controls mapping
+    for (int i=0;i<MAX_JOYSTICKS;i++) 
+        for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+            keyStr=[NSString stringWithFormat:@"%@_wiimap%02X%02X",gameStr,i,j];
+            valNb=[prefs objectForKey:keyStr];            
+            if (valNb != nil) ifba_game_conf.joymap_wiimote[i][j].dev_btn=[valNb intValue];
+            else ifba_game_conf.joymap_wiimote[i][j].dev_btn=default_joymap_wiimote[i][j].dev_btn;
+            
+            keyStr=[NSString stringWithFormat:@"%@_wiimap_str%02X%02X",gameStr,i,j];
+            valStr=[prefs objectForKey:keyStr];            
+            if (valStr != nil) strncpy(ifba_game_conf.joymap_wiimote[i][j].btn_name,[valStr UTF8String],sizeof(ifba_game_conf.joymap_wiimote[i][j].btn_name)-1);
+            else strcpy(ifba_game_conf.joymap_wiimote[i][j].btn_name,default_joymap_wiimote[i][j].btn_name);
+        }
+    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+        keyStr=[NSString stringWithFormat:@"%@_icademap%02X",gameStr,j];
+        valNb=[prefs objectForKey:keyStr];        
+        if (valNb != nil) ifba_game_conf.joymap_iCade[j].dev_btn=[valNb intValue];
+        else ifba_game_conf.joymap_iCade[j].dev_btn=default_joymap_iCade[j].dev_btn;
+        
+        keyStr=[NSString stringWithFormat:@"%@_icademap_str%02X",gameStr,j];
+        valStr=[prefs objectForKey:keyStr];        
+        if (valStr != nil) strncpy(ifba_game_conf.joymap_iCade[j].btn_name,[valStr UTF8String],sizeof(ifba_game_conf.joymap_iCade[j].btn_name)-1);
+        else strcpy(ifba_game_conf.joymap_iCade[j].btn_name,default_joymap_iCade[j].btn_name);
+    }
+#undef GET_VALNB
+    return 0;
+}
+
 
 - (void)saveSettings {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -187,96 +344,264 @@ extern int device_retina;
     valNb=[[NSNumber alloc] initWithInt:VERSION_SETTINGS ];    
     [prefs setObject:valNb forKey:@"VERSION_SETTINGS"];[valNb autorelease];
     
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_type ];
-	[prefs setObject:valNb forKey:@"filter_type"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_missing ];
-	[prefs setObject:valNb forKey:@"filter_missing"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_genre ];
-	[prefs setObject:valNb forKey:@"filter_genre"];[valNb autorelease];
-    
+    //last game
     valStr=[NSString stringWithFormat:@"%s",gameName];
     [prefs setObject:valStr forKey:@"lastgame"];
+    //Gamebrowser settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_type ];
+    [prefs setObject:valNb forKey:@"filter_type"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_missing ];
+    [prefs setObject:valNb forKey:@"filter_missing"];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filter_genre ];
+    [prefs setObject:valNb forKey:@"filter_genre"];[valNb autorelease];
     
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_fskip ];
-	[prefs setObject:valNb forKey:@"video_fskip"];[valNb autorelease];        
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_60hz ];
-	[prefs setObject:valNb forKey:@"video_60hz"];[valNb autorelease];    
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.aspect_ratio ];
-	[prefs setObject:valNb forKey:@"aspect_ratio"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.screen_mode ];
-	[prefs setObject:valNb forKey:@"screen_mode"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filtering ];
-	[prefs setObject:valNb forKey:@"filtering"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.show_fps ];
-	[prefs setObject:valNb forKey:@"show_fps"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.brightness ];
-	[prefs setObject:valNb forKey:@"brightness"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.video_filter ];
-	[prefs setObject:valNb forKey:@"video_filter"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.video_filter_strength ];
-	[prefs setObject:valNb forKey:@"video_filter_strength"];[valNb autorelease];
-    
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_on ];
-	[prefs setObject:valNb forKey:@"sound_on"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_freq ];
-	[prefs setObject:valNb forKey:@"sound_freq"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_latency ];
-	[prefs setObject:valNb forKey:@"sound_latency"];[valNb autorelease];
-    
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_alpha ];
-	[prefs setObject:valNb forKey:@"vpad_alpha"];[valNb autorelease];    
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_showSpecial ];
-	[prefs setObject:valNb forKey:@"vpad_showSpecial"];[valNb autorelease];    
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_btnsize ];
-	[prefs setObject:valNb forKey:@"vpad_btnsize"];[valNb autorelease];    
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_padsize ];
-	[prefs setObject:valNb forKey:@"vpad_padsize"];[valNb autorelease];    
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.btstack_on ];
-	[prefs setObject:valNb forKey:@"btstack_on"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_style ];
-	[prefs setObject:valNb forKey:@"vpad_style"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_pad_x ];
-	[prefs setObject:valNb forKey:@"vpad_pad_x"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_pad_y ];
-	[prefs setObject:valNb forKey:@"vpad_pad_y"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_x ];
-	[prefs setObject:valNb forKey:@"vpad_button_x"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_y ];
-	[prefs setObject:valNb forKey:@"vpad_button_y"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.icade_lang ];
-	[prefs setObject:valNb forKey:@"icade_lang"];[valNb autorelease];
-    
-    
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_68k];
-	[prefs setObject:valNb forKey:@"asm_68k"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_z80];
-	[prefs setObject:valNb forKey:@"asm_z80"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_nec];
-	[prefs setObject:valNb forKey:@"asm_nec"];[valNb autorelease];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_sh2];
-	[prefs setObject:valNb forKey:@"asm_sh2"];[valNb autorelease];
-    
-    //joymaps
-    for (int i=0;i<MAX_JOYSTICKS;i++) 
-        for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-            valNb=[[NSNumber alloc] initWithInt:joymap_wiimote[i][j].dev_btn];
-            [prefs setObject:valNb forKey:[NSString stringWithFormat:@"wiimap%02X%02X",i,j]];
-            [valNb release];
-        }
-    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-        valNb=[[NSNumber alloc] initWithInt:joymap_iCade[j].dev_btn];
-        [prefs setObject:valNb forKey:[NSString stringWithFormat:@"icademap%02X",j]];
-        [valNb release];
-    }
-    
+    //Roms paths
     for (int i=0;i<DIRS_MAX;i++) {        
         valStr=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
         keyStr=[NSString stringWithFormat:@"romspath%02X",i];
         [prefs setObject:valStr forKey:keyStr];
-    }	
+    }	    
+    
+#define SET_VALNB(a) \
+[prefs setObject:valNb forKey:a];[valNb autorelease];
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.btstack_on ];
+    SET_VALNB(@"btstack_on")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.icade_lang ];
+	SET_VALNB(@"icade_lang")
+
+    
+    //video settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_fskip ];
+    SET_VALNB(@"video_fskip")    
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.video_60hz ];
+	SET_VALNB(@"video_60hz")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.aspect_ratio ];
+	SET_VALNB(@"aspect_ratio")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.screen_mode ];
+	SET_VALNB(@"screen_mode")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.filtering ];
+	SET_VALNB(@"filtering")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.show_fps ];
+	SET_VALNB(@"show_fps")
+    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.brightness ];
+	SET_VALNB(@"brightness")
+    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.video_filter ];
+	SET_VALNB(@"video_filter")
+    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.video_filter_strength ];
+	SET_VALNB(@"video_filter_strength")
+    
+    //audio settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_on ];
+	SET_VALNB(@"sound_on")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_freq ];
+	SET_VALNB(@"sound_freq")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.sound_latency ];
+	SET_VALNB(@"sound_latency")
+    
+    //controls settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_alpha ];
+	SET_VALNB(@"vpad_alpha")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_showSpecial ];
+	SET_VALNB(@"vpad_showSpecial")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_btnsize ];
+    SET_VALNB(@"vpad_btnsize")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_padsize ];
+    SET_VALNB(@"vpad_padsize")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_style ];
+    SET_VALNB(@"vpad_style")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_pad_x ];
+    SET_VALNB(@"vpad_pad_x")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_pad_y ];
+    SET_VALNB(@"vpad_pad_y")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_x ];
+    SET_VALNB(@"vpad_button_x")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_y ];
+    SET_VALNB(@"vpad_button_y")
+    
+    //emulation settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_68k];
+    SET_VALNB(@"asm_68k")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_z80];
+    SET_VALNB(@"asm_z80")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_nec];
+    SET_VALNB(@"asm_nec")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_sh2];
+    SET_VALNB(@"asm_sh2")
+    
+    //controls mapping
+    for (int i=0;i<MAX_JOYSTICKS;i++) 
+        for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+            valNb=[[NSNumber alloc] initWithInt:ifba_conf.joymap_wiimote[i][j].dev_btn];
+            [prefs setObject:valNb forKey:[NSString stringWithFormat:@"wiimap%02X%02X",i,j]];
+            [valNb release];
+        }
+    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+        valNb=[[NSNumber alloc] initWithInt:ifba_conf.joymap_iCade[j].dev_btn];
+        [prefs setObject:valNb forKey:[NSString stringWithFormat:@"icademap%02X",j]];
+        [valNb release];
+    }
+    
+#undef SET_VALNB	
+    [prefs synchronize];
+}
+
+- (void)saveSettings:(NSString *)gameStr {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+	NSNumber *valNb;
+    NSString *valStr,*keyStr;
+    
+    if (gameStr==nil) return;
+    
+    valNb=[[NSNumber alloc] initWithInt:VERSION_SETTINGS ];    
+    keyStr=[NSString stringWithFormat:@"%@_VERSION_SETTINGS",gameStr];
+    [prefs setObject:valNb forKey:keyStr];[valNb autorelease];
+    
+#define SET_VALNB(a) \
+keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
+[prefs setObject:valNb forKey:keyStr];[valNb autorelease];
+    
+    //video settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.video_fskip ];
+    SET_VALNB(@"video_fskip")    
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.video_60hz ];
+	SET_VALNB(@"video_60hz")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.aspect_ratio ];
+	SET_VALNB(@"aspect_ratio")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.screen_mode ];
+	SET_VALNB(@"screen_mode")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.filtering ];
+	SET_VALNB(@"filtering")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.show_fps ];
+	SET_VALNB(@"show_fps")
+    valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.brightness ];
+	SET_VALNB(@"brightness")
+    valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.video_filter ];
+	SET_VALNB(@"video_filter")
+    valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.video_filter_strength ];
+	SET_VALNB(@"video_filter_strength")
+    
+    //audio settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.sound_on ];
+	SET_VALNB(@"sound_on")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.sound_freq ];
+	SET_VALNB(@"sound_freq")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.sound_latency ];
+	SET_VALNB(@"sound_latency")
+    
+    //controls settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_alpha ];
+	SET_VALNB(@"vpad_alpha")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_showSpecial ];
+	SET_VALNB(@"vpad_showSpecial")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_btnsize ];
+    SET_VALNB(@"vpad_btnsize")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_padsize ];
+    SET_VALNB(@"vpad_padsize")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_style ];
+    SET_VALNB(@"vpad_style")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_pad_x ];
+    SET_VALNB(@"vpad_pad_x")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_pad_y ];
+    SET_VALNB(@"vpad_pad_y")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_button_x ];
+    SET_VALNB(@"vpad_button_x")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_button_y ];
+    SET_VALNB(@"vpad_button_y")
+    
+    //emulation settings
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.asm_68k];
+    SET_VALNB(@"asm_68k")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.asm_z80];
+    SET_VALNB(@"asm_z80")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.asm_nec];
+    SET_VALNB(@"asm_nec")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.asm_sh2];
+    SET_VALNB(@"asm_sh2")
+    
+    //controls mapping
+    for (int i=0;i<MAX_JOYSTICKS;i++) 
+        for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+            valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.joymap_wiimote[i][j].dev_btn];
+            keyStr=[NSString stringWithFormat:@"%@_wiimap%02X%02X",gameStr,i,j];
+            [prefs setObject:valNb forKey:keyStr];
+            [valNb release];
+        }
+    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+        valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.joymap_iCade[j].dev_btn];
+        keyStr=[NSString stringWithFormat:@"%@_icademap%02X",gameStr,j];
+        
+        [prefs setObject:valNb forKey:keyStr];
+        [valNb release];
+    }
+#undef SET_VALNB    
 	
     [prefs synchronize];
 }
+
+- (void)removeSettings:(NSString *)gameStr {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *keyStr;
+    
+    if (gameStr==nil) return;
+    
+    
+    keyStr=[NSString stringWithFormat:@"%@_VERSION_SETTINGS",gameStr];
+    [prefs removeObjectForKey:keyStr];
+    
+    
+#define REMOVE_KEY(a) \
+keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
+[prefs removeObjectForKey:keyStr];
+    
+    //video settings
+    REMOVE_KEY(@"video_fskip")    
+	REMOVE_KEY(@"video_60hz")
+	REMOVE_KEY(@"aspect_ratio")
+	REMOVE_KEY(@"screen_mode")
+	REMOVE_KEY(@"filtering")
+	REMOVE_KEY(@"show_fps")
+	REMOVE_KEY(@"brightness")
+	REMOVE_KEY(@"video_filter")
+	REMOVE_KEY(@"video_filter_strength")
+    
+    //audio settings
+	REMOVE_KEY(@"sound_on")
+	REMOVE_KEY(@"sound_freq")
+	REMOVE_KEY(@"sound_latency")
+    
+    //controls settings
+	REMOVE_KEY(@"vpad_alpha")
+	REMOVE_KEY(@"vpad_showSpecial")
+    REMOVE_KEY(@"vpad_btnsize")
+    REMOVE_KEY(@"vpad_padsize")
+    REMOVE_KEY(@"btstack_on")
+    REMOVE_KEY(@"vpad_style")
+    REMOVE_KEY(@"vpad_pad_x")
+    REMOVE_KEY(@"vpad_pad_y")
+    REMOVE_KEY(@"vpad_button_x")
+    REMOVE_KEY(@"vpad_button_y")
+	REMOVE_KEY(@"icade_lang")
+    
+    //emulation settings
+    REMOVE_KEY(@"asm_68k")
+    REMOVE_KEY(@"asm_z80")
+    REMOVE_KEY(@"asm_nec")
+    REMOVE_KEY(@"asm_sh2")
+    
+    //controls mapping
+    for (int i=0;i<MAX_JOYSTICKS;i++) 
+        for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+            keyStr=[NSString stringWithFormat:@"%@_wiimap%02X%02X",gameStr,i,j];
+            [prefs removeObjectForKey:keyStr];
+        }
+    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+        keyStr=[NSString stringWithFormat:@"%@_icademap%02X",gameStr,j];
+        [prefs removeObjectForKey:keyStr];
+    }
+#undef REMOVE_KEY	
+    [prefs synchronize];
+}
+
 
 - (void)dealloc
 {
@@ -351,10 +676,11 @@ extern int device_retina;
     int bg_height=[UIScreen mainScreen].applicationFrame.size.height;
     int bg_max=MAX(bg_width,bg_height);
     UIView *bg_view=[[UIView alloc] initWithFrame:CGRectMake(0,0,bg_max,bg_max)];
-    int x,y;
+    int x,y,yavg,cnt;
     x=y=0;
     bg_view.backgroundColor=[UIColor blackColor];
     bg_view.frame=CGRectMake(0,0,bg_max,bg_max);
+    cnt=0;yavg=0;
     while (y<bg_max) {
         char *szName;
         NSString *img_name;
@@ -369,9 +695,12 @@ extern int device_retina;
         UIImageView *img=[[UIImageView alloc] initWithImage:img_tmp];
         img.frame=CGRectMake(x,y,img_tmp.size.width,img_tmp.size.height);
         x+=img_tmp.size.width;
+        yavg+=img_tmp.size.height;
+        cnt++;
         if (x>=bg_max) {
             x=0;
-            y+=32;
+            y+=yavg/cnt;
+            cnt=0;yavg=0;
         }
         [bg_view addSubview:img];
         [img release];
@@ -382,7 +711,7 @@ extern int device_retina;
     [self.navController pushViewController:menuvc animated:YES];    
     self.window.rootViewController = self.navController;    
     [self.window makeKeyAndVisible];
-
+    
     
     if (settings_reseted) {
         NSString *msgString=[NSString stringWithFormat:NSLocalizedString(@"Warning_Settings_Reset",@""),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];

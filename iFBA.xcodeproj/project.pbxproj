@@ -4650,6 +4650,8 @@
 		33EAB3801523319A00D6606C /* zzyzzyxx.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EAAAB81523319900D6606C /* zzyzzyxx.png */; };
 		33EAB3821523A4D800D6606C /* scanline-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EAB3811523A4D800D6606C /* scanline-3.png */; };
 		33EAB3841523A6A000D6606C /* scanline-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EAB3831523A6A000D6606C /* scanline-2.png */; };
+		33EAB38815243F5B00D6606C /* OptOptionsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33EAB38615243F5300D6606C /* OptOptionsViewController.mm */; };
+		33EAB38915243F5B00D6606C /* OptOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33EAB38715243F5600D6606C /* OptOptionsViewController.xib */; };
 		33F444CB14F50D8800BA36E1 /* cd_interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33F444C514F50D8800BA36E1 /* cd_interface.cpp */; };
 		33F444D314F5186000BA36E1 /* support_paths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33F444D214F5186000BA36E1 /* support_paths.cpp */; };
 		33F444D714F567DC00BA36E1 /* EmuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33F444D614F567DC00BA36E1 /* EmuViewController.xib */; };
@@ -9570,6 +9572,9 @@
 		33EAAAB81523319900D6606C /* zzyzzyxx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zzyzzyxx.png; sourceTree = "<group>"; };
 		33EAB3811523A4D800D6606C /* scanline-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scanline-3.png"; sourceTree = "<group>"; };
 		33EAB3831523A6A000D6606C /* scanline-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scanline-2.png"; sourceTree = "<group>"; };
+		33EAB38515243F4E00D6606C /* OptOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptOptionsViewController.h; sourceTree = "<group>"; };
+		33EAB38615243F5300D6606C /* OptOptionsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptOptionsViewController.mm; sourceTree = "<group>"; };
+		33EAB38715243F5600D6606C /* OptOptionsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptOptionsViewController.xib; sourceTree = "<group>"; };
 		33F444B714F4C44400BA36E1 /* driverlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = driverlist.h; sourceTree = "<group>"; };
 		33F444B814F4C85D00BA36E1 /* ctv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ctv.h; sourceTree = "<group>"; };
 		33F444B914F4C8DA00BA36E1 /* cave_sprite_func_table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cave_sprite_func_table.h; sourceTree = "<group>"; };
@@ -10988,6 +10993,9 @@
 				331D16AC1505F56F00327F74 /* OptDIPSWValueViewController.h */,
 				331D16AD1505F56F00327F74 /* OptDIPSWValueViewController.mm */,
 				331D16AE1505F56F00327F74 /* OptDIPSWValueViewController.xib */,
+				33EAB38515243F4E00D6606C /* OptOptionsViewController.h */,
+				33EAB38615243F5300D6606C /* OptOptionsViewController.mm */,
+				33EAB38715243F5600D6606C /* OptOptionsViewController.xib */,
 				331D170F1507DC1700327F74 /* OptROMSPathsViewController.h */,
 				331D17101507DC1800327F74 /* OptROMSPathsViewController.mm */,
 				331D17111507DC1A00327F74 /* OptROMSPathsViewController.xib */,
@@ -19262,6 +19270,7 @@
 				33EAB3801523319A00D6606C /* zzyzzyxx.png in Resources */,
 				33EAB3821523A4D800D6606C /* scanline-3.png in Resources */,
 				33EAB3841523A6A000D6606C /* scanline-2.png in Resources */,
+				33EAB38915243F5B00D6606C /* OptOptionsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19831,6 +19840,7 @@
 				331082051514905700B6FD1A /* MNEValueTrackingSlider.m in Sources */,
 				336D5BC0151DE94A006D8984 /* DBHelper.mm in Sources */,
 				336D5BC4151E0B7E006D8984 /* OptGameInfoViewController.m in Sources */,
+				33EAB38815243F5B00D6606C /* OptOptionsViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19960,7 +19970,7 @@
 				);
 				LLVM_LTO = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "B23CC58B-ECC0-4397-B00C-1F4F32FC3D2C";
+				PROVISIONING_PROFILE = "665E9A0B-50B3-44E8-817A-DC79CE7C6501";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

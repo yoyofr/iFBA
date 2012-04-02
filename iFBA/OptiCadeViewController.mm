@@ -21,6 +21,7 @@ int mOptICadeButtonSelected;
 extern volatile int emuThread_running;
 extern int launchGame;
 extern char gameName[64];
+extern int optionScope;
 
 //iCade & wiimote
 #import "iCadeReaderView.h"
@@ -97,7 +98,11 @@ static CADisplayLink* m_displayLink;
     return YES;
 }
 
+static int viewWA_patch=0;
+
 - (void)viewWillAppear:(BOOL)animated {
+    if (viewWA_patch) return;
+    viewWA_patch++;
     [super viewWillAppear:animated];
     
     /* Wiimote check => rely on cadisplaylink*/
@@ -117,6 +122,8 @@ static CADisplayLink* m_displayLink;
     [tabView reloadData];
 }
 -(void)viewWillDisappear:(BOOL)animated {
+    if (!viewWA_patch) return;
+    viewWA_patch--;
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
@@ -126,14 +133,20 @@ static CADisplayLink* m_displayLink;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 3;
+    if (optionScope==0)	return 3;
+    else return 2;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
+    if (optionScope==0) {
     if (section==1) return VSTICK_NB_BUTTON;
     return 1;
+    } else {
+        if (section==0) return VSTICK_NB_BUTTON;
+        return 1;
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -144,6 +157,7 @@ static CADisplayLink* m_displayLink;
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
+    if (optionScope==0) {
     switch (section) {
         case 0://Language
             footer=NSLocalizedString(@"iCade Language",@"");
@@ -154,6 +168,16 @@ static CADisplayLink* m_displayLink;
         case 2://Reset to Default
             footer=@"";
             break;
+    }
+    } else {
+        switch (section) {
+            case 0://Mapping
+                footer=NSLocalizedString(@"Mapping info",@"");
+                break;
+            case 1://Reset to Default
+                footer=@"";
+                break;
+        }
     }
     return footer;
 }
@@ -167,6 +191,7 @@ static CADisplayLink* m_displayLink;
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];                
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
+    if (optionScope==0) {
     switch (indexPath.section) {
         case 0://Reset to default
             cell.textLabel.text=[NSString stringWithFormat:@"%@%@",NSLocalizedString(@"System keyboard: ",@""),[NSString stringWithCString:iCade_langStr[ifba_conf.icade_lang] encoding:NSUTF8StringEncoding]];
@@ -174,9 +199,9 @@ static CADisplayLink* m_displayLink;
             cell.accessoryView=nil;
             break;
         case 1://Mapping
-            cell.textLabel.text=[NSString stringWithFormat:@"%s",joymap_iCade[indexPath.row].btn_name];
+            cell.textLabel.text=[NSString stringWithFormat:@"%s",cur_ifba_conf->joymap_iCade[indexPath.row].btn_name];
             lblview=[[UILabel alloc] initWithFrame:CGRectMake(0,0,100,30)];
-            if (joymap_iCade[indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %c",'A'-1+joymap_iCade[indexPath.row].dev_btn];
+            if (cur_ifba_conf->joymap_iCade[indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %c",'A'-1+cur_ifba_conf->joymap_iCade[indexPath.row].dev_btn];
             else lblview.text=@"/";
             lblview.backgroundColor=[UIColor clearColor];
             cell.accessoryView=lblview;
@@ -189,7 +214,26 @@ static CADisplayLink* m_displayLink;
             cell.accessoryView=nil;
             break;
     }
-    
+    } else {
+        switch (indexPath.section) {
+            case 0://Mapping
+                cell.textLabel.text=[NSString stringWithFormat:@"%s",cur_ifba_conf->joymap_iCade[indexPath.row].btn_name];
+                lblview=[[UILabel alloc] initWithFrame:CGRectMake(0,0,100,30)];
+                if (cur_ifba_conf->joymap_iCade[indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %c",'A'-1+cur_ifba_conf->joymap_iCade[indexPath.row].dev_btn];
+                else lblview.text=@"/";
+                lblview.backgroundColor=[UIColor clearColor];
+                cell.accessoryView=lblview;
+                [lblview release];
+                cell.textLabel.textAlignment=UITextAlignmentLeft;
+                break;
+            case 1://Reset to default
+                cell.textLabel.text=NSLocalizedString(@"Reset to default",@"");
+                cell.textLabel.textAlignment=UITextAlignmentCenter;
+                cell.accessoryView=nil;
+                break;
+        }
+
+    }
 	
     
     return cell;
@@ -197,6 +241,7 @@ static CADisplayLink* m_displayLink;
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (optionScope==0) {
     switch (indexPath.section) {
         case 0:
             ifba_conf.icade_lang++;
@@ -209,7 +254,7 @@ static CADisplayLink* m_displayLink;
             [tabView reloadData];            
             break;
         case 2:
-            joymap_iCade[0].dev_btn=4;//Start
+            /*joymap_iCade[0].dev_btn=4;//Start
             joymap_iCade[1].dev_btn=8;//Select/Coin
             joymap_iCade[2].dev_btn=0;//Menu
             joymap_iCade[3].dev_btn=0;//Turbo
@@ -219,9 +264,35 @@ static CADisplayLink* m_displayLink;
             joymap_iCade[7].dev_btn=3;//...
             joymap_iCade[8].dev_btn=5;//
             joymap_iCade[9].dev_btn=6;//
-            joymap_iCade[10].dev_btn=7;//Fire 6
+            joymap_iCade[10].dev_btn=7;//Fire 6*/
+            memcpy(cur_ifba_conf->joymap_iCade,default_joymap_iCade,sizeof(default_joymap_iCade));
             [tabView reloadData];            
             break;
+    }
+    } else {
+        switch (indexPath.section) {
+            case 0:
+                mOptICadeButtonSelected=indexPath.row;
+                [self presentSemiModalViewController:optgetButton];
+                [tabView reloadData];            
+                break;
+            case 1:
+                /*joymap_iCade[0].dev_btn=4;//Start
+                joymap_iCade[1].dev_btn=8;//Select/Coin
+                joymap_iCade[2].dev_btn=0;//Menu
+                joymap_iCade[3].dev_btn=0;//Turbo
+                joymap_iCade[4].dev_btn=0;//Service
+                joymap_iCade[5].dev_btn=1;//Fire 1
+                joymap_iCade[6].dev_btn=2;//Fire 2
+                joymap_iCade[7].dev_btn=3;//...
+                joymap_iCade[8].dev_btn=5;//
+                joymap_iCade[9].dev_btn=6;//
+                joymap_iCade[10].dev_btn=7;//Fire 6
+                [tabView reloadData];   */
+                memcpy(cur_ifba_conf->joymap_iCade,default_joymap_iCade,sizeof(default_joymap_iCade));
+                break;
+        }
+        
     }
 }
 

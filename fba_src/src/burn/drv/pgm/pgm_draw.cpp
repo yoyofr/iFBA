@@ -154,7 +154,7 @@ static void pgm_draw_sprite_nozoom(INT32 wide, INT32 high, INT32 palt, INT32 bof
 			}
 		}
 
-		if (yoff >= 0 && yoff < nScreenHeight && xpos >= 0 && (xpos + wide) < nScreenWidth)
+		if (yoff >= 0 && yoff < nScreenHeight && xpos >= 0 && (xpos + wide + 8) < nScreenWidth)
 		{
 			for (INT32 xcnt = 0; xcnt < wide; xcnt+=8)
 			{
@@ -662,6 +662,7 @@ void pgmInitDraw() // preprocess some things...
 	SpritePrio = (UINT8*)BurnMalloc(nScreenWidth * nScreenHeight);
 	pTempScreen = (UINT16*)BurnMalloc(nScreenWidth * nScreenHeight * sizeof(INT16));
 
+    
 	// Find transparent tiles so we can skip them
 	{
 		nTileMask = ((nPGMTileROMLen / 5) * 8) / 0x400; // also used to set max. tile

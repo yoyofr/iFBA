@@ -82,7 +82,11 @@ static CADisplayLink* m_displayLink;
     
 }
 
+static int viewWA_patch=0;
+
 -(void) viewWillAppear:(BOOL)animated {  //Not called in iOS 4.3 simulator... BUG?
+    if (viewWA_patch) return;
+    viewWA_patch++;
     [super viewWillAppear:animated];
     
     /* Wiimote check => rely on cadisplaylink*/
@@ -105,6 +109,8 @@ static CADisplayLink* m_displayLink;
 }
 
 -(void) viewWillDisappear:(BOOL)animated {
+    if (!viewWA_patch) return;
+    viewWA_patch--;
     [super viewWillDisappear:animated];
     [gradientF removeFromSuperlayer];
     [gradientH removeFromSuperlayer];
