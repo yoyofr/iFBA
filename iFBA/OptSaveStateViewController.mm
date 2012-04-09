@@ -251,13 +251,13 @@ static int selectedSlot;
     if (current_slot==-1) return;
     StatedSave(current_slot);
     MakeScreenShot(current_slot);
-    launchGame=2;
-    [self.navigationController popToRootViewControllerAnimated:NO];    
+/*    launchGame=2;
+    [self.navigationController popToRootViewControllerAnimated:NO];    */
     
-//    [self scanFiles];
-//    [tabView reloadData];
+    [self scanFiles];
+    [tabView reloadData];
     
-/*    char tmp_str[512];
+    char tmp_str[512];
     FILE *f;
 #ifdef RELEASE_DEBUG    
     sprintf(tmp_str,"%s/%s_%02x.png", debug_root_path, gameName,current_slot);
@@ -266,8 +266,7 @@ static int selectedSlot;
 #endif            
     [imgview setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%s",tmp_str]]];
     
-    if (slot[current_slot]) btn_load.hidden=NO;    
-*/  
+    if (slot[current_slot]) btn_load.hidden=NO;     
 }
 -(IBAction) loadState {
     if (current_slot==-1) return;    

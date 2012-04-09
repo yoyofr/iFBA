@@ -13,14 +13,13 @@
 @interface MenuViewController : UIViewController {
     IBOutlet UITableView *tabView;
     IBOutlet UIBarButtonItem *btn_backToEmu;
-    UIViewController *emuvc;
     UIViewController *gamebrowservc;
     UIViewController *optionsvc;
     UIViewController *dipswvc;
     UIViewController *statevc;
 }
 
-@property (nonatomic, retain) UIViewController *emuvc,*gamebrowservc,*optionsvc,*dipswvc,*statevc;
+@property (nonatomic, retain) UIViewController *gamebrowservc,*optionsvc,*dipswvc,*statevc;
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
 

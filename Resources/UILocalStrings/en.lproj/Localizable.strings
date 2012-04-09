@@ -104,6 +104,9 @@
 "iCade Language"="Choose the langage selected in system settings for keyboard input";
 "System keyboard: "="System keyboard: ";
 
+//Vpad options
+"Change layout"="Change layout";
+
 //Audio options
 "Sound Output"="Sound Output";
 "Sound Output on"="Sound output activated. Changes are applied at next game launch";

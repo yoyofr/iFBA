@@ -17,6 +17,7 @@ static unsigned int newgenreFilter_first=1;
 static CAGradientLayer *gradientF,*gradientH;
 
 char gameInfo[64*1024];
+extern char gameName[64];
 
 //iCade & wiimote
 #import "iCadeReaderView.h"
@@ -68,6 +69,13 @@ static CADisplayLink* m_displayLink;
 -(void) viewWillAppear:(BOOL)animated {  //Not called in iOS 4.3 simulator... BUG?
     [super viewWillAppear:animated];    
     
+    /*if (gameName[0]) {
+        NSString *myStr=[NSString stringWithFormat:@"%s.png",gameName];
+        UIImage *myImg=[UIImage imageNamed:myStr];
+        if (myImg) txtview.backgroundColor=[UIColor colorWithPatternImage:myImg];
+        else txtview.backgroundColor=[UIColor clearColor];
+    } else txtview.backgroundColor=[UIColor clearColor];
+    */
     /* Wiimote check => rely on cadisplaylink*/
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
     m_displayLink.frameInterval = 3; //20fps

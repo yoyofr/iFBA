@@ -38,9 +38,11 @@ static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
+EmuViewController *emuvc;
+
 
 @implementation MenuViewController
-@synthesize emuvc,gamebrowservc,optionsvc,dipswvc,statevc;
+@synthesize gamebrowservc,optionsvc,dipswvc,statevc;
 @synthesize tabView;
 @synthesize btn_backToEmu;
 

@@ -109,7 +109,7 @@ static int ReadJoystick()
 // Read one joystick axis
 int SDLinpJoyAxis(int i, int nAxis)
 {
-//    static int test_tmp=0;
+    int val;
 	if (i < 0 || i >= nJoystickCount) {				// This joystick number isn't connected
 		return 0;
 	}
@@ -122,21 +122,24 @@ int SDLinpJoyAxis(int i, int nAxis)
     
     switch (nAxis) {
         case 0:
-            return joy_analog_x[i]*32767;
+            val=joy_analog_x[i]*32768;
+            if (val<-32768) val=-32768;
+            else if (val>32767) val=32767;
+            return val;
             break;
         case 1:
-            return joy_analog_y[i]*32767;
+            val=joy_analog_y[i]*32768;
+            if (val<-32768) val=-32768;
+            else if (val>32767) val=32767;
+            return val;
             break;
         case 2: //also used by forgotten worlds
-//            return joy_analog_z[i];//forgotten worlds
-            
-            return joy_analog_l[i]*32767;
-            /*test_tmp+=10;
-            test_tmp&=0xFFFF;
-            return test_tmp;*/
+            val=joy_analog_l[i]*32768*4;
+            return val;
             break;
         case 3:
-            return joy_analog_r[i]*32767;
+            val=joy_analog_r[i]*32768*4;
+            return val;
             break;
     }
     

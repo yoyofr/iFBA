@@ -136,6 +136,8 @@ static int viewWA_patch=0;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {    
+    gradientF.frame = footer.bounds;
+    gradientH.frame = footer.bounds;
     return YES;
 }
 

@@ -17,6 +17,9 @@ Port to FBA by OopsWare
 
 **********************************************************************/
 
+//IOS_BUILD
+extern int lowmem_device;
+
 #include "cps3.h"
 #include "sh2.h"
 
@@ -477,10 +480,15 @@ static INT32 MemIndex()
 	
 	RamStart	= Next;
 	
-	RomGame 	= Next; Next += 0x1000000;
+	RomGame 	= Next;
+//IOS_BUILD    
+    if (!lowmem_device) Next += 0x1000000;
+
 	RomGame_D 	= Next; Next += 0x1000000;
 	
-	RamC000		= Next; Next += 0x0000400;
+	RamC000		= Next; 
+    if (!lowmem_device) Next += 0x1000000;
+    
 	RamC000_D	= Next; Next += 0x0000400;
 
 	RamMain		= Next; Next += 0x0080000;

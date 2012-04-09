@@ -1,9 +1,13 @@
+iPhone: 480x480
+iPhone retina: 960x960
+iPad: 1024x1024
+iPad Retina: 2048x2048
+
 TODO
 - multiplayer
 - hiscore (hitotxt like) / google app ?
 - cheats
 - icon (border/bg)
-- 2 buttons press with 1 finger
 - pad restrictor: 2ways, 4ways, 8ways
 - check forgotten worlds main dump => garbage in bg gfx
 	+ rotary stick support ? (2axis?)
@@ -22,6 +26,7 @@ v0.5 - xx/xx/2012
 - settings/game
 - random background image
 - fixed issue with iOS 4.3 and buttons mapping
+- vpad: 2 buttons pressed now possible (touch between 2 buttons)
 
 v0.4.1 - 24/03/2012
 -------------------

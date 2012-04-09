@@ -15,7 +15,7 @@ ifba_game_conf_t ifba_game_conf;
 int optionScope; //0:default, 1:current game
 int game_has_options;
 
-static int missedFrame;
+volatile int doFrame_inProgress=0;
 
 #include "inp_sdl_keys.h"
 unsigned char joy_state[MAX_JOYSTICKS][GN_MAX_KEY];
@@ -128,7 +128,6 @@ int joymap_dir_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
 extern int fba_main( int argc, char **argv );
 extern bool bAppDoFast;
 
-volatile int mNewGLFrame;
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch);
 
 static unsigned short *vbuffer;
@@ -140,6 +139,8 @@ static volatile float pb_value;
 static volatile int pb_total;
 static char pb_msg[256];
 
+volatile int renderVPADonly;
+
 
 int device_isIpad,device_retina;
 unsigned int virtual_stick_buttons_alpha=75;
@@ -147,174 +148,236 @@ unsigned int virtual_stick_buttons_alpha2=150;
 int virtual_stick_on;
 long virtual_stick_padfinger;
 
+int device_orientation;
 
 int virtual_stick_pad;
-int virtual_stick_posx=90;
-int virtual_stick_posy=320-90;
 int virtual_stick_posx_ofs,virtual_stick_posy_ofs;
 int virtual_stick_maxdist=90;
-int virtual_stick_mindist=10;
+int virtual_stick_mindist=16;
 int virtual_stick_maxdist2=90*90;
 int virtual_stick_mindist2=10*10;
 int vpad_button_nb=VPAD_SPECIALS_BUTTON_NB;
+int vpad_button_nb_save;
 float virtual_stick_angle;
-typedef struct {int button_id,x,y,w,h,sw,sh;unsigned char r,g,b;long finger_id;} t_touch_area;
-t_touch_area *virtual_stick;
+typedef struct {int button_id,w,h,sw,sh;unsigned char r,g,b;long finger_id;} t_touch_area;
+t_touch_area virtual_stick[VSTICK_NB_BUTTON];
 
-void computeButtonLayout(int btnsize,int nb_button,int width,int height);
+void computePadLayouts(int nb_button){
+    int w;
+    int h;
+    int btnsize=(device_isIpad?64:48);
+    
+    
+    if (cur_ifba_conf->vpad_pad_manual_layout[0]==0){
+        if (device_isIpad) {
+            cur_ifba_conf->vpad_pad_x[0] = virtual_stick_maxdist;
+            cur_ifba_conf->vpad_pad_y[0] = 1024-virtual_stick_maxdist-80;
+        } else {
+            cur_ifba_conf->vpad_pad_x[0] = virtual_stick_maxdist;
+            cur_ifba_conf->vpad_pad_y[0] = 480-virtual_stick_maxdist-0;
+        }
+    }
+    if (cur_ifba_conf->vpad_pad_manual_layout[1]==0){
+        if (device_isIpad) {
+            cur_ifba_conf->vpad_pad_x[1] = virtual_stick_maxdist+40;
+            cur_ifba_conf->vpad_pad_y[1] = 768-virtual_stick_maxdist-40;             
+        } else {
+            cur_ifba_conf->vpad_pad_x[1] = virtual_stick_maxdist;
+            cur_ifba_conf->vpad_pad_y[1] = 320-virtual_stick_maxdist;
+            
+        }
+    }
+    
+    for (int i=0;i<5;i++) {
+        virtual_stick[i].r=0xFF;virtual_stick[i].g=0xFF;virtual_stick[i].b=0xFF;
+    }
+    virtual_stick[0].button_id=GN_START;
+    virtual_stick[1].button_id=GN_SELECT_COIN;
+    virtual_stick[2].button_id=GN_MENU_KEY;
+    virtual_stick[3].button_id=GN_TURBO;
+    virtual_stick[4].button_id=GN_SERVICE;
+    
+    virtual_stick[5].button_id=GN_A;
+    virtual_stick[6].button_id=GN_B;
+    virtual_stick[7].button_id=GN_C;
+    virtual_stick[8].button_id=GN_D;
+    virtual_stick[9].button_id=GN_E;
+    virtual_stick[10].button_id=GN_F;
+    
+    
+    if (device_isIpad) {
+        for (int i=0;i<5;i++) {
+            virtual_stick[i].w=64;virtual_stick[i].h=64;
+            virtual_stick[i].sw=64;virtual_stick[i].sh=32;
+        }
+        
+        cur_ifba_conf->vpad_button_x[0][0]=768-64;
+        cur_ifba_conf->vpad_button_y[0][0]=0;
+        cur_ifba_conf->vpad_button_x[1][0]=768-64-96;
+        cur_ifba_conf->vpad_button_y[1][0]=0;
+        cur_ifba_conf->vpad_button_x[2][0]=0;
+        cur_ifba_conf->vpad_button_y[2][0]=0;
+        cur_ifba_conf->vpad_button_x[3][0]=96;
+        cur_ifba_conf->vpad_button_y[3][0]=0;
+        cur_ifba_conf->vpad_button_x[4][0]=768/2-32;
+        cur_ifba_conf->vpad_button_y[4][0]=0;
 
-void computeButtonLayout(int btnsize,int nb_button,int width,int height){
-    int w=width;
-    int h=height;
-    if (device_isIpad) h-=40;
+        cur_ifba_conf->vpad_button_x[0][1]=1024-64;
+        cur_ifba_conf->vpad_button_y[0][1]=0;
+        cur_ifba_conf->vpad_button_x[1][1]=1024-64;
+        cur_ifba_conf->vpad_button_y[1][1]=100;
+        cur_ifba_conf->vpad_button_x[2][1]=0;
+        cur_ifba_conf->vpad_button_y[2][1]=0;
+        cur_ifba_conf->vpad_button_x[3][1]=0;
+        cur_ifba_conf->vpad_button_y[3][1]=100;
+        cur_ifba_conf->vpad_button_x[4][1]=1024/2-32;
+        cur_ifba_conf->vpad_button_y[4][1]=0;
+    } else {
+        for (int i=0;i<5;i++) {
+            virtual_stick[i].w=48;virtual_stick[i].h=48;
+            virtual_stick[i].sw=48;virtual_stick[i].sh=24;
+        }
+        
+        
+        cur_ifba_conf->vpad_button_x[0][0]=320-48;
+        cur_ifba_conf->vpad_button_y[0][0]=0;
+        cur_ifba_conf->vpad_button_x[1][0]=320-48-64;
+        cur_ifba_conf->vpad_button_y[1][0]=0;
+        cur_ifba_conf->vpad_button_x[2][0]=0;
+        cur_ifba_conf->vpad_button_y[2][0]=0;
+        cur_ifba_conf->vpad_button_x[3][0]=64;
+        cur_ifba_conf->vpad_button_y[3][0]=0;
+        cur_ifba_conf->vpad_button_x[4][0]=320/2-24;
+        cur_ifba_conf->vpad_button_y[4][0]=0;
+        
+        cur_ifba_conf->vpad_button_x[0][1]=480-48;
+        cur_ifba_conf->vpad_button_y[0][1]=0;
+        cur_ifba_conf->vpad_button_x[1][1]=480-48;
+        cur_ifba_conf->vpad_button_y[1][1]=48;
+        cur_ifba_conf->vpad_button_x[2][1]=0;
+        cur_ifba_conf->vpad_button_y[2][1]=0;
+        cur_ifba_conf->vpad_button_x[3][1]=0;
+        cur_ifba_conf->vpad_button_y[3][1]=48;
+        cur_ifba_conf->vpad_button_x[4][1]=480/2-24;
+        cur_ifba_conf->vpad_button_y[4][1]=0;
+    }
+    
+    
     for (int i=0;i<nb_button;i++) {
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].r=0xDF;
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].g=0xDF;
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].b=0xDF;
-        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].w=btnsize;
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].w=btnsize*1.3f;  //touch area is 30% larger than drawing one
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].sw=btnsize;
-        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].h=btnsize;
+        virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].h=btnsize*1.3f;  //touch area is 30% larger than drawing one
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].sh=btnsize;
     }
-    if (width>height) {//horizontal        
-        switch (nb_button) {
-            case 0:
-                break;
-            case 1:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                break;
-            case 2:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
-                break;
-            case 3:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize;
-                break;
-            case 4:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize;
-                break;
-            case 5:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*3.15f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].y=h-btnsize;
-                break;
-            case 6:
-            default:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize*3.15f; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*3.15f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].y=h-btnsize;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+5].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+5].y=h-btnsize;            
-                break;
-        }
-    } else {//vertical
-        switch (nb_button) {
-            case 0:
-                break;
-            case 1:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
-                break;
-            case 2:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize; virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*1.5f;
-                break;
-            case 3:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*1.5f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize*2.6f;
-                break;
-            case 4:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*2.6f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*1.5f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize*2.6f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize*1.5f;
-                break;
-            case 5:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*3.15f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize*3.15f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].y=h-btnsize*2.1f;
-                break;
-            case 6:
-            default:
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB].y=h-btnsize*3.15f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+1].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].x=w-btnsize;      virtual_stick[VPAD_SPECIALS_BUTTON_NB+2].y=h-btnsize;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+3].y=h-btnsize*3.15f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+4].y=h-btnsize*2.1f;
-                virtual_stick[VPAD_SPECIALS_BUTTON_NB+5].x=w-btnsize*2.1f; virtual_stick[VPAD_SPECIALS_BUTTON_NB+5].y=h-btnsize;            
-                break;
-        }
-        
-    }
+
+#define SET_BUTTON_LAYOUT(a,o,px,py) \
+if (cur_ifba_conf->vpad_button_manual_layout[a][o]==0) { \
+cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
 }
+    
+    
+    if (device_isIpad) {
+        w=768;
+        h=1024-40;
+    } else {
+        w=320;
+        h=480;
+    }
+    w-=10;
+    h-=10; //dirty hack to compensate the +30% touch area size
 
-t_touch_area virtual_stick_iphone_landscape[VSTICK_NB_BUTTON]={
-    {GN_START,      480-48,         0,              48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,480-48,         48,             48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_MENU_KEY,     0,            0,              48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_TURBO,        0,            48,             48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_SERVICE,      480/2-24,         0,             48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_A,          480-64-10-64,   320-64-6-64,   64,64,64,64,0xCF,0xCF,0xCF,0},
-    {GN_B,          480-64,         320-64-6-64-10,   64,64,64,64,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          480-64-10-64,   320-64,         64,64,64,64,0x00,0xFF,0x00,0},  //green
-    {GN_D,          480-64,         320-64-10,         64,64,64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          480-64,         320-64-10,         64,64,64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          480-64,         320-64-10,         64,64,64,64,0x00,0x00,0xFF,0}  //blue    
-};
+        switch (nb_button) { //verti
+            case 0:
+                break;
+            case 1:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
+                break;
+            case 2:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
+                break;
+            case 3:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize*2.1f, h-btnsize*2.6f)                
+                break;
+            case 4:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize*2.1f, h-btnsize*2.6f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*1.5f)                
+                break;
+            case 5:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,0, w-btnsize*2.1f, h-btnsize*2.1f)                
+                break;
+            case 6:
+            default:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,0, w-btnsize*2.1f, h-btnsize*2.1f)                
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,0, w-btnsize*2.1f, h-btnsize)                
+                break;        
+    }
+    
+    if (device_isIpad) {
+        w=1024;
+        h=768-40;
+    } else {
+        w=480;
+        h=320;
+    }
+    w-=10;
+    h-=10; //dirty hack to compensate the +30% touch area size
+    
+    switch (nb_button) {//horiz
+        case 0:
+            break;
+        case 1:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize, h-btnsize*2.1f)
+            break;
+        case 2:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*2.1f, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize, h-btnsize*2.1f)
+            break;
+        case 3:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*2.1f, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize)                
+            break;
+        case 4:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*2.1f, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize*2.1f, h-btnsize)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize, h-btnsize)                
+            break;
+        case 5:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*3.15f, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize*2.1f, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize*2.1f, h-btnsize)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,1, w-btnsize, h-btnsize)                                
+            break;
+        case 6:
+        default:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*3.15f, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize*2.1f, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize*3.15f, h-btnsize)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,1, w-btnsize*2.1f, h-btnsize)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,1, w-btnsize, h-btnsize)                                
+            break;
+    }
 
-t_touch_area virtual_stick_iphone_portrait[VSTICK_NB_BUTTON]={
-    {GN_START,      320-48,         0,               48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,320-64-48,         0,               48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_MENU_KEY,     0,            0,            48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_TURBO,        64,            0,           48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_SERVICE,      320/2-24,         0,             48,48,48,24,0xFF,0xFF,0xFF,0},
-    {GN_A,          320-64-10-64,   480-2*64-6-0,   64,64,64,64,0xFF,0x00,0x00,0},  //red
-    {GN_B,          320-64,         480-2*64-6-10,   64,64,64,64,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          320-64-10-64,   480-64-0,         64,64,64,64,0x00,0xFF,0x00,0},  //green
-    {GN_D,          320-64,         480-64-10,         64,64,64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          320-64,         480-64-10,         64,64,64,64,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          320-64,         480-64-10,         64,64,64,64,0x00,0x00,0xFF,0}  //blue        
-};
-
-
-t_touch_area virtual_stick_ipad_landscape[VSTICK_NB_BUTTON]={
-    {GN_START,      1024-80,        0,              64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,1024-80,        100,            64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_MENU_KEY,     0,            0,              64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_TURBO,        0,            100,            64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_SERVICE,      1024/2-32,         0,             64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_A,          1024-96*2-10,   768-96*2-6,    96,96,96,96,0xFF,0x00,0x00,0},  //red
-    {GN_B,          1024-96,        768-96*2-6-20,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          1024-96*2-10,   768-96,         96,96,96,96,0x00,0xFF,0x00,0},  //green
-    {GN_D,          1024-96,        768-96-20,         96,96,96,96,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          1024-96,        768-96-20,         96,96,96,96,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          1024-96,        768-96-20,         96,96,96,96,0x00,0x00,0xFF,0}  //blue
-};
-
-t_touch_area virtual_stick_ipad_portrait[VSTICK_NB_BUTTON]={
-    {GN_START,      768-80,        0,             64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_SELECT_COIN,768-80-120,    0,             64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_MENU_KEY,     0,           0,             64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_TURBO,        120,         0,             64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_SERVICE,      768/2-32,         0,             64,64,64,32,0xFF,0xFF,0xFF,0},
-    {GN_A,          768-96*2-20,   1024-96*2-6-60,    96,96,96,96,0xFF,0x00,0x00,0},  //red
-    {GN_B,          768-96,        1024-96*2-6-20-60,    96,96,96,96,0xFF,0xFF,0x00,0},  //yellow
-    {GN_C,          768-96*2-20,   1024-96-60,         96,96,96,96,0x00,0xFF,0x00,0},  //green
-    {GN_D,          768-96,        1024-96-20-60,         96,96,96,96,0x00,0x00,0xFF,0},  //blue
-    {GN_E,          768-96,        1024-96-20-60,         96,96,96,96,0x00,0x00,0xFF,0},  //blue
-    {GN_F,          768-96,        1024-96-20-60,         96,96,96,96,0x00,0x00,0xFF,0}  //blue
-};
-
+}
 
 int gTurboMode;
 
@@ -355,7 +418,8 @@ static int statusLoadMsgUpdated=0;
     if (self) {
         self.title = NSLocalizedString(@"Emu", @"Emu");
         //self.tabBarItem.image = [UIImage imageNamed:@"Emu"];
-        launchGame=0;        
+        launchGame=0; 
+        device_orientation=0; //portrait
         
         //WIIMOTE
         // create discovery controller
@@ -371,6 +435,7 @@ static int statusLoadMsgUpdated=0;
             //[bt addListener:discoveryView];
             if (ifba_conf.btstack_on) [bt activate];
         }
+        renderVPADonly=0;
         
         
     }
@@ -427,6 +492,8 @@ static int statusLoadMsgUpdated=0;
     
     context=self;
     
+    
+    
 	// Do any additional setup after loading the view, typically from a nib.
     m_oglView=(OGLView*)(self.view);
     
@@ -454,6 +521,8 @@ static int statusLoadMsgUpdated=0;
 		
 	}
     
+    
+    
     m_oglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
 	[EAGLContext setCurrentContext:m_oglContext];
 	[m_oglView initialize:m_oglContext scaleFactor:mScaleFactor];
@@ -478,8 +547,9 @@ static int statusLoadMsgUpdated=0;
     vpad_button_spe_texture[2]=[self loadTexture:[UIImage imageNamed:@"button-menu.png"]];
     vpad_button_spe_texture[3]=[self loadTexture:[UIImage imageNamed:@"button-turbo.png"]];
     vpad_button_spe_texture[4]=[self loadTexture:[UIImage imageNamed:@"button-service.png"]];
-    
+        
     vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
+    vpad_button_nb_save=vpad_button_nb;
     
     vpad_animated_dpad[0]=[self loadTexture:[UIImage imageNamed:@"DPad_NotPressed.png"]];
     vpad_animated_dpad[1]=[self loadTexture:[UIImage imageNamed:@"DPad_R.png"]];
@@ -535,7 +605,12 @@ static int statusLoadMsgUpdated=0;
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
     
-    missedFrame=0;
+    UIInterfaceOrientation cur_or=[[UIApplication sharedApplication] statusBarOrientation];
+    if ((cur_or==UIInterfaceOrientationLandscapeLeft)||(cur_or==UIInterfaceOrientationLandscapeRight)) device_orientation=1;
+    else device_orientation=0;
+    
+    if (renderVPADonly&&(vpad_button_nb==VPAD_SPECIALS_BUTTON_NB)) vpad_button_nb=VSTICK_NB_BUTTON;
+    
     
     if (bt&&ifba_conf.btstack_on) {
         stopWiimoteDetection();
@@ -602,14 +677,11 @@ static int statusLoadMsgUpdated=0;
     int cur_width=m_oglView.frame.size.width;
     int cur_height=m_oglView.frame.size.height;
     
-    if (device_isIpad) {
-        virtual_stick=(cur_width>cur_height?virtual_stick_ipad_landscape:virtual_stick_ipad_portrait);
-        computeButtonLayout(64,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
-    } else {
-        virtual_stick=(cur_width>cur_height?virtual_stick_iphone_landscape:virtual_stick_iphone_portrait);
-        computeButtonLayout(48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
-    }
+    //TOUCHPAD Setup
+    computePadLayouts(vpad_button_nb-VPAD_SPECIALS_BUTTON_NB);
+    vpad_button_nb_save=vpad_button_nb;
     virtual_stick_pad=0;
+    //
     for (int j=0;j<MAX_JOYSTICKS;j++) {
         joy_analog_x[j]=0;joy_analog_y[j]=0;
         joy_state[j][GN_UP]=0;
@@ -627,88 +699,94 @@ static int statusLoadMsgUpdated=0;
     }
     
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(loopCheck)];
-    m_displayLink.frameInterval = 2; //60fps
+    m_displayLink.frameInterval = 2; //30fps
 	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
 }
 
 - (void)viewDidAppear:(BOOL)animated {    
     [super viewDidAppear:animated];
-    mNewGLFrame=0;
-    //If resuming
-    if (nShouldExit==2) {
-        //launch new game ?
-        if (launchGame==1) {//yes, exit current one
-            nShouldExit=1;
-            while (emuThread_running) {
-                [NSThread sleepForTimeInterval:0.01]; //10ms        
+    if (renderVPADonly) {
+        nShouldExit=3;
+    } else {
+        //If resuming
+        if (nShouldExit==2) {
+            //launch new game ?
+            if (launchGame==1) {//yes, exit current one
+                nShouldExit=1;
+                while (emuThread_running) {
+                    [NSThread sleepForTimeInterval:0.01]; //10ms        
+                }
+                [NSThread sleepForTimeInterval:0.1]; //100ms        
+            } else {//no, only resume
+                nShouldExit=0;
             }
-            [NSThread sleepForTimeInterval:0.1]; //100ms        
-        } else {//no, only resume
-            nShouldExit=0;
         }
-    }
-    //If required launch game / emuthread
-    if (launchGame==1) {    
-        nShouldExit=0;    
-        pb_value=0;
-        pb_total=0;
-        pb_msg[0]=0;
-        vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
-        [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
+        //If required launch game / emuthread
+        if (launchGame==1) {    
+            nShouldExit=0;    
+            pb_value=0;
+            pb_total=0;
+            pb_msg[0]=0;
+            vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
+            vpad_button_nb_save=vpad_button_nb;
+            computePadLayouts(vpad_button_nb-VPAD_SPECIALS_BUTTON_NB);
+            
+            [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
+            launchGame=0;
+            prgview=[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+            prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
+            prgview.progress=0;
+            [self.view addSubview:prgview];
+            [prgview release];
+            
+            statusview=[[UIView alloc] init];
+            statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-110,m_oglView.frame.size.width-20,80);        
+            [[statusview layer] setCornerRadius:15.0];	
+            [[statusview layer] setBorderWidth:3.0];
+            [[statusview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
+            statusview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
+            
+            statusDownview=[[UIView alloc] init];
+            statusDownview.frame=CGRectMake(10,m_oglView.frame.size.height/2+40,m_oglView.frame.size.width-20,80);        
+            [[statusDownview layer] setCornerRadius:15.0];	
+            [[statusDownview layer] setBorderWidth:3.0];
+            [[statusDownview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
+            statusDownview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
+            
+            statusMsgview=[[UILabel alloc] init];
+            statusMsgview.frame=CGRectMake(10,5,statusview.frame.size.width-20,statusview.frame.size.height-10);
+            statusMsgview.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+            statusMsgview.text=@"";
+            statusMsgview.textColor=[UIColor whiteColor];
+            statusMsgview.backgroundColor=[UIColor clearColor];
+            statusMsgview.lineBreakMode=UILineBreakModeWordWrap;
+            statusMsgview.numberOfLines=3;
+            statusMsgview.font=[UIFont boldSystemFontOfSize:16];
+            statusMsgview.textAlignment=UITextAlignmentCenter;
+            [statusview addSubview:statusMsgview];
+            [self.view addSubview:statusview];
+            [statusMsgview release];
+            [statusview release];
+            
+            statusLoadMsgview=[[UILabel alloc] init];
+            statusLoadMsgview.frame=CGRectMake(10,5,statusview.frame.size.width-20,statusview.frame.size.height-10);
+            statusLoadMsgview.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+            statusLoadMsgview.text=@"";
+            statusLoadMsgview.textColor=[UIColor whiteColor];
+            statusLoadMsgview.backgroundColor=[UIColor clearColor];
+            statusLoadMsgview.lineBreakMode=UILineBreakModeWordWrap;
+            statusLoadMsgview.numberOfLines=10;
+            statusLoadMsgview.font=[UIFont boldSystemFontOfSize:10];
+            statusLoadMsgview.textAlignment=UITextAlignmentCenter;
+            [statusDownview addSubview:statusLoadMsgview];
+            [self.view addSubview:statusDownview];
+            [statusLoadMsgview release];
+            [statusDownview release];
+            
+            
+        }
         launchGame=0;
-        prgview=[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
-        prgview.progress=0;
-        [self.view addSubview:prgview];
-        [prgview release];
-        
-        statusview=[[UIView alloc] init];
-        statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-110,m_oglView.frame.size.width-20,80);        
-        [[statusview layer] setCornerRadius:15.0];	
-        [[statusview layer] setBorderWidth:3.0];
-        [[statusview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
-        statusview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
-        
-        statusDownview=[[UIView alloc] init];
-        statusDownview.frame=CGRectMake(10,m_oglView.frame.size.height/2+40,m_oglView.frame.size.width-20,80);        
-        [[statusDownview layer] setCornerRadius:15.0];	
-        [[statusDownview layer] setBorderWidth:3.0];
-        [[statusDownview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
-        statusDownview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
-        
-        statusMsgview=[[UILabel alloc] init];
-        statusMsgview.frame=CGRectMake(10,5,statusview.frame.size.width-20,statusview.frame.size.height-10);
-        statusMsgview.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        statusMsgview.text=@"";
-        statusMsgview.textColor=[UIColor whiteColor];
-        statusMsgview.backgroundColor=[UIColor clearColor];
-        statusMsgview.lineBreakMode=UILineBreakModeWordWrap;
-        statusMsgview.numberOfLines=3;
-        statusMsgview.font=[UIFont boldSystemFontOfSize:16];
-        statusMsgview.textAlignment=UITextAlignmentCenter;
-        [statusview addSubview:statusMsgview];
-        [self.view addSubview:statusview];
-        [statusMsgview release];
-        [statusview release];
-        
-        statusLoadMsgview=[[UILabel alloc] init];
-        statusLoadMsgview.frame=CGRectMake(10,5,statusview.frame.size.width-20,statusview.frame.size.height-10);
-        statusLoadMsgview.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        statusLoadMsgview.text=@"";
-        statusLoadMsgview.textColor=[UIColor whiteColor];
-        statusLoadMsgview.backgroundColor=[UIColor clearColor];
-        statusLoadMsgview.lineBreakMode=UILineBreakModeWordWrap;
-        statusLoadMsgview.numberOfLines=10;
-        statusLoadMsgview.font=[UIFont boldSystemFontOfSize:10];
-        statusLoadMsgview.textAlignment=UITextAlignmentCenter;
-        [statusDownview addSubview:statusLoadMsgview];
-        [self.view addSubview:statusDownview];
-        [statusLoadMsgview release];
-        [statusDownview release];
-        
-        
     }
-    launchGame=0;
     //update ogl framebuffer
     [m_oglView didRotateFromInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
     
@@ -717,6 +795,9 @@ static int statusLoadMsgUpdated=0;
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];    
     if (m_displayLink) [m_displayLink invalidate];
+    
+    //reset rendering mode
+    renderVPADonly=0;
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     
@@ -759,10 +840,11 @@ static int statusLoadMsgUpdated=0;
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     if ((interfaceOrientation==UIInterfaceOrientationPortrait)||(interfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
         m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);
+        device_orientation=0;
         
     } else {
         m_oglView.frame=CGRectMake(0,0,mDevice_hh,mDevice_ww);
-        
+        device_orientation=1;
     }
     if (prgview) prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
     if (statusview) statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-30,m_oglView.frame.size.width-20,30);
@@ -1169,8 +1251,7 @@ void stopWiimoteDetection(void) {
 int vstick_update_status(int rx,int ry) {
     float angle;
     //compute distance    
-    //    printf("%d %d / %d %d\n",rx,ry,virtual_stick_posx,virtual_stick_posy);
-    float dist=(rx-virtual_stick_posx)*(rx-virtual_stick_posx)+(ry-virtual_stick_posy)*(ry-virtual_stick_posy);
+    float dist=(rx-cur_ifba_conf->vpad_pad_x[device_orientation])*(rx-cur_ifba_conf->vpad_pad_x[device_orientation])+(ry-cur_ifba_conf->vpad_pad_y[device_orientation])*(ry-cur_ifba_conf->vpad_pad_y[device_orientation]);
     
     
     //virtual_stick_pad=0; //Reset pad state
@@ -1179,8 +1260,8 @@ int vstick_update_status(int rx,int ry) {
         virtual_stick_pad=0; //Reset pad state
         //compute angle
         //        float rdist=sqrtf(dist);
-        float dx=rx-virtual_stick_posx;
-        float dy=-ry+virtual_stick_posy;
+        float dx=rx-cur_ifba_conf->vpad_pad_x[device_orientation];
+        float dy=-ry+cur_ifba_conf->vpad_pad_y[device_orientation];
         if (dx!=0) {
             
             angle=atanf(dy/dx);
@@ -1222,17 +1303,21 @@ int vstick_update_status(int rx,int ry) {
         //    printf("angle: %f pad:%02X\n",angle*180/M_PI,virtual_stick_pad);
     } else if (dist<virtual_stick_mindist2) {//deadzone
         virtual_stick_pad=0; //Reset pad state
-        return -1;
+        if (renderVPADonly) return 1;
+        else return -1;
     } else if (dist>virtual_stick_maxdist2) return 0;
     
+    if (renderVPADonly) {
+        virtual_stick_pad=0;
+        return 1;
+    }
     return virtual_stick_pad;
 }
 
 
-void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
+void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,float ly) {
     //printf("touch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
     int ret;
-    int xx,yy;
     switch (evt_type) {
         case 1: //Pressed            
             virtual_stick_on=1;
@@ -1250,17 +1335,11 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
                 virtual_stick_padfinger=touch_id;
             } else { //check if finger is on a button                
                 for (int i=0;i<vpad_button_nb;i++) {
-                    if (i>=VPAD_SPECIALS_BUTTON_NB) {
-                        xx=x-cur_ifba_conf->vpad_button_x;
-                        yy=y+cur_ifba_conf->vpad_button_y;
-                    } else {
-                        xx=x;yy=y;
-                    }
-                    if ((xx>virtual_stick[i].x)&&(xx<virtual_stick[i].x+virtual_stick[i].w)&&
-                        (yy>virtual_stick[i].y)&&(yy<virtual_stick[i].y+virtual_stick[i].h)){
+                    if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
+                        (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)){
                         joy_state[0][virtual_stick[i].button_id]=1;
                         virtual_stick[i].finger_id=touch_id;
-                        break;
+                        //break;  //no break, allow 2 or more buttons with 1 finger
                     }
                 }       
             }
@@ -1268,21 +1347,51 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
             break;
         case 2: //Moved
             virtual_stick_on=1;
-            if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
-                if ((ret=vstick_update_status(x,y))<=0) {
-                    if (ret<0) {
-                        virtual_stick_padfinger=0;
-                        joy_analog_x[0]=0;joy_analog_y[0]=0;
-                        joy_state[0][GN_UP]=0;
-                        joy_state[0][GN_DOWN]=0;
-                        joy_state[0][GN_LEFT]=0;
-                        joy_state[0][GN_RIGHT]=0;
-                        joy_state[0][GN_UPRIGHT]=0;
-                        joy_state[0][GN_DOWNRIGHT]=0;
-                        joy_state[0][GN_UPLEFT]=0;
-                        joy_state[0][GN_DOWNLEFT]=0;
-                    }
+                        
+            if (renderVPADonly) {
+                if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
+                    cur_ifba_conf->vpad_pad_x[device_orientation]+=x-lx;
+                    cur_ifba_conf->vpad_pad_y[device_orientation]+=y-ly;
+                    cur_ifba_conf->vpad_pad_manual_layout[device_orientation]=1;
                 } else {
+                for (int i=VPAD_SPECIALS_BUTTON_NB;i<vpad_button_nb;i++) {
+                    if (virtual_stick[i].finger_id==touch_id) {
+                        //move button
+                        cur_ifba_conf->vpad_button_manual_layout[i][device_orientation]=1;
+                        cur_ifba_conf->vpad_button_x[i][device_orientation]+=x-lx;
+                        cur_ifba_conf->vpad_button_y[i][device_orientation]+=y-ly;
+                        break;
+                    }
+                }
+                }
+            } else {
+                
+                if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
+                    if ((ret=vstick_update_status(x,y))<=0) {
+                        if (ret<0) {
+                            virtual_stick_padfinger=0;
+                            joy_analog_x[0]=0;joy_analog_y[0]=0;
+                            joy_state[0][GN_UP]=0;
+                            joy_state[0][GN_DOWN]=0;
+                            joy_state[0][GN_LEFT]=0;
+                            joy_state[0][GN_RIGHT]=0;
+                            joy_state[0][GN_UPRIGHT]=0;
+                            joy_state[0][GN_DOWNRIGHT]=0;
+                            joy_state[0][GN_UPLEFT]=0;
+                            joy_state[0][GN_DOWNLEFT]=0;
+                        }
+                    } else {
+                        joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
+                        joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
+                        joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
+                        joy_state[0][GN_RIGHT]=(virtual_stick_pad==GN_RIGHT?1:0);
+                        joy_state[0][GN_UPRIGHT]=(virtual_stick_pad==GN_UPRIGHT?1:0);
+                        joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
+                        joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
+                        joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
+                    }
+                } else if (virtual_stick_padfinger==0) {
+                    if (vstick_update_status(x,y)) virtual_stick_padfinger=touch_id;
                     joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
                     joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
                     joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
@@ -1292,49 +1401,32 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
                     joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
                     joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
                 }
-            } else if (virtual_stick_padfinger==0) {
-                if (vstick_update_status(x,y)) virtual_stick_padfinger=touch_id;
-                joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
-                joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
-                joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
-                joy_state[0][GN_RIGHT]=(virtual_stick_pad==GN_RIGHT?1:0);
-                joy_state[0][GN_UPRIGHT]=(virtual_stick_pad==GN_UPRIGHT?1:0);
-                joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
-                joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
-                joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
-            }
-            
-            for (int i=0;i<vpad_button_nb;i++) {                    
-                if (i>=VPAD_SPECIALS_BUTTON_NB) {
-                    xx=x-cur_ifba_conf->vpad_button_x;
-                    yy=y+cur_ifba_conf->vpad_button_y;
-                } else {
-                    xx=x;yy=y;
-                }
-                //is there a button already pressed with this finger ?
-                if (virtual_stick[i].finger_id==touch_id) {
-                    //a button was pressed and finger moved
-                    //check if finger is still in button area
-                    
-                    if ((xx>virtual_stick[i].x)&&(xx<virtual_stick[i].x+virtual_stick[i].w)&&
-                        (yy>virtual_stick[i].y)&&(yy<virtual_stick[i].y+virtual_stick[i].h)){
-                        break;
+                
+                for (int i=0;i<vpad_button_nb;i++) {                    
+                    //is there a button already pressed with this finger ?
+                    if (virtual_stick[i].finger_id==touch_id) {
+                        //a button was pressed and finger moved
+                        //check if finger is still in button area
+                        
+                        if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
+                            (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)){
+                            //break;  //no break, allow 2 or more buttons with 1 finger
+                        } else {
+                            //button not pressed anymore
+                            //do not break to check if finger moved to a new button
+                            virtual_stick[i].finger_id=0;
+                            joy_state[0][virtual_stick[i].button_id]=0;                            
+                        }
                     } else {
-                        //button not pressed anymore
-                        //do not break to check if finger moved to a new button
-                        virtual_stick[i].finger_id=0;
-                        joy_state[0][virtual_stick[i].button_id]=0;                            
-                    }
-                } else {
-                    //did the finger move to a new button area ?
-                    if ((xx>virtual_stick[i].x)&&(xx<virtual_stick[i].x+virtual_stick[i].w)&&
-                        (yy>virtual_stick[i].y)&&(yy<virtual_stick[i].y+virtual_stick[i].h)){
-                        joy_state[0][virtual_stick[i].button_id]=1;
-                        virtual_stick[i].finger_id=touch_id;
+                        //did the finger move to a new button area ?
+                        if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
+                            (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)){
+                            joy_state[0][virtual_stick[i].button_id]=1;
+                            virtual_stick[i].finger_id=touch_id;
+                        }
                     }
                 }
             }
-            
             break;
         case 0: //Release
             virtual_stick_on=1;
@@ -1357,7 +1449,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y) {
                 if (virtual_stick[i].finger_id==touch_id) {
                     virtual_stick[i].finger_id=0;
                     joy_state[0][virtual_stick[i].button_id]=0;
-                    break;
+                    //break;  //no break, allow 2 or more buttons with 1 finger
                 }
             break;
     }
@@ -1390,7 +1482,6 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
         dst+=TEXTURE_W;
         src+=pitch;
     }
-    mNewGLFrame=1;
     [(id) context doFrame];
 }
 
@@ -1398,14 +1489,6 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
 - (void)drawVPad {
     int cur_width=m_oglView.frame.size.width;
     int cur_height=m_oglView.frame.size.height;
-    
-    if (device_isIpad) {
-        virtual_stick=(cur_width>cur_height?virtual_stick_ipad_landscape:virtual_stick_ipad_portrait);        
-        computeButtonLayout(cur_ifba_conf->vpad_btnsize*16+64,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
-    } else {
-        virtual_stick=(cur_width>cur_height?virtual_stick_iphone_landscape:virtual_stick_iphone_portrait);
-        computeButtonLayout(cur_ifba_conf->vpad_btnsize*16+48,vpad_button_nb-VPAD_SPECIALS_BUTTON_NB,cur_width,cur_height);
-    }
     
     
     virtual_stick_buttons_alpha=64*cur_ifba_conf->vpad_alpha;
@@ -1417,34 +1500,14 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     else if (cur_ifba_conf->vpad_padsize==1) virtual_stick_maxdist=80;
     else if (cur_ifba_conf->vpad_padsize==2) virtual_stick_maxdist=96;
     
-    switch (cur_height) {
-        case 320:
-            virtual_stick_posx = virtual_stick_maxdist;
-            virtual_stick_posy = cur_height-virtual_stick_maxdist;
-            break;
-        case 480:
-            virtual_stick_posx = virtual_stick_maxdist;
-            virtual_stick_posy = cur_height-virtual_stick_maxdist-0;
-            break;    
-        case 768:
-            virtual_stick_posx = virtual_stick_maxdist+40;
-            virtual_stick_posy = cur_height-virtual_stick_maxdist-40;
-            break;
-        case 1024:
-            virtual_stick_posx = virtual_stick_maxdist;
-            virtual_stick_posy = cur_height-virtual_stick_maxdist-80;
-            break;
-        default:
-            virtual_stick_posx = virtual_stick_maxdist;
-            virtual_stick_posy = cur_height-virtual_stick_maxdist;
-            break;
-    }
-    
-    virtual_stick_posx+=cur_ifba_conf->vpad_pad_x;
-    virtual_stick_posy-=cur_ifba_conf->vpad_pad_y;
-    
+        
     virtual_stick_maxdist2=virtual_stick_maxdist*virtual_stick_maxdist;
     virtual_stick_mindist2=virtual_stick_mindist*virtual_stick_mindist;
+    
+    if (vpad_button_nb_save!=vpad_button_nb) {
+        computePadLayouts(vpad_button_nb-VPAD_SPECIALS_BUTTON_NB);
+        vpad_button_nb_save=vpad_button_nb;
+    }
     
     //update viewport to match real device screen
     
@@ -1457,25 +1520,22 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     texcoords[2][0]=0; texcoords[2][1]=1;
     texcoords[3][0]=1; texcoords[3][1]=1;
     
-    int button_ofsx=0;
-    int button_ofsy=0;
     for (int i=(cur_ifba_conf->vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {            
         
         if (i<=VPAD_SPECIALS_BUTTON_NB) {
-            if (i==VPAD_SPECIALS_BUTTON_NB) { glBindTexture(GL_TEXTURE_2D, vpad_button_texture);
-                button_ofsx=cur_ifba_conf->vpad_button_x;
-                button_ofsy=-cur_ifba_conf->vpad_button_y;
+            if (i==VPAD_SPECIALS_BUTTON_NB) { 
+                glBindTexture(GL_TEXTURE_2D, vpad_button_texture);
             }
-        else glBindTexture(GL_TEXTURE_2D, vpad_button_spe_texture[i]);
+            else glBindTexture(GL_TEXTURE_2D, vpad_button_spe_texture[i]);
         }
         
-        vertices[0][0]=(float)(button_ofsx+virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
-        vertices[0][1]=(float)(button_ofsy+virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
+        vertices[0][0]=(float)(cur_ifba_conf->vpad_button_x[i][device_orientation]+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
+        vertices[0][1]=(float)(cur_ifba_conf->vpad_button_y[i][device_orientation]+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
         
         vertices[1][0]=vertices[0][0]+(float)(virtual_stick[i].sw)/cur_width;
-        vertices[1][1]=(float)(button_ofsy+virtual_stick[i].y+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
+        vertices[1][1]=(float)(cur_ifba_conf->vpad_button_y[i][device_orientation]+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
         
-        vertices[2][0]=(float)(button_ofsx+virtual_stick[i].x+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
+        vertices[2][0]=(float)(cur_ifba_conf->vpad_button_x[i][device_orientation]+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
         vertices[2][1]=vertices[0][1]+(float)(virtual_stick[i].sh)/cur_height;
         
         vertices[3][0]=vertices[0][0]+(float)(virtual_stick[i].sw)/cur_width;
@@ -1500,14 +1560,14 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     switch (cur_ifba_conf->vpad_style) {
         case 0: //animated pad
             glBindTexture(GL_TEXTURE_2D, vpad_animated_dpad[virtual_stick_pad]);    /* Bind The Texture */
-            vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
-            vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
+            vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
+            vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
             
             vertices[0][0]=vertices[0][0]*2-1;
             vertices[1][0]=vertices[1][0]*2-1;
@@ -1522,14 +1582,14 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
             break;
         case 1: //animated stick
             glBindTexture(GL_TEXTURE_2D, vpad_animated_stick[1]);    /* Bind The Texture */
-            vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
-            vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
+            vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
+            vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
             
             vertices[0][0]=vertices[0][0]*2-1;
             vertices[1][0]=vertices[1][0]*2-1;
@@ -1574,14 +1634,14 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
             
             
             glBindTexture(GL_TEXTURE_2D, vpad_animated_stick[0]);    /* Bind The Texture */
-            vertices[0][0]=(float)(virtual_stick_posx_ofs+virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[0][1]=(float)(virtual_stick_posy_ofs+virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[1][0]=(float)(virtual_stick_posx_ofs+virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
-            vertices[1][1]=(float)(virtual_stick_posy_ofs+virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[2][0]=(float)(virtual_stick_posx_ofs+virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[2][1]=(float)(virtual_stick_posy_ofs+virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[3][0]=(float)(virtual_stick_posx_ofs+virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[3][1]=(float)(virtual_stick_posy_ofs+virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
+            vertices[0][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[0][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[1][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
+            vertices[1][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[2][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[2][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[3][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[3][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
             
             vertices[0][0]=vertices[0][0]*2-1;
             vertices[1][0]=vertices[1][0]*2-1;
@@ -1593,18 +1653,18 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
             vertices[3][1]=-vertices[3][1]*2+1;
             glColor4ub(250,245,255,virtual_stick_buttons_alpha);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
+            
             break;
         case 2: //not animated
             glBindTexture(GL_TEXTURE_2D, vpad_dpad_texture);    /* Bind The Texture */
-            vertices[0][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[0][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[1][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;;
-            vertices[1][1]=(float)(virtual_stick_posy+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[2][0]=(float)(virtual_stick_posx-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[2][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[3][0]=(float)(virtual_stick_posx+virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[3][1]=(float)(virtual_stick_posy-virtual_stick_maxdist*0.9f)/cur_height;
+            vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
+            vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;            
+            vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
+            vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
             
             vertices[0][0]=vertices[0][0]*2-1;
             vertices[1][0]=vertices[1][0]*2-1;
@@ -1626,14 +1686,14 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     
     if (cur_ifba_conf->vpad_style==2) { //highlight direction
         for (int i=0;i<4;i++) {
-            vertices[0][0]=(float)(virtual_stick_posx+0.9f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
-            vertices[0][1]=(float)(virtual_stick_posy-0.9f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
+            vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+0.9f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
+            vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-0.9f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
             
-            vertices[1][0]=(float)(virtual_stick_posx+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2+M_PI/8))/cur_width;
-            vertices[1][1]=(float)(virtual_stick_posy-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2+M_PI/8))/cur_height;
+            vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2+M_PI/8))/cur_width;
+            vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2+M_PI/8))/cur_height;
             
-            vertices[2][0]=(float)(virtual_stick_posx+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2-M_PI/8))/cur_width;
-            vertices[2][1]=(float)(virtual_stick_posy-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2-M_PI/8))/cur_height;
+            vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+0.6f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2-M_PI/8))/cur_width;
+            vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-0.6f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2-M_PI/8))/cur_height;
             
             vertices[0][0]=vertices[0][0]*2-1;
             vertices[1][0]=vertices[1][0]*2-1;
@@ -1701,7 +1761,10 @@ int StopProgressBar() {
 
 -(void) loopCheck {
     static int msgCounter=0;
-    if (nShouldExit) {
+    
+    if (renderVPADonly) [self doFrameVPAD];
+    
+    if (nShouldExit==2) {
         self.navigationController.navigationBar.hidden=NO;        
         [[self navigationController] popViewControllerAnimated:NO];
     }
@@ -1744,7 +1807,6 @@ int StopProgressBar() {
     
 }
 
-volatile int doFrame_inProgress=0;
 - (void)doFrame {
     
     int width,height,rw,rh;
@@ -1753,10 +1815,6 @@ volatile int doFrame_inProgress=0;
     if (doFrame_inProgress) return;
     doFrame_inProgress=1;
     
-    //New frame to draw?
-    if (!mNewGLFrame) {
-        return;
-    }
     //get ogl context & bind
     
     [EAGLContext setCurrentContext:m_oglContext];
@@ -1766,9 +1824,6 @@ volatile int doFrame_inProgress=0;
     width=m_oglView.frame.size.width;
     height=m_oglView.frame.size.height;
     
-    /*********************/
-    /*Handle input*/
-    /*********************/
     /**********************************/
     /* Redraw */
     /**********************************/
@@ -1906,5 +1961,57 @@ volatile int doFrame_inProgress=0;
     
     doFrame_inProgress=0;
 }
+
+- (void)doFrameVPAD {
+    
+    int width,height;
+    
+    if (emuThread_running) {
+        [self doFrame];
+        return;
+    }
+    
+    
+    if (doFrame_inProgress) return;
+    doFrame_inProgress=1;
+    
+    //get ogl context & bind
+    
+    [EAGLContext setCurrentContext:m_oglContext];
+	[m_oglView bind];
+    
+    
+    width=m_oglView.frame.size.width;
+    height=m_oglView.frame.size.height;
+    
+    /**********************************/
+    /* Redraw */
+    /**********************************/
+    
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST) );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST));
+    
+    
+    /* Begin Drawing Quads, setup vertex and texcoord array pointers */
+    glVertexPointer(2, GL_FLOAT, 0, vertices);
+    glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+    
+    /* Enable Vertex Pointer */
+    glEnableClientState(GL_VERTEX_ARRAY);
+    /* Enable Texture Coordinations Pointer */
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    
+    glColor4ub(255,255,255,255);
+    
+    [self drawVPad];
+    [m_oglContext presentRenderbuffer:GL_RENDERBUFFER_OES];
+    
+    doFrame_inProgress=0;
+}
+
 
 @end

@@ -144,7 +144,7 @@ static CADisplayLink* m_displayLink;
     // Return the number of rows in the section.
     if (section==0) return 1;
     if (section==1) return 4;
-    if (section==2) return 1 + [bt numberOfDevicesFound];
+    if (section==2) return 1;// + [bt numberOfDevicesFound];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

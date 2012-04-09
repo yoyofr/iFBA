@@ -14,6 +14,7 @@
 
 #import "OptVPadViewController.h"
 #import "MNEValueTrackingSlider.h"
+#import "EmuViewController.h"
 
 #import "fbaconf.h"
 
@@ -27,9 +28,12 @@ static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
+extern EmuViewController *emuvc;
+
 extern int optionScope;
 #define OPTION(a) (optionScope?ifba_game_conf.a:ifba_conf.a)
 
+extern volatile int renderVPADonly;
 
 extern volatile int emuThread_running;
 extern int launchGame;
@@ -122,7 +126,7 @@ extern char gameName[64];
     switch (section) {
         case 0:return 2;
         case 1:return 2;
-        case 2:return 5;
+        case 2:return 2;
         case 3:return 1;
     }
     return 0;
@@ -172,18 +176,6 @@ extern char gameName[64];
     if (OPTION(vpad_style)!=[sender selectedSegmentIndex]) refresh=1;
     OPTION(vpad_style)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
-}
-- (void)sldActionPadX:(id)sender {
-    OPTION(vpad_pad_x)=((UISlider *)sender).value;
-}
-- (void)sldActionPadY:(id)sender {
-    OPTION(vpad_pad_y)=((UISlider *)sender).value;
-}
-- (void)sldActionButtonX:(id)sender {
-    OPTION(vpad_button_x)=((UISlider *)sender).value;
-}
-- (void)sldActionButtonY:(id)sender {
-    OPTION(vpad_button_y)=((UISlider *)sender).value;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
@@ -258,59 +250,12 @@ extern char gameName[64];
             break;
         case 2://position
             switch (indexPath.row) {
-                case 0://Pad X
-                    cell.textLabel.text=NSLocalizedString(@"Pad X",@"");
-                    cell.textLabel.textAlignment=UITextAlignmentLeft;
-                    sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
-                    sliderview.integerMode=1;
-                    [sliderview setMaximumValue:MAX_PAD_OFS_X];
-                    [sliderview setMinimumValue:-MAX_PAD_OFS_X];
-                    [sliderview setContinuous:true];
-                    sliderview.value=OPTION(vpad_pad_x);                    
-                    [sliderview addTarget:self action:@selector(sldActionPadX:) forControlEvents:UIControlEventValueChanged];
-                    cell.accessoryView = sliderview;
-                    [sliderview release];
+                case 0://dynamic setup
+                    cell.textLabel.text=NSLocalizedString(@"Change layout",@"");
+                    cell.textLabel.textAlignment=UITextAlignmentCenter;
+                    cell.accessoryView = nil;
                     break;
-                case 1://Pad Y
-                    cell.textLabel.text=NSLocalizedString(@"Pad Y",@"");
-                    cell.textLabel.textAlignment=UITextAlignmentLeft;
-                    sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
-                    sliderview.integerMode=1;
-                    [sliderview setMaximumValue:MAX_PAD_OFS_Y];
-                    [sliderview setMinimumValue:-MAX_PAD_OFS_Y];
-                    [sliderview setContinuous:true];
-                    sliderview.value=OPTION(vpad_pad_y);                    
-                    [sliderview addTarget:self action:@selector(sldActionPadY:) forControlEvents:UIControlEventValueChanged];
-                    cell.accessoryView = sliderview;
-                    [sliderview release];
-                    break;
-                case 2://Button X
-                    cell.textLabel.text=NSLocalizedString(@"Buttons X",@"");
-                    cell.textLabel.textAlignment=UITextAlignmentLeft;
-                    sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
-                    sliderview.integerMode=1;
-                    [sliderview setMaximumValue:MAX_BUTTON_OFS_X];
-                    [sliderview setMinimumValue:-MAX_BUTTON_OFS_X];
-                    [sliderview setContinuous:true];
-                    sliderview.value=OPTION(vpad_button_x);                    
-                    [sliderview addTarget:self action:@selector(sldActionButtonX:) forControlEvents:UIControlEventValueChanged];
-                    cell.accessoryView = sliderview;
-                    [sliderview release];
-                    break;
-                case 3://Button Y
-                    cell.textLabel.text=NSLocalizedString(@"Buttons Y",@"");
-                    cell.textLabel.textAlignment=UITextAlignmentLeft;
-                    sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
-                    sliderview.integerMode=1;
-                    [sliderview setMaximumValue:MAX_BUTTON_OFS_Y];
-                    [sliderview setMinimumValue:-MAX_BUTTON_OFS_Y];
-                    [sliderview setContinuous:true];
-                    sliderview.value=OPTION(vpad_button_y);                    
-                    [sliderview addTarget:self action:@selector(sldActionButtonY:) forControlEvents:UIControlEventValueChanged];
-                    cell.accessoryView = sliderview;
-                    [sliderview release];
-                    break;
-                case 4://Default
+                case 1://Default
                     cell.textLabel.text=NSLocalizedString(@"Reset to default",@"");
                     cell.textLabel.textAlignment=UITextAlignmentCenter;
                     cell.accessoryView=nil;
@@ -337,11 +282,12 @@ extern char gameName[64];
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==2) {//Position
-        if (indexPath.row==4) {//Reset x,y ofs to default
-            OPTION(vpad_button_x)=0;
-            OPTION(vpad_button_y)=0;
-            OPTION(vpad_pad_x)=0;
-            OPTION(vpad_pad_y)=0;
+        if (indexPath.row==0) {//change layout
+            renderVPADonly=1;
+            //EmuViewController *vc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];                    
+            [self.navigationController pushViewController:emuvc animated:NO];
+//            [vc release];
+        } else if (indexPath.row==1) {//Reset x,y ofs to default
             [tableView reloadData];
         }
     }

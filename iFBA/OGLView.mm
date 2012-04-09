@@ -68,7 +68,7 @@ extern volatile int doFrame_inProgress;
 }
 
 
-void ios_fingerEvent(long touch_id, int evt_type, float x, float y);
+void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,float ly);
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     NSEnumerator *enumerator = [touches objectEnumerator];
@@ -81,7 +81,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y);
         //FIXME: TODO: Using touch as the fingerId is potentially dangerous
         //It is also much more efficient than storing the UITouch pointer
         //and comparing it to the incoming event.
-        ios_fingerEvent((long)touch, 1, point.x, point.y);
+        ios_fingerEvent((long)touch, 1, point.x, point.y,0,0);
         
         touch = (UITouch*)[enumerator nextObject];
     }
@@ -98,7 +98,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y);
         //FIXME: TODO: Using touch as the fingerId is potentially dangerous
         //It is also much more efficient than storing the UITouch pointer
         //and comparing it to the incoming event.
-        ios_fingerEvent((long)touch, 0, point.x, point.y);
+        ios_fingerEvent((long)touch, 0, point.x, point.y,0,0);
         
         touch = (UITouch*)[enumerator nextObject];
     }
@@ -111,11 +111,12 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y);
     while(touch) {
         //CGPoint locationInView = [self touchLocation:touch];
         CGPoint point = [touch locationInView: touch.view];
+        CGPoint prev_point = [touch previousLocationInView: touch.view];
         
         //FIXME: TODO: Using touch as the fingerId is potentially dangerous
         //It is also much more efficient than storing the UITouch pointer
         //and comparing it to the incoming event.
-        ios_fingerEvent((long)touch, 2, point.x, point.y);
+        ios_fingerEvent((long)touch, 2, point.x, point.y,prev_point.x,prev_point.y);
         
         touch = (UITouch*)[enumerator nextObject];
     }

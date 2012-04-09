@@ -105,6 +105,9 @@
 "iCade Language"="Sélectionner la langue définie dans le système pour le clavier";
 "System keyboard: "="Langage clavier: ";
 
+//Vpad options
+"Change layout"="Changer disposition";
+
 //Audio options
 "Sound Output"="Audio";
 "Sound Output on"="Audio activé. Changement pris en compte au prochain lancement d'un jeu";
