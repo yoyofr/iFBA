@@ -229,6 +229,34 @@ extern int optionScope;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
+- (void)tableView:(UITableView *)tableView changeValueAtIndexPath:(NSIndexPath *)indexPath direction:(int)direction{
+    switch (indexPath.section) {        
+        case 0://Sound output
+            if (direction>0) {                
+                OPTION(sound_on)=1;
+            } else {
+                OPTION(sound_on)=0;
+            }
+            break;
+        case 1://Sound Frequency
+                if (direction>0) {                
+                    if (OPTION(sound_freq)<1) OPTION(sound_freq)++;
+                } else {
+                    if (OPTION(sound_freq)>0) OPTION(sound_freq)--;
+                }                
+            break;
+        case 2://Sound Latency
+            if (direction>0) {                
+                if (OPTION(sound_latency)<2) OPTION(sound_latency)++;
+            } else {
+                if (OPTION(sound_latency)>0) OPTION(sound_latency)--;
+            }
+            break;
+            
+    }
+    [tableView reloadData];
+}
+
 
 
 -(IBAction) backToEmu {
@@ -304,6 +332,12 @@ extern int optionScope;
                     ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
                 }
             }
+        } else if (button&iCadeJoystickLeft) { //change value
+            [self tableView:tabView changeValueAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] direction:-1];
+            
+        } else if (button&iCadeJoystickRight) { //change value
+            [self tableView:tabView changeValueAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] direction:1];
+            
         } else if (button&iCadeButtonA) { //validate            
             [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
             

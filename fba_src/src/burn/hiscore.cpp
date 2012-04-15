@@ -426,7 +426,7 @@ void HiscoreInit()
 #ifdef RELEASE_DEBUG
     sprintf(szFilename, "%s/%s.hi", debug_root_path,BurnDrvGetText(DRV_NAME));
 #else    
-    strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.hi",BurnDrvGetText(DRV_NAME));
+    sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.hi",BurnDrvGetText(DRV_NAME));
 #endif
     
 
@@ -570,7 +570,7 @@ void HiscoreExit()
 #ifdef RELEASE_DEBUG
     sprintf(szFilename, "%s/%s.hi", debug_root_path,BurnDrvGetText(DRV_NAME));
 #else    
-    strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.hi",BurnDrvGetText(DRV_NAME));
+    sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.hi",BurnDrvGetText(DRV_NAME));
 #endif
 
 

@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import <MediaPlayer/MediaPlayer.h>
 #import "MenuViewController.h"
 #import "EmuViewController.h"
 #import "GameBrowserViewController.h"
@@ -88,6 +89,11 @@ EmuViewController *emuvc;
     
     //
     game_has_options=0;
+    
+/*    MPVolumeView *volumeView = [ [MPVolumeView alloc] init] ;
+    [volumeView setShowsVolumeSlider:NO];
+    [volumeView sizeToFit];
+    [self.view addSubview:volumeView];*/
 }
 
 
@@ -135,6 +141,16 @@ EmuViewController *emuvc;
     if (launchGame==1) {
         game_has_options=0;
         memcpy(&ifba_game_conf,&ifba_conf,sizeof(ifba_game_conf_t));
+        
+        //update game stats
+        int playCount,fav;
+        char lastPlayed[11];
+        DBHelper::getGameStats(gameName, &playCount, &fav, lastPlayed);
+        playCount++;
+        time_t cur_time=time(NULL);
+        strftime(lastPlayed,sizeof(lastPlayed),"%Y/%m/%d",localtime((const time_t*)&cur_time));
+        DBHelper::setGameStats(gameName, playCount, fav, lastPlayed);
+//        NSLog(@"Stats: pc:%d, fav:%d, lp:%s",playCount,fav,lastPlayed);
     }
     
     //check if game settings should be changed

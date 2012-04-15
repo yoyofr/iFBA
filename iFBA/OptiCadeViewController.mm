@@ -98,11 +98,11 @@ static CADisplayLink* m_displayLink;
     return YES;
 }
 
-static int viewWA_patch=0;
+//static int viewWA_patch=0;
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (viewWA_patch) return;
-    viewWA_patch++;
+//    if (viewWA_patch) return;
+//    viewWA_patch++;
     [super viewWillAppear:animated];
     
     /* Wiimote check => rely on cadisplaylink*/
@@ -122,8 +122,8 @@ static int viewWA_patch=0;
     [tabView reloadData];
 }
 -(void)viewWillDisappear:(BOOL)animated {
-    if (!viewWA_patch) return;
-    viewWA_patch--;
+//    if (!viewWA_patch) return;
+//    viewWA_patch--;
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;

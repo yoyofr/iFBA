@@ -39,14 +39,15 @@ typedef struct {
     unsigned char sound_latency;
     
     //Controls
+    float vpad_analog_speed[MAX_JOYSTICKS][4];  //4 axis
     unsigned char vpad_alpha;
     unsigned char vpad_showSpecial;
     unsigned char vpad_btnsize;
     unsigned char vpad_padsize;
     unsigned char vpad_style;
-    int vpad_pad_x[2],vpad_pad_y[2];
+    float vpad_pad_x[2],vpad_pad_y[2];
     int vpad_pad_manual_layout[2];
-    int vpad_button_x[VSTICK_NB_BUTTON][2],vpad_button_y[VSTICK_NB_BUTTON][2];
+    float vpad_button_x[VSTICK_NB_BUTTON][2],vpad_button_y[VSTICK_NB_BUTTON][2];
     int vpad_button_manual_layout[VSTICK_NB_BUTTON][2];
     t_button_map joymap_iCade[VSTICK_NB_BUTTON];
     t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
@@ -86,14 +87,15 @@ typedef struct {
     unsigned char sound_latency;
     
     //Controls
+    float vpad_analog_speed[MAX_JOYSTICKS][4];  //4 axis
     unsigned char vpad_alpha;
     unsigned char vpad_showSpecial;
     unsigned char vpad_btnsize;
     unsigned char vpad_padsize;
     unsigned char vpad_style;
-    int vpad_pad_x[2],vpad_pad_y[2];
+    float vpad_pad_x[2],vpad_pad_y[2];
     int vpad_pad_manual_layout[2];
-    int vpad_button_x[VSTICK_NB_BUTTON][2],vpad_button_y[VSTICK_NB_BUTTON][2];
+    float vpad_button_x[VSTICK_NB_BUTTON][2],vpad_button_y[VSTICK_NB_BUTTON][2];
     int vpad_button_manual_layout[VSTICK_NB_BUTTON][2];
     t_button_map joymap_iCade[VSTICK_NB_BUTTON];
     t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];

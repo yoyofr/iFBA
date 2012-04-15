@@ -8,12 +8,14 @@
 
 #import "TDSemiModalViewController.h"
 
+extern UIScreen *cur_screen;
+
 @implementation TDSemiModalViewController
 @synthesize coverView;
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-	self.coverView = [[[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame] autorelease];
+	self.coverView = [[[UIView alloc] initWithFrame:cur_screen.applicationFrame] autorelease];
 	//self.coverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
 	coverView.backgroundColor = UIColor.blackColor;
 

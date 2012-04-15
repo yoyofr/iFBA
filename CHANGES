@@ -1,32 +1,28 @@
-iPhone: 480x480
-iPhone retina: 960x960
-iPad: 1024x1024
-iPad Retina: 2048x2048
-
 TODO
+- browser/fav & most played
+- game/stats
 - multiplayer
 - hiscore (hitotxt like) / google app ?
 - cheats
 - icon (border/bg)
 - pad restrictor: 2ways, 4ways, 8ways
 - check forgotten worlds main dump => garbage in bg gfx
-	+ rotary stick support ? (2axis?)
-	
+- analog stick mul factor: currently implemented as a hack in loadSettings functions
 
 v0.5 - xx/xx/2012
 -----------------
-- fixed an issue with filters in game browser
 - added mameu game icons
 - added mame history support
 - (re)added mem hack to help low mem device run large cps3 games
-- fixed a bug with iCade 'language' (keyboard layout) management
-- multiple bug fixes
-- update to latest FBA. Add support for Demon Front(v102) & Bee Storm(v120)
 - wiimote/icade/icp can be used in menu
+- update to latest FBA. PGM: support of Demon Front & Bee Storm
 - settings/game
-- random background image
+- customizable buttons layout for touchpad
+- vpad: 2 buttons pressed now possible (touch between 2 buttons, buttons need to be close enough)
+- fixed an issue with filters in game browser
+- fixed a bug with iCade 'language' (keyboard layout) management
 - fixed issue with iOS 4.3 and buttons mapping
-- vpad: 2 buttons pressed now possible (touch between 2 buttons)
+- multiple bug fixes
 
 v0.4.1 - 24/03/2012
 -------------------

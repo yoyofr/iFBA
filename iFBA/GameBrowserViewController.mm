@@ -113,6 +113,7 @@ NSMutableArray *filterEntries;
     sectionLbl=nil;
     sectionLblMin=nil;
     romlist=nil;
+    romlist_mst=nil;
     romlistLbl=nil;
     rompath=nil;
     romavail=nil;
@@ -163,6 +164,7 @@ NSMutableArray *filterEntries;
     listSectionCount=NULL;
     listNbSection=0;
     if (romlist) [romlist release];
+    if (romlist_mst) [romlist_mst release];
     if (romlistLbl) [romlistLbl release];
     if (rompath) [rompath release];
     if (romavail) [romavail release];
@@ -172,6 +174,7 @@ NSMutableArray *filterEntries;
     if (sectionLblMin) [sectionLblMin release];
     
     romlist=[[NSMutableArray alloc] initWithCapacity:0];
+    romlist_mst=[[NSMutableArray alloc] initWithCapacity:0];
     romlistLbl=[[NSMutableArray alloc] initWithCapacity:0];
     rompath=[[NSMutableArray alloc] initWithCapacity:0];
     romlistSystem=[[NSMutableArray alloc] initWithCapacity:0];
@@ -218,6 +221,7 @@ NSMutableArray *filterEntries;
             
             if (genre&(ifba_conf.filter_genre)) {
                 [romlist addObject:[burn_supportedRoms objectAtIndex:i]];
+                [romlist_mst addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_PARENT)] ];
                 [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
                 [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
                 //[romlistLbl addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
@@ -272,7 +276,8 @@ NSMutableArray *filterEntries;
                                 int tmpchar=BurnDrvGetTextA(DRV_FULLNAME)[0];
                                 if (tmpchar<'A') tmpchar='#';
                                 [romlist addObject:[file stringByDeletingPathExtension] ];
-                                [rompath addObject:cpath];                                                                
+                                [rompath addObject:cpath];
+                                [romlist_mst addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_PARENT)] ];
                                 [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
                                 [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
                                 
@@ -414,6 +419,8 @@ NSMutableArray *filterEntries;
     
     if (romlist) [romlist release];
     romlist=nil;
+    if (romlist_mst) [romlist_mst release];
+    romlist_mst=nil;
     if (romlistLbl) [romlistLbl release];
     romlistLbl=nil;
     if (rompath) [rompath release];
@@ -573,7 +580,13 @@ NSMutableArray *filterEntries;
         bottomLabel.textColor = [UIColor colorWithRed:0.05 green:0 blue:0.2 alpha:1.0];
     }
     UIImage *img=[UIImage imageNamed:[NSString stringWithFormat:@"%@.ico",[romlist objectAtIndex:index]]];
-    if (img==nil) {
+    iconview.alpha=1.0f;
+    if (img==nil) { //image not found, check alternatives
+        //1st, is there a master rom ?
+        img=[UIImage imageNamed:[NSString stringWithFormat:@"%@.ico",[romlist_mst objectAtIndex:index]]];
+        iconview.alpha=0.5f;
+        
+        //2nd, check if it is a console game
         if ([[romlist objectAtIndex:index] rangeOfString:@"md_"].location!=NSNotFound) {
             img=[UIImage imageNamed:@"md_icon.gif"];
         } else if ([[romlist objectAtIndex:index] rangeOfString:@"tg_"].location!=NSNotFound) {
@@ -603,6 +616,11 @@ NSMutableArray *filterEntries;
     
     cur_game_row=indexPath.row;
     cur_game_section=indexPath.section;
+    
+    int playCount,fav;
+    char lastPlayed[11];
+    DBHelper::getGameStats([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], &playCount, &fav, lastPlayed);
+//    NSLog(@"Stats for %@: %d %d %s",[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension],playCount,fav,lastPlayed);
     
     DBHelper::getGameInfo([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], gameInfo);
     if (gameInfo[0]) {

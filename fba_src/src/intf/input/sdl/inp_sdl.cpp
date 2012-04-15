@@ -16,6 +16,8 @@ extern float joy_analog_r[MAX_JOYSTICKS];
 extern void updateWiimotes(void);
 int pendingReset=0;
 
+extern ifba_game_conf_t *cur_ifba_conf;
+
 // Sets up one Joystick (for example the range of the joystick's axes)
 static int SDLinpJoystickInit(int i)
 {
@@ -122,23 +124,23 @@ int SDLinpJoyAxis(int i, int nAxis)
     
     switch (nAxis) {
         case 0:
-            val=joy_analog_x[i]*32768;
+            val=joy_analog_x[i]*32768*cur_ifba_conf->vpad_analog_speed[i][0];
             if (val<-32768) val=-32768;
             else if (val>32767) val=32767;
             return val;
             break;
         case 1:
-            val=joy_analog_y[i]*32768;
+            val=joy_analog_y[i]*32768*cur_ifba_conf->vpad_analog_speed[i][1];
             if (val<-32768) val=-32768;
             else if (val>32767) val=32767;
             return val;
             break;
         case 2: //also used by forgotten worlds
-            val=joy_analog_l[i]*32768*4;
+            val=joy_analog_l[i]*32768*cur_ifba_conf->vpad_analog_speed[i][2];
             return val;
             break;
         case 3:
-            val=joy_analog_r[i]*32768*4;
+            val=joy_analog_r[i]*32768*cur_ifba_conf->vpad_analog_speed[i][3];
             return val;
             break;
     }

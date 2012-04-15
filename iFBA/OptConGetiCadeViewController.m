@@ -19,6 +19,9 @@ extern int mOptICadeButtonSelected;
 @synthesize iCaderv;
 @synthesize mnview;
 
+static int viewWA_patch=0;
+
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -36,10 +39,7 @@ extern int mOptICadeButtonSelected;
     [[mnview layer] setCornerRadius:15.0];	
 	[[mnview layer] setBorderWidth:3.0];
 	[[mnview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
-}
-
--(void) viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+    
     iCadePress=0;
     iCadeAllPress=0;
     //ICADE
@@ -49,11 +49,26 @@ extern int mOptICadeButtonSelected;
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv release];
+}
+
+-(void) viewWillAppear:(BOOL)animated {
+    if (viewWA_patch) return;
+    viewWA_patch++;
+    [super viewWillAppear:animated];
+    
+    iCadePress=0;
+    iCadeAllPress=0;
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv becomeFirstResponder];
+    
     
 }
 -(void) viewWillDisappear:(BOOL)animated {
-    iCaderv.active=NO;
-    [iCaderv removeFromSuperview];
+    if (!viewWA_patch) return;
+    viewWA_patch--;  
+    iCaderv.active = NO;
+    [iCaderv resignFirstResponder];
 }
 
 - (void)viewDidUnload
@@ -61,6 +76,7 @@ extern int mOptICadeButtonSelected;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

@@ -99,7 +99,7 @@
 #pragma mark - Private methods
 
 - (void)setValue:(float)aValue sValue:(NSString *)sValue {
-    [valuePopupView setValue:aValue sValue:sValue];
+    [valuePopupView setValue:aValue sValue:sValue];    
 }
 
 
@@ -108,12 +108,12 @@
     valuePopupView.backgroundColor = [UIColor clearColor];
     valuePopupView.alpha = 0.0;
     integerMode=0;
-    [self addSubview:valuePopupView];
+    [self addSubview:valuePopupView];    
 }
 
 - (void)_fadePopupViewInAndOut:(BOOL)aFadeIn {
     [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationDuration:1.0];
     if (aFadeIn) {
         valuePopupView.alpha = 1.0;
     } else {

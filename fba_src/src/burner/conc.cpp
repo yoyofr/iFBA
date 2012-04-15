@@ -95,7 +95,7 @@ static INT32 ConfigParseFile(TCHAR* pszFilename)
 #ifdef RELEASE_DEBUG
             sprintf(szFilename, "%s/%s.dat", debug_root_path,szQuote);
 #else    
-            strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.dat",szQuote);
+            sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.dat",szQuote);
 #endif
 
 
@@ -104,7 +104,7 @@ static INT32 ConfigParseFile(TCHAR* pszFilename)
 #ifdef RELEASE_DEBUG
                 sprintf(szFilename, "%s/%s.cht", debug_root_path,szQuote);
 #else    
-                strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.cht",szQuote);
+                sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.cht",szQuote);
 #endif
 
 				if (ConfigParseFile(szFilename)) {
@@ -593,7 +593,7 @@ INT32 ConfigCheatLoad()
 #ifdef RELEASE_DEBUG
     sprintf(szFilename, "%s/%s.cht", debug_root_path,BurnDrvGetText(DRV_NAME));
 #else    
-    strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.cht",BurnDrvGetText(DRV_NAME));
+    sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.cht",BurnDrvGetText(DRV_NAME));
 #endif
 
 	if (ConfigParseFile(szFilename)) {
@@ -601,7 +601,7 @@ INT32 ConfigCheatLoad()
 #ifdef RELEASE_DEBUG
         sprintf(szFilename, "%s/%s.dat", debug_root_path,BurnDrvGetText(DRV_NAME));
 #else    
-        strcpy(szFilename, "/var/mobile/Documents/iFBA/%s.dat",BurnDrvGetText(DRV_NAME));
+        sprintf(szFilename, "/var/mobile/Documents/iFBA/%s.dat",BurnDrvGetText(DRV_NAME));
 #endif
 
 		if (ConfigParseNebulaFile(szFilename)) {

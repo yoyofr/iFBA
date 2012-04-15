@@ -10,6 +10,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "fbaconf.h"
 
+extern UIScreen *cur_screen;
+
 static NSMutableArray *genreList;
 static int allnone;
 static unsigned int newgenreFilter;
@@ -97,13 +99,16 @@ static int viewWA_patch=0;
     allnone=0;
     newgenreFilter=(ifba_conf.filter_genre);    
     
+    int max_width=MAX([cur_screen bounds].size.width,[cur_screen bounds].size.height);
+    CGRect grframe=CGRectMake(0,0,max_width,footer.frame.size.height);
+    
     gradientF = [CAGradientLayer layer];
-    gradientF.frame = footer.bounds;
+    gradientF.frame = grframe;    
     gradientF.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:0] CGColor], (id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:1] CGColor], nil];
     [footer.layer insertSublayer:gradientF atIndex:0];
     
     gradientH = [CAGradientLayer layer];
-    gradientH.frame = footer.bounds;
+    gradientH.frame = grframe;    
     gradientH.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:1] CGColor], (id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:0] CGColor], nil];
     [header.layer insertSublayer:gradientH atIndex:0];        
 }
@@ -136,14 +141,16 @@ static int viewWA_patch=0;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {    
-    gradientF.frame = footer.bounds;
-    gradientH.frame = footer.bounds;
+/*    CGRect grframe=CGRectMake(0,0,footer.frame.size.width,footer.frame.size.height);
+    gradientF.frame = grframe;
+    gradientH.frame = grframe;*/
     return YES;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    gradientF.frame = footer.bounds;
-    gradientH.frame = footer.bounds;
+/*    CGRect grframe=CGRectMake(0,0,footer.frame.size.width,footer.frame.size.height);
+    gradientF.frame = grframe;
+    gradientH.frame = grframe;*/
     [self.mnview setNeedsLayout];
 }
 

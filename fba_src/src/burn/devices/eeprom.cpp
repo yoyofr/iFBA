@@ -99,7 +99,7 @@ void EEPROMInit(const eeprom_interface *interface)
 #ifdef RELEASE_DEBUG
     sprintf(output, "%s/%s.nv", debug_root_path,BurnDrvGetTextA(DRV_NAME));
 #else    
-    strcpy(output, "/var/mobile/Documents/iFBA/%s.nv",BurnDrvGetTextA(DRV_NAME));
+    sprintf(output, "/var/mobile/Documents/iFBA/%s.nv",BurnDrvGetTextA(DRV_NAME));
 #endif
     
 
@@ -126,7 +126,7 @@ void EEPROMExit()
 #ifdef RELEASE_DEBUG
     sprintf(output, "%s/%s.nv", debug_root_path,BurnDrvGetTextA(DRV_NAME));
 #else    
-    strcpy(output, "/var/mobile/Documents/iFBA/%s.nv",BurnDrvGetTextA(DRV_NAME));
+    sprintf(output, "/var/mobile/Documents/iFBA/%s.nv",BurnDrvGetTextA(DRV_NAME));
 #endif
 
 

@@ -12,7 +12,7 @@
 
 @interface GameBrowserViewController : UIViewController {
     IBOutlet UITableView *tabView;    
-    NSMutableArray *romlist,*romlistLbl,*rompath,*romlistSystem,*romlistGenre,*romavail,*sectionLbl,*sectionLblMin;
+    NSMutableArray *romlist,*romlist_mst,*romlistLbl,*rompath,*romlistSystem,*romlistGenre,*romavail,*sectionLbl,*sectionLblMin;
     NSMutableArray *indexTitles;
     NSMutableArray *burn_supportedRoms,*burn_supportedRomsNames;
     IBOutlet UIBarButtonItem *btn_backToEmu,*btn_missing;

@@ -15,6 +15,8 @@ ifba_game_conf_t ifba_game_conf;
 int optionScope; //0:default, 1:current game
 int game_has_options;
 
+extern UIScreen *cur_screen;
+
 volatile int doFrame_inProgress=0;
 
 #include "inp_sdl_keys.h"
@@ -166,6 +168,11 @@ void computePadLayouts(int nb_button){
     int w;
     int h;
     int btnsize=(device_isIpad?64:48);
+    switch (cur_ifba_conf->vpad_btnsize) {
+        case 0:btnsize>>=1;break;
+            case 1:break;
+            case 2:btnsize<<=1;break;
+    }
     
     
     if (cur_ifba_conf->vpad_pad_manual_layout[0]==0){
@@ -381,7 +388,7 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
 
 int gTurboMode;
 
-static uint vpad_button_texture,vpad_dpad_texture;
+static uint vpad_button_texture[6],vpad_dpad_texture;
 static uint vpad_button_spe_texture[5];
 static uint filter_crt_texture,filter_scanline_texture;
 static uint vpad_animated_dpad[9]; //8directions + still
@@ -508,7 +515,7 @@ static int statusLoadMsgUpdated=0;
 		mDeviceType=0; //iphone   (iphone 4 res currently not handled)
 		mDevice_hh=480;
 		mDevice_ww=320;
-		UIScreen* mainscr = [UIScreen mainScreen];
+		UIScreen* mainscr = cur_screen;
 		if ([mainscr respondsToSelector:@selector(currentMode)]) {
 			if (mainscr.currentMode.size.width>480) {  //iphone 4
 				mDeviceType=2;
@@ -541,7 +548,12 @@ static int statusLoadMsgUpdated=0;
     
     // a,b,c,d buttons
     vpad_dpad_texture=[self loadTexture:[UIImage imageNamed:@"dpad.png"]];
-    vpad_button_texture=[self loadTexture:[UIImage imageNamed:@"button.png"]];
+    vpad_button_texture[0]=[self loadTexture:[UIImage imageNamed:@"button_1.png"]];
+    vpad_button_texture[1]=[self loadTexture:[UIImage imageNamed:@"button_2.png"]];
+    vpad_button_texture[2]=[self loadTexture:[UIImage imageNamed:@"button_3.png"]];
+    vpad_button_texture[3]=[self loadTexture:[UIImage imageNamed:@"button_4.png"]];
+    vpad_button_texture[4]=[self loadTexture:[UIImage imageNamed:@"button_5.png"]];
+    vpad_button_texture[5]=[self loadTexture:[UIImage imageNamed:@"button_6.png"]];
     vpad_button_spe_texture[0]=[self loadTexture:[UIImage imageNamed:@"button-start.png"]];
     vpad_button_spe_texture[1]=[self loadTexture:[UIImage imageNamed:@"button-coin.png"]];
     vpad_button_spe_texture[2]=[self loadTexture:[UIImage imageNamed:@"button-menu.png"]];
@@ -586,9 +598,7 @@ static int statusLoadMsgUpdated=0;
         joy_analog_y[i]=0;
         joy_analog_l[i]=0;
         joy_analog_r[i]=0;
-    }
-    
-    
+    }        
 }
 
 
@@ -603,6 +613,11 @@ static int statusLoadMsgUpdated=0;
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden=YES;    
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    
+    
+    //assign good conf
+    if (game_has_options) cur_ifba_conf=&ifba_game_conf;
+    else cur_ifba_conf=(ifba_game_conf_t*)&ifba_conf;
     
     
     UIInterfaceOrientation cur_or=[[UIApplication sharedApplication] statusBarOrientation];
@@ -1521,13 +1536,13 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     texcoords[3][0]=1; texcoords[3][1]=1;
     
     for (int i=(cur_ifba_conf->vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {            
-        
-        if (i<=VPAD_SPECIALS_BUTTON_NB) {
-            if (i==VPAD_SPECIALS_BUTTON_NB) { 
-                glBindTexture(GL_TEXTURE_2D, vpad_button_texture);
+        if (renderVPADonly&&(i!=2)&&(i<VPAD_SPECIALS_BUTTON_NB)) continue;
+//        if (i<=VPAD_SPECIALS_BUTTON_NB) {
+            if (i>=VPAD_SPECIALS_BUTTON_NB) { 
+                glBindTexture(GL_TEXTURE_2D, vpad_button_texture[i-VPAD_SPECIALS_BUTTON_NB]);
             }
             else glBindTexture(GL_TEXTURE_2D, vpad_button_spe_texture[i]);
-        }
+//        }
         
         vertices[0][0]=(float)(cur_ifba_conf->vpad_button_x[i][device_orientation]+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
         vertices[0][1]=(float)(cur_ifba_conf->vpad_button_y[i][device_orientation]+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;

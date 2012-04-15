@@ -11,6 +11,8 @@
 
 #import "fbaconf.h"
 
+extern UIScreen *cur_screen;
+
 extern volatile int emuThread_running;
 extern int launchGame;
 extern char gameName[64];
@@ -235,7 +237,7 @@ extern int optionScope;
 }
 -(void)sliderBrightness:(id)sender {
     OPTION(brightness)=((MNEValueTrackingSlider*)sender).value;
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]) [[UIScreen mainScreen] setBrightness:OPTION(brightness)];
+    if ([cur_screen respondsToSelector:@selector(setBrightness:)]) [cur_screen setBrightness:OPTION(brightness)];
     //    [tabView reloadData];
 }
 -(void)sliderFilterStrength:(id)sender {
@@ -351,7 +353,7 @@ extern int optionScope;
             [sliderview addTarget:self action:@selector(sliderBrightness:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = sliderview;
             [sliderview release];
-            if ([[UIScreen mainScreen] respondsToSelector:@selector(setBrightness:)]==NO) sliderview.enabled=NO; 
+            if ([cur_screen respondsToSelector:@selector(setBrightness:)]==NO) sliderview.enabled=NO; 
             break;
         
     }
@@ -361,6 +363,81 @@ extern int optionScope;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
+
+- (void)tableView:(UITableView *)tableView changeValueAtIndexPath:(NSIndexPath *)indexPath direction:(int)direction{
+    switch (indexPath.section) {        
+        case 0://Screen mode
+            if (direction>0) {                
+                if (OPTION(screen_mode)<2) OPTION(screen_mode)++;
+            } else {
+                if (OPTION(screen_mode)>0) OPTION(screen_mode)--;
+            }            
+            break;
+        case 1://Frameskipping
+            if (direction>0) {                
+                if (OPTION(video_fskip)<10) OPTION(video_fskip)++;
+            } else {
+                if (OPTION(video_fskip)>0) OPTION(video_fskip)--;
+            }            
+            break;
+        case 2://Aspect Ratio
+            if (direction>0) {                
+                OPTION(aspect_ratio)=1;
+            } else {
+                OPTION(aspect_ratio)=0;
+            }
+            break;
+        case 3://Video Filters
+            if (indexPath.row==0) {
+                if (direction>0) {                
+                    if (OPTION(video_filter)<2) OPTION(video_filter)++;
+                } else {
+                    if (OPTION(video_filter)>0) OPTION(video_filter)--;
+                }                
+            } else { //strength
+                if (direction>0) {                
+                    if (OPTION(video_filter_strength)<128) OPTION(video_filter_strength)++;
+                } else {
+                    if (OPTION(video_filter_strength)>0) OPTION(video_filter_strength)--;
+                }
+            }
+            break;
+        case 4://Filtering
+            if (direction>0) {                
+                OPTION(filtering)=1;
+            } else {
+                OPTION(filtering)=0;
+            }
+            break;
+        case 5://60Hz
+            if (direction>0) {                
+                OPTION(video_60hz)=1;
+            } else {
+                OPTION(video_60hz)=0;
+            }
+            break;
+        case 6://Show FPS
+            if (direction>0) {                
+                OPTION(show_fps)=1;
+            } else {
+                OPTION(show_fps)=0;
+            }
+            break;
+            
+        case 7://Brightness
+            if (direction>0) {                
+                OPTION(brightness)=OPTION(brightness)+0.1f;
+                if (OPTION(brightness)>1) OPTION(brightness)=1;
+            } else {
+                OPTION(brightness)=OPTION(brightness)-0.1f;
+                if (OPTION(brightness)<0) OPTION(brightness)=0;
+            }
+            break;
+            
+    }
+    [tableView reloadData];
+}
+
 
 -(IBAction) backToEmu {
     launchGame=2;
@@ -435,6 +512,12 @@ extern int optionScope;
                     ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
                 }
             }
+        } else if (button&iCadeJoystickLeft) { //change value
+            [self tableView:tabView changeValueAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] direction:-1];
+            
+        } else if (button&iCadeJoystickRight) { //change value
+            [self tableView:tabView changeValueAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] direction:1];
+            
         } else if (button&iCadeButtonA) { //validate            
             [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
             

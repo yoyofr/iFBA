@@ -8,6 +8,8 @@
 
 #import "UIViewController+TDSemiModalExtension.h"
 
+extern UIScreen *cur_screen;
+
 static void* org_vc;
 
 @implementation UIViewController (TDSemiModalExtension)
@@ -26,7 +28,7 @@ static void* org_vc;
 	//UIWindow* mainWindow = [(id)[[UIApplication sharedApplication] delegate] window];
 
 	CGPoint middleCenter = self.view.center;
-	CGSize offSize = [UIScreen mainScreen].bounds.size;
+	CGSize offSize = cur_screen.bounds.size;
 
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
 
@@ -70,7 +72,7 @@ static void* org_vc;
 	UIView* modalView = vc.view;
 	UIView* coverView = vc.coverView;
 
-	CGSize offSize = [UIScreen mainScreen].bounds.size;
+	CGSize offSize = cur_screen.bounds.size;
 
 	CGPoint offScreenCenter = CGPointZero;
 	

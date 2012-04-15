@@ -5,7 +5,7 @@
 //#define BENCH_MODE 1
 
 //#define TARGET_IPHONE_SIMULATOR 1
-#define RELEASE_DEBUG 1  //use to match usual directories structure when debugging (apple sandbox vs /var/mobile/Documents for cydia)
+//#define RELEASE_DEBUG 1  //use to match usual directories structure when debugging (apple sandbox vs /var/mobile/Documents for cydia)
 
 #import <Availability.h>
 
