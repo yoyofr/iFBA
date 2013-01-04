@@ -479,7 +479,7 @@ static int statusLoadMsgUpdated=0;
 	glTexParameterf(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);//TRUE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 	
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST) );
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (cur_ifba_conf->filtering?GL_LINEAR:GL_NEAREST));
 	
@@ -1825,6 +1825,7 @@ int StopProgressBar() {
 - (void)doFrame {
     
     int width,height,rw,rh;
+    float zf;
     
     
     if (doFrame_inProgress) return;
@@ -1958,14 +1959,15 @@ int StopProgressBar() {
             break;
         case 2:
             glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);            
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glColor4ub(255,255,255,cur_ifba_conf->video_filter_strength);            
             /* Enable Vertex Pointer */
+            zf=1.0f;
             texcoords[0][0]=0; texcoords[0][1]=0;
-            texcoords[1][0]=1.0f*rw*4/32.0f; texcoords[1][1]=0;
-            texcoords[2][0]=0; texcoords[2][1]=1.0f*rh*4/32.0f;
-            texcoords[3][0]=1.0f*rw*4/32.0f; texcoords[3][1]=1.0f*rh*4/32.0f;
+            texcoords[1][0]=1.0f*rw*zf/8.0f; texcoords[1][1]=0;
+            texcoords[2][0]=0; texcoords[2][1]=1.0f*rh*zf/8.0f;
+            texcoords[3][0]=1.0f*rw*zf/8.0f; texcoords[3][1]=1.0f*rh*zf/8.0f;
             glBindTexture(GL_TEXTURE_2D, filter_crt_texture);    /* Bind The Texture */    
-            glColor4ub(255,255,255,cur_ifba_conf->video_filter_strength);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glDisable(GL_BLEND);
             break;

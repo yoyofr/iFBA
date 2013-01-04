@@ -1,3 +1,16 @@
+bugs 0.5:
+
+**********
+I don't know if this has been discussed before, but does anyone else have issue with the button assignments randomly changing? I can set everything correctly, but if I go into the menu or something while a game is running it seems to cause glitches with the controls. And then even after restarting iFBA the controls are screwed up (e.g. the Coin button might be Fire 3 and the real Fire 3 might not even exist anymore). And going into the button assignment menu doesn't work, it can't be fixed without disable the preferences file manually.
+
+I don't know if this is a new thing with 5.1.1 or an issue that has been around a while since I haven't been able to play this emulator since I got the iPad 3. It's very annoying though.
+************
+
+
+
+------------------
+
+
 todo:
 
 Burn.cpp:

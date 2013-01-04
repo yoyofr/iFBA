@@ -9,13 +9,13 @@ TODO
 - check forgotten worlds main dump => garbage in bg gfx
 - analog stick mul factor: currently implemented as a hack in loadSettings functions
 
-v0.5 - xx/xx/2012
+v0.5 - 15/04/2012
 -----------------
+- update to latest FBA (including support of Demon Front & Bee Storm)
 - added mameu game icons
 - added mame history support
 - (re)added mem hack to help low mem device run large cps3 games
-- wiimote/icade/icp can be used in menu
-- update to latest FBA. PGM: support of Demon Front & Bee Storm
+- wiimote/icade/icp can be used in menu (not all menu/options are covered yet)
 - settings/game
 - customizable buttons layout for touchpad
 - vpad: 2 buttons pressed now possible (touch between 2 buttons, buttons need to be close enough)
