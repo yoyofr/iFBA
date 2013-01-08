@@ -1,2 +1,14 @@
 
 .DS_Store
+
+fba_src/.DS_Store
+
+fba_src/src/.DS_Store
+
+fba_src/src/burn/.DS_Store
+
+*.xcuserstate
+
+*.xcuserstate
+
+iFBA.xcodeproj/project.xcworkspace/xcuserdata/ymagnien.xcuserdatad/UserInterfaceState.xcuserstate
