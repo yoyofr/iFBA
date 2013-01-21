@@ -1,1 +1,0 @@
-../dep/scripts/gamelist.pl -o driverlist.h -l gamelist.txt drv/ drv/capcom/ drv/cave/ drv/cps3/ drv/dataeast/ drv/galaxian/ drv/irem/ drv/konami/ drv/megadrive/ drv/neogeo/ drv/pce/ drv/pgm/ drv/pre90s/ drv/psikyo/ drv/pst90s/ drv/sega/ drv/snes/ drv/taito/ drv/toaplan/ 

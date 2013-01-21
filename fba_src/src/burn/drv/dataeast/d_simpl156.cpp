@@ -385,8 +385,10 @@ static INT32 CommonInit(INT32 (*pRomLoad)(INT32 *, INT32 *), void (*pMap)(), INT
 
 	EEPROMInit(&eeprom_interface_93C46);
 
-	MSM6295Init(0, 1006875 / 132, 60.0, 1);
-	MSM6295Init(1, 2013750 / 132 / msm, 20.0, 1);
+	MSM6295Init(0, 1006875 / 132, 1);
+	MSM6295Init(1, 2013750 / 132 / msm, 1);
+	MSM6295SetRoute(0, 0.60, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 0.20, BURN_SND_ROUTE_BOTH);
 
 	deco16Init(1, 0, 1);
 	deco16_set_bank_callback(0, simpl156_bank_callback);
@@ -426,9 +428,9 @@ static void simpl156_palette_recalc()
 
 	for (INT32 i = 0; i < 0x1000 / 4; i++)
 	{
-		INT32 r = (p[i] >>  0) & 0x1f;
-		INT32 g = (p[i] >>  5) & 0x1f;
-		INT32 b = (p[i] >> 10) & 0x1f;
+		INT32 r =  (BURN_ENDIAN_SWAP_INT16 (p[i]) >>  0) & 0x1f; //Seb
+		INT32 g = (BURN_ENDIAN_SWAP_INT16 (p[i]) >>  5) & 0x1f; //Seb
+		INT32 b = (BURN_ENDIAN_SWAP_INT16 (p[i]) >> 10) & 0x1f; //Seb
 
 		r = (r << 3) | (r >> 2);
 		g = (g << 3) | (g >> 2);
@@ -446,11 +448,11 @@ static void draw_sprites()
 	{
 		INT32 mult, inc;
 
-		INT32 sy	  = spriteram[offs + 0];
+		INT32 sy	  = BURN_ENDIAN_SWAP_INT16 (spriteram[offs + 0]); //Seb
 		if ((sy & 0x1000) && (nCurrentFrame & 1)) continue;
 
-		INT32 code  = spriteram[offs + 1];
-		INT32 sx    = spriteram[offs + 2];
+		INT32 code  = BURN_ENDIAN_SWAP_INT16 (spriteram[offs + 1]); //Seb
+		INT32 sx    = BURN_ENDIAN_SWAP_INT16 (spriteram[offs + 2]); //Seb
 		INT32 color = (sx >> 9) & 0x1f;
 		INT32 pri   = sx & 0xc000;
 		INT32 flipx = sy & 0x2000;

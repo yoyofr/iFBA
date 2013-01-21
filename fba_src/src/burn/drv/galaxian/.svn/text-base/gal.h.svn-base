@@ -1,10 +1,11 @@
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "dac.h"
 #include "8255ppi.h"
 #include "bitswap.h"
 #include "s2650_intf.h"
 #include "sn76496.h"
+#include "flt_rc.h"
 
 #include "driver.h"
 extern "C" {
@@ -136,6 +137,8 @@ void DambustrExtendTileInfo(UINT16 *Code, INT32*, INT32, INT32 x);
 void Ad2083ExtendTileInfo(UINT16 *Code, INT32 *Colour, INT32 Attr, INT32);
 void Ad2083ExtendSpriteInfo(const UINT8 *Base, INT32*, INT32*, UINT8 *xFlip, UINT8*, UINT16 *Code, UINT8*);
 void RacknrolExtendTileInfo(UINT16 *Code, INT32*, INT32, INT32 x);
+void BagmanmcExtendTileInfo(UINT16 *Code, INT32*, INT32, INT32);
+void BagmanmcExtendSpriteInfo(const UINT8*, INT32*, INT32*, UINT8*, UINT8*, UINT16 *Code, UINT8*);
 void HardCodeGalaxianPROM();
 void HardCodeMooncrstPROM();
 void GalaxianCalcPalette();
@@ -243,6 +246,7 @@ extern UINT8 MshuttleAY8910CS;
 extern UINT8 GmgalaxSelectedGame;
 extern UINT8 Fourin1Bank;
 extern UINT8 GameIsGmgalax;
+extern UINT8 GameIsBagmanmc;
 extern UINT8 CavelonBankSwitch;
 extern UINT8 GalVBlank;
 
@@ -267,7 +271,6 @@ INT32 GalScan(INT32 nAction, INT32 *pnMin);
 extern INT16* pFMBuffer;
 extern INT16* pAY8910Buffer[9];
 extern UINT8 GalSoundType;
-extern UINT8 GalSoundVolumeShift;
 extern UINT8 HunchbksSoundIrqFire;
 extern UINT8 GalLastPort2;
 extern UINT8 GalShootEnable;
@@ -281,6 +284,8 @@ extern INT32 GalLfoVolume[3];
 extern double GalLfoFreq;
 extern double GalLfoFreqFrameVar;
 extern INT32 GalLfoBit[4];
+
+void GalaxianSoundSetRoute(double nVolume, INT32 nRouteDir);
 
 void GalSoundReset();
 void GalSoundInit();

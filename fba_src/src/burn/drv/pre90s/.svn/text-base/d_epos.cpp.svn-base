@@ -2,7 +2,7 @@
 // Based on MAME driver by Zsolt Vasvari
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "8255ppi.h"
 #include "bitswap.h"
 #include "driver.h"
@@ -34,6 +34,8 @@ static UINT8 DrvReset;
 static UINT8 *DrvPaletteBank;
 static UINT8 *DealerZ80Bank;
 static UINT8 *DealerZ80Bank2;
+
+static int watchdog;
 
 static struct BurnInputInfo MegadonInputList[] = {
 	{"P1 Coin",		BIT_DIGITAL,	DrvJoy1 + 0,	"p1 coin"	},
@@ -276,19 +278,20 @@ void __fastcall epos_write_port(UINT16 port, UINT8 data)
 	switch (port & 0xff)
 	{
 		case 0x00:
-		break;
+			watchdog = 0;
+		return;
 
 		case 0x01:
 			*DrvPaletteBank = (data << 1) & 0x10;
-		break;
+		return;
 
 		case 0x02:
 			AY8910Write(0, 1, data);
-		break;
+		return;
 
 		case 0x06:
 			AY8910Write(0, 0, data);
-		break;
+		return;
 	}
 }
 
@@ -348,7 +351,7 @@ void __fastcall dealer_write_port(UINT16 port, UINT8 data)
 		case 0x12:
 		case 0x13:
 			ppi8255_w(0, port & 3, data);
-		break;
+		return;
 
 		case 0x20:
 		case 0x21:
@@ -356,7 +359,19 @@ void __fastcall dealer_write_port(UINT16 port, UINT8 data)
 		case 0x23:
 		case 0x24:
 			dealer_bankswitch(port & 7);
-		break;
+		return;
+
+		case 0x34:
+			AY8910Write(0, 1, data);
+		return;
+
+		case 0x3c:
+			AY8910Write(0, 0, data);
+		return;
+
+		case 0x40:
+			watchdog = 0;
+		return;
 	}
 }
 
@@ -370,11 +385,11 @@ void DealerPPIWriteC(UINT8 data)
 	dealer_bankswitch2(data);
 }
 
-static INT32 DrvDoReset()
+static INT32 DrvDoReset(INT32 full_reset)
 {
-	DrvReset = 0;
-
-	memset (AllRam, 0, RamEnd - AllRam);
+	if (full_reset) {
+		memset (AllRam, 0, RamEnd - AllRam);
+	}
 
 	ZetOpen(0);
 	ZetReset();
@@ -383,6 +398,8 @@ static INT32 DrvDoReset()
 	ZetClose();
 
 	AY8910Reset(0);
+
+	watchdog = 0;
 
 	return 0;
 }
@@ -485,14 +502,14 @@ static INT32 DrvInit()
 	ZetMapArea(0x8000, 0xffff, 2, DrvVidRAM);
 	ZetSetInHandler(epos_read_port);
 	ZetSetOutHandler(epos_write_port);
-	ZetMemEnd();
 	ZetClose();
 
 	AY8910Init(0, 2750000, nBurnSoundRate, NULL, NULL, NULL, NULL);
+	AY8910SetAllRoutes(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
-	DrvDoReset();
+	DrvDoReset(1);
 
 	return 0;
 }
@@ -528,10 +545,10 @@ static INT32 DealerInit()
 	ZetMapArea(0x8000, 0xffff, 2, DrvVidRAM);
 	ZetSetInHandler(dealer_read_port);
 	ZetSetOutHandler(dealer_write_port);
-	ZetMemEnd();
 	ZetClose();
 
 	AY8910Init(0, 2750000, nBurnSoundRate, NULL, NULL, NULL, NULL);
+	AY8910SetAllRoutes(0, 0.25, BURN_SND_ROUTE_BOTH);
 
 	ppi8255_init(1);
 	PPI0PortReadA = DealerPPIReadA;
@@ -539,7 +556,7 @@ static INT32 DealerInit()
 
 	GenericTilesInit();
 
-	DrvDoReset();
+	DrvDoReset(1);
 
 	return 0;
 }
@@ -572,6 +589,8 @@ static INT32 DrvDraw()
 	
 			DrvPalette[i] = BurnHighCol(r, g, b, 0);
 		}
+
+		DrvRecalc = 0;
 	}
 
 	for (INT32 i = 0; i < 0x8000; i++)
@@ -591,8 +610,13 @@ static INT32 DrvDraw()
 
 static INT32 DrvFrame()
 {
+	watchdog++;
+	if (watchdog > 180) {
+		DrvDoReset(0);
+	}
+
 	if (DrvReset) {
-		DrvDoReset();
+		DrvDoReset(1);
 	}
 
 	{
@@ -611,20 +635,7 @@ static INT32 DrvFrame()
 	ZetClose();
 
 	if (pBurnSoundOut) {
-		INT32 nSample;
-		AY8910Update(0, &pAY8910Buffer[0], nBurnSoundLen);
-		for (INT32 n = 0; n < nBurnSoundLen; n++) {
-			nSample  = pAY8910Buffer[0][n];
-			nSample += pAY8910Buffer[1][n];
-			nSample += pAY8910Buffer[2][n];
-
-			nSample /= 4;
-
-			nSample = BURN_SND_CLIP(nSample);
-
-			pBurnSoundOut[(n << 1) + 0] = nSample;
-			pBurnSoundOut[(n << 1) + 1] = nSample;
-		}
+		AY8910Render(&pAY8910Buffer[0], pBurnSoundOut, nBurnSoundLen, 0);
 	}
 
 	if (pBurnDraw) {
@@ -886,7 +897,7 @@ STD_ROM_FN(dealer)
 
 struct BurnDriver BurnDrvDealer = {
 	"dealer", NULL, NULL, NULL, "198?",
-	"The Dealer\0", "No Sound / Incorrect Colors", "Epos Corporation", "EPOS Tristar",
+	"The Dealer\0", "Incorrect Colors", "Epos Corporation", "EPOS Tristar",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL, 1, HARDWARE_MISC_PRE90S, GBF_CASINO, 0,
 	NULL, dealerRomInfo, dealerRomName, NULL, NULL, DealerInputInfo, DealerDIPInfo,

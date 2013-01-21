@@ -2,7 +2,7 @@
 // Based on code by Zsolt Vasvari
 
 #include "burnint.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "driver.h"
 #include "dac.h"
 extern "C" {
@@ -276,7 +276,7 @@ UINT8 __fastcall route16_cpu0_read(UINT16 offset)
 
 		case 0x6400:		// routex
 		{
-			if (ZetPc(-1) == 0x2f)
+			if (ZetGetPC(-1) == 0x2f)
 				return 0xfb;
 			else
 				return 0;
@@ -444,7 +444,6 @@ static INT32 DrvInit()
 	ZetMapArea (0x4000, 0x43ff, 0, Rom0 + 0x4000); // Read Shared RAM
 	ZetMapArea (0x8000, 0xbfff, 0, Rom0 + 0x8000); // Video RAM
 	ZetMapArea (0x8000, 0xbfff, 1, Rom0 + 0x8000);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -455,7 +454,6 @@ static INT32 DrvInit()
 	ZetMapArea (0x4000, 0x43ff, 0, Rom0 + 0x4000); // Read Shared RAM
 	ZetMapArea (0x8000, 0xbfff, 0, Rom1 + 0x8000); // Video RAM
 	ZetMapArea (0x8000, 0xbfff, 1, Rom1 + 0x8000);
-	ZetMemEnd();
 	ZetClose();
 
 	pAY8910Buffer[0] = pFMBuffer + nBurnSoundLen * 0;
@@ -463,9 +461,10 @@ static INT32 DrvInit()
 	pAY8910Buffer[2] = pFMBuffer + nBurnSoundLen * 2;
 
 	AY8910Init(0, 1250000, nBurnSoundRate, NULL, NULL, &stratvox_sn76477_write, NULL);
+	AY8910SetAllRoutes(0, 0.50, BURN_SND_ROUTE_BOTH);
 	
 	DACInit(0, 0, 1, DrvSyncDAC);
-	DACSetVolShift(0, 2);
+	DACSetRoute(0, 0.50, BURN_SND_ROUTE_BOTH);
 
 	DrvDoReset();
 
@@ -619,22 +618,9 @@ static INT32 DrvFrame()
 
 		// Render Sound Segment
 		if (pBurnSoundOut) {
-			INT32 nSample;
 			INT32 nSegmentLength = nBurnSoundLen / nInterleave;
 			INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
-			AY8910Update(0, &pAY8910Buffer[0], nSegmentLength);
-			for (INT32 n = 0; n < nSegmentLength; n++) {
-				nSample  = pAY8910Buffer[0][n];
-				nSample += pAY8910Buffer[1][n];
-				nSample += pAY8910Buffer[2][n];
-
-				nSample /= 4;
-
-				nSample = BURN_SND_CLIP(nSample);
-
-				pSoundBuf[(n << 1) + 0] = nSample;
-				pSoundBuf[(n << 1) + 1] = nSample;
-			}
+			AY8910Render(&pAY8910Buffer[0], pSoundBuf, nSegmentLength, 0);
 			
 			nSoundBufferPos += nSegmentLength;
 		}
@@ -642,23 +628,10 @@ static INT32 DrvFrame()
 
 	// Make sure the buffer is entirely filled.
 	if (pBurnSoundOut) {
-		INT32 nSample;
 		INT32 nSegmentLength = nBurnSoundLen - nSoundBufferPos;
 		INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
 		if (nSegmentLength) {
-			AY8910Update(0, &pAY8910Buffer[0], nSegmentLength);
-			for (INT32 n = 0; n < nSegmentLength; n++) {
-				nSample  = pAY8910Buffer[0][n];
-				nSample += pAY8910Buffer[1][n];
-				nSample += pAY8910Buffer[2][n];
-
-				nSample /= 4;
-
-				nSample = BURN_SND_CLIP(nSample);
-
-				pSoundBuf[(n << 1) + 0] = nSample;
-				pSoundBuf[(n << 1) + 1] = nSample;
-			}
+			AY8910Render(&pAY8910Buffer[0], pSoundBuf, nSegmentLength, 0);
 		}
 		
 		DACUpdate(pBurnSoundOut, nBurnSoundLen);

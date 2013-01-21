@@ -2,7 +2,7 @@
 // Based on MAME driver by Bryan McPhail and David Haywood
 
 #include "tiles_generic.h"
-#include "sek.h"
+#include "m68000_intf.h"
 #include "deco16ic.h"
 #include "msm6295.h"
 #include "h6280_intf.h"
@@ -290,7 +290,7 @@ static INT32 DrvInit()
 	SekSetReadByteHandler(0,		dietgogo_main_read_byte);
 	SekClose();
 
-	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, NULL, 45.0, 1006875, 100.0, 0, 0);
+	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, NULL, 0.45, 1006875, 0.60, 0, 0);
 
 	GenericTilesInit();
 
@@ -319,13 +319,13 @@ static void draw_sprites()
 
 	for (INT32 offs = 0; offs < 0x400; offs += 4)
 	{
-		if (ram[offs + 1] == 0) continue;
+		if (BURN_ENDIAN_SWAP_INT16(ram[offs + 1]) == 0) continue;
 
 		INT32 inc, mult;
 
-		INT32 sy     = ram[offs + 0];
-		INT32 code   = ram[offs + 1] & 0x3fff;
-		INT32 sx     = ram[offs + 2];
+		INT32 sy     = BURN_ENDIAN_SWAP_INT16(ram[offs + 0]);
+		INT32 code   = BURN_ENDIAN_SWAP_INT16(ram[offs + 1]) & 0x3fff;
+		INT32 sx     = BURN_ENDIAN_SWAP_INT16(ram[offs + 2]);
 
 		if ((sy & 0x1000) && (nCurrentFrame & 1)) continue;
 

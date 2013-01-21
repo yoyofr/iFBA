@@ -2,7 +2,7 @@
 //Based on MAME Driver by Takahiro Nogi
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 
 static UINT8 *AllMem;
 static UINT8 *MemEnd;
@@ -86,7 +86,6 @@ static INT32 DrvInit()
 	ZetMapArea (0xa000, 0xbfff, 1, DrvZ80RAM);
 	ZetMapArea (0xa000, 0xbfff, 2, DrvZ80RAM);
 	ZetSetReadHandler(minivdr_read);
-	ZetMemEnd();
 	ZetClose();
 
 	GenericTilesInit();

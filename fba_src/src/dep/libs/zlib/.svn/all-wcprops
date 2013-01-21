@@ -1,0 +1,173 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib
+END
+inffast.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/zlib/inffast.h
+END
+inffixed.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/343/trunk/src/dep/libs/zlib/inffixed.h
+END
+deflate.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/deflate.c
+END
+zlib.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/zlib.h
+END
+gzclose.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/zlib/gzclose.c
+END
+gzlib.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/gzlib.c
+END
+zutil.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/zutil.c
+END
+deflate.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/343/trunk/src/dep/libs/zlib/deflate.h
+END
+gzread.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/gzread.c
+END
+crc32.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/crc32.c
+END
+zutil.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/zutil.h
+END
+inftrees.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/inftrees.c
+END
+crc32.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/crc32.h
+END
+inflate.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/inflate.c
+END
+trees.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/343/trunk/src/dep/libs/zlib/trees.c
+END
+_fba_zlib_v127.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/_fba_zlib_v127.txt
+END
+uncompr.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/zlib/uncompr.c
+END
+inftrees.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/zlib/inftrees.h
+END
+zconf.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/zconf.h
+END
+inflate.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/zlib/inflate.h
+END
+trees.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/zlib/trees.h
+END
+gzguts.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/gzguts.h
+END
+zconf.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/zconf.h.in
+END
+inffast.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/zlib/inffast.c
+END
+gzwrite.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/781/trunk/src/dep/libs/zlib/gzwrite.c
+END
+compress.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/zlib/compress.c
+END
+adler32.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/343/trunk/src/dep/libs/zlib/adler32.c
+END
+infback.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/343/trunk/src/dep/libs/zlib/infback.c
+END

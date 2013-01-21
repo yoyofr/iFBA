@@ -1,5 +1,5 @@
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "m6800_intf.h"
 #include "taito_m68705.h"
 #include "burn_ym2203.h"
@@ -650,9 +650,10 @@ static struct BurnRomInfo Boblbobl2RomDesc[] = {
 	{ "a78-14.17",     0x08000, 0x7b5369a8, BRF_GRA },	     //  8
 	{ "gfx10.bin",     0x10000, 0xd370f499, BRF_GRA },	     //  9
 	{ "gfx11.bin",     0x10000, 0x76f2b367, BRF_GRA },	     //  10
-	{ "a78-20.35",     0x08000, 0x9ef863ad, BRF_GRA },	     //  11
+	{ "a78-19.34",     0x08000, 0x66e9438c, BRF_GRA },	     //  11
+	{ "a78-20.35",     0x08000, 0x9ef863ad, BRF_GRA },	     //  12
 
-	{ "a71-25.41",     0x00100, 0x2d0f8545, BRF_GRA },	     //  12	PROMs
+	{ "a71-25.41",     0x00100, 0x2d0f8545, BRF_GRA },	     //  13	PROMs
 };
 
 STD_ROM_PICK(Boblbobl2)
@@ -744,8 +745,6 @@ static struct BurnRomInfo Bub68705RomDesc[] = {
 STD_ROM_PICK(Bub68705)
 STD_ROM_FN(Bub68705)
 
-
-
 static struct BurnRomInfo DlandRomDesc[] = {
 	{ "dl_3.u69",	   0x08000, 0x01eb3e4f, BRF_ESS | BRF_PRG }, //  0	Z80 #1 Program Code
 	{ "dl_5.u67",	   0x08000, 0x75740b61, BRF_ESS | BRF_PRG }, //  1
@@ -768,6 +767,63 @@ static struct BurnRomInfo DlandRomDesc[] = {
 STD_ROM_PICK(Dland)
 STD_ROM_FN(Dland)
 
+static struct BurnRomInfo BublcaveRomDesc[] = {
+	{ "lcave06_10",    0x08000, 0x185cc219, BRF_ESS | BRF_PRG }, //  0	Z80 #1 Program Code
+	{ "lcave05_11",    0x10000, 0xb6b02df3, BRF_ESS | BRF_PRG }, //	 1
+	
+	{ "lcave08_11",    0x08000, 0xc5d14e62, BRF_ESS | BRF_PRG }, //  2	Z80 #2 Program 
+	
+	{ "a78-07.46",     0x08000, 0x4f9a26e8, BRF_ESS | BRF_PRG }, //  3	Z80 #3 Program 
+	
+	{ "a78-01.17",     0x01000, 0xb1bfb53d, BRF_ESS | BRF_PRG }, //  4	MCU Program 
+	
+	{ "lcave09_10",    0x08000, 0xb90b7eef, BRF_GRA },	     //  5	Tiles
+	{ "lcave10_10",    0x08000, 0x4fb22f05, BRF_GRA },	     //  6
+	{ "a78-11.14",     0x08000, 0x9773e512, BRF_GRA },	     //  7
+	{ "lcave12_10",    0x08000, 0xe49eb49e, BRF_GRA },	     //  8
+	{ "lcave13_10",    0x08000, 0x61919734, BRF_GRA },	     //  9
+	{ "lcave14_10",    0x08000, 0x7e3a13bd, BRF_GRA },	     //  10
+	{ "lcave15_10",    0x08000, 0xc253c73a, BRF_GRA },	     //  11
+	{ "lcave16_10",    0x08000, 0xe66c92ee, BRF_GRA },	     //  12
+	{ "a78-17.32",     0x08000, 0xd69762d5, BRF_GRA },	     //  13
+	{ "lcave18_10",    0x08000, 0x47ee2544, BRF_GRA },	     //  14
+	{ "lcave19_10",    0x08000, 0x1ceeb1fa, BRF_GRA },	     //  15
+	{ "lcave20_10",    0x08000, 0x64322e24, BRF_GRA },	     //  16
+	
+	{ "a71-25.41",     0x00100, 0x2d0f8545, BRF_GRA },	     //  17	PROMs
+};
+
+STD_ROM_PICK(Bublcave)
+STD_ROM_FN(Bublcave)
+
+static struct BurnRomInfo Bublcave10RomDesc[] = {
+	{ "lcave06_10",    0x08000, 0x185cc219, BRF_ESS | BRF_PRG }, //  0	Z80 #1 Program Code
+	{ "lcave05_10",    0x10000, 0x381cdde7, BRF_ESS | BRF_PRG }, //	 1
+	
+	{ "lcave08_10",    0x08000, 0x026a68e1, BRF_ESS | BRF_PRG }, //  2	Z80 #2 Program 
+	
+	{ "a78-07.46",     0x08000, 0x4f9a26e8, BRF_ESS | BRF_PRG }, //  3	Z80 #3 Program 
+	
+	{ "a78-01.17",     0x01000, 0xb1bfb53d, BRF_ESS | BRF_PRG }, //  4	MCU Program 
+	
+	{ "lcave09_10",    0x08000, 0xb90b7eef, BRF_GRA },	     //  5	Tiles
+	{ "lcave10_10",    0x08000, 0x4fb22f05, BRF_GRA },	     //  6
+	{ "a78-11.14",     0x08000, 0x9773e512, BRF_GRA },	     //  7
+	{ "lcave12_10",    0x08000, 0xe49eb49e, BRF_GRA },	     //  8
+	{ "lcave13_10",    0x08000, 0x61919734, BRF_GRA },	     //  9
+	{ "lcave14_10",    0x08000, 0x7e3a13bd, BRF_GRA },	     //  10
+	{ "lcave15_10",    0x08000, 0xc253c73a, BRF_GRA },	     //  11
+	{ "lcave16_10",    0x08000, 0xe66c92ee, BRF_GRA },	     //  12
+	{ "a78-17.32",     0x08000, 0xd69762d5, BRF_GRA },	     //  13
+	{ "lcave18_10",    0x08000, 0x47ee2544, BRF_GRA },	     //  14
+	{ "lcave19_10",    0x08000, 0x1ceeb1fa, BRF_GRA },	     //  15
+	{ "lcave20_10",    0x08000, 0x64322e24, BRF_GRA },	     //  16
+	
+	{ "a71-25.41",     0x00100, 0x2d0f8545, BRF_GRA },	     //  17	PROMs
+};
+
+STD_ROM_PICK(Bublcave10)
+STD_ROM_FN(Bublcave10)
 
 static struct BurnRomInfo tokioRomDesc[] = {
 	{ "a71-02-1.ic4",	0x8000, 0xBB8DABD7, BRF_ESS | BRF_PRG }, //  0 Z80 #1 Program
@@ -1510,7 +1566,7 @@ void bublbobl_68705_portB_out(UINT8 *bytevalue)
 		ZetOpen(0);
 
 		/* hack to get random EXTEND letters (who is supposed to do this? 68705? PAL?) */
-		DrvZ80Ram1[0x7c] = (ZetTotalCycles() ^ ZetPc(-1)) % 6;
+		DrvZ80Ram1[0x7c] = (ZetTotalCycles() ^ ZetGetPC(-1)) % 6;
 
 		ZetSetVector(DrvZ80Ram1[0]);
 		ZetSetIRQLine(0, ZET_IRQSTATUS_AUTO);
@@ -1719,7 +1775,6 @@ static INT32 MachineInit()
 	ZetMapArea(0xfc00, 0xffff, 0, DrvZ80Ram1             );
 	ZetMapArea(0xfc00, 0xffff, 1, DrvZ80Ram1             );
 	ZetMapArea(0xfc00, 0xffff, 2, DrvZ80Ram1             );	
-	ZetMemEnd();
 	ZetClose();
 	
 	ZetInit(1);
@@ -1729,7 +1784,6 @@ static INT32 MachineInit()
 	ZetMapArea(0xe000, 0xf7ff, 0, DrvSharedRam           );
 	ZetMapArea(0xe000, 0xf7ff, 1, DrvSharedRam           );
 	ZetMapArea(0xe000, 0xf7ff, 2, DrvSharedRam           );
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(2);
@@ -1741,14 +1795,13 @@ static INT32 MachineInit()
 	ZetMapArea(0x8000, 0x8fff, 0, DrvZ80Ram3             );
 	ZetMapArea(0x8000, 0x8fff, 1, DrvZ80Ram3             );
 	ZetMapArea(0x8000, 0x8fff, 2, DrvZ80Ram3             );	
-	ZetMemEnd();
 	ZetClose();
 	
 	if (DrvMCUInUse == 1) {
 		M6801Init(1);
 		M6801MapMemory(DrvMcuRom, 0xf000, 0xffff, M6801_ROM);
-		M6801SetReadByteHandler(BublboblMcuReadByte);
-		M6801SetWriteByteHandler(BublboblMcuWriteByte);
+		M6801SetReadHandler(BublboblMcuReadByte);
+		M6801SetWriteHandler(BublboblMcuWriteByte);
 	} else if (DrvMCUInUse == 2) {
 
 		m67805_taito_init(DrvMcuRom, DrvMcuRam, &bub68705_m68705_interface);
@@ -1756,9 +1809,11 @@ static INT32 MachineInit()
 	
 	BurnYM2203Init(1, 3000000, &DrvYM2203IRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
 	BurnTimerAttachZet(3000000);
+	BurnYM2203SetAllRoutes(0, 0.25, BURN_SND_ROUTE_BOTH);
 	
 	BurnYM3526Init(3000000, NULL, &DrvYM3526SynchroniseStream, 1);
 	BurnTimerAttachZetYM3526(6000000);
+	BurnYM3526SetRoute(BURN_SND_YM3526_ROUTE, 0.50, BURN_SND_ROUTE_BOTH);
 	
 	if (BublboblCallbackFunction()) return 1;
 
@@ -1866,7 +1921,6 @@ static INT32 BoblboblCallback()
 	ZetMemCallback(0xfe00, 0xffff, 0);
 	ZetMemCallback(0xfe00, 0xffff, 1);
 	ZetMemCallback(0xfe00, 0xffff, 2);
-	ZetMemEnd();
 	ZetClose();
 	
 	return 0;
@@ -1894,14 +1948,15 @@ static INT32 Boblbobl2Callback()
 	nRet = BurnLoadRom(DrvTempRom + 0x10000,  6, 1); if (nRet != 0) return 1;
 	nRet = BurnLoadRom(DrvTempRom + 0x20000,  7, 1); if (nRet != 0) return 1;
 	nRet = BurnLoadRom(DrvTempRom + 0x28000,  8, 1); if (nRet != 0) return 1;
-	nRet = BurnLoadRom(DrvTempRom + 0x50000,  9, 1); if (nRet != 0) return 1;
-	nRet = BurnLoadRom(DrvTempRom + 0x60000, 10, 1); if (nRet != 0) return 1;
-	nRet = BurnLoadRom(DrvTempRom + 0x68000, 11, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(DrvTempRom + 0x40000,  9, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(DrvTempRom + 0x50000, 10, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(DrvTempRom + 0x60000, 11, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(DrvTempRom + 0x68000, 12, 1); if (nRet != 0) return 1;
 	for (INT32 i = 0; i < 0x80000; i++) DrvTempRom[i] ^= 0xff;
 	GfxDecode(0x4000, 4, 8, 8, TilePlaneOffsets, TileXOffsets, TileYOffsets, 0x80, DrvTempRom, DrvTiles);
 	
 	// Load the PROM
-	nRet = BurnLoadRom(DrvProm + 0x00000,  12, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(DrvProm + 0x00000,  13, 1); if (nRet != 0) return 1;
 	
 	BurnFree(DrvTempRom);
 	
@@ -1911,7 +1966,6 @@ static INT32 Boblbobl2Callback()
 	ZetMemCallback(0xfe00, 0xffff, 0);
 	ZetMemCallback(0xfe00, 0xffff, 1);
 	ZetMemCallback(0xfe00, 0xffff, 2);
-	ZetMemEnd();
 	ZetClose();
 	
 	return 0;
@@ -2031,7 +2085,6 @@ static INT32 DlandCallback()
 	ZetMemCallback(0xfe00, 0xffff, 0);
 	ZetMemCallback(0xfe00, 0xffff, 1);
 	ZetMemCallback(0xfe00, 0xffff, 2);
-	ZetMemEnd();
 	ZetClose();
 
 	return 0;
@@ -2122,7 +2175,6 @@ static INT32 TokioInit()
 	ZetMapArea(0xf800, 0xf9ff, 0, DrvPaletteRam          );
 	ZetMapArea(0xf800, 0xf9ff, 1, DrvPaletteRam          );
 	ZetMapArea(0xf800, 0xf9ff, 2, DrvPaletteRam          );
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -2132,7 +2184,6 @@ static INT32 TokioInit()
 	ZetMapArea(0x8000, 0x97ff, 0, DrvSharedRam           );
 	ZetMapArea(0x8000, 0x97ff, 1, DrvSharedRam           );
 	ZetMapArea(0x8000, 0x97ff, 2, DrvSharedRam           );
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(2);
@@ -2144,12 +2195,14 @@ static INT32 TokioInit()
 	ZetMapArea(0x8000, 0x8fff, 0, DrvZ80Ram3             );
 	ZetMapArea(0x8000, 0x8fff, 1, DrvZ80Ram3             );
 	ZetMapArea(0x8000, 0x8fff, 2, DrvZ80Ram3             );	
-	ZetMemEnd();
 	ZetClose();
 	
 	BurnYM2203Init(1, 3000000, &DrvYM2203IRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
-	BurnYM2203SetVolumeShift(2);
 	BurnTimerAttachZet(3000000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.10, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.08, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.08, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.08, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 
@@ -2391,8 +2444,8 @@ static INT32 DrvFrame()
 					if (i == 99) m68705SetIrqLine(0, 0 /*CLEAR_LINE*/);
 				} else {
 					nCyclesSegment = M6801Run(nCyclesSegment);
-					if (i == 98) M6801SetIRQ(0, M6801_IRQSTATUS_ACK);
-					if (i == 99) M6801SetIRQ(0, M6801_IRQSTATUS_NONE);
+					if (i == 98) M6801SetIRQLine(0, M6801_IRQSTATUS_ACK);
+					if (i == 99) M6801SetIRQLine(0, M6801_IRQSTATUS_NONE);
 				} 
 
 				nCyclesDone[nCurrentCPU] += nCyclesSegment;
@@ -2654,6 +2707,26 @@ struct BurnDriver BurnDrvDland = {
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
 	NULL, DlandRomInfo, DlandRomName, NULL, NULL, BoblboblInputInfo, DlandDIPInfo,
 	DlandInit, BublboblExit, DrvFrame, NULL, DrvScan,
+	NULL, 0x100, 256, 224, 4, 3
+};
+
+struct BurnDriver BurnDrvBublcave = {
+	"bublcave", "bublbobl", NULL, NULL, "1986",
+	"Bubble Bobble Lost Cave (v1.1)\0", NULL, "Bisboch and Aladar", "Taito Misc",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_HOMEBREW, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
+	NULL, BublcaveRomInfo, BublcaveRomName, NULL, NULL, BublboblInputInfo, BublboblDIPInfo,
+	BublboblInit, BublboblExit, DrvFrame, NULL, DrvScan,
+	NULL, 0x100, 256, 224, 4, 3
+};
+
+struct BurnDriver BurnDrvBublcave10 = {
+	"bublcave10", "bublbobl", NULL, NULL, "1986",
+	"Bubble Bobble Lost Cave (v1.0)\0", NULL, "Bisboch and Aladar", "Taito Misc",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_HOMEBREW, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
+	NULL, Bublcave10RomInfo, Bublcave10RomName, NULL, NULL, BublboblInputInfo, BublboblDIPInfo,
+	BublboblInit, BublboblExit, DrvFrame, NULL, DrvScan,
 	NULL, 0x100, 256, 224, 4, 3
 };
 

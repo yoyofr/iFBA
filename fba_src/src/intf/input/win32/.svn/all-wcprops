@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/input/win32
+END
+dinput_core.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/input/win32/dinput_core.h
+END
+inp_dinput.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/input/win32/inp_dinput.cpp
+END
+dinput_core.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/input/win32/dinput_core.cpp
+END

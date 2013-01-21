@@ -359,7 +359,6 @@ static INT32 DrvZ80Init()
 	ZetMapArea    (0x8000, 0xFFFF, 1, RamZ80);	// Direct Write to RAM
 	ZetMapArea    (0x8000, 0xFFFF, 2, RamZ80);	//
 
-	ZetMemEnd();
 
 	ZetClose();
 
@@ -599,6 +598,7 @@ static INT32 DrvInit()
 
 	BurnYM3812Init(28000000 / 8, &toaplan1FMIRQHandler, &toaplan1SynchroniseStream, 0);
 	BurnTimerAttachZetYM3812(28000000 / 8);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 1.00, BURN_SND_ROUTE_BOTH);
 
 	bDrawScreen = true;
 

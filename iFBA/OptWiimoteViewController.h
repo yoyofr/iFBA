@@ -10,6 +10,7 @@
 #import "BTstack/BTstackManager.h"
 #import "BTstack/BTDiscoveryViewController.h"
 #import "BTstackManager.h"
+#import "EmuViewController.h"
 
 @class BTstackManager;
 
@@ -27,6 +28,9 @@
 	int connectingIndex;
 	NSString *customActivityText;
     IBOutlet UIBarButtonItem *btn_backToEmu;
+@public
+    EmuViewController *emuvc;
+    
 }
 
 -(void) markConnecting:(int)index; // use -1 for no connection active
@@ -36,6 +40,7 @@
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+@property (nonatomic, retain) EmuViewController *emuvc;
 
 -(IBAction) backToEmu;
 

@@ -8,16 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import "TDSemiModal.h"
+#import "EmuViewController.h"
 
 @interface OptWiimoteBtnViewController : UIViewController {
     IBOutlet UITableView *tabView;
     TDSemiModalViewController *optgetButton;
     IBOutlet UIBarButtonItem *btn_backToEmu;
+@public
+    EmuViewController *emuvc;
+    
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) UIViewController *optgetButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+@property (nonatomic, retain) EmuViewController *emuvc;
 
 -(IBAction) backToEmu;
 

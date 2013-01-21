@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 44
-/svn/fbalpha/!svn/ver/448/trunk/src/burn/snd
+/svn/fbalpha/!svn/ver/805/trunk/src/burn/snd
 END
 es8712.h
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/es8712.h
+/svn/fbalpha/!svn/ver/700/trunk/src/burn/snd/es8712.h
 END
 ym2151.c
 K 25
@@ -19,19 +19,19 @@ ym2413.c
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/svn/fbalpha/!svn/ver/340/trunk/src/burn/snd/ym2413.c
+/svn/fbalpha/!svn/ver/738/trunk/src/burn/snd/ym2413.c
 END
 ay8910.h
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ay8910.h
+/svn/fbalpha/!svn/ver/671/trunk/src/burn/snd/ay8910.h
 END
 burn_ym3526.h
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym3526.h
+/svn/fbalpha/!svn/ver/669/trunk/src/burn/snd/burn_ym3526.h
 END
 ym2151.h
 K 25
@@ -49,25 +49,25 @@ c6280.h
 K 25
 svn:wc:ra_dav:version-url
 V 52
-/svn/fbalpha/!svn/ver/261/trunk/src/burn/snd/c6280.h
+/svn/fbalpha/!svn/ver/701/trunk/src/burn/snd/c6280.h
 END
 msm5205.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/msm5205.cpp
+/svn/fbalpha/!svn/ver/789/trunk/src/burn/snd/msm5205.cpp
 END
 samples.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/samples.h
+/svn/fbalpha/!svn/ver/718/trunk/src/burn/snd/samples.h
 END
 iremga20.h
 K 25
 svn:wc:ra_dav:version-url
 V 55
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/iremga20.h
+/svn/fbalpha/!svn/ver/704/trunk/src/burn/snd/iremga20.h
 END
 fmopl.c
 K 25
@@ -75,17 +75,29 @@ svn:wc:ra_dav:version-url
 V 52
 /svn/fbalpha/!svn/ver/340/trunk/src/burn/snd/fmopl.c
 END
+flt_rc.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/724/trunk/src/burn/snd/flt_rc.h
+END
 x1010.h
 K 25
 svn:wc:ra_dav:version-url
 V 52
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/x1010.h
+/svn/fbalpha/!svn/ver/709/trunk/src/burn/snd/x1010.h
+END
+rescap.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/724/trunk/src/burn/snd/rescap.h
 END
 msm6295.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/msm6295.cpp
+/svn/fbalpha/!svn/ver/686/trunk/src/burn/snd/msm6295.cpp
 END
 fmopl.h
 K 25
@@ -97,43 +109,43 @@ burn_ym2151.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/249/trunk/src/burn/snd/burn_ym2151.cpp
+/svn/fbalpha/!svn/ver/682/trunk/src/burn/snd/burn_ym2151.cpp
 END
 burn_y8950.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 59
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/snd/burn_y8950.cpp
+/svn/fbalpha/!svn/ver/798/trunk/src/burn/snd/burn_y8950.cpp
 END
 burn_ymf278b.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 61
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ymf278b.cpp
+/svn/fbalpha/!svn/ver/698/trunk/src/burn/snd/burn_ymf278b.cpp
 END
 k051649.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k051649.h
+/svn/fbalpha/!svn/ver/690/trunk/src/burn/snd/k051649.h
 END
 k054539.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k054539.h
+/svn/fbalpha/!svn/ver/693/trunk/src/burn/snd/k054539.h
 END
 es8712.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 55
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/es8712.cpp
+/svn/fbalpha/!svn/ver/700/trunk/src/burn/snd/es8712.cpp
 END
 burn_ym3526.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/snd/burn_ym3526.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/snd/burn_ym3526.cpp
 END
 ics2115.h
 K 25
@@ -145,19 +157,19 @@ dac.h
 K 25
 svn:wc:ra_dav:version-url
 V 50
-/svn/fbalpha/!svn/ver/431/trunk/src/burn/snd/dac.h
+/svn/fbalpha/!svn/ver/676/trunk/src/burn/snd/dac.h
 END
 burn_ym3812.h
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym3812.h
+/svn/fbalpha/!svn/ver/670/trunk/src/burn/snd/burn_ym3812.h
 END
 burn_ym2608.h
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2608.h
+/svn/fbalpha/!svn/ver/662/trunk/src/burn/snd/burn_ym2608.h
 END
 fm.c
 K 25
@@ -169,7 +181,7 @@ namco_snd.h
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/namco_snd.h
+/svn/fbalpha/!svn/ver/744/trunk/src/burn/snd/namco_snd.h
 END
 fm.h
 K 25
@@ -177,95 +189,101 @@ svn:wc:ra_dav:version-url
 V 49
 /svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/fm.h
 END
+flt_rc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/724/trunk/src/burn/snd/flt_rc.cpp
+END
 x1010.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/x1010.cpp
+/svn/fbalpha/!svn/ver/709/trunk/src/burn/snd/x1010.cpp
 END
 k053260.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k053260.cpp
+/svn/fbalpha/!svn/ver/692/trunk/src/burn/snd/k053260.cpp
 END
 msm5205.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/msm5205.h
+/svn/fbalpha/!svn/ver/789/trunk/src/burn/snd/msm5205.h
 END
 burn_ym2203.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2203.cpp
+/svn/fbalpha/!svn/ver/723/trunk/src/burn/snd/burn_ym2203.cpp
 END
 k051649.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k051649.cpp
+/svn/fbalpha/!svn/ver/690/trunk/src/burn/snd/k051649.cpp
 END
 msm6295.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/msm6295.h
+/svn/fbalpha/!svn/ver/686/trunk/src/burn/snd/msm6295.h
 END
 ics2115.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/snd/ics2115.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/snd/ics2115.cpp
 END
 dac.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 52
-/svn/fbalpha/!svn/ver/448/trunk/src/burn/snd/dac.cpp
+/svn/fbalpha/!svn/ver/805/trunk/src/burn/snd/dac.cpp
 END
 burn_ym2151.h
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2151.h
+/svn/fbalpha/!svn/ver/682/trunk/src/burn/snd/burn_ym2151.h
 END
 burn_y8950.h
 K 25
 svn:wc:ra_dav:version-url
 V 57
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_y8950.h
+/svn/fbalpha/!svn/ver/798/trunk/src/burn/snd/burn_y8950.h
 END
 burn_ym3812.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/snd/burn_ym3812.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/snd/burn_ym3812.cpp
 END
 burn_ymf278b.h
 K 25
 svn:wc:ra_dav:version-url
 V 59
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ymf278b.h
+/svn/fbalpha/!svn/ver/698/trunk/src/burn/snd/burn_ymf278b.h
 END
 burn_ym2413.h
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/324/trunk/src/burn/snd/burn_ym2413.h
+/svn/fbalpha/!svn/ver/677/trunk/src/burn/snd/burn_ym2413.h
 END
 burn_ym2608.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2608.cpp
+/svn/fbalpha/!svn/ver/662/trunk/src/burn/snd/burn_ym2608.cpp
 END
 saa1099.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/saa1099.h
+/svn/fbalpha/!svn/ver/706/trunk/src/burn/snd/saa1099.h
 END
 es5506.h
 K 25
@@ -283,13 +301,13 @@ sn76496.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/sn76496.cpp
+/svn/fbalpha/!svn/ver/696/trunk/src/burn/snd/sn76496.cpp
 END
 namco_snd.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/namco_snd.cpp
+/svn/fbalpha/!svn/ver/744/trunk/src/burn/snd/namco_snd.cpp
 END
 ymf278b.h
 K 25
@@ -301,67 +319,67 @@ k007232.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k007232.cpp
+/svn/fbalpha/!svn/ver/691/trunk/src/burn/snd/k007232.cpp
 END
 k053260.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k053260.h
+/svn/fbalpha/!svn/ver/692/trunk/src/burn/snd/k053260.h
 END
 ymz280b.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymz280b.h
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/snd/ymz280b.h
 END
 rf5c68.h
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/rf5c68.h
-END
-upd7759.cpp
-K 25
-svn:wc:ra_dav:version-url
-V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/upd7759.cpp
+/svn/fbalpha/!svn/ver/685/trunk/src/burn/snd/rf5c68.h
 END
 segapcm.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/segapcm.h
+/svn/fbalpha/!svn/ver/777/trunk/src/burn/snd/segapcm.h
 END
 burn_ym2610.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2610.cpp
+/svn/fbalpha/!svn/ver/722/trunk/src/burn/snd/burn_ym2610.cpp
+END
+upd7759.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/683/trunk/src/burn/snd/upd7759.cpp
 END
 burn_ym2413.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/324/trunk/src/burn/snd/burn_ym2413.cpp
+/svn/fbalpha/!svn/ver/677/trunk/src/burn/snd/burn_ym2413.cpp
 END
 burn_ym2612.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2612.cpp
+/svn/fbalpha/!svn/ver/665/trunk/src/burn/snd/burn_ym2612.cpp
 END
 saa1099.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/saa1099.cpp
+/svn/fbalpha/!svn/ver/708/trunk/src/burn/snd/saa1099.cpp
 END
 burn_ym2203.h
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2203.h
+/svn/fbalpha/!svn/ver/723/trunk/src/burn/snd/burn_ym2203.h
 END
 es5506.cpp
 K 25
@@ -373,49 +391,49 @@ c6280.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/285/trunk/src/burn/snd/c6280.cpp
+/svn/fbalpha/!svn/ver/701/trunk/src/burn/snd/c6280.cpp
 END
 samples.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/406/trunk/src/burn/snd/samples.cpp
+/svn/fbalpha/!svn/ver/805/trunk/src/burn/snd/samples.cpp
 END
 sn76496.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/sn76496.h
+/svn/fbalpha/!svn/ver/696/trunk/src/burn/snd/sn76496.h
 END
 iremga20.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 57
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/iremga20.cpp
+/svn/fbalpha/!svn/ver/704/trunk/src/burn/snd/iremga20.cpp
 END
 ymz280b.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymz280b.cpp
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/snd/ymz280b.cpp
 END
 rf5c68.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 55
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/rf5c68.cpp
+/svn/fbalpha/!svn/ver/685/trunk/src/burn/snd/rf5c68.cpp
 END
 k007232.h
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k007232.h
+/svn/fbalpha/!svn/ver/691/trunk/src/burn/snd/k007232.h
 END
 segapcm.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/segapcm.cpp
+/svn/fbalpha/!svn/ver/777/trunk/src/burn/snd/segapcm.cpp
 END
 ymdeltat.c
 K 25
@@ -427,7 +445,7 @@ k054539.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/k054539.cpp
+/svn/fbalpha/!svn/ver/693/trunk/src/burn/snd/k054539.cpp
 END
 ymdeltat.h
 K 25
@@ -435,27 +453,27 @@ svn:wc:ra_dav:version-url
 V 55
 /svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ymdeltat.h
 END
-upd7759.h
-K 25
-svn:wc:ra_dav:version-url
-V 54
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/upd7759.h
-END
 burn_ym2610.h
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2610.h
+/svn/fbalpha/!svn/ver/722/trunk/src/burn/snd/burn_ym2610.h
+END
+upd7759.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/683/trunk/src/burn/snd/upd7759.h
 END
 burn_ym2612.h
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/burn_ym2612.h
+/svn/fbalpha/!svn/ver/663/trunk/src/burn/snd/burn_ym2612.h
 END
 ay8910.c
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/snd/ay8910.c
+/svn/fbalpha/!svn/ver/673/trunk/src/burn/snd/ay8910.c
 END

@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/fbalpha/!svn/ver/957/trunk/src/burn
+END
+burn_memory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/37/trunk/src/burn/burn_memory.cpp
+END
+burn_led.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/burn_led.h
+END
+driver.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/driver.h
+END
+hiscore.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/hiscore.h
+END
+vector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/vector.cpp
+END
+burn.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/929/trunk/src/burn/burn.cpp
+END
+vector.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/vector.h
+END
+debug_track.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/724/trunk/src/burn/debug_track.cpp
+END
+stdfunc.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/stdfunc.h
+END
+burn.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fbalpha/!svn/ver/929/trunk/src/burn/burn.h
+END
+burn_sound_a.asm
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/burn_sound_a.asm
+END
+tiles_generic.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/510/trunk/src/burn/tiles_generic.cpp
+END
+bitswap.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/309/trunk/src/burn/bitswap.h
+END
+burn_sound.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/burn_sound.cpp
+END
+burn_gun.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/928/trunk/src/burn/burn_gun.cpp
+END
+load.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/load.cpp
+END
+burn_sound_c.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/burn_sound_c.cpp
+END
+timer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/826/trunk/src/burn/timer.cpp
+END
+tiles_generic.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/148/trunk/src/burn/tiles_generic.h
+END
+burn_sound.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/burn_sound.h
+END
+cheat.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/307/trunk/src/burn/cheat.cpp
+END
+burn_gun.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/burn_gun.h
+END
+state.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fbalpha/!svn/ver/496/trunk/src/burn/state.h
+END
+timer.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/timer.h
+END
+burnint.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/735/trunk/src/burn/burnint.h
+END
+cheat.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fbalpha/!svn/ver/451/trunk/src/burn/cheat.h
+END
+burn_led.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/12/trunk/src/burn/burn_led.cpp
+END
+version.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/936/trunk/src/burn/version.h
+END
+hiscore.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/826/trunk/src/burn/hiscore.cpp
+END

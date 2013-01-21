@@ -2,8 +2,8 @@
 // Based on MAME driver by Luca Elia
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym3812.h"
 #include "msm6295.h"
 
@@ -663,13 +663,14 @@ static INT32 DrvInit(INT32 game_select)
 	ZetMapArea(0xe000, 0xe7ff, 2, DrvZ80RAM);
 	ZetSetOutHandler(magicbub_sound_out);
 	ZetSetInHandler(magicbub_sound_in);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnYM3812Init(4000000, &DrvYM3812IrqHandler, &DrvSynchroniseStream, 0);
 	BurnTimerAttachZetYM3812(3000000);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 0.80, BURN_SND_ROUTE_BOTH);
 
-	MSM6295Init(0, (is_magicbub ? 1056000 : 1000000) / 132, 60.0, is_magicbub);
+	MSM6295Init(0, (is_magicbub ? 1056000 : 1000000) / 132, is_magicbub);
+	MSM6295SetRoute(0, (is_magicbub ? 0.80 : 1.00), BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

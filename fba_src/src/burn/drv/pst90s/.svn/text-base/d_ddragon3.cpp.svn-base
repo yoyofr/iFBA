@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym2151.h"
 #include "msm6295.h"
 
@@ -1250,15 +1250,17 @@ static INT32 DrvInit()
 	ZetMapArea(0xc000, 0xc7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xc000, 0xc7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xc000, 0xc7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
 	BurnYM2151SetIrqHandler(&DrvYM2151IrqHandler);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.50, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.50, BURN_SND_ROUTE_RIGHT);
 	
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 1000000 / 132, 100.0, 1);
+	MSM6295Init(0, 1000000 / 132, 1);
+	MSM6295SetRoute(0, 1.50, BURN_SND_ROUTE_BOTH);
 	
 	DrawFunction = DrvDraw;
 	
@@ -1360,15 +1362,17 @@ static INT32 DrvpInit()
 	ZetMapArea(0xc000, 0xc7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xc000, 0xc7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xc000, 0xc7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
 	BurnYM2151SetIrqHandler(&DrvYM2151IrqHandler);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.50, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.50, BURN_SND_ROUTE_RIGHT);
 	
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 1000000 / 132, 100.0, 1);
+	MSM6295Init(0, 1000000 / 132, 1);
+	MSM6295SetRoute(0, 1.50, BURN_SND_ROUTE_BOTH);
 	
 	DrawFunction = DrvDraw;
 	
@@ -1467,15 +1471,17 @@ static INT32 DrvbInit()
 	ZetMapArea(0xc000, 0xc7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xc000, 0xc7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xc000, 0xc7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
 	BurnYM2151SetIrqHandler(&DrvYM2151IrqHandler);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.50, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.50, BURN_SND_ROUTE_RIGHT);
 	
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 1000000 / 132, 100.0, 1);
+	MSM6295Init(0, 1000000 / 132, 1);
+	MSM6295SetRoute(0, 1.50, BURN_SND_ROUTE_BOTH);
 	
 	DrawFunction = DrvDraw;
 	
@@ -1604,15 +1610,17 @@ static INT32 CtribeInit()
 	ZetMapArea(0x8000, 0x87ff, 0, DrvZ80Ram                );
 	ZetMapArea(0x8000, 0x87ff, 1, DrvZ80Ram                );
 	ZetMapArea(0x8000, 0x87ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
 	BurnYM2151SetIrqHandler(&DrvYM2151IrqHandler);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 1.20, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 1.20, BURN_SND_ROUTE_RIGHT);
 	
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 1000000 / 132, 10.0, 1);
+	MSM6295Init(0, 1000000 / 132, 1);
+	MSM6295SetRoute(0, 0.80, BURN_SND_ROUTE_BOTH);
 	
 	DrawFunction = CtribeDraw;
 	

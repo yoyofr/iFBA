@@ -2,7 +2,7 @@
 // Based on MAME driver by Uki
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "sn76496.h"
 
 static UINT8 *AllMem;
@@ -320,7 +320,6 @@ static INT32 DrvInit()
 	ZetMapArea(0xd800, 0xdfff, 2, DrvShareRAM);
 	ZetSetWriteHandler(markham_main_write);
 	ZetSetReadHandler(markham_main_read);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -331,11 +330,12 @@ static INT32 DrvInit()
 	ZetMapArea(0x8000, 0x87ff, 1, DrvShareRAM);
 	ZetMapArea(0x8000, 0x87ff, 2, DrvShareRAM);
 	ZetSetWriteHandler(markham_sound_write);
-	ZetMemEnd();
 	ZetClose();
 
-	SN76489Init(0, 4000000, 0);
-	SN76489Init(1, 4000000, 1);
+	SN76496Init(0, 4000000, 0);
+	SN76496Init(1, 4000000, 1);
+	SN76496SetRoute(0, 0.75, BURN_SND_ROUTE_BOTH);
+	SN76496SetRoute(1, 0.75, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

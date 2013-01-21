@@ -75,6 +75,7 @@ UINT8 MshuttleAY8910CS;
 UINT8 GmgalaxSelectedGame;
 UINT8 Fourin1Bank;
 UINT8 GameIsGmgalax;
+UINT8 GameIsBagmanmc;
 UINT8 CavelonBankSwitch;
 UINT8 GalVBlank;
 
@@ -139,6 +140,10 @@ static INT32 GalDoReset()
 	
 	if (GalZ80Rom1Size) {
 		ZetOpen(0);
+		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "4in1")) {
+			ZetMapArea(0x0000, 0x3fff, 0, GalZ80Rom1);
+			ZetMapArea(0x0000, 0x3fff, 2, GalZ80Rom1);
+		}
 		ZetReset();
 		ZetClose();
 	}
@@ -586,7 +591,6 @@ INT32 GalInit()
 			ZetMapArea(0x5000, 0x53ff, 2, GalVideoRam);
 			ZetMapArea(0x5800, 0x58ff, 0, GalSpriteRam);
 			ZetMapArea(0x5800, 0x58ff, 2, GalSpriteRam);
-			ZetMemEnd();
 			ZetClose();
 		}
 	}
@@ -772,7 +776,6 @@ void MapMooncrst()
 	ZetMapArea(0x9000, 0x93ff, 2, GalVideoRam);
 	ZetMapArea(0x9800, 0x98ff, 0, GalSpriteRam);
 	ZetMapArea(0x9800, 0x98ff, 2, GalSpriteRam);
-	ZetMemEnd();
 	ZetClose();
 }
 
@@ -934,7 +937,6 @@ void MapJumpbug()
 	ZetMapArea(0x5000, 0x50ff, 2, GalSpriteRam);
 	ZetMapArea(0x8000, GalZ80Rom1Size + 0x4000 - 1, 0, GalZ80Rom1 + 0x4000);
 	ZetMapArea(0x8000, GalZ80Rom1Size + 0x4000 - 1, 2, GalZ80Rom1 + 0x4000);
-	ZetMemEnd();
 	ZetClose();
 }
 
@@ -1058,7 +1060,6 @@ void MapFrogger()
 	ZetMapArea(0xa800, 0xabff, 2, GalVideoRam);
 	ZetMapArea(0xb000, 0xb0ff, 0, GalSpriteRam);
 	ZetMapArea(0xb000, 0xb0ff, 2, GalSpriteRam);
-	ZetMemEnd();
 	ZetClose();
 }
 
@@ -1195,7 +1196,6 @@ void MapTheend()
 	ZetMapArea(0x4c00, 0x4fff, 2, GalVideoRam);
 	ZetMapArea(0x5000, 0x50ff, 0, GalSpriteRam);
 	ZetMapArea(0x5000, 0x50ff, 2, GalSpriteRam);
-	ZetMemEnd();
 	ZetClose();
 }
 
@@ -1348,7 +1348,6 @@ void MapTurtles()
 	ZetMapArea(0x9400, 0x97ff, 2, GalVideoRam);
 	ZetMapArea(0x9800, 0x98ff, 0, GalSpriteRam);
 	ZetMapArea(0x9800, 0x98ff, 2, GalSpriteRam);
-	ZetMemEnd();
 	ZetClose();
 }
 
@@ -1498,7 +1497,6 @@ void MapScobra()
 	ZetMapArea(0x8c00, 0x8fff, 2, GalVideoRam);
 	ZetMapArea(0x9000, 0x90ff, 0, GalSpriteRam);
 	ZetMapArea(0x9000, 0x90ff, 2, GalSpriteRam);
-	ZetMemEnd();
 	ZetClose();
 }
 
@@ -1519,7 +1517,6 @@ INT32 GalExit()
 	GalIrqFire = 0;
 	GalIrqType = 0;
 	GalSoundType = 0;
-	GalSoundVolumeShift = 0;
 	GalFlipScreenX = 0;
 	GalFlipScreenY = 0;
 	ZigzagAYLatch = 0;
@@ -1574,6 +1571,7 @@ INT32 GalExit()
 	MshuttleAY8910CS = 0;
 	Fourin1Bank = 0;
 	GameIsGmgalax = 0;
+	GameIsBagmanmc = 0;
 	CavelonBankSwitch = 0;
 	DarkplntBulletColour = 0;
 	DambustrBgColour1 = 0;
@@ -1610,7 +1608,9 @@ INT32 GalFrame()
 	if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMAJAY8910) nInterleave = 32;
 	if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) nInterleave = 32;
 	
-	INT32 nIrqInterleaveFire = nInterleave / 4;	
+	INT32 nIrqInterleaveFire = nInterleave / 4;
+	
+	if (GameIsBagmanmc) nIrqInterleaveFire = 0;
 
 	if (GalReset) GalDoReset();
 	
@@ -1729,38 +1729,34 @@ INT32 GalFrame()
 			}
 		}
 		
-		if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_ZIGZAGAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_JUMPBUGAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMANAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMAJAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FROGGERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_EXPLORERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SFXAY8910DAC || GalSoundType == GAL_SOUND_HARDWARE_TYPE_MSHUTTLEAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_BONGOAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_AD2083AY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_HUNCHBACKAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) {
+		if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_ZIGZAGAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_JUMPBUGAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMANAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMAJAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_EXPLORERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SFXAY8910DAC || GalSoundType == GAL_SOUND_HARDWARE_TYPE_MSHUTTLEAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_BONGOAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_AD2083AY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_HUNCHBACKAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) {
 			if (pBurnSoundOut) {
-				INT32 nSample;
 				INT32 nSegmentLength = nBurnSoundLen - nSoundBufferPos;
 				INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
+				AY8910Render(&pAY8910Buffer[0], pSoundBuf, nSegmentLength, 0);
+				nSoundBufferPos += nSegmentLength;
+			}
+		}
+		
+		if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FROGGERAY8910) {
+			if (pBurnSoundOut) {
+				INT32 nSegmentLength = nBurnSoundLen - nSoundBufferPos;
+				INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
+				
 				AY8910Update(0, &pAY8910Buffer[0], nSegmentLength);
-				if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_EXPLORERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SFXAY8910DAC || GalSoundType == GAL_SOUND_HARDWARE_TYPE_AD2083AY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_HUNCHBACKAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) {
+				if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910) {
 					AY8910Update(1, &pAY8910Buffer[3], nSegmentLength);
-				}				
-				if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910) {
-					AY8910Update(2, &pAY8910Buffer[6], nSegmentLength);
 				}
-				for (INT32 n = 0; n < nSegmentLength; n++) {
-					nSample  = pAY8910Buffer[0][n] >> GalSoundVolumeShift;
-					nSample += pAY8910Buffer[1][n] >> GalSoundVolumeShift;
-					nSample += pAY8910Buffer[2][n] >> GalSoundVolumeShift;
-					if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_EXPLORERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SFXAY8910DAC || GalSoundType == GAL_SOUND_HARDWARE_TYPE_AD2083AY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_HUNCHBACKAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) {
-						nSample += pAY8910Buffer[3][n] >> GalSoundVolumeShift;
-						nSample += pAY8910Buffer[4][n] >> GalSoundVolumeShift;
-						nSample += pAY8910Buffer[5][n] >> GalSoundVolumeShift;
-					}
-					if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910) {
-						nSample += pAY8910Buffer[6][n] >> GalSoundVolumeShift;
-						nSample += pAY8910Buffer[7][n] >> GalSoundVolumeShift;
-						nSample += pAY8910Buffer[8][n] >> GalSoundVolumeShift;
-					}
-
-					nSample = BURN_SND_CLIP(nSample);
-
-					pSoundBuf[(n << 1) + 0] = nSample;
-					pSoundBuf[(n << 1) + 1] = nSample;
-    			}
+				
+				filter_rc_update(0, pAY8910Buffer[0], pSoundBuf, nSegmentLength);
+				filter_rc_update(1, pAY8910Buffer[1], pSoundBuf, nSegmentLength);
+				filter_rc_update(2, pAY8910Buffer[2], pSoundBuf, nSegmentLength);
+				if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910) {
+					filter_rc_update(3, pAY8910Buffer[3], pSoundBuf, nSegmentLength);
+					filter_rc_update(4, pAY8910Buffer[4], pSoundBuf, nSegmentLength);
+					filter_rc_update(5, pAY8910Buffer[5], pSoundBuf, nSegmentLength);
+				}
+				
 				nSoundBufferPos += nSegmentLength;
 			}
 		}
@@ -1800,40 +1796,35 @@ INT32 GalFrame()
 		}
 	}
 	
-	if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_ZIGZAGAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_JUMPBUGAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMANAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMAJAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FROGGERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_EXPLORERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SFXAY8910DAC || GalSoundType == GAL_SOUND_HARDWARE_TYPE_MSHUTTLEAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_BONGOAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_AD2083AY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_HUNCHBACKAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) {
+	if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_ZIGZAGAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_JUMPBUGAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMANAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_CHECKMAJAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_EXPLORERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SFXAY8910DAC || GalSoundType == GAL_SOUND_HARDWARE_TYPE_MSHUTTLEAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_BONGOAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_AD2083AY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_HUNCHBACKAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) {
 		if (pBurnSoundOut) {
-			INT32 nSample;
+			INT32 nSegmentLength = nBurnSoundLen - nSoundBufferPos;
+			INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
+			if (nSegmentLength) {
+				AY8910Render(&pAY8910Buffer[0], pSoundBuf, nSegmentLength, 0);
+ 			}
+		}
+	}
+	
+	if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FROGGERAY8910) {
+		if (pBurnSoundOut) {
 			INT32 nSegmentLength = nBurnSoundLen - nSoundBufferPos;
 			INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
 			if (nSegmentLength) {
 				AY8910Update(0, &pAY8910Buffer[0], nSegmentLength);
-				if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_EXPLORERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SFXAY8910DAC || GalSoundType == GAL_SOUND_HARDWARE_TYPE_AD2083AY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_HUNCHBACKAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) {
+				if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910) {
 					AY8910Update(1, &pAY8910Buffer[3], nSegmentLength);
 				}
-				if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910) {
-					AY8910Update(2, &pAY8910Buffer[6], nSegmentLength);
+				
+				filter_rc_update(0, pAY8910Buffer[0], pSoundBuf, nSegmentLength);
+				filter_rc_update(1, pAY8910Buffer[1], pSoundBuf, nSegmentLength);
+				filter_rc_update(2, pAY8910Buffer[2], pSoundBuf, nSegmentLength);
+				if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910) {
+					filter_rc_update(3, pAY8910Buffer[3], pSoundBuf, nSegmentLength);
+					filter_rc_update(4, pAY8910Buffer[4], pSoundBuf, nSegmentLength);
+					filter_rc_update(5, pAY8910Buffer[5], pSoundBuf, nSegmentLength);
 				}
-				for (INT32 n = 0; n < nSegmentLength; n++) {
-					nSample  = pAY8910Buffer[0][n] >> GalSoundVolumeShift;
-					nSample += pAY8910Buffer[1][n] >> GalSoundVolumeShift;
-					nSample += pAY8910Buffer[2][n] >> GalSoundVolumeShift;
-					if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_KONAMIAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_EXPLORERAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_SFXAY8910DAC || GalSoundType == GAL_SOUND_HARDWARE_TYPE_AD2083AY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_HUNCHBACKAY8910 || GalSoundType == GAL_SOUND_HARDWARE_TYPE_FANTASTCAY8910) {
-						nSample += pAY8910Buffer[3][n] >> GalSoundVolumeShift;
-						nSample += pAY8910Buffer[4][n] >> GalSoundVolumeShift;
-						nSample += pAY8910Buffer[5][n] >> GalSoundVolumeShift;
-					}
-					if (GalSoundType == GAL_SOUND_HARDWARE_TYPE_SCORPIONAY8910) {
-						nSample += pAY8910Buffer[6][n] >> GalSoundVolumeShift;
-						nSample += pAY8910Buffer[7][n] >> GalSoundVolumeShift;
-						nSample += pAY8910Buffer[8][n] >> GalSoundVolumeShift;
-					}
-
-					nSample = BURN_SND_CLIP(nSample);
-
-					pSoundBuf[(n << 1) + 0] = nSample;
-					pSoundBuf[(n << 1) + 1] = nSample;
- 				}
- 			}
+			}
 		}
 	}
 	

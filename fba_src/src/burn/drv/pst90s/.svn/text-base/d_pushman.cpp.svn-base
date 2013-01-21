@@ -2,8 +2,8 @@
 // Based on MAME driver by Bryan McPhail
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "m6805_intf.h"
 #include "burn_ym2203.h"
 
@@ -550,7 +550,6 @@ static INT32 DrvInit()
 	ZetMapArea(0xc000, 0xc7ff, 0, DrvZ80RAM);
 	ZetSetReadHandler(pushman_sound_read);
 	ZetSetOutHandler(pushman_sound_out_port);
-	ZetMemEnd();
 	ZetClose();
 
 	m6805Init(1, 0x1000);
@@ -562,8 +561,9 @@ static INT32 DrvInit()
 //	m6805Close();
 
 	BurnYM2203Init(2, 2000000, &DrvIRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
-	BurnYM2203SetVolumeShift(1);
 	BurnTimerAttachZet(4000000);
+	BurnYM2203SetAllRoutes(0, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetAllRoutes(1, 0.40, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

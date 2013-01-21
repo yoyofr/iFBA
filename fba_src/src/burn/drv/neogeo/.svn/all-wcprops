@@ -1,19 +1,19 @@
 K 25
 svn:wc:ra_dav:version-url
 V 51
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/neogeo
+/svn/fbalpha/!svn/ver/932/trunk/src/burn/drv/neogeo
 END
 d_neogeo.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/405/trunk/src/burn/drv/neogeo/d_neogeo.cpp
+/svn/fbalpha/!svn/ver/932/trunk/src/burn/drv/neogeo/d_neogeo.cpp
 END
 neo_palette.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neo_palette.cpp
+/svn/fbalpha/!svn/ver/490/trunk/src/burn/drv/neogeo/neo_palette.cpp
 END
 neo_upd4990a.cpp
 K 25
@@ -25,13 +25,13 @@ neogeo.h
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/neogeo/neogeo.h
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/neogeo/neogeo.h
 END
 neo_run.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/399/trunk/src/burn/drv/neogeo/neo_run.cpp
+/svn/fbalpha/!svn/ver/841/trunk/src/burn/drv/neogeo/neo_run.cpp
 END
 neo_text.cpp
 K 25
@@ -67,5 +67,5 @@ neogeo.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/neogeo/neogeo.cpp
+/svn/fbalpha/!svn/ver/841/trunk/src/burn/drv/neogeo/neogeo.cpp
 END

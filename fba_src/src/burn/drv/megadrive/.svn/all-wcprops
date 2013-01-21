@@ -1,23 +1,23 @@
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/megadrive
+/svn/fbalpha/!svn/ver/846/trunk/src/burn/drv/megadrive
 END
 megadrive.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 68
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/megadrive/megadrive.cpp
+/svn/fbalpha/!svn/ver/846/trunk/src/burn/drv/megadrive/megadrive.cpp
 END
 d_megadrive.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 70
-/svn/fbalpha/!svn/ver/353/trunk/src/burn/drv/megadrive/d_megadrive.cpp
+/svn/fbalpha/!svn/ver/846/trunk/src/burn/drv/megadrive/d_megadrive.cpp
 END
 megadrive.h
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/megadrive/megadrive.h
+/svn/fbalpha/!svn/ver/846/trunk/src/burn/drv/megadrive/megadrive.h
 END

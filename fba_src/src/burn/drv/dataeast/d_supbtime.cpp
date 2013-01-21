@@ -2,7 +2,7 @@
 // Based on MAME driver by Bryan McPhail
 
 #include "tiles_generic.h"
-#include "sek.h"
+#include "m68000_intf.h"
 #include "deco16ic.h"
 #include "h6280_intf.h"
 #include "msm6295.h"
@@ -331,7 +331,7 @@ static INT32 DrvInit(INT32 game)
 	SekSetReadByteHandler(0,		supbtime_main_read_byte);
 	SekClose();
 
-	deco16SoundInit(DrvHucROM, DrvHucRAM, 4027500, 0, NULL, 40.0, 1023924, 75.0, 0, 0);
+	deco16SoundInit(DrvHucROM, DrvHucRAM, 4027500, 0, NULL, 0.45, 1023924, 0.50, 0, 0);
 
 	GenericTilesInit();
 
@@ -359,9 +359,9 @@ static void DrvPaletteRecalc()
 	UINT16 *p = (UINT16*)DrvPalRAM;
 
 	for (INT32 i = 0; i < 0x800 / 2; i++) {
-		INT32 b = (p[i] >> 8) & 0x0f;
-		INT32 g = (p[i] >> 4) & 0x0f;
-		INT32 r = (p[i] >> 0) & 0x0f;
+		INT32 b = (BURN_ENDIAN_SWAP_INT16(p[i]) >> 8) & 0x0f; //Seb
+		INT32 g = (BURN_ENDIAN_SWAP_INT16(p[i]) >> 4) & 0x0f; //Seb
+		INT32 r = (BURN_ENDIAN_SWAP_INT16(p[i]) >> 0) & 0x0f; //Seb
 
 		r |= r << 4;
 		g |= g << 4;
@@ -379,9 +379,9 @@ static void draw_sprites()
 	{
 		INT32 inc, mult;
 
-		INT32 sy     = ram[offs + 0];
-		INT32 code   = ram[offs + 1] & 0x3fff;
-		INT32 sx     = ram[offs + 2];
+		INT32 sy     = BURN_ENDIAN_SWAP_INT16(ram[offs + 0]);
+		INT32 code   = BURN_ENDIAN_SWAP_INT16(ram[offs + 1]) & 0x3fff;
+		INT32 sx     = BURN_ENDIAN_SWAP_INT16(ram[offs + 2]);
 
 		if ((sy & 0x1000) && (nCurrentFrame & 1)) continue;
 

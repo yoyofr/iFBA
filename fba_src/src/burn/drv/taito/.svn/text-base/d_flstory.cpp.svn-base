@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
 #include "taito_m68705.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "driver.h"
 #include "dac.h"
 extern "C" {
@@ -856,7 +856,6 @@ static INT32 DrvInit()
 	ZetMapArea(0xe000, 0xe7ff, 2, DrvZ80RAM0);
 	ZetSetWriteHandler(flstory_main_write);
 	ZetSetReadHandler(flstory_main_read);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -870,15 +869,15 @@ static INT32 DrvInit()
 	ZetMapArea(0xe000, 0xefff, 2, DrvZ80ROM1 + 0xe000);
 	ZetSetWriteHandler(flstory_sound_write);
 	ZetSetReadHandler(flstory_sound_read);
-	ZetMemEnd();
 	ZetClose();
 
 	m67805_taito_init(DrvMcuROM, DrvMcuRAM, &standard_m68705_interface);
 
 	AY8910Init(0, 2000000, nBurnSoundRate, NULL, NULL, NULL, NULL);
+	AY8910SetAllRoutes(0, 0.10, BURN_SND_ROUTE_BOTH);
 
 	DACInit(0, 0, 1, flstoryDACSync);
-	DACSetVolShift(0, 2);
+	DACSetRoute(0, 0.20, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -1179,21 +1178,7 @@ static INT32 DrvFrame()
 	ZetOpen(1);
 
 	if (pBurnSoundOut) {
-		INT32 nSample;
-		AY8910Update(0, &pAY8910Buffer[0], nBurnSoundLen);
-		for (INT32 n = 0; n < nBurnSoundLen; n++) {
-			nSample  = pAY8910Buffer[0][n];
-			nSample += pAY8910Buffer[1][n];
-			nSample += pAY8910Buffer[2][n];
-
-			nSample /= 4;
-
-			nSample = BURN_SND_CLIP(nSample);
-
-			pBurnSoundOut[(n << 1) + 0] = nSample;
-			pBurnSoundOut[(n << 1) + 1] = nSample;
-		}
-			
+		AY8910Render(&pAY8910Buffer[0], pBurnSoundOut, nBurnSoundLen, 0);			
 		DACUpdate(pBurnSoundOut, nBurnSoundLen);
 	}
 
@@ -1407,7 +1392,11 @@ static INT32 victnineInit()
 {
 	select_game = 2;
 
-	return DrvInit();
+	INT32 nRet = DrvInit();
+	
+	AY8910SetAllRoutes(0, 0.50, BURN_SND_ROUTE_BOTH);
+	
+	return nRet;
 }
 
 struct BurnDriverD BurnDrvVictnine = {

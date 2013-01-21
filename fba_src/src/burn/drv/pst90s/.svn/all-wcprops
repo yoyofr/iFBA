@@ -1,109 +1,103 @@
 K 25
 svn:wc:ra_dav:version-url
 V 51
-/svn/fbalpha/!svn/ver/443/trunk/src/burn/drv/pst90s
+/svn/fbalpha/!svn/ver/945/trunk/src/burn/drv/pst90s
 END
 d_nmk16.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_nmk16.cpp
+/svn/fbalpha/!svn/ver/842/trunk/src/burn/drv/pst90s/d_nmk16.cpp
 END
 d_seta.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_seta.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_seta.cpp
 END
 d_deniam.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_deniam.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_deniam.cpp
 END
 d_f1gp.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_f1gp.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_f1gp.cpp
 END
 d_taotaido.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_taotaido.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_taotaido.cpp
 END
 d_gotcha.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_gotcha.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_gotcha.cpp
 END
 d_nmg5.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_nmg5.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_nmg5.cpp
 END
 d_ohmygod.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_ohmygod.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_ohmygod.cpp
 END
 d_pass.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_pass.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_pass.cpp
 END
 d_powerins.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_powerins.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_powerins.cpp
 END
 d_tecmosys.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/443/trunk/src/burn/drv/pst90s/d_tecmosys.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_tecmosys.cpp
 END
 d_1945kiii.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_1945kiii.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_1945kiii.cpp
 END
 d_silkroad.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_silkroad.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_silkroad.cpp
 END
 d_gumbo.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_gumbo.cpp
-END
-d_lordgun.cpp
-K 25
-svn:wc:ra_dav:version-url
-V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_lordgun.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_gumbo.cpp
 END
 d_fstarfrc.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_fstarfrc.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_fstarfrc.cpp
 END
-d_pushman.cpp
+d_lordgun.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_pushman.cpp
+/svn/fbalpha/!svn/ver/835/trunk/src/burn/drv/pst90s/d_lordgun.cpp
 END
 nmk004.h
 K 25
@@ -111,113 +105,125 @@ svn:wc:ra_dav:version-url
 V 60
 /svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pst90s/nmk004.h
 END
-d_crospang.cpp
+d_pushman.cpp
 K 25
 svn:wc:ra_dav:version-url
-V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_crospang.cpp
+V 65
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_pushman.cpp
 END
 d_news.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_news.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_news.cpp
 END
-d_suna16.cpp
-K 25
-svn:wc:ra_dav:version-url
-V 64
-/svn/fbalpha/!svn/ver/443/trunk/src/burn/drv/pst90s/d_suna16.cpp
-END
-d_suprnova.cpp
+d_crospang.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/pst90s/d_suprnova.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_crospang.cpp
 END
 d_unico.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_unico.cpp
+/svn/fbalpha/!svn/ver/919/trunk/src/burn/drv/pst90s/d_unico.cpp
+END
+d_suprnova.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/926/trunk/src/burn/drv/pst90s/d_suprnova.cpp
+END
+d_suna16.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_suna16.cpp
 END
 d_galpanic.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_galpanic.cpp
+/svn/fbalpha/!svn/ver/831/trunk/src/burn/drv/pst90s/d_galpanic.cpp
 END
-d_mcatadv.cpp
+d_silvmil.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_mcatadv.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_silvmil.cpp
 END
 d_shadfrce.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_shadfrce.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_shadfrce.cpp
+END
+d_mcatadv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_mcatadv.cpp
 END
 d_xorworld.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_xorworld.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_xorworld.cpp
 END
 d_speedspn.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_speedspn.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_speedspn.cpp
 END
 d_jchan.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_jchan.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_jchan.cpp
 END
 d_mugsmash.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_mugsmash.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_mugsmash.cpp
 END
 d_funybubl.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_funybubl.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_funybubl.cpp
 END
 d_aerofgt.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_aerofgt.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_aerofgt.cpp
 END
 d_crshrace.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_crshrace.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_crshrace.cpp
 END
 d_airbustr.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_airbustr.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_airbustr.cpp
 END
 d_blmbycar.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_blmbycar.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_blmbycar.cpp
 END
 d_midas.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_midas.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_midas.cpp
 END
 kanekotb.h
 K 25
@@ -229,37 +235,37 @@ d_ddragon3.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_ddragon3.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_ddragon3.cpp
 END
 d_egghunt.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_egghunt.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_egghunt.cpp
 END
 d_galspnbl.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/443/trunk/src/burn/drv/pst90s/d_galspnbl.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_galspnbl.cpp
 END
 d_bloodbro.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_bloodbro.cpp
+/svn/fbalpha/!svn/ver/932/trunk/src/burn/drv/pst90s/d_bloodbro.cpp
 END
 d_raiden.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_raiden.cpp
+/svn/fbalpha/!svn/ver/827/trunk/src/burn/drv/pst90s/d_raiden.cpp
 END
 d_welltris.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_welltris.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_welltris.cpp
 END
 nmk004.cpp
 K 25
@@ -271,101 +277,101 @@ d_pirates.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_pirates.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_pirates.cpp
 END
 d_yunsun16.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_yunsun16.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_yunsun16.cpp
 END
 d_hyperpac.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_hyperpac.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_hyperpac.cpp
 END
 d_zerozone.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_zerozone.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_zerozone.cpp
 END
 d_wwfwfest.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_wwfwfest.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_wwfwfest.cpp
 END
 d_drtomy.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_drtomy.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_drtomy.cpp
 END
 d_seta2.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_seta2.cpp
+/svn/fbalpha/!svn/ver/763/trunk/src/burn/drv/pst90s/d_seta2.cpp
 END
 d_kaneko16.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_kaneko16.cpp
+/svn/fbalpha/!svn/ver/945/trunk/src/burn/drv/pst90s/d_kaneko16.cpp
 END
 d_esd16.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_esd16.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_esd16.cpp
 END
 d_fuukifg3.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_fuukifg3.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_fuukifg3.cpp
 END
 d_dcon.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_dcon.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_dcon.cpp
 END
 d_diverboy.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_diverboy.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_diverboy.cpp
 END
 d_aquarium.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_aquarium.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_aquarium.cpp
 END
 d_gaiden.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/443/trunk/src/burn/drv/pst90s/d_gaiden.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_gaiden.cpp
 END
 d_vmetal.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_vmetal.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_vmetal.cpp
 END
 d_gaelco.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/443/trunk/src/burn/drv/pst90s/d_gaelco.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/pst90s/d_gaelco.cpp
 END
 d_tumbleb.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/pst90s/d_tumbleb.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/pst90s/d_tumbleb.cpp
 END

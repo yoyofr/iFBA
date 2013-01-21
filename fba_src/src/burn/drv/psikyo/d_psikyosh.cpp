@@ -9,7 +9,7 @@
 #include "psikyosh_render.h"
 #include "burn_ymf278b.h"
 #include "eeprom.h"
-#include "sh2.h"
+#include "sh2_intf.h"
 
 static UINT8 *AllMem;
 static UINT8 *MemEnd;
@@ -697,6 +697,7 @@ static INT32 DrvInit(INT32 (*LoadCallback)(), INT32 type, INT32 gfx_max, INT32 g
 	Sh2SetReadLongHandler (1,		hack_read_long);
 
 	BurnYMF278BInit(0, DrvSndROM, &DrvIRQCallback, DrvSynchroniseStream);
+	BurnYMF278BSetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 	BurnTimerAttachSh2(28636350);
 
 	EEPROMInit(&eeprom_interface_93C56);

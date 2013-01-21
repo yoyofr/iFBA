@@ -1,5 +1,5 @@
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "burn_ym2203.h"
 #include "msm5205.h"
 
@@ -465,7 +465,7 @@ void __fastcall Wc90b1Write3(UINT16 a, UINT8 d)
 
 inline static INT32 Wc90b1SynchroniseStream(INT32 nSoundRate)
 {
-	return (INT64)ZetTotalCycles() * nSoundRate / 5000000;
+	return (INT64)(double)ZetTotalCycles() * nSoundRate / 5000000;
 }
 
 inline static double Wc90b1GetTime()
@@ -598,7 +598,6 @@ static INT32 Wc90b1Init()
 	ZetMapArea(0xf800, 0xfbff, 0, Wc90b1SharedRam        );
 	ZetMapArea(0xf800, 0xfbff, 1, Wc90b1SharedRam        );
 	ZetMapArea(0xf800, 0xfbff, 2, Wc90b1SharedRam        );
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -626,7 +625,6 @@ static INT32 Wc90b1Init()
 	ZetMapArea(0xf800, 0xfbff, 0, Wc90b1SharedRam        );
 	ZetMapArea(0xf800, 0xfbff, 1, Wc90b1SharedRam        );
 	ZetMapArea(0xf800, 0xfbff, 2, Wc90b1SharedRam        );
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(2);
@@ -640,15 +638,16 @@ static INT32 Wc90b1Init()
 	ZetMapArea(0xf000, 0xf7ff, 0, Wc90b1Z80Ram3          );
 	ZetMapArea(0xf000, 0xf7ff, 1, Wc90b1Z80Ram3          );
 	ZetMapArea(0xf000, 0xf7ff, 2, Wc90b1Z80Ram3          );
-	ZetMemEnd();
 	ZetClose();
 
 	GenericTilesInit();
 
 	BurnYM2203Init(1, 1250000, NULL, Wc90b1SynchroniseStream, Wc90b1GetTime, 0);
 	BurnTimerAttachZet(5000000);
+	BurnYM2203SetAllRoutes(0, 0.20, BURN_SND_ROUTE_BOTH);
 	
-	MSM5205Init(0, Wc90b1SynchroniseStream, 384000, Wc90b1MSM5205Vck0, MSM5205_S96_4B, 100, 1);
+	MSM5205Init(0, Wc90b1SynchroniseStream, 384000, Wc90b1MSM5205Vck0, MSM5205_S96_4B, 1);
+	MSM5205SetRoute(0, 0.30, BURN_SND_ROUTE_BOTH);
 	
 	Wc90b1DoReset();
 

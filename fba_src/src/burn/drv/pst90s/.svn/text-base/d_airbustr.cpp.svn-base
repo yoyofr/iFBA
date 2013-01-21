@@ -2,8 +2,8 @@
 // Based on MAME driver by Luca Elia
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "msm6295.h"
 #include "burn_ym2203.h"
 #include "pandora.h"
@@ -588,7 +588,6 @@ static INT32 DrvInit()
 	ZetSetWriteHandler(airbustr_main_write);
 	ZetSetReadHandler(airbustr_main_read);
 	ZetSetOutHandler(airbustr_main_out);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -612,7 +611,6 @@ static INT32 DrvInit()
 	ZetMapArea(0xf000, 0xffff, 2, DrvShareRAM);
 	ZetSetOutHandler(airbustr_sub_out);
 	ZetSetInHandler(airbustr_sub_in);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(2);
@@ -624,15 +622,18 @@ static INT32 DrvInit()
 	ZetMapArea(0xc000, 0xdfff, 2, DrvZ80RAM2);
 	ZetSetOutHandler(airbustr_sound_out);
 	ZetSetInHandler(airbustr_sound_in);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnYM2203Init(1, 3000000, NULL, DrvSynchroniseStream, DrvGetTime, 0);
 	BurnYM2203SetPorts(0, &DrvYM2203PortA, &DrvYM2203PortB, NULL, NULL);
-	BurnYM2203SetVolumeShift(2);
 	BurnTimerAttachZet(6000000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.50, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.25, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.25, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.25, BURN_SND_ROUTE_BOTH);
 
-	MSM6295Init(0, 3000000 / 132, 80, 1);
+	MSM6295Init(0, 3000000 / 132, 1);
+	MSM6295SetRoute(0, 0.80, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/psp
+END
+vid_pspfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/psp/vid_pspfx.cpp
+END
+vid_psp.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/psp/vid_psp.c
+END
+vid_psp.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/psp/vid_psp.h
+END

@@ -2,7 +2,7 @@
 // Based on MAME driver by Nicola Salmoria
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "sn76496.h"
 #include "bitswap.h"
 
@@ -770,15 +770,14 @@ static INT32 DrvInit(INT32 game_select)
 	ZetMapArea(0xd400, 0xd7ff, 2, DrvColRAM);
 	ZetSetWriteHandler(ladybug_write);
 	ZetSetReadHandler(ladybug_read);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1); // So reset function can be shared
 
 	SN76489Init(0, 4000000, 0);
 	SN76489Init(1, 4000000, 1);
-	SN76496SetVolShift(0, 2);
-	SN76496SetVolShift(1, 2);
+	SN76496SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
+	SN76496SetRoute(1, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -838,7 +837,6 @@ static INT32 SraiderInit()
 	ZetMapArea(0xd400, 0xd7ff, 2, DrvColRAM);
 	ZetSetWriteHandler(sraider_main_write);
 	ZetSetReadHandler(ladybug_read);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -854,7 +852,6 @@ static INT32 SraiderInit()
 	ZetSetWriteHandler(sraider_sub_write);
 	ZetSetReadHandler(sraider_sub_read);
 	ZetSetOutHandler(sraider_sub_out);
-	ZetMemEnd();
 	ZetClose();
 
 	SN76489Init(0, 4000000, 0);
@@ -862,11 +859,11 @@ static INT32 SraiderInit()
 	SN76489Init(2, 4000000, 1);
 	SN76489Init(3, 4000000, 1);
 	SN76489Init(4, 4000000, 1);
-	SN76496SetVolShift(0, 3);
-	SN76496SetVolShift(1, 3);
-	SN76496SetVolShift(2, 3);
-	SN76496SetVolShift(3, 3);
-	SN76496SetVolShift(4, 3);
+	SN76496SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
+	SN76496SetRoute(1, 1.00, BURN_SND_ROUTE_BOTH);
+	SN76496SetRoute(2, 1.00, BURN_SND_ROUTE_BOTH);
+	SN76496SetRoute(3, 1.00, BURN_SND_ROUTE_BOTH);
+	SN76496SetRoute(4, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

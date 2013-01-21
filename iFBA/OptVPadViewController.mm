@@ -40,7 +40,7 @@ extern int launchGame;
 extern char gameName[64];
 
 @implementation OptVPadViewController
-@synthesize tabView,btn_backToEmu;
+@synthesize tabView,btn_backToEmu,emuvc;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -295,8 +295,12 @@ extern char gameName[64];
 
 
 -(IBAction) backToEmu {
-    launchGame=2;
-    [self.navigationController popToRootViewControllerAnimated:NO];
+//    launchGame=2;
+//    [self.navigationController popToRootViewControllerAnimated:NO];
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
+    [self.navigationController pushViewController:emuvc animated:NO];
+
 }
 
 #pragma Wiimote/iCP support

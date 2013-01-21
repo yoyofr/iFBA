@@ -2,7 +2,7 @@
 // Based on MAME driver by Brad Oliver and MANY others.
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "taito_m68705.h"
 #include "driver.h"
 extern "C" {
@@ -524,27 +524,27 @@ static void arkanoid_bootleg_d018_write(UINT8 data)
 			switch (data)
 			{
 				case 0x36:  // unneeded value : no call 0x2050, unused A and overwritten HL (0x0313 -> 0x0340)
-					if (ZetPc(-1) == 0x7c47)
+					if (ZetGetPC(-1) == 0x7c47)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x38:  // unneeded value : no call 0x2050, unused A and fixed HL (0x7bd5)
-					if (ZetPc(-1) == 0x7b87)
+					if (ZetGetPC(-1) == 0x7b87)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x8a:  // unneeded value : no call 0x2050, unused A and overwritten HL (0x7b77 -> 0x7c1c)
-					if (ZetPc(-1) == 0x9661)
+					if (ZetGetPC(-1) == 0x9661)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xe3:  // unneeded value : call 0x2050 but fixed A (0x00) and fixed HL (0xed83)
-					if (ZetPc(-1) == 0x67e3)
+					if (ZetGetPC(-1) == 0x67e3)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xf7:  // unneeded value : 3 * 'NOP' at 0x034f + 2 * 'NOP' at 0x35b
-					if (ZetPc(-1) == 0x0349)
+					if (ZetGetPC(-1) == 0x0349)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xff:  // unneeded value : no call 0x2050, unused A and overwritten HL (0x7c4f -> 0x7d31)
-					if (ZetPc(-1) == 0x9670)
+					if (ZetGetPC(-1) == 0x9670)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				default:
@@ -557,37 +557,37 @@ static void arkanoid_bootleg_d018_write(UINT8 data)
 			switch (data)
 			{
 				case 0x36:  // unneeded value : call 0x2050 but fixed A (0x2d)
-					if (ZetPc(-1) == 0x7c4c)
+					if (ZetGetPC(-1) == 0x7c4c)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x38:  // unneeded value : call 0x2050 but fixed A (0xf3)
-					if (ZetPc(-1) == 0x7b87)
+					if (ZetGetPC(-1) == 0x7b87)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x88:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e3)
+					if (ZetGetPC(-1) == 0x67e3)
 						arkanoid_bootleg_cmd = 0x00;
-					if (ZetPc(-1) == 0x7c47)
+					if (ZetGetPC(-1) == 0x7c47)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x89:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e5)
+					if (ZetGetPC(-1) == 0x67e5)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x8a:  // unneeded value : call 0x2050 but fixed A (0xa5)
-					if (ZetPc(-1) == 0x9661)
+					if (ZetGetPC(-1) == 0x9661)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xc0:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e7)
+					if (ZetGetPC(-1) == 0x67e7)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xe3:  // unneeded value : call 0x2050 but fixed A (0x61)
-					if (ZetPc(-1) == 0x67e9)
+					if (ZetGetPC(-1) == 0x67e9)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xff:  // unneeded value : call 0x2050 but fixed A (0xe2)
-					if (ZetPc(-1) == 0x9670)
+					if (ZetGetPC(-1) == 0x9670)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				default:
@@ -600,41 +600,41 @@ static void arkanoid_bootleg_d018_write(UINT8 data)
 			switch (data)
 			{
 				case 0x36:  // unneeded value : call 0x2050 but fixed A (0x2d)
-					if (ZetPc(-1) == 0x7c4c)
+					if (ZetGetPC(-1) == 0x7c4c)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x38:  // unneeded value : call 0x2050 but fixed A (0xf3)
-					if (ZetPc(-1) == 0x7b87)
+					if (ZetGetPC(-1) == 0x7b87)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x88:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e3)
+					if (ZetGetPC(-1) == 0x67e3)
 						arkanoid_bootleg_cmd = 0x00;
-					if (ZetPc(-1) == 0x7c47)
+					if (ZetGetPC(-1) == 0x7c47)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x89:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e5)
+					if (ZetGetPC(-1) == 0x67e5)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x8a:  // unneeded value : call 0x2050 but unused HL and fixed DE (0x7c1c)
-					if (ZetPc(-1) == 0x9661)
+					if (ZetGetPC(-1) == 0x9661)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xc0:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e7)
+					if (ZetGetPC(-1) == 0x67e7)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xe3:  // unneeded value : call 0x2050 but fixed A (0x61)
-					if (ZetPc(-1) == 0x67e9)
+					if (ZetGetPC(-1) == 0x67e9)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xf7:  // unneeded value : call 0x2050 but never called (check code at 0x0340)
-					if (ZetPc(-1) == 0x0349)
+					if (ZetGetPC(-1) == 0x0349)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xff:  // unneeded value : no call 0x2050, unused A and fixed HL (0x7d31)
-					if (ZetPc(-1) == 0x9670)
+					if (ZetGetPC(-1) == 0x9670)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				default:
@@ -647,40 +647,40 @@ static void arkanoid_bootleg_d018_write(UINT8 data)
 			switch (data)
 			{
 				case 0x36:  // unneeded value : call 0x2050 but fixed A (0x2d)
-					if (ZetPc(-1) == 0x7c4c)
+					if (ZetGetPC(-1) == 0x7c4c)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x38:  // unneeded value : call 0x2050 but fixed A (0xf3)
-					if (ZetPc(-1) == 0x7b87)
+					if (ZetGetPC(-1) == 0x7b87)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x88:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e3)
+					if (ZetGetPC(-1) == 0x67e3)
 						arkanoid_bootleg_cmd = 0x00;
-					if (ZetPc(-1) == 0x7c47)
+					if (ZetGetPC(-1) == 0x7c47)
 						arkanoid_bootleg_cmd = 0x00;
 				case 0x89:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e5)
+					if (ZetGetPC(-1) == 0x67e5)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x8a:  // call 0x2050 with A read from 0xf002 and wrong HL
-					if (ZetPc(-1) == 0x9661)
+					if (ZetGetPC(-1) == 0x9661)
 						arkanoid_bootleg_cmd = data;
 					break;
 				case 0xc0:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e7)
+					if (ZetGetPC(-1) == 0x67e7)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xe3:  // unneeded value : call 0x2050 but fixed A (0x61)
-					if (ZetPc(-1) == 0x67e9)
+					if (ZetGetPC(-1) == 0x67e9)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xf7:  // unneeded value : 3 * 'NOP' at 0x034f + 'JR NZ,$035D' at 0x35b
-					if (ZetPc(-1) == 0x0349)
+					if (ZetGetPC(-1) == 0x0349)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xff:  // call 0x2050 with A read from 0xf002 and wrong HL
-					if (ZetPc(-1) == 0x9670)
+					if (ZetGetPC(-1) == 0x9670)
 						arkanoid_bootleg_cmd = data;
 					break;
 				default:
@@ -693,48 +693,48 @@ static void arkanoid_bootleg_d018_write(UINT8 data)
 			switch (data)
 			{
 				case 0x24:  // A read from 0xf002 (expected to be 0x9b)
-					if (ZetPc(-1) == 0xbd7a)
+					if (ZetGetPC(-1) == 0xbd7a)
 						arkanoid_bootleg_cmd = data;
 					break;
 				case 0x36:  // call 0x2050 with A read from 0xf002 and wrong HL
-					if (ZetPc(-1) == 0x7c4c)
+					if (ZetGetPC(-1) == 0x7c4c)
 						arkanoid_bootleg_cmd = data;
 					break;
 				case 0x38:  // call 0x2050 with A read from 0xf002 and wrong HL
-					if (ZetPc(-1) == 0x7b87)
+					if (ZetGetPC(-1) == 0x7b87)
 						arkanoid_bootleg_cmd = data;
 					break;
 				case 0x88:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e3)
+					if (ZetGetPC(-1) == 0x67e3)
 						arkanoid_bootleg_cmd = 0x00;
-					if (ZetPc(-1) == 0x7c47)
+					if (ZetGetPC(-1) == 0x7c47)
 						arkanoid_bootleg_cmd = 0x00;
 				case 0x89:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e5)
+					if (ZetGetPC(-1) == 0x67e5)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0x8a:  // call 0x2050 with A read from 0xf002 and wrong HL
-					if (ZetPc(-1) == 0x9661)
+					if (ZetGetPC(-1) == 0x9661)
 						arkanoid_bootleg_cmd = data;
 					break;
 				case 0xc0:  // unneeded value : no read back
-					if (ZetPc(-1) == 0x67e7)
+					if (ZetGetPC(-1) == 0x67e7)
 						arkanoid_bootleg_cmd = 0x00;
 					break;
 				case 0xc3:  // A read from 0xf002 (expected to be 0x1d)
-					if (ZetPc(-1) == 0xbd8a)
+					if (ZetGetPC(-1) == 0xbd8a)
 						arkanoid_bootleg_cmd = data;
 					break;
 				case 0xe3:  // call 0x2050 with A read from 0xf002 and wrong HL
-					if (ZetPc(-1) == 0x67e9)
+					if (ZetGetPC(-1) == 0x67e9)
 						arkanoid_bootleg_cmd = data;
 					break;
 				case 0xf7:  // call 0x2050 with A read from 0xf002 and wrong HL
-					if (ZetPc(-1) == 0x0349)
+					if (ZetGetPC(-1) == 0x0349)
 						arkanoid_bootleg_cmd = data;
 					break;
 				case 0xff:  // call 0x2050 with A read from 0xf002 and wrong HL
-					if (ZetPc(-1) == 0x9670)
+					if (ZetGetPC(-1) == 0x9670)
 						arkanoid_bootleg_cmd = data;
 					break;
 				default:
@@ -1097,12 +1097,13 @@ static INT32 DrvInit()
 		ZetSetWriteHandler(arkanoid_write);
 	}
 	ZetSetReadHandler(arkanoid_read);
-	ZetMemEnd();
 	ZetClose();
 
 	m67805_taito_init(DrvMcuROM, DrvMcuRAM, &arkanoid_m68705_interface);
 
 	AY8910Init(0, 1500000, nBurnSoundRate, &ay8910_read_port_5, &ay8910_read_port_4, NULL, NULL);
+	AY8910SetAllRoutes(0, 0.33, BURN_SND_ROUTE_BOTH);
+	if (arkanoid_bootleg_id == HEXA) AY8910SetAllRoutes(0, 0.50, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -1239,20 +1240,7 @@ static INT32 DrvFrame()
 	ZetClose();
 
 	if (pBurnSoundOut) {
-		INT32 nSample;
-		AY8910Update(0, &pAY8910Buffer[0], nBurnSoundLen);
-		for (INT32 n = 0; n < nBurnSoundLen; n++) {
-			nSample  = pAY8910Buffer[0][n];
-			nSample += pAY8910Buffer[1][n];
-			nSample += pAY8910Buffer[2][n];
-
-			nSample /= 4;
-
-			nSample = BURN_SND_CLIP(nSample);
-
-			pBurnSoundOut[(n << 1) + 0] = nSample;
-			pBurnSoundOut[(n << 1) + 1] = nSample;
-		}
+		AY8910Render(&pAY8910Buffer[0], pBurnSoundOut, nBurnSoundLen, 0);
 	}
 
 	if (pBurnDraw) {
@@ -1426,10 +1414,10 @@ STD_ROM_PICK(arkatour)
 STD_ROM_FN(arkatour)
 
 struct BurnDriver BurnDrvarkatour = {
-	"arkatour", "arkanoid", NULL, NULL, "1987",
+	"arkatour", NULL, NULL, NULL, "1987",
 	"Tournament Arkanoid (US)\0", NULL, "Taito America Corporation (Romstar license)", "Arkanoid",
 	NULL, NULL, NULL, NULL,
-	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_TAITO_MISC, GBF_BREAKOUT, 0,
+	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_TAITO_MISC, GBF_BREAKOUT, 0,
 	NULL, arkatourRomInfo, arkatourRomName, NULL, NULL, DrvInputInfo, arkanoidDIPInfo,
 	DrvInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x200,
 	224, 256, 3, 4
@@ -1467,7 +1455,7 @@ struct BurnDriver BurnDrvarknoidj = {
 };
 
 
-// Arkanoid (bootleg with MCU)
+// Arkanoid (bootleg with MCU set 1)
 
 static struct BurnRomInfo arkmcublRomDesc[] = {
 	{ "e1.6d",        0x8000, 0xdd4f2b72, 1 | BRF_ESS | BRF_PRG }, //  0 Z80 Code
@@ -1491,10 +1479,76 @@ STD_ROM_FN(arkmcubl)
 
 struct BurnDriver BurnDrvarkmcubl = {
 	"arkanoidjb", "arkanoid", NULL, NULL, "1986",
-	"Arkanoid (bootleg with MCU)\0", NULL, "bootleg", "Arkanoid",
+	"Arkanoid (bootleg with MCU set 1)\0", NULL, "bootleg", "Arkanoid",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_TAITO_MISC, GBF_BREAKOUT, 0,
 	NULL, arkmcublRomInfo, arkmcublRomName, NULL, NULL, DrvInputInfo, arknoidjDIPInfo,
+	DrvInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x200,
+	224, 256, 3, 4
+};
+
+
+
+// Arkanoid (bootleg with MCU set 2)
+
+static struct BurnRomInfo arkanoidjb2RomDesc[] = {
+	{ "1.ic81",       0x8000, 0x9ff93dc2, 1 | BRF_ESS | BRF_PRG }, //  0 Z80 Code
+	{ "2.ic82",       0x8000, 0xbbc33ceb, 1 | BRF_ESS | BRF_PRG }, //  1
+
+	{ "a75-06.ic14",  0x0800, 0x515d77b6, 2 | BRF_ESS | BRF_PRG }, //  2 M68705 MCU
+
+	{ "a75-03.ic64",  0x8000, 0x038b74ba, 3 | BRF_GRA },	       //  3 Graphics
+	{ "a75-04.ic63",  0x8000, 0x71fae199, 3 | BRF_GRA },	       //  4
+	{ "a75-05.ic62",  0x8000, 0xc76374e2, 3 | BRF_GRA },	       //  5
+
+	{ "a75-07.ic24",  0x0200, 0x0af8b289, 4 | BRF_GRA },	       //  6 Color Proms
+	{ "a75-08.ic23",  0x0200, 0xabb002fb, 4 | BRF_GRA },	       //  7
+	{ "a75-09.ic23",  0x0200, 0xa7c6c277, 4 | BRF_GRA },	       //  8
+};
+
+STD_ROM_PICK(arkanoidjb2)
+STD_ROM_FN(arkanoidjb2)
+
+struct BurnDriver BurnDrvarkanoidjb2 = {
+	"arkanoidjb2", "arkanoid", NULL, NULL, "1986",
+	"Arkanoid (bootleg with MCU set 2)\0", NULL, "bootleg (Beta)", "Arkanoid",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_TAITO_MISC, GBF_BREAKOUT, 0,
+	NULL, arkanoidjb2RomInfo, arkanoidjb2RomName, NULL, NULL, DrvInputInfo, arknoidjDIPInfo,
+	DrvInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x200,
+	224, 256, 3, 4
+};
+
+
+// Arkanoid (bootleg with MCU, alt)
+// f205v id 318
+
+static struct BurnRomInfo arkmcublaRomDesc[] = {
+	{ "1.3f.ic81",    0x8000, 0x9ff93dc2, 1 | BRF_ESS | BRF_PRG }, //  0 Z80 Code
+	{ "2.4f.ic82",    0x8000, 0xbbc33ceb, 1 | BRF_ESS | BRF_PRG }, //  1
+
+	{ "a75-06.ic14",  0x0800, 0x515d77b6, 2 | BRF_ESS | BRF_PRG }, //  2 M68705 MCU
+
+	{ "3.1c.ic33",    0x8000, 0x038b74ba, 3 | BRF_GRA },	       //  3 Graphics
+	{ "4.3c.ic34",    0x8000, 0x71fae199, 3 | BRF_GRA },	       //  4
+	{ "5.4c.ic35",    0x8000, 0xc76374e2, 3 | BRF_GRA },	       //  5
+
+	{ "a75-07.bpr",   0x0200, 0x0af8b289, 4 | BRF_GRA },	       //  6 Color Proms
+	{ "a75-08.bpr",   0x0200, 0xabb002fb, 4 | BRF_GRA },	       //  7
+	{ "a75-09.bpr",   0x0200, 0xa7c6c277, 4 | BRF_GRA },	       //  8
+
+	{ "68705p3.6i",   0x0800, 0x389a8cfb, 0 | BRF_OPT | BRF_PRG }, //  9 Another MCU?
+};
+
+STD_ROM_PICK(arkmcubla)
+STD_ROM_FN(arkmcubla)
+
+struct BurnDriver BurnDrvarkmcubla = {
+	"arkanoidjba", "arkanoid", NULL, NULL, "1986",
+	"Arkanoid (bootleg with MCU, alt)\0", NULL, "bootleg", "Arkanoid",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_TAITO_MISC, GBF_BREAKOUT, 0,
+	NULL, arkmcublaRomInfo, arkmcublaRomName, NULL, NULL, DrvInputInfo, arknoidjDIPInfo,
 	DrvInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x200,
 	224, 256, 3, 4
 };
@@ -1526,6 +1580,38 @@ struct BurnDriver BurnDrvark1ball = {
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_TAITO_MISC, GBF_BREAKOUT, 0,
 	NULL, ark1ballRomInfo, ark1ballRomName, NULL, NULL, DrvInputInfo, ark1ballDIPInfo,
+	DrvInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x200,
+	224, 256, 3, 4
+};
+
+
+// Arkanoid (bootleg with MCU, harder, alt)
+// f205v id 196
+
+static struct BurnRomInfo ark1ballaRomDesc[] = {
+	{ "6c.bin",       0x8000, 0x9ff93dc2, 1 | BRF_ESS | BRF_PRG }, //  0 Z80 Code
+	{ "6f.bin",       0x8000, 0xed6b62ab, 1 | BRF_ESS | BRF_PRG }, //  1
+
+	{ "a75-06.ic14",  0x0800, 0x515d77b6, 2 | BRF_ESS | BRF_PRG }, //  2 M68705 MCU
+
+	{ "3b.bin",       0x8000, 0x038b74ba, 3 | BRF_GRA },	       //  3 Graphics
+	{ "3c.bin",       0x8000, 0x71fae199, 3 | BRF_GRA },	       //  4
+	{ "3f.bin",       0x8000, 0xc76374e2, 3 | BRF_GRA },	       //  5
+
+	{ "a75-07.bpr",   0x0200, 0x0af8b289, 4 | BRF_GRA },	       //  6 Color Proms
+	{ "a75-08.bpr",   0x0200, 0xabb002fb, 4 | BRF_GRA },	       //  7
+	{ "a75-09.bpr",   0x0200, 0xa7c6c277, 4 | BRF_GRA },	       //  8
+};
+
+STD_ROM_PICK(ark1balla)
+STD_ROM_FN(ark1balla)
+
+struct BurnDriver BurnDrvark1balla = {
+	"ark1balla", "arkanoid", NULL, NULL, "1986",
+	"Arkanoid (bootleg with MCU, harder, alt)\0", NULL, "bootleg", "Arkanoid",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED, 2, HARDWARE_TAITO_MISC, GBF_BREAKOUT, 0,
+	NULL, ark1ballaRomInfo, ark1ballaRomName, NULL, NULL, DrvInputInfo, ark1ballDIPInfo,
 	DrvInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x200,
 	224, 256, 3, 4
 };

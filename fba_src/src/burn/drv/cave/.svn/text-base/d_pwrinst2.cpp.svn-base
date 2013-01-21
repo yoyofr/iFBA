@@ -858,7 +858,6 @@ static INT32 drvZInit()
 	ZetMapArea    (0xE000, 0xFFFF, 0, RamZ80);			// Direct Read from RAM
 	ZetMapArea    (0xE000, 0xFFFF, 1, RamZ80);			// Direct Write to RAM
 	ZetMapArea    (0xE000, 0xFFFF, 2, RamZ80);			//
-	ZetMemEnd();
 	ZetClose();
 
 	return 0;
@@ -923,11 +922,16 @@ static INT32 DrvInit()
 	nCaveExtraYOffset = 1;
 	
 	BurnYM2203Init(1, 4000000, &DrvFMIRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
-	BurnYM2203SetVolumeShift(2);
 	BurnTimerAttachZet(8000000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.80, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.40, BURN_SND_ROUTE_BOTH);
 	
-	MSM6295Init(0, 3000000 / 165, 20.0, 1);
-	MSM6295Init(1, 3000000 / 165, 30.0, 1);
+	MSM6295Init(0, 3000000 / 165, 1);
+	MSM6295Init(1, 3000000 / 165, 1);
+	MSM6295SetRoute(0, 0.80, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 1.00, BURN_SND_ROUTE_BOTH);
 	
 	if (!strcmp(BurnDrvGetTextA(DRV_NAME), "pwrinst2")) {
 		UINT16 *rom = (UINT16 *)Rom01;
@@ -1001,11 +1005,16 @@ static INT32 PlegendsInit()
 	nCaveExtraYOffset = 1;
 	
 	BurnYM2203Init(1, 4000000, &DrvFMIRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
-	BurnYM2203SetVolumeShift(2);
 	BurnTimerAttachZet(8000000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.80, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.40, BURN_SND_ROUTE_BOTH);
 	
-	MSM6295Init(0, 3000000 / 165, 20.0, 1);
-	MSM6295Init(1, 3000000 / 165, 30.0, 1);
+	MSM6295Init(0, 3000000 / 165, 1);
+	MSM6295Init(1, 3000000 / 165, 1);
+	MSM6295SetRoute(0, 0.80, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 1.00, BURN_SND_ROUTE_BOTH);
 	
 	bDrawScreen = true;
 

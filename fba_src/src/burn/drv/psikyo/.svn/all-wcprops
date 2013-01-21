@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 51
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/psikyo
+/svn/fbalpha/!svn/ver/826/trunk/src/burn/drv/psikyo
 END
 d_psikyo.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/psikyo/d_psikyo.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/psikyo/d_psikyo.cpp
 END
 psikyo_render.h
 K 25
@@ -19,7 +19,7 @@ psikyo.h
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/psikyo/psikyo.h
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/psikyo/psikyo.h
 END
 psikyo_sprite.cpp
 K 25
@@ -37,7 +37,7 @@ d_psikyo4.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/psikyo/d_psikyo4.cpp
+/svn/fbalpha/!svn/ver/826/trunk/src/burn/drv/psikyo/d_psikyo4.cpp
 END
 psikyosh_render.cpp
 K 25
@@ -55,7 +55,7 @@ d_psikyosh.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/psikyo/d_psikyosh.cpp
+/svn/fbalpha/!svn/ver/826/trunk/src/burn/drv/psikyo/d_psikyosh.cpp
 END
 psikyo_palette.cpp
 K 25

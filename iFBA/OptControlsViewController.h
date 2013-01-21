@@ -7,16 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EmuViewController.h"
 
 @interface OptControlsViewController : UIViewController {
     IBOutlet UITableView *tabView;
     UIViewController *optWiimote,*optiCade,*optVPad;
     IBOutlet UIBarButtonItem *btn_backToEmu;
+@public
+    EmuViewController *emuvc;
+    
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) UIViewController *optWiimote,*optiCade,*optVPad;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
+@property (nonatomic, retain) EmuViewController *emuvc;
 
 -(IBAction) backToEmu;
 

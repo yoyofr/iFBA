@@ -2,7 +2,7 @@
 // Based on MAME driver by Jarek Burczynski
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "bitswap.h"
 #include "driver.h"
 extern "C" {
@@ -215,11 +215,12 @@ static INT32 MemIndex()
 	DrvZ80RAM		= Next; Next += 0x000400;
 	DrvVidRAM		= Next; Next += 0x000400;
 
+	RamEnd			= Next;
+
 	pAY8910Buffer[0]	= (INT16*)Next; Next += nBurnSoundLen * sizeof(INT16);
 	pAY8910Buffer[1]	= (INT16*)Next; Next += nBurnSoundLen * sizeof(INT16);
 	pAY8910Buffer[2]	= (INT16*)Next; Next += nBurnSoundLen * sizeof(INT16);
 
-	RamEnd			= Next;
 	MemEnd			= Next;
 
 	return 0;
@@ -269,10 +270,10 @@ static INT32 DrvInit(INT32 incr)
 	ZetMapArea(0xa000, 0xa3ff, 2, DrvZ80RAM);
 	ZetSetWriteHandler(wallc_write);
 	ZetSetReadHandler(wallc_read);
-	ZetMemEnd();
 	ZetClose();
 
 	AY8910Init(0, 1536000, nBurnSoundRate, NULL, NULL, NULL, NULL);
+	AY8910SetAllRoutes(0, 0.30, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -341,20 +342,7 @@ static INT32 DrvFrame()
 	ZetClose();
 
 	if (pBurnSoundOut) {
-		INT32 nSample;
-		AY8910Update(0, &pAY8910Buffer[0], nBurnSoundLen);
-		for (INT32 n = 0; n < nBurnSoundLen; n++) {
-			nSample  = pAY8910Buffer[0][n];
-			nSample += pAY8910Buffer[1][n];
-			nSample += pAY8910Buffer[2][n];
-
-			nSample /= 4;
-
-			nSample = BURN_SND_CLIP(nSample);
-
-			pBurnSoundOut[(n << 1) + 0] = nSample;
-			pBurnSoundOut[(n << 1) + 1] = nSample;
-		}
+		AY8910Render(&pAY8910Buffer[0], pBurnSoundOut, nBurnSoundLen, 0);
 	}
 
 	if (pBurnDraw) {

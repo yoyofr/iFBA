@@ -2,7 +2,7 @@
 // Based on MAME driver by David Haywood and Bryan McPhail
 
 #include "tiles_generic.h"
-#include "sek.h"
+#include "m68000_intf.h"
 #include "deco16ic.h"
 #include "msm6295.h"
 
@@ -179,10 +179,10 @@ UINT16 __fastcall pktgaldx_read_word(UINT32 address)
 			return DrvInputs[1];
 
 		case 0x167d10:
-			return *((UINT16*)(DrvProtRAM + 0));
+			return BURN_ENDIAN_SWAP_INT16(*((UINT16*)(DrvProtRAM + 0)));
 
 		case 0x167d1a:
-			return *((UINT16*)(DrvProtRAM + 2));
+			return BURN_ENDIAN_SWAP_INT16(*((UINT16*)(DrvProtRAM + 2)));
 	}
 
 	return 0;
@@ -338,8 +338,10 @@ static INT32 DrvInit()
 	SekSetReadByteHandler(0,		pktgaldx_read_byte);
 	SekClose();
 
-	MSM6295Init(0, 1006875 / 132, 75.0, 1);
-	MSM6295Init(1, 2013750 / 132, 60.0, 1);
+	MSM6295Init(0, 1006875 / 132, 1);
+	MSM6295Init(1, 2013750 / 132, 1);
+	MSM6295SetRoute(0, 0.75, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 0.60, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -373,14 +375,14 @@ static void draw_sprites()
 	{
 		INT32 inc, mult;
 
-		INT32 sprite = spriteram[offs+1];
+		INT32 sprite = BURN_ENDIAN_SWAP_INT16(spriteram[offs+1]);
 		if (!sprite) continue;
 
-		INT32 y = spriteram[offs];
+		INT32 y = BURN_ENDIAN_SWAP_INT16(spriteram[offs]);
 
 		if ((y & 0x1000) && (nCurrentFrame & 1)) continue; // flash
 
-		INT32 x = spriteram[offs + 2];
+		INT32 x = BURN_ENDIAN_SWAP_INT16(spriteram[offs + 2]);
 		INT32 colour = (x >> 9) & 0x1f;
 
 		INT32 fx = y & 0x2000;

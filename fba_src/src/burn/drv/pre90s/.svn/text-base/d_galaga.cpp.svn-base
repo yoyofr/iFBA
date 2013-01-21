@@ -1,5 +1,5 @@
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "namco_snd.h"
 #include "samples.h"
 
@@ -381,7 +381,7 @@ static struct BurnSampleInfo GalagaSampleDesc[] = {
    { "bang.wav", SAMPLE_NOLOOP },
    { "bang.wav", SAMPLE_NOLOOP },
 #endif
-   { "", 0 }
+  { "", 0 }
 };
 
 STD_SAMPLE_PICK(Galaga)
@@ -800,7 +800,6 @@ static void MachineInit()
 	ZetMapArea(0x9800, 0x9bff, 0, DrvSharedRam3);
 	ZetMapArea(0x9800, 0x9bff, 1, DrvSharedRam3);
 	ZetMapArea(0x9800, 0x9bff, 2, DrvSharedRam3);
-	ZetMemEnd();
 	ZetClose();
 	
 	ZetInit(1);
@@ -821,7 +820,6 @@ static void MachineInit()
 	ZetMapArea(0x9800, 0x9bff, 0, DrvSharedRam3);
 	ZetMapArea(0x9800, 0x9bff, 1, DrvSharedRam3);
 	ZetMapArea(0x9800, 0x9bff, 2, DrvSharedRam3);
-	ZetMemEnd();
 	ZetClose();
 	
 	ZetInit(2);
@@ -842,11 +840,12 @@ static void MachineInit()
 	ZetMapArea(0x9800, 0x9bff, 0, DrvSharedRam3);
 	ZetMapArea(0x9800, 0x9bff, 1, DrvSharedRam3);
 	ZetMapArea(0x9800, 0x9bff, 2, DrvSharedRam3);
-	ZetMemEnd();
 	ZetClose();
 	
-	NamcoSoundInit(18432000 / 6 / 32);
-	BurnSampleInit(80, 0);
+	NamcoSoundInit(18432000 / 6 / 32, 3);
+	NacmoSoundSetAllRoutes(0.90 * 10.0 / 16.0, BURN_SND_ROUTE_BOTH);
+	BurnSampleInit(0);
+	BurnSampleSetAllRoutesAllSamples(0.80, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

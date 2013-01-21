@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/674/trunk/src/intf/video/scalers
+END
+scale2x_vc.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/scale2x_vc.h
+END
+xbr.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/611/trunk/src/intf/video/scalers/xbr.h
+END
+hq_shared32.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq_shared32.cpp
+END
+superscale.asm
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/superscale.asm
+END
+hq2xs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq2xs.cpp
+END
+hq3xs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq3xs.cpp
+END
+2xsaimmx.asm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/2xsaimmx.asm
+END
+interp.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/interp.h
+END
+scale2x.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/scale2x.h
+END
+scale3x.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/scale3x.h
+END
+hq_shared32.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq_shared32.h
+END
+hq2xs.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq2xs.h
+END
+hq3xs.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq3xs.h
+END
+hq2xs_16.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq2xs_16.cpp
+END
+hq2x32.asm
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq2x32.asm
+END
+hq3x32.asm
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq3x32.asm
+END
+ddt3x.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/613/trunk/src/intf/video/scalers/ddt3x.cpp
+END
+2xsai.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/2xsai.cpp
+END
+2xpm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/2xpm.cpp
+END
+hq4x32.asm
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/hq4x32.asm
+END
+xbr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/674/trunk/src/intf/video/scalers/xbr.cpp
+END
+epx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/296/trunk/src/intf/video/scalers/epx.cpp
+END
+eagle_fm.asm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/scalers/eagle_fm.asm
+END

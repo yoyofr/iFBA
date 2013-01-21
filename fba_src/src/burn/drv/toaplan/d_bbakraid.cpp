@@ -511,7 +511,6 @@ static INT32 DrvZ80Init()
 	ZetMapArea(0xC000, 0xFFFF, 1, RamZ80);	// Direct Write to RAM
 	ZetMapArea(0xC000, 0xFFFF, 2, RamZ80);	//
 
-	ZetMemEnd();
 	ZetClose();
 
 	return 0;
@@ -858,7 +857,8 @@ static INT32 bbakraidInit()
 
 	DrvZ80Init();				// Initialize Z80
 
-	YMZ280BInit(16934400, NULL, 2);
+	YMZ280BInit(16934400, NULL);
+	YMZ280BSetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 
 	BurnTimerInit(bbakraidTimerOver, NULL);
 	BurnTimerAttachZet(TOA_Z80_SPEED);

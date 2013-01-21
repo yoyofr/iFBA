@@ -1,5 +1,5 @@
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "namco_snd.h"
 #include "samples.h"
 
@@ -702,11 +702,12 @@ static void MachineInit()
 	ZetMapArea(0x9800, 0x9fff, 1, DrvZ80Ram1);
 	ZetMapArea(0x9800, 0x9fff, 2, DrvZ80Ram1);
 	ZetMapArea(0xa000, 0xa00f, 1, DrvRadarAttrRam);	
-	ZetMemEnd();
 	ZetClose();
 	
-	NamcoSoundInit(18432000 / 6 / 32);
-	BurnSampleInit(80, 0);
+	NamcoSoundInit(18432000 / 6 / 32, 3);
+	NacmoSoundSetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
+	BurnSampleInit(0);
+	BurnSampleSetAllRoutesAllSamples(0.80, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 
@@ -731,7 +732,6 @@ static void JunglerMachineInit()
 	ZetMapArea(0x9800, 0x9fff, 2, DrvZ80Ram1);
 	ZetMapArea(0xa000, 0xa00f, 1, DrvRadarAttrRam);	
 	ZetMapArea(0xa030, 0xa03f, 1, DrvRadarAttrRam);	
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);

@@ -2,7 +2,7 @@
 // Based on MAME driver by Paul Leaman
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "burn_ym2203.h"
 
 static UINT8 *Mem, *MemEnd, *Rom0, *Rom1, *Ram;
@@ -452,7 +452,6 @@ static INT32 DrvInit()
 	ZetMapArea(0xf000, 0xffff, 1, Ram  + 0x02000);
 	ZetSetReadHandler(gunsmoke_cpu0_read);
 	ZetSetWriteHandler(gunsmoke_cpu0_write);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -464,14 +463,20 @@ static INT32 DrvInit()
 	ZetMapArea(0xc000, 0xc7ff, 2, Ram  + 0x03000);
 	ZetSetReadHandler(gunsmoke_cpu1_read);
 	ZetSetWriteHandler(gunsmoke_cpu1_write);
-	ZetMemEnd();
 	ZetClose();
 
 	GenericTilesInit();
 
 	BurnYM2203Init(2, 1500000, NULL, gunsmokeSynchroniseStream, gunsmokeGetTime, 0);
-	BurnYM2203SetVolumeShift(2);
 	BurnTimerAttachZet(3000000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.14, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.22, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.22, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.22, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_YM2203_ROUTE, 0.14, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_1, 0.22, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_2, 0.22, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_3, 0.22, BURN_SND_ROUTE_BOTH);
 
 	DrvDoReset();
 

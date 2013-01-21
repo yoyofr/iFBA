@@ -2,10 +2,11 @@
 // Based on MAME driver by Bryan McPhail
 
 #include "tiles_generic.h"
-#include "sek.h"
+#include "m68000_intf.h"
 #include "h6280_intf.h"
 #include "deco16ic.h"
 #include "msm6295.h"
+#include "burn_ym2151.h"
 
 static UINT8 *AllMem;
 static UINT8 *MemEnd;
@@ -812,7 +813,9 @@ static INT32 RohgaInit()
 	SekSetReadByteHandler(0,		rohga_main_read_byte);
 	SekClose();
 
-	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, DrvYM2151WritePort, 40.0, 1006875, 100.0, 2013750, 75.0);
+	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, DrvYM2151WritePort, 0.78, 1006875, 1.00, 2013750, 0.40);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.78, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.78, BURN_SND_ROUTE_RIGHT);
 
 	GenericTilesInit();
 
@@ -904,7 +907,9 @@ static INT32 WizdfireInit()
 	SekSetReadByteHandler(0,		wizdfire_main_read_byte);
 	SekClose();
 
-	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, DrvYM2151WritePort, 40.0, 1006875, 100.0, 2013750, 40.0);
+	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, DrvYM2151WritePort, 0.80, 1006875, 1.00, 2013750, 0.40);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.80, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.80, BURN_SND_ROUTE_RIGHT);
 
 	GenericTilesInit();
 
@@ -991,7 +996,9 @@ static INT32 SchmeisrInit()
 	SekSetReadByteHandler(0,		rohga_main_read_byte);
 	SekClose();
 
-	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, DrvYM2151WritePort, 40.0, 1006875, 100.0, 2013750, 40.0);
+	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, DrvYM2151WritePort, 0.80, 1006875, 1.00, 2013750, 0.40);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.80, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.80, BURN_SND_ROUTE_RIGHT);
 
 	GenericTilesInit();
 
@@ -1093,7 +1100,9 @@ static INT32 NitrobalInit()
 	SekSetReadByteHandler(0,		wizdfire_main_read_byte);
 	SekClose();
 
-	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, DrvYM2151WritePort, 40.0, 1006875, 100.0, 2013750, 40.0);
+	deco16SoundInit(DrvHucROM, DrvHucRAM, 2685000, 0, DrvYM2151WritePort, 0.80, 1006875, 1.00, 2013750, 0.40);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.80, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.80, BURN_SND_ROUTE_RIGHT);
 
 	GenericTilesInit();
 
@@ -1123,11 +1132,11 @@ static void rohga_draw_sprites(UINT8 *ram, INT32 is_schmeisr)
 	for (INT32 offs = 0x400 - 4; offs >= 0; offs -= 4)
 	{
 		INT32 inc, mult, pri = 0;
-		INT32 sprite = spriteptr[offs + 1];
+		INT32 sprite = BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 1]);
 
 		if (!sprite) continue;
 
-		INT32 x = spriteptr[offs + 2];
+		INT32 x = BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 2]);
 
 		switch (x & 0x6000)
 		{
@@ -1137,7 +1146,7 @@ static void rohga_draw_sprites(UINT8 *ram, INT32 is_schmeisr)
 			case 0x2000: pri = 0; break;
 		}
 
-		INT32 y = spriteptr[offs];
+		INT32 y = BURN_ENDIAN_SWAP_INT16(spriteptr[offs]);
 
 		if ((y & 0x1000) && (nCurrentFrame & 1)) continue; // flash
 
@@ -1190,10 +1199,10 @@ static void wizdfire_draw_sprites(UINT8 *ram, UINT8 *gfx, INT32 coloff, INT32 mo
 	{
 		INT32 inc, mult, prio = 0, alpha = 0xff;
 
-		INT32 sprite = spriteptr[offs + 1];
+		INT32 sprite = BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 1]);
 		if (!sprite) continue;
 
-		INT32 x = spriteptr[offs + 2];
+		INT32 x = BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 2]);
 
 		switch (mode)
 		{
@@ -1221,7 +1230,7 @@ static void wizdfire_draw_sprites(UINT8 *ram, UINT8 *gfx, INT32 coloff, INT32 mo
 			break;
 		}
 
-		INT32 y = spriteptr[offs];
+		INT32 y = BURN_ENDIAN_SWAP_INT16(spriteptr[offs]);
 
 		if ((y & 0x1000) && (nCurrentFrame & 1)) continue; // flash
 
@@ -1300,30 +1309,30 @@ static void nitrobal_draw_sprites(UINT8 *ram, INT32 gfxbank, INT32 /*bpp*/)
 		INT32 x, y, sprite, colour, fx, fy, w, h, sx, sy, x_mult, y_mult, tilemap_pri, sprite_pri, coloff;
 		INT32 alpha = 0xff;
 
-		sprite = spriteptr[offs + 3];
+		sprite = BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 3]);
 		if (!sprite)
 		{
 			offs += inc;
 			continue;
 		}
 
-		sx = spriteptr[offs + 1];
+		sx = BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 1]);
 
-		h = (spriteptr[offs + 2] & 0xf000) >> 12;
-		w = (spriteptr[offs + 2] & 0x0f00) >>  8;
+		h = (BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 2]) & 0xf000) >> 12;
+		w = (BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 2]) & 0x0f00) >>  8;
 
-		sy = spriteptr[offs];
+		sy = BURN_ENDIAN_SWAP_INT16(spriteptr[offs]);
 		if ((sy & 0x2000) && (nCurrentFrame & 1))
 		{
 			offs += inc;
 			continue;
 		}
 
-		colour = (spriteptr[offs + 2] >> 0) & 0x1f;
+		colour = (BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 2]) >> 0) & 0x1f;
 
 		if (gfxbank == 3)
 		{
-			switch (spriteptr[offs + 2] & 0xe0)
+			switch (BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 2]) & 0xe0)
 			{
 				case 0xc0: tilemap_pri = 8;   break;
 				case 0x80: tilemap_pri = 32;  break;
@@ -1357,8 +1366,8 @@ static void nitrobal_draw_sprites(UINT8 *ram, INT32 gfxbank, INT32 /*bpp*/)
 			}
 		}
 
-		fx = (spriteptr[offs + 0] & 0x4000);
-		fy = (spriteptr[offs + 0] & 0x8000);
+		fx = (BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 0]) & 0x4000);
+		fy = (BURN_ENDIAN_SWAP_INT16(spriteptr[offs + 0]) & 0x8000);
 
 		if (!*flipscreen)
 		{

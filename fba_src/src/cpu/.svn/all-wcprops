@@ -1,0 +1,173 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/fbalpha/!svn/ver/948/trunk/src/cpu
+END
+konami_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/305/trunk/src/cpu/konami_intf.cpp
+END
+m6502_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/926/trunk/src/cpu/m6502_intf.h
+END
+m6805_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/305/trunk/src/cpu/m6805_intf.cpp
+END
+m6800_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/926/trunk/src/cpu/m6800_intf.h
+END
+arm_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/486/trunk/src/cpu/arm_intf.cpp
+END
+s2650_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/305/trunk/src/cpu/s2650_intf.cpp
+END
+z80_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/827/trunk/src/cpu/z80_intf.cpp
+END
+hd6309_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/926/trunk/src/cpu/hd6309_intf.h
+END
+konami_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/2/trunk/src/cpu/konami_intf.h
+END
+m6809_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/740/trunk/src/cpu/m6809_intf.cpp
+END
+arm_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/486/trunk/src/cpu/arm_intf.h
+END
+m6805_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/926/trunk/src/cpu/m6805_intf.h
+END
+s2650_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/305/trunk/src/cpu/s2650_intf.h
+END
+m68000_debug.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/742/trunk/src/cpu/m68000_debug.h
+END
+z80_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/926/trunk/src/cpu/z80_intf.h
+END
+m6809_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/926/trunk/src/cpu/m6809_intf.h
+END
+m68000_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/742/trunk/src/cpu/m68000_intf.cpp
+END
+m68000_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/926/trunk/src/cpu/m68000_intf.h
+END
+sh2_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/826/trunk/src/cpu/sh2_intf.h
+END
+nec_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/827/trunk/src/cpu/nec_intf.cpp
+END
+arm7_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/474/trunk/src/cpu/arm7_intf.cpp
+END
+h6280_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/926/trunk/src/cpu/h6280_intf.cpp
+END
+m6502_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/740/trunk/src/cpu/m6502_intf.cpp
+END
+nec_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/827/trunk/src/cpu/nec_intf.h
+END
+m6800_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/740/trunk/src/cpu/m6800_intf.cpp
+END
+arm7_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/472/trunk/src/cpu/arm7_intf.h
+END
+h6280_intf.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/287/trunk/src/cpu/h6280_intf.h
+END
+hd6309_intf.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/740/trunk/src/cpu/hd6309_intf.cpp
+END

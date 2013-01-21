@@ -1,5 +1,5 @@
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "m6800_intf.h"
 #include "msm5205.h"
 
@@ -1117,6 +1117,38 @@ static struct BurnRomInfo Kungfub2RomDesc[] = {
 STD_ROM_PICK(Kungfub2)
 STD_ROM_FN(Kungfub2)
 
+static struct BurnRomInfo Kungfub3RomDesc[] = {
+	{ "5.bin",                0x04000, 0x5d8e791d, BRF_ESS | BRF_PRG }, //  0	Z80 Program Code
+	{ "4.bin",                0x04000, 0x4000e2b8, BRF_ESS | BRF_PRG }, //  1
+	
+	{ "1.bin",                0x02000, 0x58e87ab0, BRF_ESS | BRF_PRG }, //  2	M6803 Program Code
+	{ "2.bin",                0x02000, 0xc81e31ea, BRF_ESS | BRF_PRG }, //  3
+	{ "3.bin",                0x02000, 0xd99fb995, BRF_ESS | BRF_PRG }, //  4
+	
+	{ "6.bin",                0x02000, 0x6b2cc9c8, BRF_GRA },	    //  4	Characters
+	{ "7.bin",                0x02000, 0xc648f558, BRF_GRA },	    //  5
+	{ "8.bin",                0x02000, 0xfbe9276e, BRF_GRA },	    //  6
+	
+	{ "14.bin",               0x04000, 0x85591db2, BRF_GRA },	    //  7	Sprites
+	{ "13.bin",               0x04000, 0xed719d7b, BRF_GRA },	    //  8
+	{ "16.bin",               0x04000, 0x05fcce8b, BRF_GRA },	    //  9
+	{ "15.bin",               0x04000, 0xdc675003, BRF_GRA },	    //  10
+	{ "11.bin",               0x04000, 0x1df11d81, BRF_GRA },	    //  11
+	{ "12.bin",               0x04000, 0x2d3b69dd, BRF_GRA },	    //  12	
+	
+	{ "g-1j-.bin",            0x00100, 0x668e6bca, BRF_GRA },	    //  13	PROM (Tile Palette Red Component)
+	{ "b-1m-.bin",            0x00100, 0x76c05a9c, BRF_GRA },	    //  14	PROM (Sprite Palette Red Component)
+	{ "g-1f-.bin",            0x00100, 0x964b6495, BRF_GRA },	    //  15	PROM (Tile Palette Green Component)
+	{ "b-1n-.bin",            0x00100, 0x23f06b99, BRF_GRA },	    //  16	PROM (Sprite Palette Green Component)
+	{ "g-1h-.bin",            0x00100, 0x550563e1, BRF_GRA },	    //  17	PROM (Tile Palette Blue Component)
+	{ "b-1l-.bin",            0x00100, 0x35e45021, BRF_GRA },	    //  18	PROM (Sprite Palette Blue Component)
+	{ "b-5f-.bin",            0x00020, 0x7a601c3d, BRF_GRA },	    //  19	PROM (Sprite Height)
+	{ "b-6f-.bin",            0x00100, 0x82c20d12, BRF_GRA },	    //  20	PROM (Video Timing)
+};
+
+STD_ROM_PICK(Kungfub3)
+STD_ROM_FN(Kungfub3)
+
 static struct BurnRomInfo BattroadRomDesc[] = {
 	{ "br-a-4e.b",            0x02000, 0x9bf14768, BRF_ESS | BRF_PRG }, //  0	Z80 Program Code
 	{ "br-a-4d.b",            0x02000, 0x39ca1627, BRF_ESS | BRF_PRG }, //  1
@@ -2040,7 +2072,7 @@ void __fastcall M62Z80PortWrite(UINT16 a, UINT8 d)
 			if ((d & 0x80) == 0) {
 				M62SoundLatch = d & 0x7f;
 			} else {
-				M6803SetIRQ(M6803_IRQ_LINE, M6803_IRQSTATUS_ACK);
+				M6803SetIRQLine(M6803_IRQ_LINE, M6803_IRQSTATUS_ACK);
 			}
 			return;
 		}
@@ -2347,7 +2379,7 @@ void M62M6803WriteByte(UINT16 a, UINT8 d)
 	
 	switch (a) {
 		case 0x0800: {
-			M6803SetIRQ(M6803_IRQ_LINE, M6803_IRQSTATUS_NONE);
+			M6803SetIRQLine(M6803_IRQ_LINE, M6803_IRQSTATUS_NONE);
 			return;
 		}
 		
@@ -2460,12 +2492,12 @@ static void AY8910_0PortBWrite(UINT32, UINT32 d)
 
 inline static INT32 M62SynchroniseStream(INT32 nSoundRate)
 {
-	return (INT64)(ZetTotalCycles() * nSoundRate / M62Z80Clock);
+	return (INT64)((double)ZetTotalCycles() * nSoundRate / M62Z80Clock);
 }
 
 static void M62MSM5205Vck0()
 {
-	M6803SetIRQ(M6803_INPUT_LINE_NMI, M6803_IRQSTATUS_AUTO);
+	M6803SetIRQLine(M6803_INPUT_LINE_NMI, M6803_IRQSTATUS_AUTO);
 	M62SlaveMSM5205VClckReset = 1;
 }
 
@@ -2578,6 +2610,53 @@ static INT32 KungfumdLoadRoms()
 	nRet = BurnLoadRom(M62PromData + 0x00500, 18, 1); if (nRet != 0) return 1;
 	nRet = BurnLoadRom(M62PromData + 0x00600, 19, 1); if (nRet != 0) return 1;
 	nRet = BurnLoadRom(M62PromData + 0x00620, 20, 1); if (nRet != 0) return 1;
+
+	BurnFree(M62TempRom);
+	
+	return 0;
+}
+
+static INT32 Kungfub3LoadRoms()
+{
+	INT32 nRet = 0;
+	
+	M62TempRom = (UINT8 *)BurnMalloc(0x18000);
+
+	// Load Z80 Program Roms
+	nRet = BurnLoadRom(M62Z80Rom   + 0x00000,  0, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62Z80Rom   + 0x04000,  1, 1); if (nRet != 0) return 1;
+	
+	// Load M6803 Program Roms
+	nRet = BurnLoadRom(M62M6803Rom + 0x06000,  2, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62M6803Rom + 0x08000,  3, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62M6803Rom + 0x0a000,  4, 1); if (nRet != 0) return 1;
+		
+	// Load and decode the tiles
+	memset(M62TempRom, 0, 0x18000);
+	nRet = BurnLoadRom(M62TempRom  + 0x00000,  5, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62TempRom  + 0x02000,  6, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62TempRom  + 0x04000,  7, 1); if (nRet != 0) return 1;
+	GfxDecode(M62NumTiles, 3, M62BgxTileDim, M62BgyTileDim, Tile1024PlaneOffsets, TileXOffsets, TileYOffsets, 0x40, M62TempRom, M62Tiles);
+	
+	// Load and decode the sprites
+	memset(M62TempRom, 0, 0x18000);
+	nRet = BurnLoadRom(M62TempRom  + 0x00000,  8, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62TempRom  + 0x04000,  9, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62TempRom  + 0x08000, 10, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62TempRom  + 0x0c000, 11, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62TempRom  + 0x10000, 12, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62TempRom  + 0x14000, 13, 1); if (nRet != 0) return 1;
+	GfxDecode(M62NumSprites, 3, 16, 16, KungfumSpritePlaneOffsets, SpriteXOffsets, SpriteYOffsets, 0x100, M62TempRom, M62Sprites);
+	
+	// Load the Proms
+	nRet = BurnLoadRom(M62PromData + 0x00000, 14, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62PromData + 0x00100, 15, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62PromData + 0x00200, 16, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62PromData + 0x00300, 17, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62PromData + 0x00400, 18, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62PromData + 0x00500, 19, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62PromData + 0x00600, 20, 1); if (nRet != 0) return 1;
+	nRet = BurnLoadRom(M62PromData + 0x00620, 21, 1); if (nRet != 0) return 1;
 
 	BurnFree(M62TempRom);
 	
@@ -3295,13 +3374,12 @@ static void M62MachineInit()
 	ZetMapArea(0xe000, 0xefff, 0, M62Z80Ram   );
 	ZetMapArea(0xe000, 0xefff, 1, M62Z80Ram   );
 	ZetMapArea(0xe000, 0xefff, 2, M62Z80Ram   );
-	ZetMemEnd();
 	ZetClose();
 	
 	M6803Init(1);
 	M6803MapMemory(M62M6803Rom, 0x4000, 0xffff, M6803_ROM);
-	M6803SetReadByteHandler(M62M6803ReadByte);
-	M6803SetWriteByteHandler(M62M6803WriteByte);
+	M6803SetReadHandler(M62M6803ReadByte);
+	M6803SetWriteHandler(M62M6803WriteByte);
 	M6803SetReadPortHandler(M62M6803ReadPort);
 	M6803SetWritePortHandler(M62M6803WritePort);
 	
@@ -3312,11 +3390,15 @@ static void M62MachineInit()
 	pAY8910Buffer[4] = pFMBuffer + nBurnSoundLen * 4;
 	pAY8910Buffer[5] = pFMBuffer + nBurnSoundLen * 5;
 
-	MSM5205Init(0, M62SynchroniseStream, 384000, M62MSM5205Vck0, MSM5205_S96_4B, 50, 1);
-	MSM5205Init(1, M62SynchroniseStream, 384000, NULL, MSM5205_SEX_4B, 50, 1);
+	MSM5205Init(0, M62SynchroniseStream, 384000, M62MSM5205Vck0, MSM5205_S96_4B, 1);
+	MSM5205Init(1, M62SynchroniseStream, 384000, NULL, MSM5205_SEX_4B, 1);
+	MSM5205SetRoute(0, 0.50, BURN_SND_ROUTE_BOTH);
+	MSM5205SetRoute(1, 0.50, BURN_SND_ROUTE_BOTH);
 	
 	AY8910Init(0, 894886, nBurnSoundRate, &M62SoundLatchRead, NULL, NULL, &AY8910_0PortBWrite);
 	AY8910Init(1, 894886, nBurnSoundRate, NULL, NULL, NULL, NULL);
+	AY8910SetAllRoutes(0, 0.50, BURN_SND_ROUTE_BOTH);
+	AY8910SetAllRoutes(1, 0.50, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -3333,7 +3415,6 @@ static INT32 KungfumMachineInit()
 	ZetOpen(0);
 	ZetSetReadHandler(KungfumZ80Read);
 	ZetSetWriteHandler(KungfumZ80Write);
-	ZetMemEnd();
 	ZetClose();
 	
 	M62Z80Clock = 3072000;
@@ -3355,7 +3436,6 @@ static INT32 BattroadMachineInit()
 	ZetMapArea(0xc800, 0xcfff, 0, M62CharRam        );
 	ZetMapArea(0xc800, 0xcfff, 1, M62CharRam        );
 	ZetMapArea(0xc800, 0xcfff, 2, M62CharRam        );
-	ZetMemEnd();
 	ZetClose();
 	
 	M62Z80Clock = 3072000;
@@ -3390,7 +3470,6 @@ static INT32 Ldrun2MachineInit()
 	ZetSetOutHandler(Ldrun2Z80PortWrite);
 	ZetMapArea(0x8000, 0x9fff, 0, M62Z80Rom + 0x8000);
 	ZetMapArea(0x8000, 0x9fff, 2, M62Z80Rom + 0x8000);
-	ZetMemEnd();
 	ZetClose();
 	
 	M62RenderFunction = LdrunDraw;
@@ -3410,7 +3489,6 @@ static INT32 Ldrun3MachineInit()
 	ZetSetOutHandler(Ldrun3Z80PortWrite);
 	ZetMapArea(0x8000, 0xbfff, 0, M62Z80Rom + 0x8000);
 	ZetMapArea(0x8000, 0xbfff, 2, M62Z80Rom + 0x8000);
-	ZetMemEnd();
 	ZetClose();
 	
 	M62RenderFunction = Ldrun3Draw;
@@ -3430,7 +3508,6 @@ static INT32 Ldrun4MachineInit()
 	ZetSetOutHandler(Ldrun4Z80PortWrite);
 	ZetMapArea(0x8000, 0xbfff, 0, M62Z80Rom + 0x8000);
 	ZetMapArea(0x8000, 0xbfff, 2, M62Z80Rom + 0x8000);
-	ZetMemEnd();
 	ZetClose();
 	
 	M62RenderFunction = Ldrun4Draw;
@@ -3449,7 +3526,6 @@ static INT32 LotlotMachineInit()
 	ZetMapArea(0xa000, 0xafff, 0, M62CharRam);
 	ZetMapArea(0xa000, 0xafff, 1, M62CharRam);
 	ZetMapArea(0xa000, 0xafff, 2, M62CharRam);
-	ZetMemEnd();
 	ZetClose();
 	
 	M62RenderFunction = LotlotDraw;
@@ -3476,7 +3552,6 @@ static INT32 KidnikiMachineInit()
 	ZetMapArea(0xd000, 0xdfff, 0, M62CharRam        );
 	ZetMapArea(0xd000, 0xdfff, 1, M62CharRam        );
 	ZetMapArea(0xd000, 0xdfff, 2, M62CharRam        );
-	ZetMemEnd();
 	ZetClose();
 	
 	M62RenderFunction = KidnikiDraw;
@@ -3505,7 +3580,6 @@ static INT32 SpelunkrMachineInit()
 	ZetMemCallback(0xd000, 0xdfff, 0);
 	ZetMemCallback(0xd000, 0xdfff, 1);
 	ZetMemCallback(0xd000, 0xdfff, 2);
-	ZetMemEnd();
 	ZetClose();
 	
 	M62RenderFunction = SpelunkrDraw;
@@ -3536,7 +3610,6 @@ static INT32 Spelunk2MachineInit()
 	ZetMemCallback(0xd000, 0xdfff, 0);
 	ZetMemCallback(0xd000, 0xdfff, 1);
 	ZetMemCallback(0xd000, 0xdfff, 2);
-	ZetMemEnd();
 	ZetClose();
 	
 	M62RenderFunction = Spelunk2Draw;
@@ -3564,7 +3637,6 @@ static INT32 YoujyudnMachineInit()
 	ZetMemCallback(0xd800, 0xdfff, 0);
 	ZetMemCallback(0xd800, 0xdfff, 1);
 	ZetMemCallback(0xd800, 0xdfff, 2);
-	ZetMemEnd();
 	ZetClose();
 	
 	M62RenderFunction = YoujyudnDraw;
@@ -3591,7 +3663,6 @@ static INT32 HorizonMachineInit()
 	ZetMapArea(0xc800, 0xc83f, 0, M62ScrollRam      );
 	ZetMapArea(0xc800, 0xc83f, 1, M62ScrollRam      );
 	ZetMapArea(0xc800, 0xc83f, 2, M62ScrollRam      );
-	ZetMemEnd();
 	ZetClose();
 		
 	M62RenderFunction = HorizonDraw;
@@ -3625,6 +3696,20 @@ static INT32 KungfumdInit()
 	
 	if (M62MemInit()) return 1;
 	if (KungfumdLoadRoms()) return 1;
+	if (KungfumMachineInit()) return 1;
+
+	return 0;
+}
+
+static INT32 Kungfub3Init()
+{
+	M62Z80RomSize = 0x8000;
+	M62PromSize = 0x720;
+	M62NumTiles = 0x400;
+	M62NumSprites = 0x400;
+	
+	if (M62MemInit()) return 1;
+	if (Kungfub3LoadRoms()) return 1;
 	if (KungfumMachineInit()) return 1;
 
 	return 0;
@@ -4651,24 +4736,9 @@ static INT32 M62Frame()
 		nCyclesDone[nCurrentCPU] += nCyclesSegment;
 						
 		if (pBurnSoundOut) {
-			INT32 nSample;
 			INT32 nSegmentLength = nBurnSoundLen / nInterleave;
 			INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
-			AY8910Update(0, &pAY8910Buffer[0], nSegmentLength);
-			AY8910Update(1, &pAY8910Buffer[3], nSegmentLength);
-			for (INT32 n = 0; n < nSegmentLength; n++) {
-				nSample  = pAY8910Buffer[0][n] >> 2;
-				nSample += pAY8910Buffer[1][n] >> 2;
-				nSample += pAY8910Buffer[2][n] >> 2;
-				nSample += pAY8910Buffer[3][n] >> 2;
-				nSample += pAY8910Buffer[4][n] >> 2;
-				nSample += pAY8910Buffer[5][n] >> 2;
-
-				nSample = BURN_SND_CLIP(nSample);
-
-				pSoundBuf[(n << 1) + 0] = nSample;
-				pSoundBuf[(n << 1) + 1] = nSample;
-    		}
+			AY8910Render(&pAY8910Buffer[0], pSoundBuf, nSegmentLength, 0);
 			nSoundBufferPos += nSegmentLength;
 		}
 		
@@ -4683,25 +4753,10 @@ static INT32 M62Frame()
 	}
 	
 	if (pBurnSoundOut) {
-		INT32 nSample;
 		INT32 nSegmentLength = nBurnSoundLen - nSoundBufferPos;
 		INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
 		if (nSegmentLength) {
-			AY8910Update(0, &pAY8910Buffer[0], nSegmentLength);
-			AY8910Update(1, &pAY8910Buffer[3], nSegmentLength);
-			for (INT32 n = 0; n < nSegmentLength; n++) {
-				nSample  = pAY8910Buffer[0][n] >> 2;
-				nSample += pAY8910Buffer[1][n] >> 2;
-				nSample += pAY8910Buffer[2][n] >> 2;
-				nSample += pAY8910Buffer[3][n] >> 2;
-				nSample += pAY8910Buffer[4][n] >> 2;
-				nSample += pAY8910Buffer[5][n] >> 2;
-
-				nSample = BURN_SND_CLIP(nSample);
-
-				pSoundBuf[(n << 1) + 0] = nSample;
-				pSoundBuf[(n << 1) + 1] = nSample;
- 			}
+			AY8910Render(&pAY8910Buffer[0], pSoundBuf, nSegmentLength, 0);
 		}
 		
 		ZetOpen(0);
@@ -4787,6 +4842,16 @@ struct BurnDriver BurnDrvKungfub2 = {
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG, 2, HARDWARE_IREM_M62, GBF_SCRFIGHT, 0,
 	NULL, Kungfub2RomInfo, Kungfub2RomName, NULL, NULL, M62InputInfo, KungfumDIPInfo,
 	KungfumInit, M62Exit, M62Frame, NULL, M62Scan,
+	NULL, 0x200, 256, 256, 4, 3
+};
+
+struct BurnDriver BurnDrvKungfub3 = {
+	"kungfub3", "kungfum", NULL, NULL, "1984",
+	"Kung-Fu Master (bootleg set 3)\0", NULL, "bootleg", "Irem M62",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_IREM_M62, GBF_SCRFIGHT, 0,
+	NULL, Kungfub3RomInfo, Kungfub3RomName, NULL, NULL, M62InputInfo, KungfumDIPInfo,
+	Kungfub3Init, M62Exit, M62Frame, NULL, M62Scan,
 	NULL, 0x200, 256, 256, 4, 3
 };
 

@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "konamiic.h"
 #include "burn_ym2151.h"
 #include "upd7759.h"
@@ -58,7 +58,9 @@ static INT32 BlswhstlTileRomBank;
 
 static INT32 TitleSoundLatch;
 static INT32 PlayTitleSample;
-double TitleSamplePos = 0;
+static double TitleSamplePos = 0;
+static double TitleSampleGain;
+static INT32 TitleSampleOutputDir;
 
 static UINT8 DrvVBlank;
 
@@ -1544,6 +1546,28 @@ static struct BurnRomInfo SsriderseaaRomDesc[] = {
 STD_ROM_PICK(Ssriderseaa)
 STD_ROM_FN(Ssriderseaa)
 
+static struct BurnRomInfo SsridersuabRomDesc[] = {
+	{ "064uab02.8e",        0x040000, 0xf1a3c548, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
+	{ "064uab03.8g",        0x040000, 0x66a61287, BRF_ESS | BRF_PRG }, //  1
+	{ "064eab04.10e",       0x020000, 0xef2315bd, BRF_ESS | BRF_PRG }, //  2
+	{ "064eab05.10g",       0x020000, 0x51d6fbc4, BRF_ESS | BRF_PRG }, //  3
+	
+	{ "064e01.2f",          0x010000, 0x44b9bc52, BRF_ESS | BRF_PRG }, //  4	Z80 Program 
+	
+	{ "064e12.16k",         0x080000, 0xe2bdc619, BRF_GRA },	   //  5	Tiles
+	{ "064e11.12k",         0x080000, 0x2d8ca8b0, BRF_GRA },	   //  6
+	
+	{ "064e09.7l",          0x100000, 0x4160c372, BRF_GRA },	   //  7	Sprites
+	{ "064e07.3l",          0x100000, 0x64dd673c, BRF_GRA },	   //  8
+	
+	{ "064e06.1d",          0x100000, 0x59810df9, BRF_SND },	   //  9	K053260 Samples
+
+	{ "ssriders_uab.nv",  0x000080, 0xfe08b210, BRF_OPT },
+};
+
+STD_ROM_PICK(Ssridersuab)
+STD_ROM_FN(Ssridersuab)
+
 static struct BurnRomInfo SsridersuacRomDesc[] = {
 	{ "064uac02.8e",        0x040000, 0x870473b6, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
 	{ "064uac03.8g",        0x040000, 0xeadf289a, BRF_ESS | BRF_PRG }, //  1
@@ -1631,6 +1655,28 @@ static struct BurnRomInfo SsridersaddRomDesc[] = {
 
 STD_ROM_PICK(Ssridersadd)
 STD_ROM_FN(Ssridersadd)
+
+static struct BurnRomInfo SsridersjacRomDesc[] = {
+	{ "064jac02.8e",        0x040000, 0x64a35f6f, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
+	{ "064jac03.8g",        0x040000, 0xb5957946, BRF_ESS | BRF_PRG }, //  1
+	{ "064eab04.10e",       0x020000, 0xef2315bd, BRF_ESS | BRF_PRG }, //  2
+	{ "064eab05.10g",       0x020000, 0x51d6fbc4, BRF_ESS | BRF_PRG }, //  3
+	
+	{ "064e01.2f",          0x010000, 0x44b9bc52, BRF_ESS | BRF_PRG }, //  4	Z80 Program 
+	
+	{ "064e12.16k",         0x080000, 0xe2bdc619, BRF_GRA },	   //  5	Tiles
+	{ "064e11.12k",         0x080000, 0x2d8ca8b0, BRF_GRA },	   //  6
+	
+	{ "064e09.7l",          0x100000, 0x4160c372, BRF_GRA },	   //  7	Sprites
+	{ "064e07.3l",          0x100000, 0x64dd673c, BRF_GRA },	   //  8
+	
+	{ "064e06.1d",          0x100000, 0x59810df9, BRF_SND },	   //  9	K053260 Samples
+
+	{ "ssriders_jac.nv",  0x000080, 0xeeb0c55f, BRF_OPT },
+};
+
+STD_ROM_PICK(Ssridersjac)
+STD_ROM_FN(Ssridersjac)
 
 static struct BurnRomInfo SsridersjbdRomDesc[] = {
 	{ "064jbd02.8e",        0x040000, 0x7acdc1e3, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
@@ -2965,6 +3011,10 @@ void __fastcall Blswhstl68KWriteWord(UINT32 a, UINT16 d)
 	}
 }
 
+#ifdef _XBOX1
+#define pow powf
+#endif
+
 static void tmnt2_protection_write()
 {
 	UINT32 src_addr, dst_addr, mod_addr, attr1, code, attr2, cbase, cmod, color;
@@ -4184,6 +4234,12 @@ static void TmntDecodeTitleSample()
 	}
 }
 
+static void TmntTitleSampleSetRoute(double nVolume, INT32 nRouteDir)
+{
+	TitleSampleGain = nVolume;
+	TitleSampleOutputDir = nRouteDir;
+}
+
 static INT32 TilePlaneOffsets[4]     = { 24, 16, 8, 0 };
 static INT32 TileXOffsets[8]         = { 0, 1, 2, 3, 4, 5, 6, 7 };
 static INT32 TileYOffsets[8]         = { 0, 32, 64, 96, 128, 160, 192, 224 };
@@ -4397,16 +4453,20 @@ static INT32 TmntInit()
 	ZetMapArea(0x8000, 0x87ff, 0, DrvZ80Ram                );
 	ZetMapArea(0x8000, 0x87ff, 1, DrvZ80Ram                );
 	ZetMapArea(0x8000, 0x87ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 	
 	K007232Init(0, 3579545, DrvSoundRom, 0x20000);
 	K007232SetPortWriteHandler(0, DrvK007232VolCallback);
+	K007232PCMSetAllRoutes(0, 0.33, BURN_SND_ROUTE_BOTH);
 	
 	UPD7759Init(0, UPD7759_STANDARD_CLOCK, DrvUPD7759CRom);
+	UPD7759SetRoute(0, 0.60, BURN_SND_ROUTE_BOTH);
+	
+	TmntTitleSampleSetRoute(1.00, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4493,14 +4553,15 @@ static INT32 MiaInit()
 	ZetMapArea(0x8000, 0x87ff, 0, DrvZ80Ram                );
 	ZetMapArea(0x8000, 0x87ff, 1, DrvZ80Ram                );
 	ZetMapArea(0x8000, 0x87ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 	
 	K007232Init(0, 3579545, DrvSoundRom, 0x20000);
 	K007232SetPortWriteHandler(0, DrvK007232VolCallback);
+	K007232PCMSetAllRoutes(0, 0.20, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4566,8 +4627,9 @@ static INT32 CuebrickInit()
 	SekClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
 	BurnYM2151SetIrqHandler(&CuebrickYM2151IrqHandler);
+	BurnYM2151SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4649,13 +4711,16 @@ static INT32 BlswhstlInit()
 	ZetMapArea(0xf000, 0xf7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.70, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.70, BURN_SND_ROUTE_RIGHT);
 	
 	K053260Init(0, 3579545, DrvSoundRom, 0x100000);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_1, 0.50, BURN_SND_ROUTE_RIGHT);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_2, 0.50, BURN_SND_ROUTE_LEFT);
 
 	EEPROMInit(&BlswhstlEEPROMInterface);
 	
@@ -4733,13 +4798,16 @@ static INT32 SsridersInit()
 	ZetMapArea(0xf000, 0xf7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
 	
 	K053260Init(0, 3579545, DrvSoundRom, 0x100000);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_1, 0.70, BURN_SND_ROUTE_LEFT);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_2, 0.70, BURN_SND_ROUTE_RIGHT);
 
 	EEPROMInit(&BlswhstlEEPROMInterface);
 	
@@ -4814,13 +4882,16 @@ static INT32 Thndrx2Init()
 	ZetMapArea(0xf000, 0xf7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
 	
 	K053260Init(0, 3579545, DrvSoundRom, 0x80000);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_1, 0.75, BURN_SND_ROUTE_LEFT);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_2, 0.75, BURN_SND_ROUTE_RIGHT);
 
 	EEPROMInit(&thndrx2_eeprom_interface);
 	
@@ -4896,13 +4967,16 @@ static INT32 LgtnfghtInit()
 	ZetMapArea(0x8000, 0x87ff, 0, DrvZ80Ram                );
 	ZetMapArea(0x8000, 0x87ff, 1, DrvZ80Ram                );
 	ZetMapArea(0x8000, 0x87ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
 	
 	K053260Init(0, 3579545, DrvSoundRom, 0x80000);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_1, 0.70, BURN_SND_ROUTE_LEFT);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_2, 0.70, BURN_SND_ROUTE_RIGHT);
 
 	EEPROMInit(&thndrx2_eeprom_interface);
 	
@@ -4986,13 +5060,16 @@ static INT32 Tmnt2Init()
 	ZetMapArea(0xf000, 0xf7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
 	
 	K053260Init(0, 3579545, DrvSoundRom, 0x200000);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_1, 0.75, BURN_SND_ROUTE_LEFT);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_2, 0.75, BURN_SND_ROUTE_RIGHT);
 
 	EEPROMInit(&BlswhstlEEPROMInterface);
 	
@@ -5074,13 +5151,16 @@ static INT32 QgakumonInit()
 	ZetMapArea(0xf000, 0xf7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 	
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
 	
 	K053260Init(0, 3579545, DrvSoundRom, 0x200000);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_1, 0.75, BURN_SND_ROUTE_LEFT);
+	K053260SetRoute(0, BURN_SND_K053260_ROUTE_2, 0.75, BURN_SND_ROUTE_RIGHT);
 
 	EEPROMInit(&BlswhstlEEPROMInterface);
 	
@@ -5155,13 +5235,14 @@ static INT32 PunkshotInit()
 	ZetMapArea(0xf000, 0xf7ff, 0, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 1, DrvZ80Ram                );
 	ZetMapArea(0xf000, 0xf7ff, 2, DrvZ80Ram                );
-	ZetMemEnd();
 	ZetClose();
 
 	// Setup the YM2151 emulation
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 	
 	K053260Init(0, 3579545, DrvSoundRom, 0x80000);
+	K053260PCMSetAllRoutes(0, 0.70, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -5467,8 +5548,17 @@ static void RenderTitleSample(INT16 *pSoundBuf, INT32 nLength)
 		if (Addr > 0x3ffff) break;
 		INT16 Sample = DrvTitleSample[(INT32)Addr];
 		
-		pSoundBuf[i + 0] += Sample;
-		pSoundBuf[i + 1] += Sample;
+		INT16 nLeftSample = 0, nRightSample = 0;
+		
+		if ((TitleSampleOutputDir & BURN_SND_ROUTE_LEFT) == BURN_SND_ROUTE_LEFT) {
+			nLeftSample += (INT32)(Sample * TitleSampleGain);
+		}
+		if ((TitleSampleOutputDir & BURN_SND_ROUTE_RIGHT) == BURN_SND_ROUTE_RIGHT) {
+			nRightSample += (INT32)(Sample * TitleSampleGain);
+		}
+		
+		pSoundBuf[i + 0] += nLeftSample;
+		pSoundBuf[i + 1] += nRightSample;
 		
 		Addr += Step;
 	}
@@ -6361,6 +6451,16 @@ struct BurnDriver BurnDrvSsriderseaa = {
 	NULL, 0x810, 288, 224, 4, 3
 };
 
+struct BurnDriver BurnDrvSsridersuab = {
+	"ssridersuab", "ssriders", NULL, NULL, "1991",
+	"Sunset Riders (4 Players ver. UAB)\0", NULL, "Konami", "GX064",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE, 4, HARDWARE_KONAMI_68K_Z80, GBF_PLATFORM, 0,
+	NULL, SsridersuabRomInfo, SsridersuabRomName, NULL, NULL, Ssriders4pInputInfo, NULL,
+	SsridersInit, BlswhstlExit, SsridersFrame, NULL, SsridersScan,
+	NULL, 0x810, 288, 224, 4, 3
+};
+
 struct BurnDriver BurnDrvSsridersuac = {
 	"ssridersuac", "ssriders", NULL, NULL, "1991",
 	"Sunset Riders (4 Players ver. UAC)\0", NULL, "Konami", "GX064",
@@ -6397,6 +6497,16 @@ struct BurnDriver BurnDrvSsridersadd = {
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 4, HARDWARE_KONAMI_68K_Z80, GBF_PLATFORM, 0,
 	NULL, SsridersaddRomInfo, SsridersaddRomName, NULL, NULL, Ssriders4psInputInfo, NULL,
+	SsridersInit, BlswhstlExit, SsridersFrame, NULL, SsridersScan,
+	NULL, 0x810, 288, 224, 4, 3
+};
+
+struct BurnDriver BurnDrvSsridersjac = {
+	"ssridersjac", "ssriders", NULL, NULL, "1991",
+	"Sunset Riders (4 Players ver. JAC)\0", NULL, "Konami", "GX064",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_KONAMI_68K_Z80, GBF_PLATFORM, 0,
+	NULL, SsridersjacRomInfo, SsridersjacRomName, NULL, NULL, SsridersInputInfo, NULL,
 	SsridersInit, BlswhstlExit, SsridersFrame, NULL, SsridersScan,
 	NULL, 0x810, 288, 224, 4, 3
 };

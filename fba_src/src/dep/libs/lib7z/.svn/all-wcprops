@@ -1,0 +1,413 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z
+END
+Threads.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Threads.h
+END
+LzmaLib.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzmaLib.h
+END
+MtCoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/MtCoder.h
+END
+7zBuf.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zBuf.h
+END
+Ppmd7Dec.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Ppmd7Dec.c
+END
+RotateDefs.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/RotateDefs.h
+END
+Lzma2Enc.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Lzma2Enc.c
+END
+XzDec.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/XzDec.c
+END
+Lzma2Enc.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Lzma2Enc.h
+END
+Bcj2.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Bcj2.c
+END
+Bra86.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Bra86.c
+END
+Bcj2.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Bcj2.h
+END
+LzFind.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzFind.c
+END
+7zVersion.rc
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zVersion.rc
+END
+7zCrc.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zCrc.c
+END
+LzmaEnc.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzmaEnc.c
+END
+Delta.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Delta.c
+END
+LzFind.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzFind.h
+END
+7zCrc.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zCrc.h
+END
+LzmaEnc.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzmaEnc.h
+END
+Delta.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Delta.h
+END
+7zFile.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zFile.c
+END
+Xz.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Xz.c
+END
+Lzma2Dec.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Lzma2Dec.c
+END
+XzCrc64.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/XzCrc64.c
+END
+7zFile.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zFile.h
+END
+7z.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7z.h
+END
+Xz.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Xz.h
+END
+Lzma2Dec.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Lzma2Dec.h
+END
+XzCrc64.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/XzCrc64.h
+END
+Sha256.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Sha256.c
+END
+Types.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Types.h
+END
+7zCrcOpt.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zCrcOpt.c
+END
+7zDec.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zDec.c
+END
+Sha256.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Sha256.h
+END
+LzmaDec.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzmaDec.c
+END
+LzmaDec.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzmaDec.h
+END
+BraIA64.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/BraIA64.c
+END
+XzIn.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/XzIn.c
+END
+LzHash.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzHash.h
+END
+Ppmd.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Ppmd.h
+END
+_fba_lzmasdk_v9.22 beta.txt
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/_fba_lzmasdk_v9.22%20beta.txt
+END
+Lzma86Enc.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Lzma86Enc.c
+END
+7zVersion.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zVersion.h
+END
+7zAlloc.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zAlloc.c
+END
+7zStream.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zStream.c
+END
+7zAlloc.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zAlloc.h
+END
+Ppmd7.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Ppmd7.c
+END
+Alloc.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Alloc.c
+END
+Ppmd7.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Ppmd7.h
+END
+Lzma86Dec.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Lzma86Dec.c
+END
+Alloc.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Alloc.h
+END
+Bra.c
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Bra.c
+END
+Bra.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Bra.h
+END
+Ppmd7Enc.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Ppmd7Enc.c
+END
+7zBuf2.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zBuf2.c
+END
+CpuArch.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/CpuArch.c
+END
+Lzma86.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Lzma86.h
+END
+7zIn.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zIn.c
+END
+LzFindMt.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzFindMt.c
+END
+XzEnc.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/XzEnc.c
+END
+Threads.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/Threads.c
+END
+LzmaLib.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzmaLib.c
+END
+CpuArch.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/CpuArch.h
+END
+LzFindMt.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/LzFindMt.h
+END
+XzEnc.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/XzEnc.h
+END
+MtCoder.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/MtCoder.c
+END
+7zBuf.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/342/trunk/src/dep/libs/lib7z/7zBuf.c
+END

@@ -2,10 +2,11 @@
 // Based on MAME driver by Bryan McPhail and David Haywood
 
 #include "tiles_generic.h"
-#include "sek.h"
+#include "m68000_intf.h"
 #include "h6280_intf.h"
 #include "deco16ic.h"
 #include "msm6295.h"
+#include "burn_ym2151.h"
 
 static UINT8 *AllMem;
 static UINT8 *MemEnd;
@@ -203,7 +204,7 @@ void __fastcall boogwing_main_write_word(UINT32 address, UINT16 data)
 	}
 
 	if ((address & 0xffff800) == 0x24e000) {
-		*((UINT16*)(DrvProtRAM + (address & 0x7fe))) = data;
+		*((UINT16*)(DrvProtRAM + (address & 0x7fe))) = BURN_ENDIAN_SWAP_INT16(data);
 		return;
 	}
 }
@@ -451,7 +452,9 @@ static INT32 DrvInit()
 	SekSetReadByteHandler(0,		boogwing_main_read_byte);
 	SekClose();
 
-	deco16SoundInit(DrvHucROM, DrvHucRAM, 8055000, 0, DrvYM2151WritePort, 40.0, 1006875, 140.0, 2013750, 30.0);
+	deco16SoundInit(DrvHucROM, DrvHucRAM, 8055000, 0, DrvYM2151WritePort, 0.80, 1006875, 1.40, 2013750, 0.30);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.80, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.80, BURN_SND_ROUTE_RIGHT);
 
 	GenericTilesInit();
 
@@ -489,16 +492,16 @@ static void draw_sprites(UINT8 *ram, UINT8 *gfx, INT32 coloff, INT32 gfx_region,
 	{
 		INT32 inc, mult, pri = 0, spri = 0, alpha = 0xff;
 
-		INT32 sprite = spriteram_base[offs + 1];
+		INT32 sprite = BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 1]);
 
 		if (!sprite) continue;
 
-		INT32 y = spriteram_base[offs];
+		INT32 y = BURN_ENDIAN_SWAP_INT16(spriteram_base[offs]);
 
 		if ((y & 0x1000) && (nCurrentFrame & 1))
 			continue;
 
-		INT32 x = spriteram_base[offs + 2];
+		INT32 x = BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]);
 		INT32 colour = (x >> 9) & colmask;
 
 		INT32 fx = y & 0x2000;
@@ -507,29 +510,29 @@ static void draw_sprites(UINT8 *ram, UINT8 *gfx, INT32 coloff, INT32 gfx_region,
 
 		if (gfx_region == 4)
 		{
-			if ((spriteram_base[offs + 2] & 0xc000) == 0xc000)
+			if ((BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0xc000) == 0xc000)
 				spri = 4;
-			else if ((spriteram_base[offs + 2] & 0xc000))
+			else if ((BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0xc000))
 				spri = 16;
 			else
 				spri = 64;
 
-			if (spriteram_base[offs + 2] & 0x2000)	alpha = 0x80;
+			if (BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0x2000)	alpha = 0x80;
 
 			if (priority == 0x2)
 			{
-				if (spriteram_base[offs + 2] & 0x8000) alpha = 0x80;
+				if (BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0x8000) alpha = 0x80;
 
-				if ((spriteram_base[offs + 2] & 0xc000) == 0xc000)
+				if ((BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0xc000) == 0xc000)
 					pri = 4;
-				else if ((spriteram_base[offs + 2] & 0xc000) == 0x8000)
+				else if ((BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0xc000) == 0x8000)
 					pri = 16;
 				else
 					pri = 64;
 			}
 			else
 			{
-				if ((spriteram_base[offs + 2] & 0x8000) == 0x8000)
+				if ((BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0x8000) == 0x8000)
 					pri = 16;
 				else
 					pri = 64;
@@ -537,23 +540,23 @@ static void draw_sprites(UINT8 *ram, UINT8 *gfx, INT32 coloff, INT32 gfx_region,
 		}
 		else
 		{
-			if (spriteram_base[offs + 2] & 0x8000)
+			if (BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0x8000)
 				spri = 8;
 			else
 				spri = 32;
 
 			if (priority == 0x1)
 			{
-				if ((spriteram_base[offs + 2] & 0xc000))
+				if ((BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0xc000))
 					pri = 16;
 				else
 					pri = 64;
 			}
 			else
 			{
-				if ((spriteram_base[offs + 2] & 0xc000) == 0xc000)
+				if ((BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0xc000) == 0xc000)
 					pri = 4;
-				else if ((spriteram_base[offs + 2] & 0xc000) == 0x8000)
+				else if ((BURN_ENDIAN_SWAP_INT16(spriteram_base[offs + 2]) & 0xc000) == 0x8000)
 					pri = 16;
 				else
 					pri = 64;

@@ -34,7 +34,7 @@
 //#include <string.h>
 
 #include "burnint.h"
-#include "sh2.h"
+#include "sh2_intf.h"
 
 //#include "tchar.h"
 //extern int (__cdecl *bprintf) (int nStatus, TCHAR* szFormat, ...);
@@ -56,7 +56,9 @@ typedef unsigned long long UINT64;*/
 
 #define SH2_INT_15			15
 
+#ifndef SH2_INLINE
 #define	SH2_INLINE
+#endif
 
 #if FAST_OP_FETCH
 

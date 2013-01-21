@@ -22,7 +22,7 @@
 //
 
 #include "burnint.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "burn_ym3812.h"
 #include "burn_ym2151.h"
 #include "burn_ym2203.h"
@@ -424,7 +424,6 @@ void seibu_sound_init(INT32 type, INT32 len, INT32 freq0 /*cpu*/, INT32 freq1 /*
 	ZetMapArea(0x2000, 0x27ff, 2, SeibuZ80RAM);
 	ZetSetWriteHandler(seibu_sound_write);
 	ZetSetReadHandler(seibu_sound_read);
-	ZetMemEnd();
 	ZetClose();
 
 	switch (seibu_snd_type & 3)
@@ -435,8 +434,9 @@ void seibu_sound_init(INT32 type, INT32 len, INT32 freq0 /*cpu*/, INT32 freq1 /*
 		break;
 
 		case 1:
-			BurnYM2151Init(freq1, 100.0);
+			BurnYM2151Init(freq1);
 			BurnYM2151SetIrqHandler(&Drv2151FMIRQHandler);
+			BurnYM2151SetAllRoutes(0.50, BURN_SND_ROUTE_BOTH);
 		break;
 
 		case 2:
@@ -445,8 +445,12 @@ void seibu_sound_init(INT32 type, INT32 len, INT32 freq0 /*cpu*/, INT32 freq1 /*
 		break;
 	}
 
-	MSM6295Init(0, freq2, 100.0, 1);
-	if (seibu_snd_type & 4) MSM6295Init(1, freq2, 100.0, 1);
+	MSM6295Init(0, freq2, 1);
+	MSM6295SetRoute(0, 0.40, BURN_SND_ROUTE_BOTH);
+	if (seibu_snd_type & 4) {
+		MSM6295Init(1, freq2, 1);
+		MSM6295SetRoute(1, 0.40, BURN_SND_ROUTE_BOTH);
+	}
 
 	// init kludge for sdgndmps
 	if (!strcmp(BurnDrvGetTextA(DRV_NAME), "sdgndmps")) {

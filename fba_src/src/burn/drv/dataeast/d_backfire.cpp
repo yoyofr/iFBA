@@ -391,7 +391,9 @@ static INT32 DrvInit(UINT32 speedhack)
 
 	EEPROMInit(&eeprom_interface_93C46);
 
-	YMZ280BInit(14000000, NULL, 3);
+	YMZ280BInit(14000000, NULL);
+	YMZ280BSetRoute(BURN_SND_YMZ280B_YMZ280B_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+	YMZ280BSetRoute(BURN_SND_YMZ280B_YMZ280B_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
 
 	deco16Init(0, 0, 1);
 	deco16_set_bank_callback(0, backfire_bank_callback);
@@ -437,9 +439,9 @@ static void simpl156_palette_recalc()
 
 	for (INT32 i = 0; i < 0x2000 / 4; i++)
 	{
-		INT32 r = (p[i] >>  0) & 0x1f;
-		INT32 g = (p[i] >>  5) & 0x1f;
-		INT32 b = (p[i] >> 10) & 0x1f;
+		INT32 r = (BURN_ENDIAN_SWAP_INT16(p[i]) >>  0) & 0x1f;
+		INT32 g = (BURN_ENDIAN_SWAP_INT16(p[i]) >>  5) & 0x1f;
+		INT32 b = (BURN_ENDIAN_SWAP_INT16(p[i]) >> 10) & 0x1f;
 
 		r = (r << 3) | (r >> 2);
 		g = (g << 3) | (g >> 2);
@@ -457,14 +459,14 @@ static void draw_sprites(UINT16 *dest, UINT8 *ram, UINT8 *gfx, INT32 coloff)
 	{
 		INT32 x, y, sprite, colour, multi, fx, fy, inc, flash, mult, pri;
 
-		sprite = spriteram[offs + 1] & 0xffff;
+		sprite = BURN_ENDIAN_SWAP_INT32(spriteram[offs + 1]) & 0xffff;
 
-		y = spriteram[offs] & 0xffff;
+		y = BURN_ENDIAN_SWAP_INT32(spriteram[offs]) & 0xffff;
 		flash = y & 0x1000;
 		if (flash && (nCurrentFrame & 1))
 			continue;
 
-		x = spriteram[offs + 2] & 0xffff;
+		x = BURN_ENDIAN_SWAP_INT32(spriteram[offs + 2]) & 0xffff;
 		colour = (x >> 9) & 0x1f;
 
 		pri = x & 0xc000;

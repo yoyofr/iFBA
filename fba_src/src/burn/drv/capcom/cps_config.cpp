@@ -350,7 +350,7 @@ static const struct GfxRange mapper_QD63B_table[] = {
 	{ 0                                ,      0,      0, 0 }
 };
 
-static const struct GfxRange mapper_qtono2_table[] = {
+static const struct GfxRange mapper_TN2292_table[] = {
 	{ GFXTYPE_SCROLL1,                   0x0000, 0x0fff, 0 },
 	{ GFXTYPE_SCROLL3,                   0x1000, 0x3fff, 0 },
 	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL2, 0x4000, 0x7fff, 0 },
@@ -717,12 +717,12 @@ void SetGfxMapper(INT32 MapperId)
 			return;
 		}
 		
-		case mapper_qtono2: {
+		case mapper_TN2292: {
 			GfxBankSizes[0] = 0x8000;
 			GfxBankSizes[1] = 0x8000;
 			GfxBankSizes[2] = 0x0000;
 			GfxBankSizes[3] = 0x0000;
-			GfxBankMapper = mapper_qtono2_table;
+			GfxBankMapper = mapper_TN2292_table;
 			return;
 		}
 		
@@ -1658,6 +1658,62 @@ void SetCpsBId(INT32 CpsBId, INT32 bStars)
 			if (bStars) {
 				CpsLayEn[4] = 0x00;
 				CpsLayEn[5] = 0x00;
+			}
+			return;
+		}
+		
+		case HACK_B_5: {
+			CpsBID[0]   = 0x00;
+			CpsBID[1]   = 0x00;
+			CpsBID[2]   = 0x00;
+  			
+			CpsMProt[0] = 0x00;
+			CpsMProt[1] = 0x00;
+			CpsMProt[2] = 0x00;
+			CpsMProt[3] = 0x00;
+  			
+			nCpsLcReg   = 0x60;
+			MaskAddr[0] = 0x66;
+			MaskAddr[1] = 0x70;
+			MaskAddr[2] = 0x68;
+			MaskAddr[3] = 0x72;
+			
+			nCpsPalCtrlReg = 0x6a;
+  			
+			CpsLayEn[1] = 0x02;
+			CpsLayEn[2] = 0x04;
+			CpsLayEn[3] = 0x08;
+			if (bStars) {
+				CpsLayEn[4] = 0x30;
+				CpsLayEn[5] = 0x30;
+			}
+			return;
+		}
+		
+		case HACK_B_6: {
+			CpsBID[0]   = 0x00;
+			CpsBID[1]   = 0x00;
+			CpsBID[2]   = 0x00;
+  			
+			CpsMProt[0] = 0x00;
+			CpsMProt[1] = 0x00;
+			CpsMProt[2] = 0x00;
+			CpsMProt[3] = 0x00;
+  			
+			nCpsLcReg   = 0x60;
+			MaskAddr[0] = 0x66;
+			MaskAddr[1] = 0x68;
+			MaskAddr[2] = 0x6c;
+			MaskAddr[3] = 0x6e;
+			
+			nCpsPalCtrlReg = 0x6a;
+  			
+			CpsLayEn[1] = 0x02;
+			CpsLayEn[2] = 0x04;
+			CpsLayEn[3] = 0x08;
+			if (bStars) {
+				CpsLayEn[4] = 0x30;
+				CpsLayEn[5] = 0x30;
 			}
 			return;
 		}

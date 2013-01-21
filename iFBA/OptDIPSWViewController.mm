@@ -34,7 +34,7 @@ static CADisplayLink* m_displayLink;
 
 
 @implementation OptDIPSWViewController
-@synthesize tabView,btn_backToEmu;
+@synthesize tabView,btn_backToEmu,emuvc;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -93,6 +93,7 @@ static CADisplayLink* m_displayLink;
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
     }
+    [tabView reloadData];
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -129,14 +130,6 @@ static CADisplayLink* m_displayLink;
     return title;
 }
 
-- (void)segActionVideoMode:(id)sender {
-    ifba_conf.screen_mode=[sender selectedSegmentIndex];
-    [tabView reloadData];
-}
-- (void)switchAspectRatio:(id)sender {
-    ifba_conf.aspect_ratio =((UISwitch*)sender).on;
-    [tabView reloadData];
-}
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
     switch (section) {
@@ -177,8 +170,12 @@ static CADisplayLink* m_displayLink;
 }
 
 -(IBAction) backToEmu {
-    launchGame=2;
-    [self.navigationController popToRootViewControllerAnimated:NO];
+//    launchGame=2;
+//    [self.navigationController popToRootViewControllerAnimated:NO];
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
+    [self.navigationController pushViewController:emuvc animated:NO];
+
 }
 
 #pragma Wiimote/iCP support

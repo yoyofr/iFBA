@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 47
-/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts
+/svn/fbalpha/!svn/ver/885/trunk/src/dep/scripts
 END
 gamelist.pl
 K 25
@@ -25,7 +25,7 @@ build_details.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/246/trunk/src/dep/scripts/build_details.cpp
+/svn/fbalpha/!svn/ver/885/trunk/src/dep/scripts/build_details.cpp
 END
 fixrc.pl
 K 25

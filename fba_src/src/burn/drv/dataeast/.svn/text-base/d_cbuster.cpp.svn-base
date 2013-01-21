@@ -2,7 +2,7 @@
 // Based on MAME driver by by Bryan McPhail
 
 #include "tiles_generic.h"
-#include "sek.h"
+#include "m68000_intf.h"
 #include "h6280_intf.h"
 #include "bitswap.h"
 #include "deco16ic.h"
@@ -429,7 +429,8 @@ static INT32 DrvInit()
 	SekSetReadByteHandler(0,		cbuster_main_read_byte);
 	SekClose();
 
-	deco16SoundInit(DrvHucROM, DrvHucRAM, 8055000, 1, NULL, 40.0, 1006875, 75.0, 2013750, 100.0);
+	deco16SoundInit(DrvHucROM, DrvHucRAM, 8055000, 1, NULL, 0.45, 1006875, 0.75, 2013750, 0.60);
+	BurnYM2203SetAllRoutes(0, 0.60, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -457,9 +458,9 @@ static void DrvPaletteRecalc()
 	UINT16 *p1 = (UINT16*)DrvPalRAM1;
 
 	for (INT32 i = 0; i < BurnDrvGetPaletteEntries(); i++) {
-		INT32 r = ((p0[i] & 0xff) * 175) / 100;
-		INT32 g = ((p0[i] >>  8 ) * 175) / 100;
-		INT32 b = ((p1[i] & 0xff) * 175) / 100;
+		INT32 r = ((BURN_ENDIAN_SWAP_INT16(p0[i]) & 0xff) * 175) / 100; //Seb
+		INT32 g = ((BURN_ENDIAN_SWAP_INT16(p0[i]) >>  8 ) * 175) / 100; //Seb
+		INT32 b =  ((BURN_ENDIAN_SWAP_INT16(p1[i]) & 0xff) * 175) / 100; //Seb
 
 		DrvPalette[i] = BurnHighCol(r, g, b, 0);
 	}
@@ -473,12 +474,12 @@ static void draw_sprites(INT32 pri)
 	{
 		INT32 x, y, sprite, colour, multi, fx, fy, inc, flash, mult;
 
-		sprite = buffered_spriteram[offs + 1] & 0x7fff;
+		sprite =  BURN_ENDIAN_SWAP_INT16 (buffered_spriteram[offs + 1]) & 0x7fff; //Seb
 		if (!sprite)
 			continue;
 
-		y = buffered_spriteram[offs];
-		x = buffered_spriteram[offs + 2];
+		y = BURN_ENDIAN_SWAP_INT16 (buffered_spriteram[offs]); //Seb
+		x = BURN_ENDIAN_SWAP_INT16 (buffered_spriteram[offs + 2]); //Seb
 
 		if ((y & 0x8000) && pri == 1)
 			continue;

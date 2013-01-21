@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
-V 42
-/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k
+V 44
+/svn/fbalpha/!svn/ver/948/trunk/src/cpu/m68k
 END
 m68kconf.h
 K 25
@@ -36,12 +36,12 @@ END
 m68k_in.c
 K 25
 svn:wc:ra_dav:version-url
-V 52
-/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68k_in.c
+V 54
+/svn/fbalpha/!svn/ver/948/trunk/src/cpu/m68k/m68k_in.c
 END
 m68kcpu.c
 K 25
 svn:wc:ra_dav:version-url
-V 52
-/svn/fbalpha/!svn/ver/2/trunk/src/cpu/m68k/m68kcpu.c
+V 54
+/svn/fbalpha/!svn/ver/948/trunk/src/cpu/m68k/m68kcpu.c
 END

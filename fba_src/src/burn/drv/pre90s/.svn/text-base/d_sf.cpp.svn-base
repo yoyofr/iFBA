@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym2151.h"
 #include "msm5205.h"
 
@@ -626,7 +626,7 @@ UINT8 __fastcall sf_sound2_in(UINT16 port)
 
 static INT32 DrvSynchroniseStream(INT32 nSoundRate)
 {
-	return (INT64)ZetTotalCycles() * nSoundRate / 3579545;
+	return (INT64)(double)ZetTotalCycles() * nSoundRate / 3579545;
 }
 
 static INT32 DrvGfxDecode()
@@ -843,7 +843,6 @@ static INT32 DrvInit(INT32 initver)
 	ZetMapArea(0xc000, 0xc7ff, 2, DrvZ80Ram0);
 	ZetSetWriteHandler(sf_sound_write);
 	ZetSetReadHandler(sf_sound_read);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -852,14 +851,17 @@ static INT32 DrvInit(INT32 initver)
 	ZetMapArea(0x0000, 0x7fff, 2, DrvZ80Rom1);
 	ZetSetOutHandler(sf_sound2_out);
 	ZetSetInHandler(sf_sound2_in);
-	ZetMemEnd();
 	ZetClose();
 
-	BurnYM2151Init(3579545, 60.0);
+	BurnYM2151Init(3579545);
 	BurnYM2151SetIrqHandler(&sfYM2151IrqHandler);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.60, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.60, BURN_SND_ROUTE_RIGHT);
 
-	MSM5205Init(0, DrvSynchroniseStream, 384000, NULL, MSM5205_SEX_4B, 100, 1);
-	MSM5205Init(1, DrvSynchroniseStream, 384000, NULL, MSM5205_SEX_4B, 100, 1);
+	MSM5205Init(0, DrvSynchroniseStream, 384000, NULL, MSM5205_SEX_4B, 1);
+	MSM5205Init(1, DrvSynchroniseStream, 384000, NULL, MSM5205_SEX_4B, 1);
+	MSM5205SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
+	MSM5205SetRoute(1, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

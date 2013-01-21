@@ -1,19 +1,19 @@
 K 25
 svn:wc:ra_dav:version-url
 V 50
-/svn/fbalpha/!svn/ver/468/trunk/src/burn/drv/taito
+/svn/fbalpha/!svn/ver/944/trunk/src/burn/drv/taito
 END
 d_taitomisc.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_taitomisc.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_taitomisc.cpp
 END
 d_superchs.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_superchs.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/taito/d_superchs.cpp
 END
 taito_ic.h
 K 25
@@ -25,7 +25,7 @@ d_tnzs.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 61
-/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/taito/d_tnzs.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_tnzs.cpp
 END
 tc0220ioc.cpp
 K 25
@@ -49,25 +49,25 @@ tc0140syt.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/tc0140syt.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/taito/tc0140syt.cpp
 END
 d_taitox.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_taitox.cpp
+/svn/fbalpha/!svn/ver/831/trunk/src/burn/drv/taito/d_taitox.cpp
 END
 d_minivdr.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_minivdr.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_minivdr.cpp
 END
 d_taitoz.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_taitoz.cpp
+/svn/fbalpha/!svn/ver/842/trunk/src/burn/drv/taito/d_taitoz.cpp
 END
 tc0640fio.cpp
 K 25
@@ -91,7 +91,7 @@ d_lkage.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_lkage.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_lkage.cpp
 END
 tc0480scp.cpp
 K 25
@@ -105,35 +105,35 @@ svn:wc:ra_dav:version-url
 V 64
 /svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/taito/tc0360pri.cpp
 END
+d_othunder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_othunder.cpp
+END
+d_arkanoid.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/842/trunk/src/burn/drv/taito/d_arkanoid.cpp
+END
 taito_ic.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
 /svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/taito/taito_ic.cpp
 END
-d_arkanoid.cpp
-K 25
-svn:wc:ra_dav:version-url
-V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_arkanoid.cpp
-END
-d_othunder.cpp
-K 25
-svn:wc:ra_dav:version-url
-V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_othunder.cpp
-END
 d_retofinv.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_retofinv.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_retofinv.cpp
 END
 d_slapshot.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_slapshot.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_slapshot.cpp
 END
 tnzs_prot.cpp
 K 25
@@ -145,31 +145,31 @@ d_flstory.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/435/trunk/src/burn/drv/taito/d_flstory.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_flstory.cpp
 END
 d_chaknpop.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_chaknpop.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_chaknpop.cpp
 END
 d_asuka.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_asuka.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_asuka.cpp
 END
 d_ashnojoe.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_ashnojoe.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_ashnojoe.cpp
 END
-tc0100scn.cpp
+d_taitof2.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/taito/tc0100scn.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_taitof2.cpp
 END
 taito_m68705.h
 K 25
@@ -177,17 +177,17 @@ svn:wc:ra_dav:version-url
 V 65
 /svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/taito/taito_m68705.h
 END
-d_taitof2.cpp
+tc0100scn.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_taitof2.cpp
+/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/taito/tc0100scn.cpp
 END
 d_darius2.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_darius2.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_darius2.cpp
 END
 tc0110pcr.cpp
 K 25
@@ -205,7 +205,7 @@ taito.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/taito.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/taito/taito.cpp
 END
 tc0150rod.cpp
 K 25
@@ -223,7 +223,7 @@ d_taitob.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/taito/d_taitob.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/taito/d_taitob.cpp
 END
 cchip.cpp
 K 25
@@ -235,7 +235,7 @@ d_bublbobl.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/468/trunk/src/burn/drv/taito/d_bublbobl.cpp
+/svn/fbalpha/!svn/ver/944/trunk/src/burn/drv/taito/d_bublbobl.cpp
 END
 pc080sn.cpp
 K 25

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/277/trunk/src/intf/audio/win32
+END
+aud_xaudio2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/277/trunk/src/intf/audio/win32/aud_xaudio2.cpp
+END
+dsound_core.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/audio/win32/dsound_core.cpp
+END
+aud_dsound3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/277/trunk/src/intf/audio/win32/aud_dsound3.cpp
+END
+dsound_core.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/audio/win32/dsound_core.h
+END

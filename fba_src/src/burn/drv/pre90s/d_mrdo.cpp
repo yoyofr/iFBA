@@ -2,7 +2,7 @@
 // Based on MAME driver by Nicola Salmoria
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "sn76496.h"
 
 static UINT8 *Mem, *Rom, *Gfx0, *Gfx1, *Gfx2, *Prom;
@@ -298,15 +298,14 @@ static INT32 DrvInit()
 	ZetMapArea(0xe000, 0xefff, 0, Rom + 0xe000);
 	ZetMapArea(0xe000, 0xefff, 1, Rom + 0xe000);
 	ZetMapArea(0xe000, 0xefff, 2, Rom + 0xe000);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnSetRefreshRate(5000000.0/312/262);
 
 	SN76489Init(0, 4000000, 0);
 	SN76489Init(1, 4000000, 1);
-	SN76496SetVolShift(0, 1);
-	SN76496SetVolShift(1, 1);
+	SN76496SetRoute(0, 0.50, BURN_SND_ROUTE_BOTH);
+	SN76496SetRoute(1, 0.50, BURN_SND_ROUTE_BOTH);
  
 	DrvDoReset();
 

@@ -1880,10 +1880,10 @@ int StopProgressBar() {
             texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
             break;
         case 1:
-            texcoords[1][0]=(float)0/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
-            texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)0/TEXTURE_H;
             texcoords[0][0]=(float)0/TEXTURE_W; texcoords[0][1]=(float)(visible_area_h)/TEXTURE_H;
+            texcoords[1][0]=(float)0/TEXTURE_W; texcoords[1][1]=(float)0/TEXTURE_H;
             texcoords[2][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[2][1]=(float)(visible_area_h)/TEXTURE_H;
+            texcoords[3][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[3][1]=(float)0/TEXTURE_H;
             break;
         case 3:
             texcoords[0][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[0][1]=(float)0/TEXTURE_H;
@@ -1898,22 +1898,35 @@ int StopProgressBar() {
     switch (cur_ifba_conf->screen_mode) {
         case 0://org
             if (ios_aspect>game_aspect) {
-                rh=min(height,visible_area_h);
-                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                if (vid_rotated&1) {
+                    rh=min(height,visible_area_w);
+                    rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                } else {
+                    rh=min(height,visible_area_h);
+                    rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                }
                 
             } else {
-                rw=min(width,visible_area_w);
-                rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
-                
+                if (vid_rotated&1) {
+                    rw=min(width,visible_area_h);
+                    rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                } else {
+                    rw=min(width,visible_area_w);
+                    rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                }
             }
             break;
         case 1://max with room for vpad
-            if (ios_aspect>game_aspect) {                    
+            if (ios_aspect>game_aspect) {
                 rh=height-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f);
-                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);                    
+                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
             } else {
-                rw=width-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f)*vid_aspectX/vid_aspectY;
-                rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                rh=height-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f);
+                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                if (rw>width) {
+                    rw=width;
+                    rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                }
             }
             break;
         case 2://full
@@ -1927,6 +1940,8 @@ int StopProgressBar() {
             }
             break;
     }
+    
+//    NSLog(@"%d / %d x %d / %f %f",cur_ifba_conf->screen_mode,rw,rh,ios_aspect,game_aspect);
     
     glViewport((width-rw)>>1, height-rh, rw, rh);                    
     if (vid_rotated&&(pb_value==1)) {

@@ -4,7 +4,7 @@
 #include "tiles_generic.h"
 #include "burn_ymf278b.h"
 #include "eeprom.h"
-#include "sh2.h"
+#include "sh2_intf.h"
 
 static UINT8 *AllMem;
 static UINT8 *DrvSh2ROM;
@@ -449,7 +449,7 @@ void __fastcall ps4_write_byte(UINT32 address, UINT8 data)
 #ifdef LSB_FIRST
 		DrvSprRAM[(address ^ 3) & 0x3fff] = data;
 #else
-		DrvSprRAM((address) & 0x3fff] = data;
+		DrvSprRAM[(address) & 0x3fff] = data;
 #endif
 		return;
 	}
@@ -719,6 +719,7 @@ static INT32 DrvInit(INT32 (*LoadCallback)(), INT32 gfx_len)
 	Sh2SetReadLongHandler (1,		ps4hack_read_long);
 
 	BurnYMF278BInit(0, DrvSndROM, &DrvIRQCallback, DrvSynchroniseStream);
+	BurnYMF278BSetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 	BurnTimerAttachSh2(28636350);
 
 	EEPROMInit(&eeprom_interface_93C56);

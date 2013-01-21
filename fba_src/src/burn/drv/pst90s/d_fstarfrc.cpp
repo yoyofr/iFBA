@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "msm6295.h"
 #include "burn_ym2151.h"
 
@@ -771,17 +771,19 @@ INT32 FstarfrcInit()
 	ZetMapArea(0xfffe, 0xffff, 0, FstarfrcZ80Ram + 0xc000);
 	ZetMapArea(0xfffe, 0xffff, 1, FstarfrcZ80Ram + 0xc000);
 	ZetMapArea(0xfffe, 0xffff, 2, FstarfrcZ80Ram + 0xc000);
-	ZetMemEnd();
 	ZetSetReadHandler(FstarfrcZ80Read);
 	ZetSetWriteHandler(FstarfrcZ80Write);
 	ZetClose();
 
 	// Setup the YM2151 emulation
-	BurnYM2151Init(8000000 / 2, 50.0);
+	BurnYM2151Init(8000000 / 2);
 	BurnYM2151SetIrqHandler(&FstarfrcYM2151IrqHandler);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.60, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.60, BURN_SND_ROUTE_RIGHT);
 
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 7575, 40, 1);
+	MSM6295Init(0, 7575, 1);
+	MSM6295SetRoute(0, 0.40, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

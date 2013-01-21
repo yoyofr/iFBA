@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/sdl
+END
+vid_sdlfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/sdl/vid_sdlfx.cpp
+END
+vid_sdlopengl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/sdl/vid_sdlopengl.cpp
+END

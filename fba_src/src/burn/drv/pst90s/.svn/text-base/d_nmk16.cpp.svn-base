@@ -3,8 +3,8 @@
 // Also, a huge "thank you!" to JackC for helping bug test
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "seibusnd.h"
 #include "bitswap.h"
 #include "nmk004.h"
@@ -4125,16 +4125,21 @@ static INT32 DrvInit(INT32 (*pLoadCallback)())
 	ZetSetReadHandler(tharrier_sound_read);
 	ZetSetOutHandler(tharrier_sound_out);
 	ZetSetInHandler(tharrier_sound_in);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnSetRefreshRate(56.00);
 
 	BurnYM2203Init(1, 1500000, &DrvYM2203IrqHandler, DrvSynchroniseStream, DrvGetTime, 0);
 	BurnTimerAttachZet(3000000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 2.00, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.50, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.50, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.50, BURN_SND_ROUTE_BOTH);
 
-	MSM6295Init(0, 4000000 / 165, 20.0, 1);
-	MSM6295Init(1, 4000000 / 165, 20.0, 1);
+	MSM6295Init(0, 4000000 / 165, 1);
+	MSM6295Init(1, 4000000 / 165, 1);
+	MSM6295SetRoute(0, 0.20, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 0.20, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -4171,8 +4176,10 @@ static INT32 BjtwinInit(INT32 (*pLoadCallback)())
 
 	BurnSetRefreshRate(56.00);
 
-	MSM6295Init(0, 4000000 / 165, 20.0, 1);
-	MSM6295Init(1, 4000000 / 165, 20.0, 1);
+	MSM6295Init(0, 4000000 / 165, 1);
+	MSM6295Init(1, 4000000 / 165, 1);
+	MSM6295SetRoute(0, 0.20, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 0.20, BURN_SND_ROUTE_BOTH);
 
 	NMK112_init(0, DrvSndROM0, DrvSndROM1, 0x140000, 0x140000);
 
@@ -4246,16 +4253,18 @@ static INT32 Macross2Init()
 	ZetSetReadHandler(macross2_sound_read);
 	ZetSetOutHandler(macross2_sound_out);
 	ZetSetInHandler(macross2_sound_in);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnSetRefreshRate(56.00);
 
 	BurnYM2203Init(1, 1500000, &DrvYM2203IrqHandler, Macross2SynchroniseStream, Macross2GetTime, 0);
 	BurnTimerAttachZet(4000000);
+	BurnYM2203SetAllRoutes(0, 0.90, BURN_SND_ROUTE_BOTH);
 
-	MSM6295Init(0, 4000000 / 165, 20.0, 1);
-	MSM6295Init(1, 4000000 / 165, 20.0, 1);
+	MSM6295Init(0, 4000000 / 165, 1);
+	MSM6295Init(1, 4000000 / 165, 1);
+	MSM6295SetRoute(0, 0.20, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 0.20, BURN_SND_ROUTE_BOTH);
 
 	if (strcmp(BurnDrvGetTextA(DRV_NAME), "macross2") == 0) {
 		NMK112_init(0, DrvSndROM0, DrvSndROM1, 0x240000, 0x140000);
@@ -4292,12 +4301,12 @@ static INT32 MSM6295x1Init(INT32  (*pLoadCallback)())
 	ZetMapArea(0x8000, 0x87ff, 2, DrvZ80RAM);
 	ZetSetWriteHandler(ssmissin_sound_write);
 	ZetSetReadHandler(ssmissin_sound_read);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnSetRefreshRate(56.00);
 
-	MSM6295Init(0, 1000000 / 165, 100.0, 0);
+	MSM6295Init(0, 1000000 / 165, 0);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -4390,11 +4399,15 @@ static INT32 AfegaInit(INT32 (*pLoadCallback)(), void (*pZ80Callback)(), INT32 p
 
 	BurnSetRefreshRate(56.00);
 
-	BurnYM2151Init(4000000, 70.0);
+	BurnYM2151Init(4000000);
 	BurnYM2151SetIrqHandler(&DrvYM2151IrqHandler);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.30, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.30, BURN_SND_ROUTE_RIGHT);
 
-	MSM6295Init(0, 1000000 / (pin7high ? 132 : 165), 60.0, 1);
-	MSM6295Init(1, 1000000 / (pin7high ? 132 : 165), 60.0, 1);
+	MSM6295Init(0, 1000000 / (pin7high ? 132 : 165), 1);
+	MSM6295Init(1, 1000000 / (pin7high ? 132 : 165), 1);
+	MSM6295SetRoute(0, 0.60, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 0.60, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -4423,9 +4436,15 @@ static INT32 NMK004Init(INT32 (*pLoadCallback)(), INT32 nCpuSpeed, INT32 pin7hig
 
 	BurnYM2203Init(1, 1500000, &NMK004YM2203IrqHandler, NMK004SynchroniseStream, NMK004GetTime, 0);
 	BurnTimerAttachSek(nNMK004CpuSpeed);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 2.00, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.50, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.50, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.50, BURN_SND_ROUTE_BOTH);
 
-	MSM6295Init(0, 4000000 / (pin7high ? 132 : 165), 20.0, 1);
-	MSM6295Init(1, 4000000 / (pin7high ? 132 : 165), 20.0, 1);
+	MSM6295Init(0, 4000000 / (pin7high ? 132 : 165), 1);
+	MSM6295Init(1, 4000000 / (pin7high ? 132 : 165), 1);
+	MSM6295SetRoute(0, 0.20, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 0.20, BURN_SND_ROUTE_BOTH);
 
 	NMK004OKIROM0 = DrvSndROM0;
 	NMK004OKIROM1 = DrvSndROM1;
@@ -5654,12 +5673,12 @@ static void decode_tdragonb()
 // Task Force Harrier
 
 static struct BurnRomInfo tharrierRomDesc[] = {
-	{ "2",			0x020000, 0x78923aaa, 1 | BRF_PRG | BRF_ESS }, //  0 68k code
-	{ "3",			0x020000, 0x99cea259, 1 | BRF_PRG | BRF_ESS }, //  1
+	{ "2.bin",		0x020000, 0xf3887a44, 1 | BRF_PRG | BRF_ESS }, //  0 68k code
+	{ "3.bin",		0x020000, 0x65c247f6, 1 | BRF_PRG | BRF_ESS }, //  1
 
 	{ "12",			0x010000, 0xb959f837, 2 | BRF_PRG | BRF_ESS }, //  2 Z80 code
 
-	{ "1",			0x010000, 0xc7402e4a, 3 | BRF_GRA },           //  3 Characters
+	{ "1.bin",		0x010000, 0x005c26c3, 3 | BRF_GRA },           //  3 Characters
 
 	{ "89050-4",		0x080000, 0x64d7d687, 4 | BRF_GRA },           //  4 Tiles
 
@@ -5732,24 +5751,23 @@ static INT32 TharrierInit()
 
 struct BurnDriver BurnDrvTharrier = {
 	"tharrier", NULL, NULL, NULL, "1989",
-	"Task Force Harrier\0", NULL, "UPL (American Sammy license)", "NMK16",
+	"Task Force Harrier\0", NULL, "UPL", "NMK16",
 	NULL, NULL, NULL, NULL,
-	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_MISC_PRE90S, GBF_VERSHOOT, 0,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_MISC_PRE90S, GBF_VERSHOOT, 0,
 	NULL, tharrierRomInfo, tharrierRomName, NULL, NULL, TharrierInputInfo, TharrierDIPInfo,
 	TharrierInit, DrvExit, DrvFrame, TharrierDraw, NULL, NULL, 0x200,
 	224, 256, 3, 4
 };
 
+// Task Force Harrier (US?)
 
-// Task Force Harrier (Japan)
-
-static struct BurnRomInfo tharrierjRomDesc[] = {
-	{ "2.bin",		0x020000, 0xf3887a44, 1 | BRF_PRG | BRF_ESS }, //  0 68k code
-	{ "3.bin",		0x020000, 0x65c247f6, 1 | BRF_PRG | BRF_ESS }, //  1
+static struct BurnRomInfo tharrieruRomDesc[] = {
+	{ "2",			0x020000, 0x78923aaa, 1 | BRF_PRG | BRF_ESS }, //  0 68k code
+	{ "3",			0x020000, 0x99cea259, 1 | BRF_PRG | BRF_ESS }, //  1
 
 	{ "12",			0x010000, 0xb959f837, 2 | BRF_PRG | BRF_ESS }, //  2 Z80 code
 
-	{ "1.bin",		0x010000, 0x005c26c3, 3 | BRF_GRA },           //  3 Characters
+	{ "1",			0x010000, 0xc7402e4a, 3 | BRF_GRA },           //  3 Characters
 
 	{ "89050-4",		0x080000, 0x64d7d687, 4 | BRF_GRA },           //  4 Tiles
 
@@ -5768,15 +5786,15 @@ static struct BurnRomInfo tharrierjRomDesc[] = {
 	{ "26.bpr",		0x000020, 0x0cbfb33e, 0 | BRF_OPT },           // 14
 };
 
-STD_ROM_PICK(tharrierj)
-STD_ROM_FN(tharrierj)
+STD_ROM_PICK(tharrieru)
+STD_ROM_FN(tharrieru)
 
-struct BurnDriver BurnDrvTharrierj = {
-	"tharrierj", "tharrier", NULL, NULL, "1989",
-	"Task Force Harrier (Japan)\0", NULL, "UPL", "NMK16",
+struct BurnDriver BurnDrvTharrieru = {
+	"tharrieru", "tharrier", NULL, NULL, "1989",
+	"Task Force Harrier (US?)\0", NULL, "UPL (American Sammy license)", "NMK16",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_MISC_PRE90S, GBF_VERSHOOT, 0,
-	NULL, tharrierjRomInfo, tharrierjRomName, NULL, NULL, TharrierInputInfo, TharrierDIPInfo,
+	NULL, tharrieruRomInfo, tharrieruRomName, NULL, NULL, TharrierInputInfo, TharrierDIPInfo,
 	TharrierInit, DrvExit, DrvFrame, TharrierDraw, NULL, NULL, 0x200,
 	224, 256, 3, 4
 };
@@ -6207,7 +6225,6 @@ static void pAfegaZ80Callback()
 	ZetMapArea(0xf000, 0xf7ff, 2, DrvZ80RAM);
 	ZetSetWriteHandler(afega_sound_write);
 	ZetSetReadHandler(afega_sound_read);
-	ZetMemEnd();
 	ZetClose();
 }
 
@@ -6524,6 +6541,38 @@ struct BurnDriver BurnDrvGrdnstrmk = {
 };
 
 
+// Red Fox War Planes II (China)
+
+static struct BurnRomInfo redfoxwp2RomDesc[] = {
+	{ "u112",	        0x040000, 0x3f31600b, 1 | BRF_PRG | BRF_ESS }, //  0 68k code
+	{ "u107",			0x040000, 0xdaa44ab4, 1 | BRF_PRG | BRF_ESS }, //  1
+
+	{ "u92",		    0x010000, 0x864b55c2, 2 | BRF_PRG | BRF_ESS }, //  2 Z80 code
+
+	{ "u4",				0x010000, 0x19239401, 3 | BRF_GRA },           //  3 Characters
+
+	{ "afega_af1-b2.uc8",	0x200000, 0xd68588c2, 4 | BRF_GRA },           //  4 Tiles
+	{ "afega_af1-b1.uc3",	0x200000, 0xf8b200a8, 4 | BRF_GRA },           //  5
+
+	{ "afega_af1-sp.uc13",	0x200000, 0x7d4d4985, 5 | BRF_GRA },           //  6 Sprites
+
+	{ "afega1.u95",		0x040000, 0xe911ce33, 6 | BRF_SND },           //  7 OKI1 Samples
+};
+
+STD_ROM_PICK(redfoxwp2)
+STD_ROM_FN(redfoxwp2)
+
+struct BurnDriver BurnDrvRedfoxwp2 = {
+	"redfoxwp2", "grdnstrm", NULL, NULL, "1998",
+	"Red Fox War Planes II (China)\0", NULL, "Afega", "NMK16",
+	L"\u7D05\u5B64\u6230\u6A5FII\0Red Fox War Planes II (China)\0", NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_MISC_POST90S, GBF_VERSHOOT, 0,
+	NULL, redfoxwp2RomInfo, redfoxwp2RomName, NULL, NULL, CommonInputInfo, GrdnstrkDIPInfo,
+	GrdnstrmkInit, AfegaExit, AfegaFrame, AfegaDraw, NULL, NULL, 0x300,
+	224, 256, 3, 4
+};
+
+
 // Pop's Pop's
 
 static struct BurnRomInfo popspopsRomDesc[] = {
@@ -6794,7 +6843,6 @@ static void pFirehawkZ80Callback()
 
 	ZetSetWriteHandler(firehawk_sound_write);
 	ZetSetReadHandler(firehawk_sound_read);
-	ZetMemEnd();
 	ZetClose();
 }
 

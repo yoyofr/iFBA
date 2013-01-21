@@ -2,7 +2,7 @@
 // Based on MAME driver by Bryan McPhail
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "hd6309_intf.h"
 #include "konamiic.h"
 #include "burn_ym2151.h"
@@ -731,8 +731,8 @@ static INT32 DrvInit(INT32 type)
 	HD6309MapMemory(DrvHD6309RAM,		0x4000, 0x5fff, HD6309_RAM);
 	HD6309MapMemory(DrvHD6309ROM + 0x10000, 0x6000, 0x7fff, HD6309_ROM);
 	HD6309MapMemory(DrvHD6309ROM + 0x08000, 0x8000, 0xffff, HD6309_ROM);
-	HD6309SetWriteByteHandler(mainevt_main_write);
-	HD6309SetReadByteHandler(mainevt_main_read);
+	HD6309SetWriteHandler(mainevt_main_write);
+	HD6309SetReadHandler(mainevt_main_read);
 	HD6309Close();
 
 	ZetInit(0);
@@ -744,7 +744,6 @@ static INT32 DrvInit(INT32 type)
 	ZetMapArea(0x8000, 0x83ff, 2, DrvZ80RAM);
 	ZetSetWriteHandler(mainevt_sound_write);
 	ZetSetReadHandler(mainevt_sound_read);
-	ZetMemEnd();
 	ZetClose();
 
 	K052109Init(DrvGfxROM0, (gfx0_offset * 2) - 1);
@@ -757,10 +756,13 @@ static INT32 DrvInit(INT32 type)
 
 	K007232Init(0, 3579545, DrvSndROM0, 0x80000);
 	K007232SetPortWriteHandler(0, DrvK007232VolCallback);
+	K007232PCMSetAllRoutes(0, 0.20, BURN_SND_ROUTE_BOTH);
 
-	BurnYM2151Init(3579545, 75.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetAllRoutes(0.30, BURN_SND_ROUTE_BOTH);
 
 	UPD7759Init(0, UPD7759_STANDARD_CLOCK, DrvSndROM1);
+	UPD7759SetRoute(0, 0.50, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -893,9 +895,9 @@ static INT32 DrvFrame()
 	}
 
 	if (nGame) {
-		if (nmi_enable[0]) HD6309SetIRQ(0x20, HD6309_IRQSTATUS_AUTO); // nmi
+		if (nmi_enable[0]) HD6309SetIRQLine(0x20, HD6309_IRQSTATUS_AUTO); // nmi
 	} else {
-		if (K052109_irq_enabled) HD6309SetIRQ(HD6309_IRQ_LINE, HD6309_IRQSTATUS_AUTO);
+		if (K052109_irq_enabled) HD6309SetIRQLine(HD6309_IRQ_LINE, HD6309_IRQSTATUS_AUTO);
 	}
 
 	if (pBurnSoundOut) {
@@ -961,7 +963,7 @@ static INT32 DrvScan(INT32 nAction,INT32 *pnMin)
 // The Main Event (4 Players ver. Y)
 
 static struct BurnRomInfo mainevtRomDesc[] = {
-	{ "799c02.k11",		0x10000, 0xe2e7dbd5, 1 | BRF_PRG | BRF_ESS }, //  0 HD6309 Code
+	{ "799y02.k11",		0x10000, 0xe2e7dbd5, 1 | BRF_PRG | BRF_ESS }, //  0 HD6309 Code
 
 	{ "799c01.f7",		0x08000, 0x447c4c5c, 2 | BRF_PRG | BRF_ESS }, //  1 Z80 Code
 
@@ -1003,7 +1005,7 @@ struct BurnDriver BurnDrvMainevt = {
 // The Main Event (4 Players ver. F)
 
 static struct BurnRomInfo mainevtoRomDesc[] = {
-	{ "799_02.k11",		0x10000, 0xc143596b, 1 | BRF_PRG | BRF_ESS }, //  0 HD6309 Code
+	{ "799f02.k11",		0x10000, 0xc143596b, 1 | BRF_PRG | BRF_ESS }, //  0 HD6309 Code
 
 	{ "799c01.f7",		0x08000, 0x447c4c5c, 2 | BRF_PRG | BRF_ESS }, //  1 Z80 Code
 

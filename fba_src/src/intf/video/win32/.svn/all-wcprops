@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/303/trunk/src/intf/video/win32
+END
+ddraw_core.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/ddraw_core.h
+END
+vid_directx_support.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/fbalpha/!svn/ver/303/trunk/src/intf/video/win32/vid_directx_support.cpp
+END
+vid_ddrawfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/vid_ddrawfx.cpp
+END
+directx9_core.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/directx9_core.cpp
+END
+vid_ddraw.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/vid_ddraw.cpp
+END
+vid_directx_support.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/vid_directx_support.h
+END
+directx9_core.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/directx9_core.h
+END
+ddraw_core.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/ddraw_core.cpp
+END
+rgb_pattern.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/rgb_pattern.h
+END
+vid_d3d.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/vid_d3d.cpp
+END
+vid_directx9.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/win32/vid_directx9.cpp
+END

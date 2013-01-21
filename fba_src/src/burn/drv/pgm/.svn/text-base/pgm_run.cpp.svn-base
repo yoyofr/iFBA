@@ -47,7 +47,7 @@ void (*pPgmProtCallback)() = NULL;
 INT32 (*pPgmScanCallback)(INT32, INT32*) = NULL;
 
 static INT32 nEnableArm7 = 0;
-INT32 nPGMEnableIRQ4 = 0;
+INT32 nPGMDisableIRQ4 = 0;
 INT32 nPGMArm7Type = 0;
 
 #define M68K_CYCS_PER_FRAME	((20000000 * 100) / nBurnFPS)
@@ -172,6 +172,10 @@ static INT32 pgmGetRoms(bool bLoad)
 		if ((ri.nType & BRF_GRA) && (ri.nType & 0x0f) == 4)
 		{
 			if (bLoad) {
+				if (strcmp(BurnDrvGetTextA(DRV_NAME), "pgm3in1") == 0) {
+					if ((PGMSPRMaskROMLoad - PGMSPRMaskROM) == 0x1000000) PGMSPRMaskROMLoad -= 0x100000;
+				}
+
 				BurnLoadRom(PGMSPRMaskROMLoad, i, 1);
 				PGMSPRMaskROMLoad += ri.nLen;
 			} else {
@@ -536,6 +540,7 @@ static void expand_colourdata()
 		struct BurnRomInfo ri;
 	
 		UINT8 *PGMSPRColROMLoad = tmp;
+		INT32 prev_len = 0;
 	
 		for (INT32 i = 0; !BurnDrvGetRomName(&pRomName, i, 0); i++) {
 	
@@ -543,16 +548,14 @@ static void expand_colourdata()
 	
 			if ((ri.nType & BRF_GRA) && (ri.nType & 0x0f) == 3)
 			{
+				// Fix for kovsh a0603 rom overlap
+				if (ri.nLen == 0x400000 && prev_len == 0x400000 && nPGMSPRColROMLen == 0x2000000) {
+					PGMSPRColROMLoad -= 0x200000;
+				}
+
 				BurnLoadRom(PGMSPRColROMLoad, i, 1);
 				PGMSPRColROMLoad += ri.nLen;
-
-				// fix for 2x size b0601 rom
-               			if (strcmp(BurnDrvGetTextA(DRV_NAME), "kovsh") == 0 ||
-					strcmp(BurnDrvGetTextA(DRV_NAME), "kovsh103") == 0) {
-					if (ri.nLen == 0x400000) {
-						PGMSPRColROMLoad -= 0x200000;
-					}
-				}
+				prev_len = ri.nLen;
 
 				continue;
 			}
@@ -673,7 +676,6 @@ INT32 pgmInit()
 		ZetMapArea(0x0000, 0xffff, 2, RamZ80);
 		ZetSetOutHandler(PgmZ80PortWrite);
 		ZetSetInHandler(PgmZ80PortRead);
-		ZetMemEnd();
 		ZetClose();
 	}
 
@@ -733,7 +735,7 @@ INT32 pgmExit()
 	pPgmResetCallback = NULL;
 
 	nEnableArm7 = 0;
-	nPGMEnableIRQ4 = 0;
+	nPGMDisableIRQ4 = 0;
 	nPGMArm7Type = 0;
 
 	nPgmCurrentBios = -1;
@@ -816,11 +818,9 @@ INT32 pgmFrame()
 		nCyclesNext[1] += Z80_CYCS_PER_INTER;
 		nCyclesNext[2] += ARM7_CYCS_PER_INTER;
 
-		INT32 cycles = M68K_CYCS_PER_INTER; //nCyclesNext[0] - nCyclesDone[0];
+		INT32 cycles = M68K_CYCS_PER_INTER;
 
-		//if (cycles > 0) {
-			nCyclesDone[0] += SekRun(cycles);
-		//}
+		nCyclesDone[0] += SekRun(cycles);
 
 		if (nEnableArm7) {
 			cycles = SekTotalCycles() - Arm7TotalCycles();
@@ -838,7 +838,7 @@ INT32 pgmFrame()
 			}
 		}
 
-		if (i == ((PGM_INTER_LEAVE / 2)-1) && nPGMEnableIRQ4 != 0) {
+		if (i == ((PGM_INTER_LEAVE / 2)-1) && !nPGMDisableIRQ4) {
 			SekSetIRQLine(4, SEK_IRQSTATUS_AUTO);
 		}
 	}

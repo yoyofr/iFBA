@@ -1,5 +1,5 @@
 #include "tiles_generic.h"
-#include "sek.h"
+#include "m68000_intf.h"
 #include "burn_ym3812.h"
 #include "burn_ym2151.h"
 #include "msm6295.h"
@@ -354,44 +354,64 @@ STD_ROM_PICK(Burglarx)
 STD_ROM_FN(Burglarx)
 
 static struct BurnRomInfo ZeropntRomDesc[] = {
-	{ "zero_2.bin",    0x080000, 0x1e599509, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
-	{ "zero_3.bin",    0x080000, 0x588aeef7, BRF_ESS | BRF_PRG }, //  1
+	{ "unico_2.rom2",  			0x080000, 0x1e599509, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
+	{ "unico_3.rom3",  			0x080000, 0x588aeef7, BRF_ESS | BRF_PRG }, //  1
 	
-	{ "zpobjz01.bin",  0x200000, 0x1f2768a3, BRF_GRA },	     //  2	Sprites
-	{ "zpobjz02.bin",  0x200000, 0xde34f33a, BRF_GRA },	     //  3
-	{ "zpobjz03.bin",  0x200000, 0xd7a657f7, BRF_GRA },	     //  4
-	{ "zpobjz04.bin",  0x200000, 0x3aec2f8d, BRF_GRA },	     //  5
+	{ "unico_zpobj_z01.bin",  	0x200000, 0x1f2768a3, BRF_GRA },	     //  2	Sprites
+	{ "unico_zpobj_z02.bin",  	0x200000, 0xde34f33a, BRF_GRA },	     //  3
+	{ "unico_zpobj_z03.bin",  	0x200000, 0xd7a657f7, BRF_GRA },	     //  4
+	{ "unico_zpobj_z04.bin",  	0x200000, 0x3aec2f8d, BRF_GRA },	     //  5
 	
-	{ "zpscrz06.bin",  0x200000, 0xe1e53cf0, BRF_GRA },	     //  6	Layers
-	{ "zpscrz05.bin",  0x200000, 0x0d7d4850, BRF_GRA },	     //  7
-	{ "zpscrz07.bin",  0x200000, 0xbb178f32, BRF_GRA },	     //  8
-	{ "zpscrz08.bin",  0x200000, 0x672f02e5, BRF_GRA },	     //  9
+	{ "unico_zpscr_z06.bin",  	0x200000, 0xe1e53cf0, BRF_GRA },	     //  6	Layers
+	{ "unico_zpscr_z05.bin",  	0x200000, 0x0d7d4850, BRF_GRA },	     //  7
+	{ "unico_zpscr_z07.bin",  	0x200000, 0xbb178f32, BRF_GRA },	     //  8
+	{ "unico_zpscr_z08.bin",  	0x200000, 0x672f02e5, BRF_GRA },	     //  9
 	
-	{ "zero_1.bin",    0x080000, 0xfd2384fa, BRF_SND },	     //  10	Samples
+	{ "unico_1.rom1",    		0x080000, 0xfd2384fa, BRF_SND },	     //  10	Samples
 };
 
 STD_ROM_PICK(Zeropnt)
 STD_ROM_FN(Zeropnt)
 
 static struct BurnRomInfo ZeropntaRomDesc[] = {
-	{ "zpa2.bin",      0x080000, 0x285fbca3, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
-	{ "zpa3.bin",      0x080000, 0xad7b3129, BRF_ESS | BRF_PRG }, //  1
+	{ "unico2.rom2",      		0x080000, 0x285fbca3, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
+	{ "unico3.rom3",      		0x080000, 0xad7b3129, BRF_ESS | BRF_PRG }, //  1
 	
-	{ "zpobjz01.bin",  0x200000, 0x1f2768a3, BRF_GRA },	     //  2	Sprites
-	{ "zpobjz02.bin",  0x200000, 0xde34f33a, BRF_GRA },	     //  3
-	{ "zpobjz03.bin",  0x200000, 0xd7a657f7, BRF_GRA },	     //  4
-	{ "zpobjz04.bin",  0x200000, 0x3aec2f8d, BRF_GRA },	     //  5
+	{ "unico_zpobj_z01.bin",  	0x200000, 0x1f2768a3, BRF_GRA },	     //  2	Sprites
+	{ "unico_zpobj_z02.bin",  	0x200000, 0xde34f33a, BRF_GRA },	     //  3
+	{ "unico_zpobj_z03.bin",  	0x200000, 0xd7a657f7, BRF_GRA },	     //  4
+	{ "unico_zpobj_z04.bin",  	0x200000, 0x3aec2f8d, BRF_GRA },	     //  5
 	
-	{ "zpscrz06.bin",  0x200000, 0xe1e53cf0, BRF_GRA },	     //  6	Layers
-	{ "zpscrz05.bin",  0x200000, 0x0d7d4850, BRF_GRA },	     //  7
-	{ "zpscrz07.bin",  0x200000, 0xbb178f32, BRF_GRA },	     //  8
-	{ "zpscrz08.bin",  0x200000, 0x672f02e5, BRF_GRA },	     //  9
+	{ "unico_zpscr_z06.bin",  	0x200000, 0xe1e53cf0, BRF_GRA },	     //  6	Layers
+	{ "unico_zpscr_z05.bin",  	0x200000, 0x0d7d4850, BRF_GRA },	     //  7
+	{ "unico_zpscr_z07.bin",  	0x200000, 0xbb178f32, BRF_GRA },	     //  8
+	{ "unico_zpscr_z08.bin",  	0x200000, 0x672f02e5, BRF_GRA },	     //  9
 	
-	{ "zero_1.bin",    0x080000, 0xfd2384fa, BRF_SND },	     //  10	Samples
+	{ "unico_1.rom1",    		0x080000, 0xfd2384fa, BRF_SND },	     //  10	Samples
 };
 
 STD_ROM_PICK(Zeropnta)
 STD_ROM_FN(Zeropnta)
+
+static struct BurnRomInfo ZeropntjRomDesc[] = {
+	{ "unico_2.bin",    		0x080000, 0x098d9756, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
+	{ "unico_3.bin",    		0x080000, 0x58e105f3, BRF_ESS | BRF_PRG }, //  1
+	
+	{ "unico_zpobj_z01.bin",  	0x200000, 0x1f2768a3, BRF_GRA },	     //  2	Sprites
+	{ "unico_4.bin",  			0x200000, 0x529c36ee, BRF_GRA },	     //  3
+	{ "unico_zpobj_z03.bin",  	0x200000, 0xd7a657f7, BRF_GRA },	     //  4
+	{ "unico_zpobj_z04.bin",  	0x200000, 0x3aec2f8d, BRF_GRA },	     //  5
+	
+	{ "unico_zpscr_z06.bin",  	0x200000, 0xe1e53cf0, BRF_GRA },	     //  6	Layers
+	{ "unico_zpscr_z05.bin",  	0x200000, 0x0d7d4850, BRF_GRA },	     //  7
+	{ "unico_zpscr_z07.bin",  	0x200000, 0xbb178f32, BRF_GRA },	     //  8
+	{ "unico_zpscr_z08.bin",  	0x200000, 0x672f02e5, BRF_GRA },	     //  9
+	
+	{ "unico_1.rom1",    		0x080000, 0xfd2384fa, BRF_SND },	     //  10	Samples
+};
+
+STD_ROM_PICK(Zeropntj)
+STD_ROM_FN(Zeropntj)
 
 static struct BurnRomInfo Zeropnt2RomDesc[] = {
 	{ "d16-d31.4",     0x100000, 0x48314fdb, BRF_ESS | BRF_PRG }, //  0	68000 Program Code
@@ -1099,9 +1119,11 @@ static INT32 BurglarxInit()
 	
 	BurnYM3812Init(3579545, NULL, &BurglarxSynchroniseStream, 0);
 	BurnTimerAttachSekYM3812(16000000);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 0.40, BURN_SND_ROUTE_BOTH);
 	
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 1056000 / 132, 100.0, 1);
+	MSM6295Init(0, 1056000 / 132, 1);
+	MSM6295SetRoute(0, 0.80, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -1180,9 +1202,11 @@ static INT32 ZeropntInit()
 	
 	BurnYM3812Init(3579545, NULL, &BurglarxSynchroniseStream, 0);
 	BurnTimerAttachSekYM3812(16000000);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 0.40, BURN_SND_ROUTE_BOTH);
 	
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 1056000 / 132, 100.0, 1);
+	MSM6295Init(0, 1056000 / 132, 1);
+	MSM6295SetRoute(0, 0.80, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -1285,10 +1309,14 @@ static INT32 Zeropnt2Init()
 	
 	EEPROMInit(&zeropnt2_eeprom_interface);
 	
-	BurnYM2151Init(3579545, 25.0);
+	BurnYM2151Init(3579545);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.70, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.70, BURN_SND_ROUTE_RIGHT);
 	
-	MSM6295Init(0, 1056000 / 132, 100.0, 1);
-	MSM6295Init(1, 3960000 / 132, 100.0, 1);
+	MSM6295Init(0, 1056000 / 132, 1);
+	MSM6295Init(1, 3960000 / 132, 1);
+	MSM6295SetRoute(0, 0.40, BURN_SND_ROUTE_LEFT);
+	MSM6295SetRoute(0, 0.20, BURN_SND_ROUTE_RIGHT);
 	
 	GenericTilesInit();
 	
@@ -1890,6 +1918,16 @@ struct BurnDriver BurnDrvZeropnt = {
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_MISC_POST90S, GBF_SHOOT, 0,
 	NULL, ZeropntRomInfo, ZeropntRomName, NULL, NULL, ZeropntInputInfo, ZeropntDIPInfo,
+	ZeropntInit, DrvExit, DrvFrame, NULL, ZeropntScan,
+	NULL, 0x2000, 384, 224, 4, 3
+};
+
+struct BurnDriver BurnDrvZeropntj = {
+	"zeropntj", "zeropnt", NULL, NULL, "1998",
+	"Zero Point (Japan)\0", NULL, "Unico", "Unico",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_MISC_POST90S, GBF_SHOOT, 0,
+	NULL, ZeropntjRomInfo, ZeropntjRomName, NULL, NULL, ZeropntInputInfo, ZeropntDIPInfo,
 	ZeropntInit, DrvExit, DrvFrame, NULL, ZeropntScan,
 	NULL, 0x2000, 384, 224, 4, 3
 };

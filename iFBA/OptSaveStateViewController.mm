@@ -34,7 +34,7 @@ static int selectedSlot;
 
 
 @implementation OptSaveStateViewController
-@synthesize tabView,btn_backToEmu,imgview;
+@synthesize tabView,btn_backToEmu,imgview,emuvc;
 @synthesize btn_load,btn_save;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -243,8 +243,11 @@ static int selectedSlot;
 
 
 -(IBAction) backToEmu {
-    launchGame=2;
-    [self.navigationController popToRootViewControllerAnimated:NO];
+//    launchGame=2;
+//    [self.navigationController popToRootViewControllerAnimated:NO];
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
+    [self.navigationController pushViewController:emuvc animated:NO];
 }
 
 -(IBAction) saveState {

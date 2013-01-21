@@ -68,7 +68,7 @@ NSMutableArray *filterEntries;
 
 
 @implementation GameBrowserViewController
-@synthesize tabView,btn_backToEmu,selgenrevc,btn_missing;
+@synthesize tabView,btn_backToEmu,selgenrevc,btn_missing,emuvc;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -681,8 +681,11 @@ NSMutableArray *filterEntries;
 #pragma Actions
 
 -(IBAction) backToEmu {
-    launchGame=2;
-    [self.navigationController popToRootViewControllerAnimated:NO];
+//    launchGame=2;
+//    [self.navigationController popToRootViewControllerAnimated:NO];
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
+    [self.navigationController pushViewController:emuvc animated:NO];
 }
 -(IBAction) showFavorites{
     UIAlertView *alertMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Not dev yet",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];

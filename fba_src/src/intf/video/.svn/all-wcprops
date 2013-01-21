@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/fbalpha/!svn/ver/674/trunk/src/intf/video
+END
+vid_support.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/vid_support.cpp
+END
+vid_softfx.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/613/trunk/src/intf/video/vid_softfx.h
+END
+vid_interface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/vid_interface.cpp
+END
+vid_support.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/video/vid_support.h
+END
+vid_softfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/613/trunk/src/intf/video/vid_softfx.cpp
+END

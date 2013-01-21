@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym3812.h"
 #include "upd7759.h"
 
@@ -539,7 +539,6 @@ INT32 PrehisleInit()
 	ZetMapArea(0xf000, 0xf7ff, 0, PrehisleZ80Ram);
 	ZetMapArea(0xf000, 0xf7ff, 1, PrehisleZ80Ram);
 	ZetMapArea(0xf000, 0xf7ff, 2, PrehisleZ80Ram);
-	ZetMemEnd();
 	ZetSetReadHandler(PrehisleZ80Read);
 	ZetSetInHandler(PrehisleZ80PortRead);
 	ZetSetOutHandler(PrehisleZ80PortWrite);
@@ -547,8 +546,10 @@ INT32 PrehisleInit()
 
 	BurnYM3812Init(4000000, &prehisleFMIRQHandler, &prehisleSynchroniseStream, 0);
 	BurnTimerAttachZetYM3812(4000000);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 1.00, BURN_SND_ROUTE_BOTH);
 	
 	UPD7759Init(0, UPD7759_STANDARD_CLOCK, PrehisleADPCMSamples);
+	UPD7759SetRoute(0, 0.90, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 

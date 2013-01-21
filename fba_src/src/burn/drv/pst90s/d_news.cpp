@@ -1,5 +1,5 @@
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "msm6295.h"
 
 // FB Alpha - "News" Driver
@@ -293,13 +293,13 @@ INT32 NewsInit()
 	ZetMapArea(0xe000, 0xffff, 0, NewsRam        );
 	ZetMapArea(0xe000, 0xffff, 1, NewsRam        );
 	ZetMapArea(0xe000, 0xffff, 2, NewsRam        );
-	ZetMemEnd();
 	ZetSetReadHandler(NewsRead);
 	ZetSetWriteHandler(NewsWrite);
 	ZetClose();
 
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 8000, 100, 0);
+	MSM6295Init(0, 8000, 0);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

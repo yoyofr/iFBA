@@ -1,6 +1,5 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "sh2.h"
+#include "sh2_intf.h"
 
 static UINT8 DrvInputPort0[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static UINT8 DrvInputPort1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -626,7 +625,7 @@ static INT32 CyvernInit()
 	Sh2MapMemory(DrvPrgRam            , 0x06000000, 0x06ffffff, SH2_RAM);
 //	Sh2MapMemory(DrvPrgRam            , 0x06000000, 0x06ffffff, SH2_WRITE);
 	Sh2MapMemory(DrvCacheRam          , 0xc0000000, 0xc0000fff, SH2_RAM);
-//	Sh2MapHandler(1                   , 0x06000028, 0x0600002b, SM_READ);
+//	Sh2MapHandler(1                   , 0x06000028, 0x0600002b, SH2_READ);
 	Sh2SetReadByteHandler (0, CyvernReadByte);
 	Sh2SetReadWordHandler (0, CyvernReadWord);
 	Sh2SetReadLongHandler (0, CyvernReadLong);

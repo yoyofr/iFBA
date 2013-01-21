@@ -2,7 +2,7 @@
 // Based on MAME driver by Uki
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "burn_ym2203.h"
 
 static UINT8 *AllMem;
@@ -482,7 +482,6 @@ static INT32 DrvInit()
 	ZetMapArea(0xe000, 0xe3ff, 2, DrvVidRAM);
 	ZetSetWriteHandler(momoko_main_write);
 	ZetSetReadHandler(momoko_main_read);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -494,13 +493,19 @@ static INT32 DrvInit()
 	ZetMapArea(0x8000, 0x87ff, 2, DrvZ80RAM1);
 	ZetSetWriteHandler(momoko_sound_write);
 	ZetSetReadHandler(momoko_sound_read);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnYM2203Init(2, 1250000, NULL, DrvSynchroniseStream, DrvGetTime, 0);
 	BurnYM2203SetPorts(1, momoko_sound_read_port_A, NULL, NULL, NULL);
-	BurnYM2203SetVolumeShift(3);
 	BurnTimerAttachZet(2500000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.15, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.15, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.15, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_YM2203_ROUTE, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_1, 0.15, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_2, 0.15, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_3, 0.15, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

@@ -2,8 +2,8 @@
 // Based on MAME driver by David Graves, Brian Troha, and 
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym2151.h"
 #include "burn_ym2610.h"
 #include "msm5205.h"
@@ -1121,7 +1121,7 @@ static void DrvFMIRQHandler(INT32, INT32 nStatus)
 
 static INT32 DrvSynchroniseStream(INT32 nSoundRate)
 {
-	return (INT64)ZetTotalCycles() * nSoundRate / 4000000;
+	return (INT64)(double)ZetTotalCycles() * nSoundRate / 4000000;
 }
 
 static double DrvGetTime()
@@ -1286,7 +1286,6 @@ static void CadashZ80Setup()
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1);
 	ZetSetWriteHandler(cadash_sound_write);
 	ZetSetReadHandler(cadash_sound_read);
-	ZetMemEnd();
 	ZetClose();
 }
 
@@ -1301,15 +1300,15 @@ static void BonzeZ80Setup()
 	ZetMapArea(0xc000, 0xdfff, 2, TaitoZ80Ram1);
 	ZetSetWriteHandler(bonze_sound_write);
 	ZetSetReadHandler(bonze_sound_read);
-	ZetMemEnd();
 	ZetClose();
 }
 
 static void CadashSoundSetup()
 {
-	BurnYM2151Init(4000000, 50.0);
+	BurnYM2151Init(4000000);
 	BurnYM2151SetIrqHandler(&CadashYM2151IRQHandler);
 	BurnYM2151SetPortHandler(&DrvSoundBankSwitch);
+	BurnYM2151SetAllRoutes(0.50, BURN_SND_ROUTE_BOTH);
 	
 	TaitoNumYM2151  = 1;
 	TaitoNumYM2610  = 0;
@@ -1318,11 +1317,13 @@ static void CadashSoundSetup()
 
 static void AsukaSoundSetup()
 {
-	BurnYM2151Init(4000000, 50.0);
+	BurnYM2151Init(4000000);
 	BurnYM2151SetIrqHandler(&CadashYM2151IRQHandler);
 	BurnYM2151SetPortHandler(&DrvSoundBankSwitch);
+	BurnYM2151SetAllRoutes(0.50, BURN_SND_ROUTE_BOTH);
 
-	MSM5205Init(0, DrvSynchroniseStream, 384000, AsukaMSM5205Vck, MSM5205_S48_4B, 100, 1);
+	MSM5205Init(0, DrvSynchroniseStream, 384000, AsukaMSM5205Vck, MSM5205_S48_4B, 1);
+	MSM5205SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	TaitoNumYM2151  = 1;
 	TaitoNumMSM5205 = 1;
@@ -1334,7 +1335,9 @@ static void BonzeSoundSetup()
 	INT32 DrvSndROMLen = 0x80000;
 	BurnYM2610Init(8000000, TaitoYM2610ARom, &DrvSndROMLen, TaitoYM2610ARom, &DrvSndROMLen, &DrvFMIRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
 	BurnTimerAttachZet(4000000);
-	BurnYM2610SetSoundMixMode(1);
+	BurnYM2610SetRoute(BURN_SND_YM2610_YM2610_ROUTE_1, 1.00, BURN_SND_ROUTE_BOTH);
+	BurnYM2610SetRoute(BURN_SND_YM2610_YM2610_ROUTE_2, 1.00, BURN_SND_ROUTE_BOTH);
+	BurnYM2610SetRoute(BURN_SND_YM2610_AY8910_ROUTE, 0.25, BURN_SND_ROUTE_BOTH);
 
 	TaitoNumYM2151  = 0;
 	TaitoNumYM2610  = 1; 

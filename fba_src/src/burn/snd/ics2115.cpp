@@ -12,7 +12,7 @@
  ******************************************************/
 
 #include "burnint.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "msm6295.h"
 #include "burn_sound.h"
 #include "ics2115.h"
@@ -88,12 +88,13 @@ static void timer_cb_1()
 
 static void recalc_timer(INT32 timer)
 {
+#if 1
 	float period = 0;
 
 	if(chip->timer[timer].scale) {
 		INT32 sc = chip->timer[timer].scale;
 		float counter = (float)((((sc & 31)+1) * (chip->timer[timer].preset+1)) << (4+(sc >> 5)));
-		period = 1000000000 * counter / 33868800;
+		period = 1000000000 * counter / 33868800;        
 	} else {
 		period = 0;
 	}
@@ -103,6 +104,19 @@ static void recalc_timer(INT32 timer)
 		if(period) chip->timer[timer].active = true;
 		else  chip->timer[timer].active = false;
 	}
+#else
+    UINT64 period  = ((chip->timer[timer].scale & 0x1f) + 1) * (chip->timer[timer].preset + 1);
+    period = (period << (4 + (chip->timer[timer].scale >> 5)))*78125/2646;
+    
+    if(chip->timer[timer].period != period) {
+        chip->timer[timer].period = period;
+        // Adjust the timer lengths
+        if(period) // Reset the length
+            chip->timer[timer].active = true;
+        else // Kill the timer if length == 0
+            chip->timer[timer].active = false;
+    }
+#endif
 }
 
 UINT16 ics2115read_reg(UINT8 reg)
@@ -413,12 +427,6 @@ void ics2115_update(INT32 /*length*/)
 	for(INT32 osc=0; osc<32; osc++)
 		if(chip->voice[osc].state & V_ON) {
 			UINT32 badr = (chip->voice[osc].saddr << 20) & 0x0f00000;
-			if (badr >= nICSSNDROMLen) { // right?
-				chip->voice[osc].state &= ~V_ON;
-				chip->voice[osc].state |= V_DONE;
-				rec_irq = 1;
-				break; 
-			}
 			UINT32 adr = (chip->voice[osc].addrh << 16) | chip->voice[osc].addrl;
 			UINT32 end = (chip->voice[osc].endh << 16) | (chip->voice[osc].endl << 8);
 			UINT32 loop = (chip->voice[osc].strth << 16) | (chip->voice[osc].strtl << 8);

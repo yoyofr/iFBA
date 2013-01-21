@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng
+END
+pngrio.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/libpng/pngrio.c
+END
+pngerror.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngerror.c
+END
+pngstruct.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngstruct.h
+END
+pngconf.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngconf.h
+END
+pngwrite.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngwrite.c
+END
+pngpread.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngpread.c
+END
+pngdebug.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/libpng/pngdebug.h
+END
+pngset.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngset.c
+END
+pngwtran.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/libpng/pngwtran.c
+END
+pngwio.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/libpng/pngwio.c
+END
+pngrutil.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngrutil.c
+END
+pnginfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/dep/libs/libpng/pnginfo.h
+END
+pngwutil.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngwutil.c
+END
+_fba_libpng_v1512.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/_fba_libpng_v1512.txt
+END
+pngread.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngread.c
+END
+pngmem.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/334/trunk/src/dep/libs/libpng/pngmem.c
+END
+pngget.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/334/trunk/src/dep/libs/libpng/pngget.c
+END
+png.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/png.c
+END
+pnglibconf.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pnglibconf.h
+END
+png.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/png.h
+END
+pngpriv.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngpriv.h
+END
+pngrtran.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngrtran.c
+END
+pngtrans.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/782/trunk/src/dep/libs/libpng/pngtrans.c
+END

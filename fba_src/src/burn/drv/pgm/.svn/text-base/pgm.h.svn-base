@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "arm7_intf.h"
 #include "ics2115.h"
 
@@ -49,7 +49,7 @@ extern void (*pPgmResetCallback)();
 extern INT32 (*pPgmScanCallback)(INT32, INT32*);
 extern void (*pPgmProtCallback)();
 
-extern INT32 nPGMEnableIRQ4;
+extern INT32 nPGMDisableIRQ4;
 extern INT32 nPGMArm7Type;
 
 INT32 pgmInit();
@@ -76,6 +76,8 @@ void install_protection_asic27a_svg();
 void install_protection_asic27a_ketsui();
 void install_protection_asic27a_ddp3();
 void install_protection_asic27a_puzzli2();
+void install_protection_asic27a_kovshp();
+void install_protection_asic27a_py2k2();
 
 // pgm_crypt
 void pgm_decrypt_kov();
@@ -102,6 +104,7 @@ void pgm_decrypt_dw2001();
 void pgm_decrypt_py2k2();
 void pgm_decrypt_espgaluda();
 void pgm_decrypt_ketsui();
+void pgm_decrypt_pgm3in1();
 
 void pgm_decode_kovqhsgs_gfx_block(UINT8 *src);
 void pgm_decode_kovqhsgs_tile_data(UINT8 *source);

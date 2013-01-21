@@ -682,7 +682,6 @@ static INT32 drvZInit()
 	ZetMapArea    (0xe000, 0xFFFF, 0, RamZ80 + 0x0000);			// Direct Read from RAM
 	ZetMapArea    (0xe000, 0xFFFF, 1, RamZ80 + 0x0000);			// Direct Write to RAM
 	ZetMapArea    (0xe000, 0xFFFF, 2, RamZ80 + 0x0000);			//
-	ZetMemEnd();
 	ZetClose();
 
 	return 0;
@@ -755,13 +754,17 @@ static INT32 DrvInit()
 	nCaveExtraXOffset = -126;
 	CaveSpriteVisibleXOffset = -126;
 	
-	BurnYM2151Init(4000000, 25.0);
+	BurnYM2151Init(4000000);
 	BurnYM2151SetIrqHandler(&DrvYM2151IrqHandler);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 1.20, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 1.20, BURN_SND_ROUTE_RIGHT);
 	
 	memcpy(MSM6295ROM, MSM6295ROMSrc1, 0x40000);
 	memcpy(MSM6295ROM + 0x100000, MSM6295ROMSrc2, 0x40000);
-	MSM6295Init(0, 2000000 / 132, 30.0, 1);
-	MSM6295Init(1, 2000000 / 132, 30.0, 1);
+	MSM6295Init(0, 2000000 / 132, 1);
+	MSM6295Init(1, 2000000 / 132, 1);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 1.00, BURN_SND_ROUTE_BOTH);
 	
 	bDrawScreen = true;
 

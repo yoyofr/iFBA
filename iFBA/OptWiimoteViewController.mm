@@ -34,7 +34,7 @@ static CADisplayLink* m_displayLink;
 
 
 @implementation OptWiimoteViewController
-@synthesize tabView,btn_backToEmu;
+@synthesize tabView,btn_backToEmu,emuvc;
 @synthesize showIcons;
 @synthesize customActivityText;
 
@@ -446,8 +446,12 @@ static CADisplayLink* m_displayLink;
 
 
 -(IBAction) backToEmu {
-    launchGame=2;
-    [self.navigationController popToRootViewControllerAnimated:NO];
+//    launchGame=2;
+//    [self.navigationController popToRootViewControllerAnimated:NO];
+    if (m_displayLink) [m_displayLink invalidate];
+    m_displayLink=nil;
+    [self.navigationController pushViewController:emuvc animated:NO];
+
 }
 
 #pragma Wiimote/iCP support

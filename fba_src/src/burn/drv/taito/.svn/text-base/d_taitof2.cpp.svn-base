@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "taito.h"
 #include "taito_ic.h"
 #include "burn_ym2610.h"
@@ -3820,8 +3820,8 @@ STD_ROM_PICK(Dondokodu)
 STD_ROM_FN(Dondokodu)
 
 static struct BurnRomInfo DriftoutRomDesc[] = {
-	{ "do_46.rom",          0x080000, 0xf960363e, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "do_45.rom",          0x080000, 0xe3fe66b9, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "ic46.rom",           0x080000, 0x71303738, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "ic45.rom",           0x080000, 0x43f81eca, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	
 	{ "do_50.rom",          0x010000, 0xffe10124, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
 	
@@ -3834,6 +3834,22 @@ static struct BurnRomInfo DriftoutRomDesc[] = {
 
 STD_ROM_PICK(Driftout)
 STD_ROM_FN(Driftout)
+
+static struct BurnRomInfo DriftoutjRomDesc[] = {
+	{ "do_46.rom",          0x080000, 0xf960363e, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "do_45.rom",          0x080000, 0xe3fe66b9, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	
+	{ "do_50.rom",          0x010000, 0xffe10124, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
+	
+	{ "do_obj.rom",         0x080000, 0x5491f1c4, BRF_GRA | TAITO_SPRITESA },
+	
+	{ "do_snd.rom",         0x080000, 0xf2deb82b, BRF_SND | TAITO_YM2610A },
+	
+	{ "do_piv.rom",         0x080000, 0xc4f012f7, BRF_GRA | TAITO_CHARS_PIVOT },
+};
+
+STD_ROM_PICK(Driftoutj)
+STD_ROM_FN(Driftoutj)
 
 static struct BurnRomInfo DriveoutRomDesc[] = {
 	{ "driveout.003",       0x080000, 0xdc431e4e, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
@@ -7422,11 +7438,13 @@ static void TaitoF2SoundInit()
 	ZetMapArea(0xc000, 0xdfff, 0, TaitoZ80Ram1                 );
 	ZetMapArea(0xc000, 0xdfff, 1, TaitoZ80Ram1                 );
 	ZetMapArea(0xc000, 0xdfff, 2, TaitoZ80Ram1                 );
-	ZetMemEnd();
 	ZetClose();
 	
 	BurnYM2610Init(24000000 / 3, TaitoYM2610ARom, (INT32*)&TaitoYM2610ARomSize, TaitoYM2610BRom, (INT32*)&TaitoYM2610BRomSize, &TaitoF2FMIRQHandler, TaitoF2SynchroniseStream, TaitoF2GetTime, 0);
 	BurnTimerAttachZet(24000000 / 6);
+	BurnYM2610SetRoute(BURN_SND_YM2610_YM2610_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+	BurnYM2610SetRoute(BURN_SND_YM2610_YM2610_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
+	BurnYM2610SetRoute(BURN_SND_YM2610_AY8910_ROUTE, 0.25, BURN_SND_ROUTE_BOTH);
 }
 
 static void SwitchToMusashi()
@@ -7612,13 +7630,17 @@ static INT32 CamltryaInit()
 	ZetMapArea(0x8000, 0x8fff, 0, TaitoZ80Ram1                 );
 	ZetMapArea(0x8000, 0x8fff, 1, TaitoZ80Ram1                 );
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1                 );
-	ZetMemEnd();
 	ZetClose();
 	
 	BurnYM2203Init(1, 24000000 / 8, &TaitoF2FMIRQHandler, CamltryaSynchroniseStream, CamltryaGetTime, 0);
 	BurnTimerAttachZet(24000000 / 4);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.60, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.20, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.20, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.20, BURN_SND_ROUTE_BOTH);
 	
-	MSM6295Init(0, (4224000 / 4) / 132 , 100.0, 1);
+	MSM6295Init(0, (4224000 / 4) / 132, 1);
+	MSM6295SetRoute(0, 0.10, BURN_SND_ROUTE_BOTH);
 	
 	nTaitoCyclesTotal[1] = (24000000 / 4) / 60;
 
@@ -7962,10 +7984,10 @@ static INT32 DriveoutInit()
 	ZetMapArea(0x8000, 0x87ff, 0, TaitoZ80Ram1                 );
 	ZetMapArea(0x8000, 0x87ff, 1, TaitoZ80Ram1                 );
 	ZetMapArea(0x8000, 0x87ff, 2, TaitoZ80Ram1                 );
-	ZetMemEnd();
 	ZetClose();
 	
-	MSM6295Init(0, 1056000 / 132 , 100.0, 0);
+	MSM6295Init(0, 1056000 / 132, 0);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 	
 	TaitoXOffset = 3;
 	TaitoDrawFunction = DriftoutDraw;
@@ -10787,10 +10809,20 @@ struct BurnDriver BurnDrvDondokodu = {
 
 struct BurnDriver BurnDrvDriftout = {
 	"driftout", NULL, NULL, NULL, "1991",
-	"Drift Out (Japan)\0", NULL, "Visco", "Taito-F2",
+	"Drift Out (Europe)\0", NULL, "Visco (Europe)", "Taito-F2",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL, 2, HARDWARE_TAITO_TAITOF2, GBF_RACING, 0,
 	NULL, DriftoutRomInfo, DriftoutRomName, NULL, NULL, DriftoutInputInfo, DriftoutDIPInfo,
+	DriftoutInit, TaitoF2Exit, TaitoF2Frame, NULL, TaitoF2Scan,
+	NULL, 0x2000, 224, 320, 3, 4
+};
+
+struct BurnDriver BurnDrvDriftoutj = {
+	"driftoutj", "driftout", NULL, NULL, "1991",
+	"Drift Out (Japan)\0", NULL, "Visco (Japan)", "Taito-F2",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_ORIENTATION_VERTICAL | BDF_CLONE, 2, HARDWARE_TAITO_TAITOF2, GBF_RACING, 0,
+	NULL, DriftoutjRomInfo, DriftoutjRomName, NULL, NULL, DriftoutInputInfo, DriftoutDIPInfo,
 	DriftoutInit, TaitoF2Exit, TaitoF2Frame, NULL, TaitoF2Scan,
 	NULL, 0x2000, 224, 320, 3, 4
 };

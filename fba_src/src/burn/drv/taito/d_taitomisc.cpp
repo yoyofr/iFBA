@@ -1,8 +1,8 @@
 // PC080SN & PC090OJ based games
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "taito.h"
 #include "taito_ic.h"
 #include "msm5205.h"
@@ -23,6 +23,12 @@ static INT32 OpWolfGunYOffset;
 static UINT8 DariusADPCMCommand;
 static INT32 DariusNmiEnable;
 static UINT16 DariusCoinWord;
+static UINT32 DariusDefVol[0x10];
+static UINT8 DariusVol[8];
+static UINT8 DariusPan[5];
+static double DariusYM2203AY8910RouteMasterVol;
+static double DariusYM2203RouteMasterVol;
+static double DariusMSM5205RouteMasterVol;
 
 static UINT16 VolfiedVidCtrl;
 static UINT16 VolfiedVidMask;
@@ -1751,12 +1757,12 @@ STD_ROM_PICK(Jumping)
 STD_ROM_FN(Jumping)
 
 static struct BurnRomInfo RastanRomDesc[] = {
-	{ "b04-35.19",   0x10000, 0x1c91dbb1, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-37.07",   0x10000, 0xecf20bdd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-38.19",   0x10000, 0x1c91dbb1, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-37.7",    0x10000, 0xecf20bdd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-40.20",   0x10000, 0x0930d4b3, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-39.08",   0x10000, 0xd95ade5e, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-39.8",    0x10000, 0xd95ade5e, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-42.21",   0x10000, 0x1857a7cb, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-43.09",   0x10000, 0xc34b9152, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-43-1.9",  0x10000, 0xca4702ff, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 
 	{ "b04-19.49",   0x10000, 0xee81fdd8, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
 
@@ -1776,13 +1782,39 @@ static struct BurnRomInfo RastanRomDesc[] = {
 STD_ROM_PICK(Rastan)
 STD_ROM_FN(Rastan)
 
-static struct BurnRomInfo RastanuRomDesc[] = {
-	{ "b04-35.19",   0x10000, 0x1c91dbb1, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-37.07",   0x10000, 0xecf20bdd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-45.20",   0x10000, 0x362812dd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-44.08",   0x10000, 0x51cc5508, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+static struct BurnRomInfo RastanaRomDesc[] = {
+	{ "b04-38.19",   0x10000, 0x1c91dbb1, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-37.7",    0x10000, 0xecf20bdd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-40.20",   0x10000, 0x0930d4b3, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-39.8",    0x10000, 0xd95ade5e, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-42.21",   0x10000, 0x1857a7cb, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-41-1.09", 0x10000, 0xbd403269, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-43.9",    0x10000, 0xc34b9152, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+
+	{ "b04-19.49",   0x10000, 0xee81fdd8, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
+
+	{ "b04-01.40",   0x20000, 0xcd30de19, BRF_GRA | TAITO_CHARS },
+	{ "b04-03.39",   0x20000, 0xab67e064, BRF_GRA | TAITO_CHARS },
+	{ "b04-02.67",   0x20000, 0x54040fec, BRF_GRA | TAITO_CHARS },
+	{ "b04-04.66",   0x20000, 0x94737e93, BRF_GRA | TAITO_CHARS },
+
+	{ "b04-05.15",   0x20000, 0xc22d94ac, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-07.14",   0x20000, 0xb5632a51, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-06.28",   0x20000, 0x002ccf39, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-08.27",   0x20000, 0xfeafca05, BRF_GRA | TAITO_SPRITESA },
+
+	{ "b04-20.76",   0x10000, 0xfd1a34cc, BRF_SND | TAITO_MSM5205 },
+};
+
+STD_ROM_PICK(Rastana)
+STD_ROM_FN(Rastana)
+
+static struct BurnRomInfo RastanuRomDesc[] = {
+	{ "b04-38.19",   0x10000, 0x1c91dbb1, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-37.7",    0x10000, 0xecf20bdd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-45.20",   0x10000, 0x362812dd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-44.8",    0x10000, 0x51cc5508, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-42.21",   0x10000, 0x1857a7cb, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-41-1.9",  0x10000, 0xbd403269, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 
 	{ "b04-19.49",   0x10000, 0xee81fdd8, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
 
@@ -1802,8 +1834,34 @@ static struct BurnRomInfo RastanuRomDesc[] = {
 STD_ROM_PICK(Rastanu)
 STD_ROM_FN(Rastanu)
 
-static struct BurnRomInfo Rastanu2RomDesc[] = {
-	{ "rs19_38.bin", 0x10000, 0xa38ac909, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+static struct BurnRomInfo RastanuaRomDesc[] = {
+	{ "b04-38.19",   0x10000, 0x1c91dbb1, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-37.7",    0x10000, 0xecf20bdd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-45.20",   0x10000, 0x362812dd, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-44.8",    0x10000, 0x51cc5508, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-42.21",   0x10000, 0x1857a7cb, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-41.9",    0x10000, 0xb44ca1c4, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+
+	{ "b04-19.49",   0x10000, 0xee81fdd8, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
+
+	{ "b04-01.40",   0x20000, 0xcd30de19, BRF_GRA | TAITO_CHARS },
+	{ "b04-03.39",   0x20000, 0xab67e064, BRF_GRA | TAITO_CHARS },
+	{ "b04-02.67",   0x20000, 0x54040fec, BRF_GRA | TAITO_CHARS },
+	{ "b04-04.66",   0x20000, 0x94737e93, BRF_GRA | TAITO_CHARS },
+
+	{ "b04-05.15",   0x20000, 0xc22d94ac, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-07.14",   0x20000, 0xb5632a51, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-06.28",   0x20000, 0x002ccf39, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-08.27",   0x20000, 0xfeafca05, BRF_GRA | TAITO_SPRITESA },
+
+	{ "b04-20.76",   0x10000, 0xfd1a34cc, BRF_SND | TAITO_MSM5205 },
+};
+
+STD_ROM_PICK(Rastanua)
+STD_ROM_FN(Rastanua)
+
+static struct BurnRomInfo RastanubRomDesc[] = {
+	{ "b04-14.19",   0x10000, 0xa38ac909, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-21.7",    0x10000, 0x7c8dde9a, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-23.20",   0x10000, 0x254b3dce, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-22.8",    0x10000, 0x98e8edcf, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
@@ -1825,36 +1883,10 @@ static struct BurnRomInfo Rastanu2RomDesc[] = {
 	{ "b04-20.76",   0x10000, 0xfd1a34cc, BRF_SND | TAITO_MSM5205 },
 };
 
-STD_ROM_PICK(Rastanu2)
-STD_ROM_FN(Rastanu2)
+STD_ROM_PICK(Rastanub)
+STD_ROM_FN(Rastanub)
 
 static struct BurnRomInfo RastsagaRomDesc[] = {
-	{ "b04-38.19",   0x10000, 0xa38ac909, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-37.7",    0x10000, 0xbad60872, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-40(__rastsaga).20", 0x10000, 0x6bcf70dc, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-39.8",    0x10000, 0x8838ecc5, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-42(__rastsaga).21", 0x10000, 0xb626c439, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-	{ "b04-43.9",    0x10000, 0xc928a516, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
-
-	{ "b04-19.49",   0x10000, 0xee81fdd8, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
-
-	{ "b04-01.40",   0x20000, 0xcd30de19, BRF_GRA | TAITO_CHARS },
-	{ "b04-03.39",   0x20000, 0xab67e064, BRF_GRA | TAITO_CHARS },
-	{ "b04-02.67",   0x20000, 0x54040fec, BRF_GRA | TAITO_CHARS },
-	{ "b04-04.66",   0x20000, 0x94737e93, BRF_GRA | TAITO_CHARS },
-
-	{ "b04-05.15",   0x20000, 0xc22d94ac, BRF_GRA | TAITO_SPRITESA },
-	{ "b04-07.14",   0x20000, 0xb5632a51, BRF_GRA | TAITO_SPRITESA },
-	{ "b04-06.28",   0x20000, 0x002ccf39, BRF_GRA | TAITO_SPRITESA },
-	{ "b04-08.27",   0x20000, 0xfeafca05, BRF_GRA | TAITO_SPRITESA },
-
-	{ "b04-20.76",   0x10000, 0xfd1a34cc, BRF_SND | TAITO_MSM5205 },
-};
-
-STD_ROM_PICK(Rastsaga)
-STD_ROM_FN(Rastsaga)
-
-static struct BurnRomInfo Rastsaga1RomDesc[] = {
 	{ "b04-14.19",   0x10000, 0xa38ac909, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-13.7",    0x10000, 0xbad60872, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
 	{ "b04-16-1.20", 0x10000, 0x00b59e60, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
@@ -1877,8 +1909,34 @@ static struct BurnRomInfo Rastsaga1RomDesc[] = {
 	{ "b04-20.76",   0x10000, 0xfd1a34cc, BRF_SND | TAITO_MSM5205 },
 };
 
-STD_ROM_PICK(Rastsaga1)
-STD_ROM_FN(Rastsaga1)
+STD_ROM_PICK(Rastsaga)
+STD_ROM_FN(Rastsaga)
+
+static struct BurnRomInfo RastsagaaRomDesc[] = {
+	{ "b04-14.19",   0x10000, 0xa38ac909, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-13.7",    0x10000, 0xbad60872, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-16.20",   0x10000, 0x6bcf70dc, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-15.8",    0x10000, 0x8838ecc5, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-18-1.21", 0x10000, 0xb626c439, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+	{ "b04-17-1.9",  0x10000, 0xc928a516, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
+
+	{ "b04-19.49",   0x10000, 0xee81fdd8, BRF_ESS | BRF_PRG | TAITO_Z80ROM1 },
+
+	{ "b04-01.40",   0x20000, 0xcd30de19, BRF_GRA | TAITO_CHARS },
+	{ "b04-03.39",   0x20000, 0xab67e064, BRF_GRA | TAITO_CHARS },
+	{ "b04-02.67",   0x20000, 0x54040fec, BRF_GRA | TAITO_CHARS },
+	{ "b04-04.66",   0x20000, 0x94737e93, BRF_GRA | TAITO_CHARS },
+
+	{ "b04-05.15",   0x20000, 0xc22d94ac, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-07.14",   0x20000, 0xb5632a51, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-06.28",   0x20000, 0x002ccf39, BRF_GRA | TAITO_SPRITESA },
+	{ "b04-08.27",   0x20000, 0xfeafca05, BRF_GRA | TAITO_SPRITESA },
+
+	{ "b04-20.76",   0x10000, 0xfd1a34cc, BRF_SND | TAITO_MSM5205 },
+};
+
+STD_ROM_PICK(Rastsagaa)
+STD_ROM_FN(Rastsagaa)
 
 static struct BurnRomInfo TopspeedRomDesc[] = {
 	{ "b14-67-1.11",   0x10000, 0x23f17616, BRF_ESS | BRF_PRG | TAITO_68KROM1_BYTESWAP },
@@ -2102,6 +2160,7 @@ static int MemIndex()
 	Taito68KRom2                        = Next; Next += Taito68KRom2Size;
 	TaitoZ80Rom1                        = Next; Next += TaitoZ80Rom1Size;
 	TaitoZ80Rom2                        = Next; Next += TaitoZ80Rom2Size;
+	TaitoSpriteMapRom                   = Next; Next += TaitoSpriteMapRomSize;
 	TaitoMSM5205Rom                     = Next; Next += TaitoMSM5205RomSize;
 	
 	TaitoRamStart                       = Next;
@@ -2129,11 +2188,21 @@ static int MemIndex()
 
 static INT32 DariusDoReset()
 {
+	INT32 i;
+	
 	TaitoDoReset();
 	
 	DariusADPCMCommand = 0;
 	DariusNmiEnable = 0;
 	DariusCoinWord = 0;
+	
+	for (i = 0; i < 8; i++) DariusVol[i] = 0x00;
+
+	for (i = 0; i < 5; i++) DariusPan[i] = 0x80;
+
+	for (i = 0; i < 0x10; i++) {
+		DariusDefVol[i] = (INT32)(100.0f / (float)pow(10.0f, (32.0f - (i * (32.0f / (float)(0xf)))) / 20.0f));
+	}
 	
 	return 0;
 }
@@ -3247,6 +3316,55 @@ void __fastcall Volfied68KWriteWord(UINT32 a, UINT16 d)
 	}
 }
 
+static void DariusUpdateFM0()
+{
+	INT32 left  = (DariusPan[0] * DariusVol[6]) >> 8;
+	INT32 right = ((0xff - DariusPan[0]) * DariusVol[6]) >> 8;
+
+	BurnYM2203SetLeftVolume(0, BURN_SND_YM2203_YM2203_ROUTE, (left * DariusYM2203RouteMasterVol) / 100.0);
+	BurnYM2203SetRightVolume(0, BURN_SND_YM2203_YM2203_ROUTE, (right * DariusYM2203RouteMasterVol) / 100.0);
+}
+
+static void DariusUpdateFM1()
+{
+	INT32 left  = (DariusPan[1] * DariusVol[7]) >> 8;
+	INT32 right = ((0xff - DariusPan[1]) * DariusVol[7]) >> 8;
+
+	BurnYM2203SetLeftVolume(1, BURN_SND_YM2203_YM2203_ROUTE, (left * DariusYM2203RouteMasterVol) / 100.0);
+	BurnYM2203SetRightVolume(1, BURN_SND_YM2203_YM2203_ROUTE, (right * DariusYM2203RouteMasterVol) / 100.0);
+}
+
+static void DariusUpdatePSG0(INT32 port)
+{
+	INT32 left, right;
+
+	left  = (DariusPan[2] * DariusVol[port - 1]) >> 8;
+	right = ((0xff - DariusPan[2]) * DariusVol[port - 1]) >> 8;
+
+	BurnYM2203SetLeftVolume(0, port, (left * DariusYM2203AY8910RouteMasterVol) / 100.0);
+	BurnYM2203SetRightVolume(0, port, (right * DariusYM2203AY8910RouteMasterVol) / 100.0);
+}
+
+static void DariusUpdatePSG1(INT32 port)
+{
+	INT32 left, right;
+
+	left  = (DariusPan[3] * DariusVol[port + 2]) >> 8;
+	right = ((0xff - DariusPan[3]) * DariusVol[port + 2]) >> 8;
+
+	BurnYM2203SetLeftVolume(1, port, (left * DariusYM2203AY8910RouteMasterVol) / 100.0);
+	BurnYM2203SetRightVolume(1, port, (right * DariusYM2203AY8910RouteMasterVol) / 100.0);
+}
+
+static void DariusUpdateDa()
+{
+	INT32 left  = DariusDefVol[(DariusPan[4] >> 4) & 0x0f];
+	INT32 right = DariusDefVol[(DariusPan[4] >> 0) & 0x0f];
+	
+	MSM5205SetLeftVolume(0, (left * DariusMSM5205RouteMasterVol) / 100.0);
+	MSM5205SetRightVolume(0, (right * DariusMSM5205RouteMasterVol) / 100.0);
+}
+
 UINT8 __fastcall DariusZ80Read(UINT16 a)
 {
 	switch (a) {
@@ -3312,27 +3430,36 @@ void __fastcall DariusZ80Write(UINT16 a, UINT8 d)
 		}
 		
 		case 0xc000: {
-			//darius_fm0_pan
+			DariusPan[0] = d;
+			DariusUpdateFM0();
 			return;
 		}
 		
 		case 0xc400: {
-			//darius_fm1_pan
+			DariusPan[1] = d;
+			DariusUpdateFM1();
 			return;
 		}
 		
 		case 0xc800: {
-			//darius_psg0_pan
+			DariusPan[2] = d;
+			DariusUpdatePSG0(BURN_SND_YM2203_AY8910_ROUTE_1);
+			DariusUpdatePSG0(BURN_SND_YM2203_AY8910_ROUTE_2);
+			DariusUpdatePSG0(BURN_SND_YM2203_AY8910_ROUTE_3);
 			return;
 		}
 		
 		case 0xcc00: {
-			//darius_psg1_pan
+			DariusPan[3] = d;
+			DariusUpdatePSG1(BURN_SND_YM2203_AY8910_ROUTE_1);
+			DariusUpdatePSG1(BURN_SND_YM2203_AY8910_ROUTE_2);
+			DariusUpdatePSG1(BURN_SND_YM2203_AY8910_ROUTE_3);
 			return;
 		}
 		
 		case 0xd000: {
-			//darius_da_pan
+			DariusPan[4] = d;
+			DariusUpdateDa();
 			return;
 		}
 		
@@ -3827,7 +3954,7 @@ static void TaitoYM2203IRQHandler(INT32, INT32 nStatus)
 
 inline static INT32 TaitoSynchroniseStream(INT32 nSoundRate)
 {
-	return (INT64)(ZetTotalCycles() * nSoundRate / 4000000);
+	return (INT64)((double)ZetTotalCycles() * nSoundRate / 4000000);
 }
 
 inline static double TaitoGetTime()
@@ -3928,6 +4055,46 @@ static UINT8 VolfiedDip1Read(UINT32)
 static UINT8 VolfiedDip2Read(UINT32)
 {
 	return TaitoDip[1];
+}
+
+static void DariusWritePortA0(UINT32, UINT32 d)
+{
+	d &= 0xff;
+	
+	DariusVol[0] = DariusDefVol[(d >> 4) & 0x0f];
+	DariusVol[6] = DariusDefVol[(d >> 0) & 0x0f];
+	DariusUpdateFM0();
+	DariusUpdatePSG0(BURN_SND_YM2203_AY8910_ROUTE_1);
+}
+
+static void DariusWritePortA1(UINT32, UINT32 d)
+{
+	d &= 0xff;
+	
+	DariusVol[3] = DariusDefVol[(d >> 4) & 0x0f];
+	DariusVol[7] = DariusDefVol[(d >> 0) & 0x0f];
+	DariusUpdateFM1();
+	DariusUpdatePSG1(BURN_SND_YM2203_AY8910_ROUTE_1);
+}
+
+static void DariusWritePortB0(UINT32, UINT32 d)
+{
+	d &= 0xff;
+	
+	DariusVol[1] = DariusDefVol[(d >> 4) & 0x0f];
+	DariusVol[2] = DariusDefVol[(d >> 0) & 0x0f];
+	DariusUpdatePSG0(BURN_SND_YM2203_AY8910_ROUTE_2);
+	DariusUpdatePSG0(BURN_SND_YM2203_AY8910_ROUTE_3);
+}
+
+static void DariusWritePortB1(UINT32, UINT32 d)
+{
+	d &= 0xff;
+	
+	DariusVol[4] = DariusDefVol[(d >> 4) & 0x0f];
+	DariusVol[5] = DariusDefVol[(d >> 0) & 0x0f];
+	DariusUpdatePSG1(BURN_SND_YM2203_AY8910_ROUTE_2);
+	DariusUpdatePSG1(BURN_SND_YM2203_AY8910_ROUTE_3);
 }
 
 static INT32 DariusCharPlaneOffsets[4]     = { 0, 1, 2, 3 };
@@ -4078,7 +4245,6 @@ static INT32 DariusInit()
 	ZetMapArea(0x8000, 0x8fff, 0, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 1, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1               );
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -4087,14 +4253,19 @@ static INT32 DariusInit()
 	ZetSetOutHandler(DariusZ802WritePort);
 	ZetMapArea(0x0000, 0xffff, 0, TaitoZ80Rom2               );
 	ZetMapArea(0x0000, 0xffff, 2, TaitoZ80Rom2               );
-	ZetMemEnd();
 	ZetClose();
 	
 	BurnYM2203Init(2, 4000000, TaitoYM2203IRQHandler, TaitoSynchroniseStream, TaitoGetTime, 0);
-	BurnYM2203SetVolumeShift(2);
 	BurnTimerAttachZet(8000000 / 2);
-	
-	MSM5205Init(0, TaitoSynchroniseStream, 384000, DariusAdpcmInt, MSM5205_S48_4B, 50, 1);
+	BurnYM2203SetPorts(0, NULL, NULL, &DariusWritePortA0, &DariusWritePortB0);
+	BurnYM2203SetPorts(1, NULL, NULL, &DariusWritePortA1, &DariusWritePortB1);
+	DariusYM2203AY8910RouteMasterVol = 0.08;
+	DariusYM2203RouteMasterVol = 0.60;
+	bYM2203UseSeperateVolumes = 1;
+		
+	MSM5205Init(0, TaitoSynchroniseStream, 384000, DariusAdpcmInt, MSM5205_S48_4B, 1);
+	DariusMSM5205RouteMasterVol = 1.00;
+	MSM5205SetSeperateVolumes(0, 1);
 	
 	GenericTilesInit();
 	
@@ -4184,15 +4355,18 @@ static INT32 OpwolfInit()
 	ZetMapArea(0x8000, 0x8fff, 0, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 1, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1               );
-	ZetMemEnd();
 	ZetClose();
 	
-	BurnYM2151Init(4000000, 50.0);
+	BurnYM2151Init(4000000);
 	BurnYM2151SetIrqHandler(&TaitoYM2151IRQHandler);
 	BurnYM2151SetPortHandler(&RbislandBankSwitch);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.75, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.75, BURN_SND_ROUTE_RIGHT);
 	
-	MSM5205Init(0, TaitoSynchroniseStream, 384000, OpwolfMSM5205Vck0, MSM5205_S48_4B, 60, 1);
-	MSM5205Init(1, TaitoSynchroniseStream, 384000, OpwolfMSM5205Vck1, MSM5205_S48_4B, 60, 1);
+	MSM5205Init(0, TaitoSynchroniseStream, 384000, OpwolfMSM5205Vck0, MSM5205_S48_4B, 1);
+	MSM5205Init(1, TaitoSynchroniseStream, 384000, OpwolfMSM5205Vck1, MSM5205_S48_4B, 1);
+	MSM5205SetRoute(0, 0.60, BURN_SND_ROUTE_BOTH);
+	MSM5205SetRoute(1, 0.60, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4288,7 +4462,6 @@ static INT32 OpwolfbInit()
 	ZetMapArea(0x8000, 0x8fff, 0, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 1, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1               );
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -4300,15 +4473,18 @@ static INT32 OpwolfbInit()
 	ZetMapArea(0xc000, 0xc7ff, 0, TaitoZ80Ram2               );
 	ZetMapArea(0xc000, 0xc7ff, 1, TaitoZ80Ram2               );
 	ZetMapArea(0xc000, 0xc7ff, 2, TaitoZ80Ram2               );
-	ZetMemEnd();
 	ZetClose();
 	
-	BurnYM2151Init(4000000, 50.0);
+	BurnYM2151Init(4000000);
 	BurnYM2151SetIrqHandler(&TaitoYM2151IRQHandler);
 	BurnYM2151SetPortHandler(&RbislandBankSwitch);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.75, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.75, BURN_SND_ROUTE_RIGHT);
 	
-	MSM5205Init(0, TaitoSynchroniseStream, 384000, OpwolfMSM5205Vck0, MSM5205_S48_4B, 60, 1);
-	MSM5205Init(1, TaitoSynchroniseStream, 384000, OpwolfMSM5205Vck1, MSM5205_S48_4B, 60, 1);
+	MSM5205Init(0, TaitoSynchroniseStream, 384000, OpwolfMSM5205Vck0, MSM5205_S48_4B, 1);
+	MSM5205Init(1, TaitoSynchroniseStream, 384000, OpwolfMSM5205Vck1, MSM5205_S48_4B, 1);
+	MSM5205SetRoute(0, 0.60, BURN_SND_ROUTE_BOTH);
+	MSM5205SetRoute(1, 0.60, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4401,12 +4577,12 @@ static INT32 RbislandInit()
 	ZetMapArea(0x8000, 0x8fff, 0, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 1, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1               );
-	ZetMemEnd();
 	ZetClose();
 	
-	BurnYM2151Init(16000000 / 4, 50.0);
+	BurnYM2151Init(16000000 / 4);
 	BurnYM2151SetIrqHandler(&TaitoYM2151IRQHandler);
 	BurnYM2151SetPortHandler(&RbislandBankSwitch);
+	BurnYM2151SetAllRoutes(0.50, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4497,11 +4673,12 @@ static INT32 JumpingInit()
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1               );
 	ZetMapArea(0xc000, 0xffff, 0, TaitoZ80Rom1 + 0xc000      );
 	ZetMapArea(0xc000, 0xffff, 2, TaitoZ80Rom1 + 0xc000      );
-	ZetMemEnd();
 	ZetClose();
 	
 	BurnYM2203Init(2, 3579545, NULL, TaitoSynchroniseStream, TaitoGetTime, 0);
 	BurnTimerAttachZet(4000000);
+	BurnYM2203SetAllRoutes(0, 0.30, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetAllRoutes(1, 0.30, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4588,14 +4765,15 @@ static INT32 RastanInit()
 	ZetMapArea(0x8000, 0x8fff, 0, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 1, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1               );
-	ZetMemEnd();
 	ZetClose();
 	
-	BurnYM2151Init(16000000 / 4, 50.0);
+	BurnYM2151Init(16000000 / 4);
 	BurnYM2151SetIrqHandler(&TaitoYM2151IRQHandler);
 	BurnYM2151SetPortHandler(&RastanBankSwitch);
+	BurnYM2151SetAllRoutes(0.50, BURN_SND_ROUTE_BOTH);
 	
-	MSM5205Init(0, TaitoSynchroniseStream, 384000, RastanMSM5205Vck, MSM5205_S48_4B, 60, 1);
+	MSM5205Init(0, TaitoSynchroniseStream, 384000, RastanMSM5205Vck, MSM5205_S48_4B, 1);
+	MSM5205SetRoute(0, 0.60, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4695,14 +4873,15 @@ static INT32 TopspeedInit()
 	ZetMapArea(0x8000, 0x8fff, 0, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 1, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x8fff, 2, TaitoZ80Ram1               );
-	ZetMemEnd();
 	ZetClose();
 	
-	BurnYM2151Init(16000000 / 4, 50.0);
+	BurnYM2151Init(16000000 / 4);
 	BurnYM2151SetIrqHandler(&TaitoYM2151IRQHandler);
 	BurnYM2151SetPortHandler(&TopspeedBankSwitch);
+	BurnYM2151SetAllRoutes(0.30, BURN_SND_ROUTE_BOTH);
 	
-	MSM5205Init(0, TaitoSynchroniseStream, 384000, TopspeedMSM5205Vck, MSM5205_S48_4B, 60, 1);
+	MSM5205Init(0, TaitoSynchroniseStream, 384000, TopspeedMSM5205Vck, MSM5205_S48_4B, 1);
+	MSM5205SetRoute(0, 0.60, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -4782,12 +4961,15 @@ static INT32 VolfiedInit()
 	ZetMapArea(0x8000, 0x87ff, 0, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x87ff, 1, TaitoZ80Ram1               );
 	ZetMapArea(0x8000, 0x87ff, 2, TaitoZ80Ram1               );
-	ZetMemEnd();
 	ZetClose();
 	
 	BurnYM2203Init(1, 4000000, TaitoYM2203IRQHandler, TaitoSynchroniseStream, TaitoGetTime, 0);
 	BurnYM2203SetPorts(0, &VolfiedDip1Read, &VolfiedDip2Read, NULL, NULL);
 	BurnTimerAttachZet(4000000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.60, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.15, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.15, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.15, BURN_SND_ROUTE_BOTH);
 	
 	GenericTilesInit();
 	
@@ -5798,7 +5980,7 @@ struct BurnDriver BurnDrvJumping = {
 
 struct BurnDriver BurnDrvRastan = {
 	"rastan", NULL, NULL, NULL, "1987",
-	"Rastan (World)\0", NULL, "Taito Corporation Japan", "Taito Misc",
+	"Rastan (World Rev 1)\0", NULL, "Taito Corporation Japan", "Taito Misc",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
 	NULL, RastanRomInfo, RastanRomName, NULL, NULL, RastanInputInfo, RastanDIPInfo,
@@ -5806,9 +5988,19 @@ struct BurnDriver BurnDrvRastan = {
 	NULL, 0x2000, 320, 240, 4, 3
 };
 
+struct BurnDriver BurnDrvRastana = {
+	"rastana", "rastan", NULL, NULL, "1987",
+	"Rastan (World)\0", NULL, "Taito Corporation Japan", "Taito Misc",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
+	NULL, RastanaRomInfo, RastanaRomName, NULL, NULL, RastanInputInfo, RastanDIPInfo,
+	RastanInit, TaitoMiscExit, TaitoMiscFrame, NULL, TaitoMiscScan,
+	NULL, 0x2000, 320, 240, 4, 3
+};
+
 struct BurnDriver BurnDrvRastanu = {
 	"rastanu", "rastan", NULL, NULL, "1987",
-	"Rastan (US set 1)\0", NULL, "Taito America Corporation", "Taito Misc",
+	"Rastan (US Rev 1)\0", NULL, "Taito America Corporation", "Taito Misc",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
 	NULL, RastanuRomInfo, RastanuRomName, NULL, NULL, RastanInputInfo, RastsagaDIPInfo,
@@ -5816,19 +6008,29 @@ struct BurnDriver BurnDrvRastanu = {
 	NULL, 0x2000, 320, 240, 4, 3
 };
 
-struct BurnDriver BurnDrvRastanu2 = {
-	"rastanu2", "rastan", NULL, NULL, "1987",
-	"Rastan (US set 2)\0", NULL, "Taito America Corporation", "Taito Misc",
+struct BurnDriver BurnDrvRastanua = {
+	"rastanua", "rastan", NULL, NULL, "1987",
+	"Rastan (US)\0", NULL, "Taito America Corporation", "Taito Misc",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
-	NULL, Rastanu2RomInfo, Rastanu2RomName, NULL, NULL, RastanInputInfo, RastsagaDIPInfo,
+	NULL, RastanuaRomInfo, RastanuaRomName, NULL, NULL, RastanInputInfo, RastsagaDIPInfo,
+	RastanInit, TaitoMiscExit, TaitoMiscFrame, NULL, TaitoMiscScan,
+	NULL, 0x2000, 320, 240, 4, 3
+};
+
+struct BurnDriver BurnDrvRastanub = {
+	"rastanub", "rastan", NULL, NULL, "1987",
+	"Rastan (US, Earlier code base)\0", NULL, "Taito America Corporation", "Taito Misc",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
+	NULL, RastanubRomInfo, RastanubRomName, NULL, NULL, RastanInputInfo, RastsagaDIPInfo,
 	RastanInit, TaitoMiscExit, TaitoMiscFrame, NULL, TaitoMiscScan,
 	NULL, 0x2000, 320, 240, 4, 3
 };
 
 struct BurnDriver BurnDrvRastsaga = {
 	"rastsaga", "rastan", NULL, NULL, "1987",
-	"Rastan Saga (Japan)\0", NULL, "Taito Corporation", "Taito Misc",
+	"Rastan Saga (Japan Rev 1)\0", NULL, "Taito Corporation", "Taito Misc",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
 	NULL, RastsagaRomInfo, RastsagaRomName, NULL, NULL, RastanInputInfo, RastsagaDIPInfo,
@@ -5836,12 +6038,12 @@ struct BurnDriver BurnDrvRastsaga = {
 	NULL, 0x2000, 320, 240, 4, 3
 };
 
-struct BurnDriver BurnDrvRastsaga1 = {
-	"rastsaga1", "rastan", NULL, NULL, "1987",
-	"Rastan Saga (Japan Rev 1)\0", NULL, "Taito Corporation", "Taito Misc",
+struct BurnDriver BurnDrvRastsagaa = {
+	"rastsagaa", "rastan", NULL, NULL, "1987",
+	"Rastan Saga (Japan)\0", NULL, "Taito Corporation", "Taito Misc",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_TAITO_MISC, GBF_PLATFORM, 0,
-	NULL, Rastsaga1RomInfo, Rastsaga1RomName, NULL, NULL, RastanInputInfo, RastsagaDIPInfo,
+	NULL, RastsagaaRomInfo, RastsagaaRomName, NULL, NULL, RastanInputInfo, RastsagaDIPInfo,
 	RastanInit, TaitoMiscExit, TaitoMiscFrame, NULL, TaitoMiscScan,
 	NULL, 0x2000, 320, 240, 4, 3
 };

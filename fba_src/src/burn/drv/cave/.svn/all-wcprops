@@ -1,25 +1,25 @@
 K 25
 svn:wc:ra_dav:version-url
 V 49
-/svn/fbalpha/!svn/ver/462/trunk/src/burn/drv/cave
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/cave
 END
 d_hotdogst.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_hotdogst.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/cave/d_hotdogst.cpp
 END
 d_tjumpman.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_tjumpman.cpp
+/svn/fbalpha/!svn/ver/686/trunk/src/burn/drv/cave/d_tjumpman.cpp
 END
 d_feversos.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_feversos.cpp
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/drv/cave/d_feversos.cpp
 END
 cave_tile_render.h
 K 25
@@ -31,13 +31,13 @@ d_guwange.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_guwange.cpp
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/drv/cave/d_guwange.cpp
 END
 d_gaia.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_gaia.cpp
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/drv/cave/d_gaia.cpp
 END
 cave_sprite.cpp
 K 25
@@ -49,7 +49,7 @@ d_korokoro.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_korokoro.cpp
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/drv/cave/d_korokoro.cpp
 END
 cave_sprite_render.h
 K 25
@@ -61,7 +61,7 @@ d_dodonpachi.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/462/trunk/src/burn/drv/cave/d_dodonpachi.cpp
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/drv/cave/d_dodonpachi.cpp
 END
 cave_sprite_render_zoom.h
 K 25
@@ -79,43 +79,43 @@ d_mazinger.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_mazinger.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/cave/d_mazinger.cpp
 END
 d_metmqstr.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_metmqstr.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/cave/d_metmqstr.cpp
 END
 d_uopoko.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_uopoko.cpp
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/drv/cave/d_uopoko.cpp
 END
 cave.h
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/cave/cave.h
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/cave/cave.h
 END
 d_esprade.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_esprade.cpp
+/svn/fbalpha/!svn/ver/699/trunk/src/burn/drv/cave/d_esprade.cpp
 END
 d_sailormn.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_sailormn.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/cave/d_sailormn.cpp
 END
 d_donpachi.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/cave/d_donpachi.cpp
+/svn/fbalpha/!svn/ver/686/trunk/src/burn/drv/cave/d_donpachi.cpp
 END
 cave_tile.cpp
 K 25
@@ -127,7 +127,7 @@ d_pwrinst2.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/282/trunk/src/burn/drv/cave/d_pwrinst2.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/cave/d_pwrinst2.cpp
 END
 cave_palette.cpp
 K 25

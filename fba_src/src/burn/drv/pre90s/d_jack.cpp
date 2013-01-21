@@ -2,7 +2,7 @@
 // Based on MAME driver by Brad Oliver
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "bitswap.h"
 #include "driver.h"
 extern "C" {
@@ -1014,7 +1014,6 @@ static INT32 DrvInit()
 		ZetMapArea(0xc000, 0xffff, 2, Rom0 + 0xc000);
 	}
 
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -1026,7 +1025,6 @@ static INT32 DrvInit()
 	ZetMapArea(0x4000, 0x43ff, 0, Rom1 + 0x4000);
 	ZetMapArea(0x4000, 0x43ff, 1, Rom1 + 0x4000);
 	ZetMapArea(0x4000, 0x43ff, 2, Rom1 + 0x4000);
-	ZetMemEnd();
 	ZetClose();
 
 	pAY8910Buffer[0] = pFMBuffer + nBurnSoundLen * 0;
@@ -1034,6 +1032,7 @@ static INT32 DrvInit()
 	pAY8910Buffer[2] = pFMBuffer + nBurnSoundLen * 2;
 
 	AY8910Init(0, 1500000, nBurnSoundRate, &soundlatch_r, &timer_r, NULL, NULL);
+	AY8910SetAllRoutes(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -1208,45 +1207,19 @@ static INT32 DrvFrame()
 		
 		// Render Sound Segment
 		if (pBurnSoundOut && !suprtriv) {	// disable sound for suprtriv
-			INT32 nSample;
 			INT32 nSegmentLength = nBurnSoundLen / nInterleave;
 			INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
-			AY8910Update(0, &pAY8910Buffer[0], nSegmentLength);
-			for (INT32 n = 0; n < nSegmentLength; n++) {
-				nSample  = pAY8910Buffer[0][n];
-				nSample += pAY8910Buffer[1][n];
-				nSample += pAY8910Buffer[2][n];
-
-				nSample /= 4;
-
-				nSample = BURN_SND_CLIP(nSample);
-
-				pSoundBuf[(n << 1) + 0] = nSample;
-				pSoundBuf[(n << 1) + 1] = nSample;
-			}
+			AY8910Render(&pAY8910Buffer[0], pSoundBuf, nSegmentLength, 0);
 			nSoundBufferPos += nSegmentLength;
 		}
 	}
 
 	// Make sure the buffer is entirely filled.
 	if (pBurnSoundOut && !suprtriv) {
-		INT32 nSample;
 		INT32 nSegmentLength = nBurnSoundLen - nSoundBufferPos;
 		INT16* pSoundBuf = pBurnSoundOut + (nSoundBufferPos << 1);
 		if (nSegmentLength) {
-			AY8910Update(0, &pAY8910Buffer[0], nSegmentLength);
-			for (INT32 n = 0; n < nSegmentLength; n++) {
-				nSample  = pAY8910Buffer[0][n];
-				nSample += pAY8910Buffer[1][n];
-				nSample += pAY8910Buffer[2][n];
-
-				nSample /= 4;
-
-				nSample = BURN_SND_CLIP(nSample);
-
-				pSoundBuf[(n << 1) + 0] = nSample;
-				pSoundBuf[(n << 1) + 1] = nSample;
-			}
+			AY8910Render(&pAY8910Buffer[0], pSoundBuf, nSegmentLength, 0);
 		}
 	}
 
@@ -1925,4 +1898,43 @@ struct BurnDriver BurnDrvstriv = {
 	224, 256, 3, 4
 };
 
+static struct BurnRomInfo striv2RomDesc[] = {
+	{ "s.triv_p1.2f",     0x1000, 0xdcf5da6e, 1 | BRF_PRG | BRF_ESS }, //  0 Z80 #0 Code
+	{ "s.triv_p2.3f",     0x1000, 0x921610ba, 1 | BRF_PRG | BRF_ESS }, //  1
+	{ "s.triv_p3.4f",     0x1000, 0xc36f0e21, 1 | BRF_PRG | BRF_ESS }, //  2
+	{ "s.triv_cp4.f6",    0x1000, 0x0dc98a97, 1 | BRF_PRG | BRF_ESS }, //  3
+	{ "s.triv_c3.e7",     0x1000, 0x2f4b0570, 1 | BRF_PRG | BRF_ESS }, //  4
+	{ "s.triv_c2.e6",     0x1000, 0xe21bd3ab, 1 | BRF_PRG | BRF_ESS }, //  5
+	{ "s.triv_c1.5e",     0x1000, 0x2c2c7282, 1 | BRF_PRG | BRF_ESS }, //  6
 
+	{ "s.triv_sound.5a",  0x1000, 0xb7ddf84f, 2 | BRF_PRG | BRF_ESS }, //  7 Z80 #1 Code
+
+	{ "s.triv.1a",        0x1000, 0x8f60229b, 3 | BRF_GRA },	       //  8 Graphics
+	{ "s.triv.4a",        0x1000, 0x8f982a9c, 3 | BRF_GRA },	       //  9
+	{ "s.triv.5a",        0x1000, 0x8f982a9c, 3 | BRF_GRA },	       // 10
+	{ "s.triv.2a",        0x1000, 0x7ad4358e, 3 | BRF_GRA },	       // 11
+
+	{ "s.triv_ts0.u6",    0x8000, 0x796849da, 5 | BRF_PRG | BRF_ESS }, // 12 Question ROMs
+	{ "s.triv_ts1.u7",    0x8000, 0x059d4900, 5 | BRF_PRG | BRF_ESS }, // 13
+	{ "s.triv_ts2.u8",    0x8000, 0x184159aa, 5 | BRF_PRG | BRF_ESS }, // 14
+	{ "s.triv_ta0.u9",    0x8000, 0xc4eb7f2e, 5 | BRF_PRG | BRF_ESS }, // 15
+	{ "s.triv_ta1.u10",   0x8000, 0x3d9a136f, 5 | BRF_PRG | BRF_ESS }, // 16
+	{ "s.triv_ta2.u11",   0x8000, 0x8fa557b2, 5 | BRF_PRG | BRF_ESS }, // 17
+	{ "s.triv_te0.u12",   0x8000, 0x3f5d1c4b, 5 | BRF_PRG | BRF_ESS }, // 18
+	{ "s.triv_te1.u13",   0x8000, 0x6ae2bf3a, 5 | BRF_PRG | BRF_ESS }, // 19
+	{ "s.triv_tg0.u14",   0x8000, 0x8fc9c76d, 5 | BRF_PRG | BRF_ESS }, // 20
+	{ "s.triv_tg1.u15",   0x8000, 0x981a2a43, 5 | BRF_PRG | BRF_ESS }, // 21
+};
+
+STD_ROM_PICK(striv2)
+STD_ROM_FN(striv2)
+
+struct BurnDriver BurnDrvstriv2 = {
+	"striv2", "striv", NULL, NULL, "1985",
+	"Super Triv (set 2)\0", "No sound", "Hara Industries", "Jack the Giantkiller",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_MISC_PRE90S, GBF_QUIZ, 0,
+	NULL, striv2RomInfo, striv2RomName, NULL, NULL, StrivInputInfo, StrivDIPInfo,
+	strivInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvCalcPal, 0x100,
+	224, 256, 3, 4
+};

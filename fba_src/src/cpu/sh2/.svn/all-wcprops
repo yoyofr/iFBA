@@ -1,17 +1,11 @@
 K 25
 svn:wc:ra_dav:version-url
 V 43
-/svn/fbalpha/!svn/ver/422/trunk/src/cpu/sh2
-END
-sh2.h
-K 25
-svn:wc:ra_dav:version-url
-V 49
-/svn/fbalpha/!svn/ver/422/trunk/src/cpu/sh2/sh2.h
+/svn/fbalpha/!svn/ver/826/trunk/src/cpu/sh2
 END
 sh2.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 51
-/svn/fbalpha/!svn/ver/305/trunk/src/cpu/sh2/sh2.cpp
+/svn/fbalpha/!svn/ver/826/trunk/src/cpu/sh2/sh2.cpp
 END

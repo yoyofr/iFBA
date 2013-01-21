@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym2203.h"
 #include "msm6295.h"
 
@@ -975,7 +975,6 @@ static INT32 DrvInit()
 	ZetMapArea(0xd000, 0xd7ff, 0, DrvZ80Ram              );
 	ZetMapArea(0xd000, 0xd7ff, 1, DrvZ80Ram              );
 	ZetMapArea(0xd000, 0xd7ff, 2, DrvZ80Ram              );
-	ZetMemEnd();
 	ZetClose();
 	
 	GenericTilesInit();
@@ -983,10 +982,12 @@ static INT32 DrvInit()
 	DrvSpriteFlipYMask = 0x80;
 	
 	BurnYM2203Init(2, 3579545, &DrvYM2203IRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
-	BurnYM2203SetVolumeShift(3);
 	BurnTimerAttachZet(3579545);
+	BurnYM2203SetAllRoutes(0, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetAllRoutes(1, 0.40, BURN_SND_ROUTE_BOTH);
 	
-	MSM6295Init(0, 7575, 98, 1);
+	MSM6295Init(0, 7575, 1);
+	MSM6295SetRoute(0, 0.98, BURN_SND_ROUTE_BOTH);
 
 	// Reset the driver
 	MadgearDoReset();
@@ -1069,7 +1070,6 @@ static INT32 Ledstrm2Init()
 	ZetMapArea(0xd000, 0xd7ff, 0, DrvZ80Ram              );
 	ZetMapArea(0xd000, 0xd7ff, 1, DrvZ80Ram              );
 	ZetMapArea(0xd000, 0xd7ff, 2, DrvZ80Ram              );
-	ZetMemEnd();
 	ZetClose();
 	
 	GenericTilesInit();
@@ -1077,10 +1077,12 @@ static INT32 Ledstrm2Init()
 	DrvSpriteFlipYMask = 0x80;
 	
 	BurnYM2203Init(2, 3579545, &DrvYM2203IRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
-	BurnYM2203SetVolumeShift(3);
 	BurnTimerAttachZet(3579545);
-	
-	MSM6295Init(0, 7575, 98, 1);
+	BurnYM2203SetAllRoutes(0, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetAllRoutes(1, 0.40, BURN_SND_ROUTE_BOTH);
+		
+	MSM6295Init(0, 7575, 1);
+	MSM6295SetRoute(0, 0.98, BURN_SND_ROUTE_BOTH);
 
 	// Reset the driver
 	MadgearDoReset();
@@ -1161,7 +1163,6 @@ static INT32 LastduelInit()
 	ZetMapArea(0xe000, 0xe7ff, 0, DrvZ80Ram              );
 	ZetMapArea(0xe000, 0xe7ff, 1, DrvZ80Ram              );
 	ZetMapArea(0xe000, 0xe7ff, 2, DrvZ80Ram              );
-	ZetMemEnd();
 	ZetClose();
 	
 	GenericTilesInit();
@@ -1169,9 +1170,10 @@ static INT32 LastduelInit()
 	DrvSpriteFlipYMask = 0x40;
 	
 	BurnYM2203Init(2, 3579545, &DrvYM2203IRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
-	BurnYM2203SetVolumeShift(3);
 	BurnTimerAttachZet(3579545);
-	
+	BurnYM2203SetAllRoutes(0, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetAllRoutes(1, 0.40, BURN_SND_ROUTE_BOTH);
+
 	// Reset the driver
 	DrvDoReset();
 
@@ -1266,7 +1268,6 @@ static INT32 LastduelbInit()
 	ZetMapArea(0xe000, 0xe7ff, 0, DrvZ80Ram              );
 	ZetMapArea(0xe000, 0xe7ff, 1, DrvZ80Ram              );
 	ZetMapArea(0xe000, 0xe7ff, 2, DrvZ80Ram              );
-	ZetMemEnd();
 	ZetClose();
 	
 	GenericTilesInit();
@@ -1274,7 +1275,8 @@ static INT32 LastduelbInit()
 	DrvSpriteFlipYMask = 0x40;
 	
 	BurnYM2203Init(2, 3579545, &DrvYM2203IRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
-	BurnYM2203SetVolumeShift(3);
+	BurnYM2203SetAllRoutes(0, 0.40, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetAllRoutes(1, 0.40, BURN_SND_ROUTE_BOTH);
 	BurnTimerAttachZet(3579545);
 	
 	// Reset the driver

@@ -2,8 +2,8 @@
 // Based on MAME driver by Paul Priest and David Haywood
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ymf278b.h"
 
 static UINT8 *AllMem;
@@ -545,10 +545,11 @@ static INT32 DrvInit()
 	ZetSetReadHandler(fuuki32_sound_read);
 	ZetSetOutHandler(fuuki32_sound_out);
 	ZetSetInHandler(fuuki32_sound_in);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnYMF278BInit(0, DrvSndROM, &DrvFMIRQHandler, DrvSynchroniseStream);
+	BurnYMF278BSetRoute(BURN_SND_YMF278B_YMF278B_ROUTE_1, 0.50, BURN_SND_ROUTE_LEFT);
+	BurnYMF278BSetRoute(BURN_SND_YMF278B_YMF278B_ROUTE_2, 0.50, BURN_SND_ROUTE_RIGHT);
 	BurnTimerAttachZet(6000000);
 
 	GenericTilesInit();

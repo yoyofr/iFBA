@@ -13,8 +13,8 @@
  ********************************************************************************/
 
 #include "burnint.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym2151.h"
 #include "msm6295.h"
 
@@ -718,13 +718,15 @@ static INT32 shadfrceInit()
 		ZetMapArea(0xF000, 0xFFFF, 1, RamZ80+0x0800);
 		ZetMapArea(0xF000, 0xFFFF, 2, RamZ80+0x0800);
 		
-		ZetMemEnd();
 		ZetClose();
 	}
 	
-	BurnYM2151Init(3579545, 50.0);		// 3.5795 MHz
+	BurnYM2151Init(3579545);		// 3.5795 MHz
 	YM2151SetIrqHandler(0, &shadfrceYM2151IRQHandler);
-	MSM6295Init(0, 12000, 50.0, 1);		// 12.000 KHz
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 0.50, BURN_SND_ROUTE_LEFT);
+	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 0.50, BURN_SND_ROUTE_RIGHT);
+	MSM6295Init(0, 12000, 1);		// 12.000 KHz
+	MSM6295SetRoute(0, 0.50, BURN_SND_ROUTE_BOTH);
 	nZ80Cycles = 3579545 * 100 / nBurnFPS;
 
 	DrvDoReset();

@@ -2,8 +2,8 @@
 // Based on MAME driver by Luca Elia, XingXing, and David Haywood
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ymf278b.h"
 #include "burn_ym3812.h"
 #include "msm6295.h"
@@ -50,6 +50,8 @@ static UINT16 *draw_bitmap[5] 	= { NULL, NULL, NULL, NULL, NULL };
 
 static UINT8 aliencha_dip_sel;
 static UINT8 lordgun_whitescreen;
+
+static UINT16 lordgun_protection_data;
 
 static INT32 DrvAxis[4];
 static UINT16 DrvAnalogInput[4];
@@ -297,8 +299,36 @@ static void lordgun_update_gun(INT32 i)
 	}
 }
 
+static void lordgun_protection_w(UINT8 offset)
+{
+	switch (offset & 0xc0)
+	{
+		case 0x00:
+			lordgun_protection_data++;
+		return;
+
+		case 0xc0:
+			lordgun_protection_data = 0;
+		return;
+	}
+}
+
+static UINT8 lordgun_protection_r()
+{
+	if ((lordgun_protection_data & 0x11) == 0x01) return 0x10;
+	if ((lordgun_protection_data & 0x06) == 0x02) return 0x10;
+	if ((lordgun_protection_data & 0x09) == 0x08) return 0x10;
+
+	return 0;
+}
+
 void __fastcall lordgun_write_word(UINT32 address, UINT16 data)
 {
+	if ((address & 0xfffff00) == 0x50a900) {
+		lordgun_protection_w(address);
+		return;
+	}
+
 	switch (address)
 	{
 		case 0x502000:
@@ -366,6 +396,10 @@ void __fastcall lordgun_write_byte(UINT32 /*address*/, UINT8 /*data*/)
 
 UINT16 __fastcall lordgun_read_word(UINT32 address)
 {
+	if ((address & 0xfffff00) == 0x50a900) {
+		return lordgun_protection_r();
+	}
+
 	switch (address)
 	{
 		case 0x503800:
@@ -745,7 +779,7 @@ static INT32 DrvInit(INT32 (*pInitCallback)(), INT32 lordgun)
 	SekMapMemory(DrvScrRAM,		0x31c000, 0x31c7ff, SM_RAM);
 	SekMapMemory(DrvSprRAM,		0x400000, 0x4007ff, SM_RAM);
 	SekMapMemory(DrvPalRAM,		0x500000, 0x500fff, SM_RAM);
-	SekMapMemory(DrvProtRAM,	0x50a800, 0x50abff, SM_RAM); // 900-9ff (lordgun)
+//	SekMapMemory(DrvProtRAM,	0x50a800, 0x50abff, SM_RAM); // 900-9ff (lordgun)
 	SekMapMemory(DrvProtRAM,	0x50b800, 0x50bbff, SM_RAM); // 900-9ff (aliencha)
 	SekSetWriteWordHandler(0,	lordgun_write_word);
 	SekSetWriteByteHandler(0,	lordgun_write_byte);
@@ -762,19 +796,22 @@ static INT32 DrvInit(INT32 (*pInitCallback)(), INT32 lordgun)
 	ZetMapArea(0xf000, 0xffff, 2, DrvZ80RAM);
 	ZetSetOutHandler(lordgun_sound_write_port);
 	ZetSetInHandler(lordgun_sound_read_port);
-	ZetMemEnd();
 	ZetClose();
 
 	// aliencha
 	BurnYMF278BInit(0, DrvSndROM2, &DrvFMIRQHandler, DrvSynchroniseStream);
+	BurnYMF278BSetAllRoutes(0.50, BURN_SND_ROUTE_BOTH);
 	BurnTimerAttachZet(5000000);
 
 	// lordgun
 	BurnYM3812Init(3579545, &DrvFMIRQHandler, &DrvSynchroniseStream, 0);
 	BurnTimerAttachZetYM3812(5000000);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 1.00, BURN_SND_ROUTE_BOTH);
 
-	MSM6295Init(0, 1000000 / 132, 100, 1);
-	MSM6295Init(1, 1000000 / 132, 100, 1); // aliencha
+	MSM6295Init(0, 1000000 / 132, 1);
+	MSM6295Init(1, 1000000 / 132, 1); // aliencha
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(1, 1.00, BURN_SND_ROUTE_BOTH);
 
 	ppi8255_init(2);
 	if (lordgun) {
@@ -855,9 +892,6 @@ static INT32 lordgunLoadRoms()
 		if ((i & 0x0120) == 0x0100 || (i & 0x0a00) == 0x0800)
 			rom[i] ^= BURN_ENDIAN_SWAP_INT16(0x0010);
 	}
-
-	rom[0x14832/2]	=	BURN_ENDIAN_SWAP_INT16(0x6000);		// 014832: 6700 0006  beq     $1483a (protection)
-	rom[0x1587e/2]	=	BURN_ENDIAN_SWAP_INT16(0x6010);		// 01587E: 6710       beq     $15890 (rom check)
 
 	return 0;
 }
@@ -1362,6 +1396,7 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 
 		SCAN_VAR(aliencha_dip_sel);
 		SCAN_VAR(lordgun_whitescreen);
+		SCAN_VAR(lordgun_protection_data);
 
 		SCAN_VAR(lordgun_gun_hw_x[0]);
 		SCAN_VAR(lordgun_gun_hw_y[0]);

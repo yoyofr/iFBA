@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp
+END
+select.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/select.cpp
+END
+burner_psp.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/burner_psp.h
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/main.cpp
+END
+run.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/run.cpp
+END
+stated.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/stated.cpp
+END
+config.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/config.cpp
+END
+font.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/font.c
+END
+pg.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/pg.c
+END
+tchar.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/tchar.h
+END
+drv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/drv.cpp
+END
+pg.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/pg.h
+END
+inpdipsw.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/psp/inpdipsw.cpp
+END

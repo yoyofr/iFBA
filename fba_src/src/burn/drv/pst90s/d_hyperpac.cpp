@@ -1,6 +1,6 @@
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "timer.h"
 #include "msm6295.h"
 #include "burn_ym2151.h"
@@ -1994,17 +1994,18 @@ static INT32 HyperpacMachineInit()
 	ZetMapArea(0xd000, 0xd7ff, 0, HyperpacZ80Ram);
 	ZetMapArea(0xd000, 0xd7ff, 1, HyperpacZ80Ram);
 	ZetMapArea(0xd000, 0xd7ff, 2, HyperpacZ80Ram);
-	ZetMemEnd();
 	ZetSetReadHandler(HyperpacZ80Read);
 	ZetSetWriteHandler(HyperpacZ80Write);
 	ZetClose();
 
 	// Setup the YM2151 emulation
-	BurnYM2151Init(4000000, 25.0);
+	BurnYM2151Init(4000000);
 	BurnYM2151SetIrqHandler(&HyperpacYM2151IrqHandler);
+	BurnYM2151SetAllRoutes(0.10, BURN_SND_ROUTE_BOTH);
 
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 999900 / 132, 100.0, 1);
+	MSM6295Init(0, 999900 / 132, 1);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -2420,6 +2421,9 @@ static INT32 FinalttrInit()
 	BurnByteswap(HyperpacProtData, 0x200);
 	
 	nRet = HyperpacMachineInit(); if (nRet) return 1;
+	
+	BurnYM2151SetAllRoutes(0.08, BURN_SND_ROUTE_BOTH);
+	MSM6295SetRoute(0, 0.40, BURN_SND_ROUTE_BOTH);
 
 	return 0;
 }
@@ -2483,13 +2487,13 @@ static INT32 TwinadvInit()
 	ZetMapArea(0x8000, 0x87ff, 0, HyperpacZ80Ram);
 	ZetMapArea(0x8000, 0x87ff, 1, HyperpacZ80Ram);
 	ZetMapArea(0x8000, 0x87ff, 2, HyperpacZ80Ram);
-	ZetMemEnd();
 	ZetSetInHandler(TwinadvZ80PortRead);
 	ZetSetOutHandler(TwinadvZ80PortWrite);
 	ZetClose();
 
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, (12000000/12) / 132 , 100.0, 0);
+	MSM6295Init(0, (12000000/12) / 132, 0);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -2564,7 +2568,6 @@ static INT32 HoneydolInit()
 	ZetMapArea(0x8000, 0x87ff, 0, HyperpacZ80Ram);
 	ZetMapArea(0x8000, 0x87ff, 1, HyperpacZ80Ram);
 	ZetMapArea(0x8000, 0x87ff, 2, HyperpacZ80Ram);
-	ZetMemEnd();
 	ZetSetInHandler(SnowbrosZ80PortRead);
 	ZetSetOutHandler(SnowbrosZ80PortWrite);
 	ZetSetReadHandler(HoneydolZ80Read);
@@ -2573,9 +2576,11 @@ static INT32 HoneydolInit()
 
 	BurnYM3812Init(3000000, &snowbrosFMIRQHandler, &HoneydolSynchroniseStream, 0);
 	BurnTimerAttachZetYM3812(4000000);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 1.00, BURN_SND_ROUTE_BOTH);
 
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 999900 / 132, 100.0, 1);
+	MSM6295Init(0, 999900 / 132, 1);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -2661,13 +2666,13 @@ static INT32 SnowbrosInit()
 	ZetMapArea(0x8000, 0x87ff, 0, HyperpacZ80Ram);
 	ZetMapArea(0x8000, 0x87ff, 1, HyperpacZ80Ram);
 	ZetMapArea(0x8000, 0x87ff, 2, HyperpacZ80Ram);
-	ZetMemEnd();
 	ZetSetInHandler(SnowbrosZ80PortRead);
 	ZetSetOutHandler(SnowbrosZ80PortWrite);
 	ZetClose();
 
 	BurnYM3812Init(3000000, &snowbrosFMIRQHandler, &snowbrosSynchroniseStream, 0);
 	BurnTimerAttachZetYM3812(6000000);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
@@ -2740,7 +2745,8 @@ static INT32 Snowbro3Init()
 	SekClose();
 	
 	// Setup the OKIM6295 emulation
-	MSM6295Init(0, 999900 / 132, 100.0, 0);
+	MSM6295Init(0, 999900 / 132, 0);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

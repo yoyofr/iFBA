@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 52
-/svn/fbalpha/!svn/ver/468/trunk/src/burn/drv/toaplan
+/svn/fbalpha/!svn/ver/855/trunk/src/burn/drv/toaplan
 END
 toa_bcu2.cpp
 K 25
@@ -13,13 +13,13 @@ d_samesame.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/395/trunk/src/burn/drv/toaplan/d_samesame.cpp
+/svn/fbalpha/!svn/ver/670/trunk/src/burn/drv/toaplan/d_samesame.cpp
 END
 d_batrider.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_batrider.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_batrider.cpp
 END
 toa_palette.cpp
 K 25
@@ -31,7 +31,7 @@ toaplan.h
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/fbalpha/!svn/ver/445/trunk/src/burn/drv/toaplan/toaplan.h
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/toaplan/toaplan.h
 END
 d_tekipaki.cpp
 K 25
@@ -43,43 +43,43 @@ d_pipibibs.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_pipibibs.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_pipibibs.cpp
 END
 d_outzone.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_outzone.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_outzone.cpp
 END
 d_zerowing.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_zerowing.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_zerowing.cpp
 END
 d_rallybik.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_rallybik.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_rallybik.cpp
 END
 d_vimana.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_vimana.cpp
+/svn/fbalpha/!svn/ver/855/trunk/src/burn/drv/toaplan/d_vimana.cpp
 END
 d_snowbro2.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_snowbro2.cpp
+/svn/fbalpha/!svn/ver/686/trunk/src/burn/drv/toaplan/d_snowbro2.cpp
 END
 d_tigerheli.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 68
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/drv/toaplan/d_tigerheli.cpp
+/svn/fbalpha/!svn/ver/827/trunk/src/burn/drv/toaplan/d_tigerheli.cpp
 END
 toa_gp9001.cpp
 K 25
@@ -91,19 +91,19 @@ d_truxton.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_truxton.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_truxton.cpp
 END
 d_mahoudai.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/395/trunk/src/burn/drv/toaplan/d_mahoudai.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_mahoudai.cpp
 END
 d_batsugun.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_batsugun.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/toaplan/d_batsugun.cpp
 END
 toaplan.cpp
 K 25
@@ -121,13 +121,13 @@ d_bbakraid.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_bbakraid.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_bbakraid.cpp
 END
 d_truxton2.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_truxton2.cpp
+/svn/fbalpha/!svn/ver/686/trunk/src/burn/drv/toaplan/d_truxton2.cpp
 END
 d_ghox.cpp
 K 25
@@ -139,19 +139,19 @@ d_fixeight.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_fixeight.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/toaplan/d_fixeight.cpp
 END
 d_demonwld.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_demonwld.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_demonwld.cpp
 END
 d_kbash2.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_kbash2.cpp
+/svn/fbalpha/!svn/ver/686/trunk/src/burn/drv/toaplan/d_kbash2.cpp
 END
 toaplan1.cpp
 K 25
@@ -163,13 +163,13 @@ d_vfive.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_vfive.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/toaplan/d_vfive.cpp
 END
 d_battleg.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/468/trunk/src/burn/drv/toaplan/d_battleg.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_battleg.cpp
 END
 toa_gp9001_render.h
 K 25
@@ -187,23 +187,23 @@ d_kbash.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_kbash.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/toaplan/d_kbash.cpp
 END
 d_shippumd.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/395/trunk/src/burn/drv/toaplan/d_shippumd.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_shippumd.cpp
 END
 d_dogyuun.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_dogyuun.cpp
+/svn/fbalpha/!svn/ver/741/trunk/src/burn/drv/toaplan/d_dogyuun.cpp
 END
 d_hellfire.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/svn/fbalpha/!svn/ver/246/trunk/src/burn/drv/toaplan/d_hellfire.cpp
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/drv/toaplan/d_hellfire.cpp
 END

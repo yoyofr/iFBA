@@ -30,7 +30,9 @@ to do:
 #include "state.h"
 #include "ym2413.h"
 
+#ifndef MAME_INLINE
 #define MAME_INLINE static inline
+#endif
 
 #ifndef PI
 #define PI 3.14159265358979323846
@@ -1673,7 +1675,7 @@ static void OPLLWriteReg(YM2413 *chip, int r, int v)
 			}
 			else
 			{
-				if ((chip->rhythm&0x20)==1)
+				if (chip->rhythm&0x20)
 				/*rhythm on to off*/
 				{
 					logerror("YM2413: Rhythm mode disable\n");

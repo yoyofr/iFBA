@@ -308,11 +308,13 @@ EmuViewController *emuvc;
                     break;
                 case 1: //save state
                     statevc=[[OptSaveStateViewController alloc] initWithNibName:@"OptSaveStateViewController" bundle:nil];
+                    ((OptSaveStateViewController*)statevc)->emuvc=emuvc;
                     [self.navigationController pushViewController:statevc animated:YES];
                     [statevc release];
                     break;
                 case 2://DIP Switches
                     dipswvc = [[OptDIPSWViewController alloc] initWithNibName:@"OptDIPSWViewController" bundle:nil];
+                    ((OptDIPSWViewController*)dipswvc)->emuvc=emuvc;
                     [self.navigationController pushViewController:dipswvc animated:YES];
                     [dipswvc release];
                     break;
@@ -343,6 +345,7 @@ EmuViewController *emuvc;
                     break;
                 case 6: //game browser
                     gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
+                    ((GameBrowserViewController*)gamebrowservc)->emuvc=emuvc;
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];
                     break;
@@ -350,7 +353,8 @@ EmuViewController *emuvc;
         } else {
             switch (indexPath.row) {
                 case 0: //game browser
-                    gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];                    
+                    gamebrowservc = [[GameBrowserViewController alloc] initWithNibName:@"GameBrowserViewController" bundle:nil];
+                    ((GameBrowserViewController*)gamebrowservc)->emuvc=emuvc;
                     [self.navigationController pushViewController:gamebrowservc animated:YES];
                     [gamebrowservc release];
                     break;
@@ -358,6 +362,7 @@ EmuViewController *emuvc;
         }
     } else if (indexPath.section==1) { //options
         optionsvc=[[OptionsViewController alloc] initWithNibName:@"OptionsViewController" bundle:nil];
+        ((OptionsViewController*)optionsvc)->emuvc=emuvc;
         [self.navigationController pushViewController:optionsvc animated:YES];
         [optionsvc release];
     } else if (indexPath.section==2) { //about & feedback        

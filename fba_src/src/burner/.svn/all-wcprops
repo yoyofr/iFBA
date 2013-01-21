@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/fbalpha/!svn/ver/952/trunk/src/burner
+END
+sshot.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/95/trunk/src/burner/sshot.cpp
+END
+ioapi.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/398/trunk/src/burner/ioapi.c
+END
+burner.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/926/trunk/src/burner/burner.h
+END
+un7z.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/342/trunk/src/burner/un7z.cpp
+END
+unzip.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/87/trunk/src/burner/unzip.c
+END
+ioapi.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/87/trunk/src/burner/ioapi.h
+END
+gamc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/2/trunk/src/burner/gamc.cpp
+END
+dat.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/815/trunk/src/burner/dat.cpp
+END
+un7z.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/342/trunk/src/burner/un7z.h
+END
+unzip.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/87/trunk/src/burner/unzip.h
+END
+gami.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/734/trunk/src/burner/gami.cpp
+END
+state.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/2/trunk/src/burner/state.cpp
+END
+conc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/451/trunk/src/burner/conc.cpp
+END
+image.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/854/trunk/src/burner/image.cpp
+END
+statec.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/2/trunk/src/burner/statec.cpp
+END
+gameinp.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/2/trunk/src/burner/gameinp.h
+END
+cong.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/95/trunk/src/burner/cong.cpp
+END
+title.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fbalpha/!svn/ver/81/trunk/src/burner/title.h
+END
+zipfn.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fbalpha/!svn/ver/344/trunk/src/burner/zipfn.cpp
+END
+neocdlist.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fbalpha/!svn/ver/184/trunk/src/burner/neocdlist.h
+END
+misc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/172/trunk/src/burner/misc.cpp
+END

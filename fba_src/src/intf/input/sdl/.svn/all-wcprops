@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/input/sdl
+END
+inp_sdl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/input/sdl/inp_sdl.cpp
+END
+inp_sdl_keys.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/intf/input/sdl/inp_sdl_keys.h
+END

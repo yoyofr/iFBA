@@ -7,12 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EmuViewController.h"
 
 @interface OptSaveStateViewController : UIViewController {
     IBOutlet UITableView *tabView;
     IBOutlet UIImageView *imgview;
     IBOutlet UIBarButtonItem *btn_backToEmu;
     IBOutlet UIButton *btn_save,*btn_load;
+@public
+    EmuViewController *emuvc;
     
 }
 
@@ -20,6 +23,7 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
 @property (nonatomic, retain) IBOutlet UIImageView *imgview;
 @property (nonatomic, retain) IBOutlet UIButton *btn_save,*btn_load;
+@property (nonatomic, retain) EmuViewController *emuvc;
 
 
 -(IBAction) backToEmu;

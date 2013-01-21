@@ -2,7 +2,7 @@
 // Based on MAME driver by David Haywood
 
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "burn_ym2203.h"
 #include "bitswap.h"
 
@@ -687,7 +687,6 @@ static INT32 DrvInit(INT32 game)
 	ZetSetWriteHandler(angelkds_write);
 	ZetSetOutHandler(angelkds_out_port);
 	ZetSetInHandler(angelkds_in_port);
-	ZetMemEnd();
 	ZetClose();
 
 	ZetInit(1);
@@ -699,11 +698,18 @@ static INT32 DrvInit(INT32 game)
 	ZetMapArea(0x8000, 0x87ff, 2, DrvZ80RAM1);
 	ZetSetOutHandler(main_to_sound_out_port);
 	ZetSetInHandler(main_to_sound_in_port);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnYM2203Init(2, 4000000, &DrvFMIRQHandler, DrvSynchroniseStream, DrvGetTime, 0);
 	BurnTimerAttachZet(4000000);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_YM2203_ROUTE, 0.45, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_1, 0.65, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_2, 0.65, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(0, BURN_SND_YM2203_AY8910_ROUTE_3, 0.65, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_YM2203_ROUTE, 0.45, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_1, 0.65, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_2, 0.65, BURN_SND_ROUTE_BOTH);
+	BurnYM2203SetRoute(1, BURN_SND_YM2203_AY8910_ROUTE_3, 0.65, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

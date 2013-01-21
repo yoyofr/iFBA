@@ -2,8 +2,8 @@
 // Based on MAME driver by Pierpaolo Prazzoli
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym3812.h"
 #include "msm6295.h"
 
@@ -1086,13 +1086,14 @@ static INT32 DrvInit(INT32 loadtype, INT32 sektype, INT32 zettype) // 0 nmg, 1 p
 	}
 	ZetSetInHandler(nmg5_read_port);
 	ZetSetOutHandler(nmg5_write_port);
-	ZetMemEnd();
 	ZetClose();
 
 	BurnYM3812Init(4000000, &DrvFMIRQHandler, &DrvSynchroniseStream, 0);
 	BurnTimerAttachZetYM3812(4000000);
+	BurnYM3812SetRoute(BURN_SND_YM3812_ROUTE, 1.00, BURN_SND_ROUTE_BOTH);
 
-	MSM6295Init(0, 1000000 / 132, 100.0, 1);
+	MSM6295Init(0, 1000000 / 132, 1);
+	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 

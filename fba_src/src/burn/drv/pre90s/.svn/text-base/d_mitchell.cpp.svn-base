@@ -1,5 +1,5 @@
 #include "tiles_generic.h"
-#include "zet.h"
+#include "z80_intf.h"
 #include "eeprom.h"
 #include "burn_ym2413.h"
 #include "msm6295.h"
@@ -1590,12 +1590,12 @@ static void MitchellMachineInit()
 	ZetMapArea(0xe000, 0xffff, 0, DrvZ80Ram                                );
 	ZetMapArea(0xe000, 0xffff, 1, DrvZ80Ram                                );
 	ZetMapArea(0xe000, 0xffff, 2, DrvZ80Ram                                );
-	ZetMemEnd();
 	ZetClose();
 	
-	BurnYM2413Init(4000000, 1.0);
-	BurnYM2413DecreaseVolume(40);
-	MSM6295Init(0, 1000000 / 132, 10.0, 1);
+	BurnYM2413Init(4000000);
+	BurnYM2413SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
+	MSM6295Init(0, 1000000 / 132, 1);
+	MSM6295SetRoute(0, 0.30, BURN_SND_ROUTE_BOTH);
 	MSM6295ROM = DrvSoundRom;
 	
 	EEPROMInit(&MitchellEEPROMIntf);
@@ -1625,12 +1625,12 @@ static void MahjongMachineInit()
 	ZetMapArea(0xe000, 0xffff, 0, DrvZ80Ram                                );
 	ZetMapArea(0xe000, 0xffff, 1, DrvZ80Ram                                );
 	ZetMapArea(0xe000, 0xffff, 2, DrvZ80Ram                                );
-	ZetMemEnd();
 	ZetClose();
 	
-	BurnYM2413Init(4000000, 1.0);
-	BurnYM2413DecreaseVolume(40);
-	MSM6295Init(0, 990000 / 132, 10.0, 1);
+	BurnYM2413Init(4000000);
+	BurnYM2413SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
+	MSM6295Init(0, 990000 / 132, 1);
+	MSM6295SetRoute(0, 0.30, BURN_SND_ROUTE_BOTH);
 	memcpy(MSM6295ROM, DrvSoundRom, 0x40000);
 	
 	EEPROMInit(&MitchellEEPROMIntf);
@@ -1697,12 +1697,12 @@ static INT32 MgakuenInit()
 	ZetMapArea(0xf000, 0xffff, 0, DrvSpriteRam       );
 	ZetMapArea(0xf000, 0xffff, 1, DrvSpriteRam       );
 	ZetMapArea(0xf000, 0xffff, 2, DrvSpriteRam       );
-	ZetMemEnd();
 	ZetClose();
 	
-	BurnYM2413Init(4000000, 1.0);
-	BurnYM2413DecreaseVolume(40);
-	MSM6295Init(0, 990000 / 132, 10.0, 1);
+	BurnYM2413Init(4000000);
+	BurnYM2413SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
+	MSM6295Init(0, 990000 / 132, 1);
+	MSM6295SetRoute(0, 0.50, BURN_SND_ROUTE_BOTH);
 	memcpy(MSM6295ROM, DrvSoundRom, 0x40000);
 	
 	GenericTilesInit();
@@ -2306,9 +2306,9 @@ static INT32 MstworldInit()
 	ZetMapArea(0xe000, 0xffff, 0, DrvZ80Ram                                );
 	ZetMapArea(0xe000, 0xffff, 1, DrvZ80Ram                                );
 	ZetMapArea(0xe000, 0xffff, 2, DrvZ80Ram                                );
-	ZetMemEnd();
 	ZetClose();
 	
+	ZetInit(1);
 	ZetOpen(1);
 	ZetSetReadHandler(MstworldSoundZ80Read);
 	ZetSetWriteHandler(MstworldSoundZ80Write);
@@ -2317,10 +2317,10 @@ static INT32 MstworldInit()
 	ZetMapArea(0x8000, 0x87ff, 0, DrvZ80Ram2);
 	ZetMapArea(0x8000, 0x87ff, 1, DrvZ80Ram2);
 	ZetMapArea(0x8000, 0x87ff, 2, DrvZ80Ram2);
-	ZetMemEnd();
 	ZetClose();
 	
-	MSM6295Init(0, 990000 / 132, 25.0, 0);
+	MSM6295Init(0, 990000 / 132, 0);
+	MSM6295SetRoute(0, 0.50, BURN_SND_ROUTE_BOTH);
 	memcpy(MSM6295ROM, DrvSoundRom, 0x40000);
 	
 	DrvHasEEPROM = 0;

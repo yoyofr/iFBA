@@ -1,0 +1,311 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fbalpha/!svn/ver/952/trunk/src/burner/win32
+END
+systeminfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/883/trunk/src/burner/win32/systeminfo.cpp
+END
+wave.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/wave.cpp
+END
+dynhuff.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/dynhuff.cpp
+END
+menu.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/613/trunk/src/burner/win32/menu.cpp
+END
+bzip.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/266/trunk/src/burner/win32/bzip.cpp
+END
+scrn.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/885/trunk/src/burner/win32/scrn.cpp
+END
+memcard.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/memcard.cpp
+END
+inps.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/inps.cpp
+END
+resource.rc
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/resource.rc
+END
+misc_win32.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/misc_win32.cpp
+END
+localise_gamelist.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/fbalpha/!svn/ver/852/trunk/src/burner/win32/localise_gamelist.cpp
+END
+roms.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/379/trunk/src/burner/win32/roms.cpp
+END
+sel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/391/trunk/src/burner/win32/sel.cpp
+END
+stated.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/stated.cpp
+END
+neocdlist.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/485/trunk/src/burner/win32/neocdlist.cpp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/275/trunk/src/burner/win32/main.cpp
+END
+popup_win32.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/popup_win32.cpp
+END
+string.rc
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/485/trunk/src/burner/win32/string.rc
+END
+res.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/res.cpp
+END
+numdial.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/numdial.cpp
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/613/trunk/src/burner/win32/resource.h
+END
+replay.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/replay.cpp
+END
+fba_kaillera.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/fba_kaillera.cpp
+END
+dwmapi_core.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/dwmapi_core.h
+END
+app.rc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fbalpha/!svn/ver/952/trunk/src/burner/win32/app.rc
+END
+numpluscommas.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/numpluscommas.cpp
+END
+sfactd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/sfactd.cpp
+END
+run.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/run.cpp
+END
+progress.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/progress.cpp
+END
+image_win32.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/image_win32.cpp
+END
+version.rc
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/version.rc
+END
+dynhuff.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/dynhuff.h
+END
+mdi.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/mdi.cpp
+END
+about.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/about.cpp
+END
+support_paths.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/support_paths.cpp
+END
+media.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/media.cpp
+END
+paletteviewer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/paletteviewer.cpp
+END
+cona.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/391/trunk/src/burner/win32/cona.cpp
+END
+resource_string.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/fbalpha/!svn/ver/485/trunk/src/burner/win32/resource_string.h
+END
+burner_win32.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/fbalpha/!svn/ver/391/trunk/src/burner/win32/burner_win32.h
+END
+debugger.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/741/trunk/src/burner/win32/debugger.cpp
+END
+ips_manager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/382/trunk/src/burner/win32/ips_manager.cpp
+END
+dwmapi_core.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/dwmapi_core.cpp
+END
+inpc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/inpc.cpp
+END
+inpd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/inpd.cpp
+END
+splash.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/splash.cpp
+END
+localise.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/localise.cpp
+END
+drv.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/450/trunk/src/burner/win32/drv.cpp
+END
+inpcheat.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/inpcheat.cpp
+END
+neocdsel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/383/trunk/src/burner/win32/neocdsel.cpp
+END
+inpdipsw.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/246/trunk/src/burner/win32/inpdipsw.cpp
+END

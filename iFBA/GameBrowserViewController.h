@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIView.h>
 #import "OptSelGenresViewController.h"
+#import "EmuViewController.h"
 
 @interface GameBrowserViewController : UIViewController {
     IBOutlet UITableView *tabView;    
@@ -17,12 +18,14 @@
     NSMutableArray *burn_supportedRoms,*burn_supportedRomsNames;
     IBOutlet UIBarButtonItem *btn_backToEmu,*btn_missing;
     OptSelGenresViewController *selgenrevc;
-
+@public
+    EmuViewController *emuvc;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu,*btn_missing;
 @property (nonatomic, retain) OptSelGenresViewController *selgenrevc;
+@property (nonatomic, retain) EmuViewController *emuvc;
 
 -(IBAction) backToEmu;
 -(IBAction) showFavorites;

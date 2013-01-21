@@ -1807,7 +1807,6 @@ static INT32 DrvInit()
 				ZetMapArea(0x7800, 0x7FFF, 1, PsikyoZ80RAM);
 				ZetMapArea(0x7800, 0x7FFF, 2, PsikyoZ80RAM);
 
-				ZetMemEnd();
 
 				ZetSetInHandler(samuraiaZ80In);
 				ZetSetOutHandler(samuraiaZ80Out);
@@ -1822,7 +1821,6 @@ static INT32 DrvInit()
 				ZetMapArea(0x8000, 0x81FF, 1, PsikyoZ80RAM);
 				ZetMapArea(0x8000, 0x81FF, 2, PsikyoZ80RAM);
 
-				ZetMemEnd();
 
 				ZetSetInHandler(gunbirdZ80In);
 				ZetSetOutHandler(gunbirdZ80Out);
@@ -1838,7 +1836,6 @@ static INT32 DrvInit()
 				ZetMapArea(0x8000, 0x81FF, 1, PsikyoZ80RAM);
 				ZetMapArea(0x8000, 0x81FF, 2, PsikyoZ80RAM);
 
-				ZetMemEnd();
 				ZetSetInHandler(tengaiZ80In);
 				ZetSetOutHandler(tengaiZ80Out);
 				break;
@@ -1858,11 +1855,16 @@ static INT32 DrvInit()
 		case PSIKYO_HW_GUNBIRD: {
 			BurnYM2610Init(8000000, PsikyoSampleROM02, &PsikyoSampleROM02Size, PsikyoSampleROM01, &PsikyoSampleROM01Size, &PsikyoFMIRQHandler, PsikyoSynchroniseStream, PsikyoGetTime, 0);
 			BurnTimerAttachZet(4000000);
+			BurnYM2610SetRoute(BURN_SND_YM2610_YM2610_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+			BurnYM2610SetRoute(BURN_SND_YM2610_YM2610_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
+			BurnYM2610SetRoute(BURN_SND_YM2610_AY8910_ROUTE, 1.20, BURN_SND_ROUTE_BOTH);
 			break;
 		}
 		case PSIKYO_HW_S1945:
 		case PSIKYO_HW_TENGAI: {
 			BurnYMF278BInit(0, PsikyoSampleROM02, &PsikyoFMIRQHandler, PsikyoSynchroniseStream);
+			BurnYMF278BSetRoute(BURN_SND_YMF278B_YMF278B_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+			BurnYMF278BSetRoute(BURN_SND_YMF278B_YMF278B_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
 			BurnTimerAttachZet(4000000);
 			break;
 		}

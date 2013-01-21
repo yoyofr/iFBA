@@ -98,7 +98,7 @@ extern INT32 (__cdecl *BurnExtCartridgeSetupCallback)(BurnCartrigeCommand nComma
 extern UINT32 (__cdecl *BurnHighCol) (INT32 r, INT32 g, INT32 b, INT32 i);
 
 // ---------------------------------------------------------------------------
-
+     
 //IOS_BUILD PATCH
 extern int rom_force_len;
 
@@ -212,7 +212,9 @@ extern UINT32 *pBurnDrvPalette;
 #define PRINT_IMPORTANT (2)
 #define PRINT_ERROR		(3)
 
+#ifndef bprintf
 extern INT32 (__cdecl *bprintf) (INT32 nStatus, TCHAR* szFormat, ...);
+#endif
 
 INT32 BurnLibInit();
 INT32 BurnLibExit();
@@ -464,7 +466,8 @@ void IpsApplyPatches(UINT8* base, char* rom_name);
 #define HARDWARE_SEGA_MEGADRIVE_PCB_12IN1				(38)
 #define HARDWARE_SEGA_MEGADRIVE_PCB_TOPFIGHTER			(39)
 #define HARDWARE_SEGA_MEGADRIVE_PCB_POKEMON				(40)
-#define HARDWARE_SEGA_MEGADRIVE_PCB_MULAN				(41)
+#define HARDWARE_SEGA_MEGADRIVE_PCB_POKEMON2			(41)
+#define HARDWARE_SEGA_MEGADRIVE_PCB_MULAN				(42)
 
 #define HARDWARE_SEGA_MEGADRIVE_SRAM_00400				(0x0100)
 #define HARDWARE_SEGA_MEGADRIVE_SRAM_00800				(0x0200)

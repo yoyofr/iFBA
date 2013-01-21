@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 48
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/devices
+/svn/fbalpha/!svn/ver/915/trunk/src/burn/devices
 END
 sknsspr.cpp
 K 25
@@ -24,8 +24,8 @@ END
 timekpr.cpp
 K 25
 svn:wc:ra_dav:version-url
-V 59
-/svn/fbalpha/!svn/ver/12/trunk/src/burn/devices/timekpr.cpp
+V 60
+/svn/fbalpha/!svn/ver/915/trunk/src/burn/devices/timekpr.cpp
 END
 vdc.cpp
 K 25
@@ -33,17 +33,17 @@ svn:wc:ra_dav:version-url
 V 56
 /svn/fbalpha/!svn/ver/253/trunk/src/burn/devices/vdc.cpp
 END
-seibusnd.cpp
-K 25
-svn:wc:ra_dav:version-url
-V 61
-/svn/fbalpha/!svn/ver/422/trunk/src/burn/devices/seibusnd.cpp
-END
 8255ppi.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 59
 /svn/fbalpha/!svn/ver/12/trunk/src/burn/devices/8255ppi.cpp
+END
+seibusnd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fbalpha/!svn/ver/824/trunk/src/burn/devices/seibusnd.cpp
 END
 v3021.h
 K 25
@@ -54,8 +54,8 @@ END
 timekpr.h
 K 25
 svn:wc:ra_dav:version-url
-V 56
-/svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/timekpr.h
+V 58
+/svn/fbalpha/!svn/ver/914/trunk/src/burn/devices/timekpr.h
 END
 vdc.h
 K 25
@@ -63,17 +63,23 @@ svn:wc:ra_dav:version-url
 V 54
 /svn/fbalpha/!svn/ver/253/trunk/src/burn/devices/vdc.h
 END
+8255ppi.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/8255ppi.h
+END
 seibusnd.h
 K 25
 svn:wc:ra_dav:version-url
 V 57
 /svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/seibusnd.h
 END
-8255ppi.h
+slapstic.cpp
 K 25
 svn:wc:ra_dav:version-url
-V 56
-/svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/8255ppi.h
+V 61
+/svn/fbalpha/!svn/ver/854/trunk/src/burn/devices/slapstic.cpp
 END
 pandora.cpp
 K 25
@@ -81,11 +87,23 @@ svn:wc:ra_dav:version-url
 V 59
 /svn/fbalpha/!svn/ver/12/trunk/src/burn/devices/pandora.cpp
 END
+slapstic.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/783/trunk/src/burn/devices/slapstic.h
+END
 eeprom.cpp
 K 25
 svn:wc:ra_dav:version-url
-V 58
-/svn/fbalpha/!svn/ver/95/trunk/src/burn/devices/eeprom.cpp
+V 59
+/svn/fbalpha/!svn/ver/495/trunk/src/burn/devices/eeprom.cpp
+END
+8257dma.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/fbalpha/!svn/ver/745/trunk/src/burn/devices/8257dma.cpp
 END
 pandora.h
 K 25
@@ -98,4 +116,10 @@ K 25
 svn:wc:ra_dav:version-url
 V 55
 /svn/fbalpha/!svn/ver/2/trunk/src/burn/devices/eeprom.h
+END
+8257dma.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/745/trunk/src/burn/devices/8257dma.h
 END

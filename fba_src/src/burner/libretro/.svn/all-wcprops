@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fbalpha/!svn/ver/943/trunk/src/burner/libretro
+END
+link.T
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fbalpha/!svn/ver/730/trunk/src/burner/libretro/link.T
+END
+burn_libretro_opts.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/fbalpha/!svn/ver/926/trunk/src/burner/libretro/burn_libretro_opts.h
+END
+libretro.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fbalpha/!svn/ver/943/trunk/src/burner/libretro/libretro.cpp
+END
+burner_libretro.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/fbalpha/!svn/ver/926/trunk/src/burner/libretro/burner_libretro.h
+END
+neocdlist.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/926/trunk/src/burner/libretro/neocdlist.cpp
+END
+tchar.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fbalpha/!svn/ver/942/trunk/src/burner/libretro/tchar.h
+END
+libretro.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fbalpha/!svn/ver/926/trunk/src/burner/libretro/libretro.h
+END
+burn_endian.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fbalpha/!svn/ver/730/trunk/src/burner/libretro/burn_endian.h
+END
+net.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fbalpha/!svn/ver/730/trunk/src/burner/libretro/net.h
+END

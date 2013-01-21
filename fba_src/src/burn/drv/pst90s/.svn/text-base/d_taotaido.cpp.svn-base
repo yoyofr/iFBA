@@ -2,8 +2,8 @@
 // Based on MAME driver by David Haywood
 
 #include "tiles_generic.h"
-#include "sek.h"
-#include "zet.h"
+#include "m68000_intf.h"
+#include "z80_intf.h"
 #include "burn_ym2610.h"
 
 static UINT8 *AllMem;
@@ -722,13 +722,15 @@ static INT32 DrvInit()
 	ZetMapArea(0x7800, 0x7fff, 2, DrvZ80RAM);
 	ZetSetInHandler(taotaido_sound_in);
 	ZetSetOutHandler(taotaido_sound_out);
-	ZetMemEnd();
 	ZetClose();
 
 	INT32 nDrvSndROM0Size = 0x100000;
 	INT32 nDrvSndROM1Size = 0x200000;
 	BurnYM2610Init(8000000, DrvSndROM1, &nDrvSndROM1Size, DrvSndROM0, &nDrvSndROM0Size, &taotaidoFMIRQHandler, taotaidoSynchroniseStream, taotaidoGetTime, 0);
 	BurnTimerAttachZet(5000000);
+	BurnYM2610SetRoute(BURN_SND_YM2610_YM2610_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
+	BurnYM2610SetRoute(BURN_SND_YM2610_YM2610_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
+	BurnYM2610SetRoute(BURN_SND_YM2610_AY8910_ROUTE, 0.25, BURN_SND_ROUTE_BOTH);
 
 	GenericTilesInit();
 
