@@ -285,12 +285,26 @@ inline static INT32 CheckSleep(INT32)
 	return 0;
 }
 
+//HACK
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y;
+extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
+extern int sek_touchpad_hack;
+extern int wait_control;
+extern void PatchMemoryFeversos();
+//
+
+
 static INT32 DrvFrame()
 {
 	INT32 nCyclesVBlank;
 	INT32 nInterleave = 8;
 
-	if (DrvReset) {														// Reset machine
+	if (DrvReset) {
+        //HACK
+        wait_control=60;
+        //
+		// Reset machine
 		DrvDoReset();
 	}
 
@@ -301,6 +315,29 @@ static INT32 DrvFrame()
 		DrvInput[0] |= (DrvJoy1[i] & 1) << i;
 		DrvInput[1] |= (DrvJoy2[i] & 1) << i;
 	}
+    //HACK
+    if (glob_ffingeron) {
+        DrvInput[0]&=~((1<<4)); //clear fire 1
+        if (glob_mov_y>0) DrvInput[0]|=1;
+        if (glob_mov_y<0) DrvInput[0]|=2;
+        if (glob_mov_x<0) DrvInput[0]|=4;
+        if (glob_mov_x>0) DrvInput[0]|=8;
+        if (glob_shooton) {
+            switch (glob_shootmode) {
+                case 0: //shoot
+                    if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
+                    glob_autofirecpt++;
+                    break;
+                case 1: //laser
+                    DrvInput[0]|=1<<4;
+                    break;
+            }
+        }
+        if (DrvJoy1[6]) DrvInput[0]|=1<<5; //bomb
+    }
+    sek_touchpad_hack=3;
+    //
+    
 	CaveClearOpposites(&DrvInput[0]);
 	CaveClearOpposites(&DrvInput[1]);
 
@@ -315,10 +352,16 @@ static INT32 DrvFrame()
 	INT32 nSoundBufferPos = 0;
 
 	SekOpen(0);
+    //HACK
+    if (glob_ffingeron) {
+    if (wait_control==0) PatchMemoryFeversos();
+    else wait_control--;
+    }
+    //
+    
 
 	for (INT32 i = 1; i <= nInterleave; i++) {
 		INT32 nNext;
-
 		// Render sound segment
 		if ((i & 1) == 0) {
 			if (pBurnSoundOut) {
@@ -328,7 +371,6 @@ static INT32 DrvFrame()
 				nSoundBufferPos = nSegmentEnd;
 			}
 		}
-
 		// Run 68000
     	nCurrentCPU = 0;
 		nNext = i * nCyclesTotal[nCurrentCPU] / nInterleave;

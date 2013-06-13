@@ -45,6 +45,7 @@ typedef struct {
     unsigned char vpad_btnsize;
     unsigned char vpad_padsize;
     unsigned char vpad_style;
+    unsigned char vpad_followfinger;
     float vpad_pad_x[2],vpad_pad_y[2];
     int vpad_pad_manual_layout[2];
     float vpad_button_x[VSTICK_NB_BUTTON][2],vpad_button_y[VSTICK_NB_BUTTON][2];
@@ -93,6 +94,7 @@ typedef struct {
     unsigned char vpad_btnsize;
     unsigned char vpad_padsize;
     unsigned char vpad_style;
+    unsigned char vpad_followfinger;
     float vpad_pad_x[2],vpad_pad_y[2];
     int vpad_pad_manual_layout[2];
     float vpad_button_x[VSTICK_NB_BUTTON][2],vpad_button_y[VSTICK_NB_BUTTON][2];

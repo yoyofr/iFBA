@@ -76,9 +76,9 @@ int ConfigAppSave()
 	FILE *h;
 
 	CreateConfigName(szConfig);
-
+    
 	if ((h = fopen(szConfig, "wt")) == NULL) {
-		return 1;
+        return 1;
 	}
 
 

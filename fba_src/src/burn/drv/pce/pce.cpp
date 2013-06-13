@@ -83,11 +83,11 @@ INT32 PceGetZipName(char** pszName, UINT32 i)
 		*pszName = NULL;
 		return 1;
 	}
-
+//IOS_BUILD_PATCH
 	// remove the "pce_"
-	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
-		szFilename[j] = pszGameName[j + 4];
-	}
+//	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
+//		szFilename[j] = pszGameName[j + 4];
+//	}
 
 	*pszName = szFilename;
 

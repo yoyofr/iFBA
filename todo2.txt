@@ -1,0 +1,14 @@
+1. DONE init base: copier iFBA.db dans Documents si pas existant
+
+2. ajouter option de reset de la base (cf 1.)
+
+3. IN PRG:ajouter un log du temps passé sur le jeu
+-> pb sur func "clock()" -> dans simu, plus lent que réel
+
+4. revoir gamebrowser pour afficher infos: playcount, temps passé, last played, favorites
+
+
+
+bugs:
+- layout ne se met pas a jour qd rotation
+- savestate -> image ne respecte pas ratio de la rom, ex: ddpdoj

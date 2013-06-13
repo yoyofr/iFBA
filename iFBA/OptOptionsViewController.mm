@@ -161,21 +161,25 @@ static CADisplayLink* m_displayLink;
     switch (indexPath.row) {
         case 0://video
             vc=[[OptVideoViewController alloc] initWithNibName:@"OptVideoViewController" bundle:nil];
+            ((OptVideoViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];
             [vc release];
             break;
         case 1://audio
             vc=[[OptAudioViewController alloc] initWithNibName:@"OptAudioViewController" bundle:nil];
+            ((OptAudioViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];
             [vc release];
             break;
         case 2://controllers
             vc=[[OptControlsViewController alloc] initWithNibName:@"OptControlsViewController" bundle:nil];
+            ((OptControlsViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];
             [vc release];
             break;
         case 3://emulation
             vc=[[OptEmuViewController alloc] initWithNibName:@"OptEmuViewController" bundle:nil];
+            ((OptEmuViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];
             [vc release];
             break;

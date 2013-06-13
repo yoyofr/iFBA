@@ -3,6 +3,11 @@
 #include "m68000_intf.h"
 #include "m68000_debug.h"
 
+//IOS_BUILD PATCH
+struct Cyclone PicoCpu[SEK_MAX];
+static bool bCycloneInited = false;
+
+
 #ifdef EMU_M68K
 INT32 nSekM68KContextSize[SEK_MAX];
 INT8* SekM68KContext[SEK_MAX];
@@ -237,6 +242,7 @@ inline static UINT8 FetchByte(UINT32 a)
 	return pSekExt->ReadByte[(uintptr_t)pr](a);
 }
 
+
 inline static void WriteByte(UINT32 a, UINT8 d)
 {
 	UINT8* pr;
@@ -248,7 +254,9 @@ inline static void WriteByte(UINT32 a, UINT8 d)
 	pr = FIND_W(a);
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
 		a ^= 1;
-		pr[a & SEK_PAGEM] = (UINT8)d;
+        pr[a & SEK_PAGEM] = (UINT8)d;
+        
+        
 		return;
 	}
 	pSekExt->WriteByte[(uintptr_t)pr](a, d);
@@ -299,21 +307,242 @@ inline static UINT16 FetchWord(UINT32 a)
 	return pSekExt->ReadWord[(uintptr_t)pr](a);
 }
 
+// HACK for touchpad 'follow finger' mode
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
+extern int glob_mov_init,glob_touchpad_cnt,glob_touchpad_fingerid,glob_ffingeron;
+int pos_ofsx,pos_ofsy;
+int wait_control;
+int sek_touchpad_hack;
+
+
+void PatchMemoryDonpachi() {
+    UINT8* pr;
+    int newd;
+    UINT16 d;
+    pr = FIND_W(0x10215E);
+    if ( glob_mov_init ) {
+        pos_ofsy=*((UINT16*)(pr + (0x10215E & SEK_PAGEM)));
+        pos_ofsx=*((UINT16*)(pr + (0x102160 & SEK_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*320/480);    
+    if (newd<34*64) newd=34*64;
+    if (newd>278*64) newd=278*64;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x10215E & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*240/320);
+    if (newd<8*64) newd=8*64;
+    if (newd>232*64) newd=232*64;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x102160 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);    
+    glob_mov_x=0;
+}
+
+void PatchMemoryDodonpachi() {
+    UINT8* pr;
+    int newd;
+    UINT16 d;
+    pr = FIND_W(0x102C92);
+    if ( glob_mov_init ) {
+        pos_ofsy=*((UINT16*)(pr + (0x102C92 & SEK_PAGEM)));
+        pos_ofsx=*((UINT16*)(pr + (0x102C94 & SEK_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*320/480);
+    if (newd<34*64) newd=34*64;
+    if (newd>278*64) newd=278*64;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x102C92 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*240/320);
+    if (newd<8*64) newd=8*64;
+    if (newd>232*64) newd=232*64;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x102C94 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_x=0;
+}
+
+void PatchMemoryFeversos() {
+    UINT8* pr;
+    int newd;
+    UINT16 d;
+    pr = FIND_W(0x105A1C);
+    if ( glob_mov_init ) {
+        pos_ofsy=*((UINT16*)(pr + (0x105A1C & SEK_PAGEM)));
+        pos_ofsx=*((UINT16*)(pr + (0x105A1E & SEK_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*320/480);
+    if (newd<34*64) newd=34*64;
+    if (newd>278*64) newd=278*64;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x105A1C & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*240/320);
+    if (newd<8*64) newd=8*64;
+    if (newd>232*64) newd=232*64;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x105A1E & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_x=0;
+}
+
+void PatchMemoryDogyuun() {
+    UINT8* pr;
+    int newd;
+    UINT16 d;
+    pr = FIND_W(0x102A80);
+    if ( glob_mov_init ) {
+        pos_ofsy=*((UINT16*)(pr + (0x102A80 & SEK_PAGEM)));
+        pos_ofsx=*((UINT16*)(pr + (0x102A82 & SEK_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*128*320/480);
+    if (newd<0x0800) newd=0x0800;
+    if (newd>0x9400) newd=0x9400;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x102A80 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*128*240/320);
+    if (newd<0x0600) newd=0x0600;
+    if (newd>0x7200) newd=0x7200;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x102A82 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_x=0;
+}
+
+
+static int garegga_respawn=0;
+
+void PatchMemoryGaregga() {
+    UINT8* pr;
+    int newd,shift;
+    UINT16 d;
+    
+    pr = FIND_W(0x1015C4);
+    
+    //check if respawn in progress
+    d=*((UINT16*)(pr + (0x1015C4 & SEK_PAGEM)));
+    if (d==0xD000) {
+        garegga_respawn=1;
+    }
+    if (garegga_respawn&&(d==0x2000)) {
+        garegga_respawn=0;
+        glob_pos_xi=glob_pos_x;
+        glob_pos_yi=glob_pos_y;
+        glob_mov_init=1;
+    }
+    if (garegga_respawn&&(d==0x1000)) {
+        garegga_respawn=0;
+        glob_pos_xi=glob_pos_x;
+        glob_pos_yi=glob_pos_y;
+        glob_mov_init=1;
+    }
+    
+    if (garegga_respawn) return;
+    
+    if ( glob_mov_init ) {
+        pos_ofsy=*((UINT16*)(pr + (0x1015C4 & SEK_PAGEM)));
+        pos_ofsx=*((UINT16*)(pr + (0x101616 & SEK_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    shift=128;
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*320/480);
+    if (newd<0x0800/*34*shift*/) newd=0x0800/*34*shift*/;
+    if (newd>0x8E00/*278*shift*/) newd=0x8E00/*278*shift*/;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x1015C4 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*240/320);
+    if (newd<0x0400/*8*shift*/) newd=0x0400;//8*shift;
+    if (newd>0x9B80/*232*shift*/) newd=0x9B80;//232*shift;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x101616 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_x=0;    
+}
+
+void PatchMemoryTruxton2() {
+    UINT8* pr;
+    int newd;
+    UINT16 d;
+    pr = FIND_W(0x1005EA);
+    if ( glob_mov_init ) {
+        pos_ofsy=*((UINT16*)(pr + (0x1005EA & SEK_PAGEM)));
+        pos_ofsx=*((UINT16*)(pr + (0x1005EC & SEK_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*128*320/480);
+    if (newd<0x0800) newd=0x0800;
+    if (newd>0x9000) newd=0x9000;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x1005EA & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*128*240/320);
+    if (newd<0x0800) newd=0x0800;
+    if (newd>0x7100) newd=0x7100;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x1005EC & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_x=0;
+}
+
+
+
 inline static void WriteWord(UINT32 a, UINT16 d)
 {
 	UINT8* pr;
 
 	a &= 0xFFFFFF;
-
 //	bprintf(PRINT_NORMAL, _T("write16 0x%08X\n"), a);
 
 	pr = FIND_W(a);
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
-		*((UINT16*)(pr + (a & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+        if (glob_ffingeron&&glob_touchpad_fingerid)
+        switch (sek_touchpad_hack) {
+            case 1: //donpachi
+                if ( ((a==0x10215E)||(a==0x102160)) && (wait_control==0)) return;
+                break;
+            case 2:
+                //dodonpachi
+                if ( ((a==0x102C92)||(a==0x102C94)) && (wait_control==0)) return;
+                break;
+            case 3:
+                //feversos
+                if ( ((a==0x105A1C)||(a==0x105A1E)) && (wait_control==0)) return;
+                break;
+            case 4:
+                //garegga
+                if ( ((a==0x1015C4)||(a==0x101616)) && (wait_control==0) && (d!=0xD000) && (garegga_respawn==0)) return;
+                break;
+            case 5:
+                //dogyuun
+                if ( ((a==0x102A80)||(a==0x102A82)) && (wait_control==0)) return;
+                break;
+            case 6:
+                //truxton2
+                if ( ((a==0x1005EA)||(a==0x1005EC)) && (wait_control==0)) return;
+                break;
+            default:break;
+        }
+        *((UINT16*)(pr + (a & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
 		return;
 	}
 	pSekExt->WriteWord[(uintptr_t)pr](a, d);
 }
+
+// END OF HACK
 
 inline static void WriteWordROM(UINT32 a, UINT16 d)
 {
@@ -366,9 +595,8 @@ inline static UINT32 FetchLong(UINT32 a)
 inline static void WriteLong(UINT32 a, UINT32 d)
 {
 	UINT8* pr;
-
 	a &= 0xFFFFFF;
-
+    
 //	bprintf(PRINT_NORMAL, _T("write32 0x%08X\n"), a);
 
 	pr = FIND_W(a);
@@ -424,6 +652,8 @@ void __fastcall WriteByteBP(UINT32 a, UINT8 d)
 	pr = FIND_W(a);
 
 	CheckBreakpoint_W(a, ~0);
+    
+    printf("w8BP\t%08X\t%d\n",a,d);
 
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
 		a ^= 1;
@@ -431,6 +661,8 @@ void __fastcall WriteByteBP(UINT32 a, UINT8 d)
 		return;
 	}
 	pSekExt->WriteByte[(uintptr_t)pr](a, d);
+    
+    
 }
 
 UINT16 __fastcall ReadWordBP(UINT32 a)
@@ -458,12 +690,16 @@ void __fastcall WriteWordBP(UINT32 a, UINT16 d)
 	pr = FIND_W(a);
 
 	CheckBreakpoint_W(a, ~1);
+    
+    printf("w16BP\t%08X\t%d\n",a,d);
 
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
 		*((UINT16*)(pr + (a & SEK_PAGEM))) = (UINT16)d;
 		return;
 	}
 	pSekExt->WriteWord[(uintptr_t)pr](a, d);
+    
+    
 }
 
 UINT32 __fastcall ReadLongBP(UINT32 a)
@@ -493,6 +729,8 @@ void __fastcall WriteLongBP(UINT32 a, UINT32 d)
 	pr = FIND_W(a);
 
 	CheckBreakpoint_W(a, ~1);
+    
+    printf("w32BP\t%08X\t%d\n",a,d);
 
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
 		d = (d >> 16) | (d << 16);
@@ -867,11 +1105,53 @@ static cpu_core_config SekCheatCpuConfig =
 	0
 };
 
+//IOS_BUILD_PATCH
+unsigned int PicoCheckPc(unsigned int pc) {
+	pc -= PicoCpu[nSekActive].membase; // Get real pc
+	pc &= 0xffffff;
+	
+	PicoCpu[nSekActive].membase = (int)FIND_F(pc) - (pc & ~SEK_PAGEM); //PicoMemBase(pc);
+    
+	return PicoCpu[nSekActive].membase + pc;
+}
+
+static int PicoIrqCallback(int int_level) {
+	if (nSekIRQPending[nSekActive] & SEK_IRQSTATUS_AUTO) {
+		PicoCpu[nSekActive].irq = 0;
+        
+    }
+    nSekIRQPending[nSekActive] = 0;
+    
+    if (pSekExt->IrqCallback) {
+		return pSekExt->IrqCallback(int_level);
+	}
+    
+    return CYCLONE_INT_ACK_AUTOVECTOR;
+}
+
+static void PicoResetCallback()
+{
+	//dprintf("ResetCallback();\n" );
+	
+	if (pSekExt->ResetCallback) {
+		pSekExt->ResetCallback();
+	}
+}
+
+static int UnrecognizedCallback()
+{
+	printf("UnrecognizedCallback();\n");
+	return 0;
+}
+
+
 INT32 SekInit(INT32 nCount, INT32 nCPUType)
 {
 	DebugCPU_SekInitted = 1;
 	
 	struct SekExt* ps = NULL;
+    
+    sek_touchpad_hack=0;
 
 #if !defined BUILD_A68K
 	bBurnUseASMCPUEmulation = false;
@@ -992,11 +1272,40 @@ INT32 SekInit(INT32 nCount, INT32 nCPUType)
 #endif
 
 #ifdef EMU_M68K
-		m68k_init();
-		if (SekInitCPUM68K(nCount, nCPUType)) {
-			SekExit();
-			return 1;
-		}
+//IOS_BUILD_PATCH
+        if (bBurnUseASMCPUEmulation==0) {
+            m68k_init();
+            if (SekInitCPUM68K(nCount, nCPUType)) {
+                SekExit();
+                return 1;
+            }
+        } else {
+            nSekCPUType[nCount] = nCPUType;
+            if (!bCycloneInited) {
+                CycloneInit();
+                bCycloneInited = true;
+            }
+            memset(&PicoCpu[nCount], 0, sizeof(PicoCpu));
+            
+            PicoCpu[nCount].read8	= ReadByte;
+            PicoCpu[nCount].read16	= ReadWord;
+            PicoCpu[nCount].read32	= ReadLong;
+            
+            PicoCpu[nCount].write8	= WriteByte;
+            PicoCpu[nCount].write16	= WriteWord;
+            PicoCpu[nCount].write32	= WriteLong;
+            
+            PicoCpu[nCount].fetch8	= FetchByte;
+            PicoCpu[nCount].fetch16	= FetchWord;
+            PicoCpu[nCount].fetch32	= FetchLong;
+            
+            PicoCpu[nCount].checkpc = PicoCheckPc;
+            
+            PicoCpu[nCount].IrqCallback = PicoIrqCallback;
+            PicoCpu[nCount].ResetCallback = PicoResetCallback;
+            PicoCpu[nCount].UnrecognizedCallback = UnrecognizedCallback;
+            
+        }
 #endif
 
 #ifdef EMU_A68K
@@ -1048,7 +1357,8 @@ INT32 SekExit()
 #endif
 
 #ifdef EMU_M68K
-		SekCPUExitM68K(i);
+        //IOS_BUILD_PATCH
+		if (!bBurnUseASMCPUEmulation) SekCPUExitM68K(i);
 #endif
 
 		// Deallocate other context data
@@ -1066,6 +1376,20 @@ INT32 SekExit()
 	DebugCPU_SekInitted = 0;
 
 	return 0;
+}
+
+//IOS_BUILD_PATCH
+static void PicoReset() {
+    memset(&PicoCpu, 0, 22 * 4); // clear all regs
+	
+    //YOYOFR
+	//PicoCpu.stopped	= 0;
+    PicoCpu[nSekActive].state_flags = 0;
+    
+	PicoCpu[nSekActive].srh		= 0x27; // Supervisor mode
+	PicoCpu[nSekActive].a[7]	= FetchLong(0); // Stack Pointer
+	PicoCpu[nSekActive].membase	= 0;
+	PicoCpu[nSekActive].pc		= PicoCpu[nSekActive].checkpc(FetchLong(4)); // Program Counter
 }
 
 void SekReset()
@@ -1086,7 +1410,9 @@ void SekReset()
 #endif
 
 #ifdef EMU_M68K
-		m68k_pulse_reset();
+//IOS_BUILD_PATCH
+		if (!bBurnUseASMCPUEmulation) m68k_pulse_reset();
+        else PicoReset();
 #endif
 
 #ifdef EMU_A68K
@@ -1120,7 +1446,8 @@ void SekOpen(const INT32 i)
 #endif
 
 #ifdef EMU_M68K
-			m68k_set_context(SekM68KContext[nSekActive]);
+//IOS_BUILD_PATCH
+			if (!bBurnUseASMCPUEmulation) m68k_set_context(SekM68KContext[nSekActive]);
 #endif
 
 #ifdef EMU_A68K
@@ -1146,7 +1473,8 @@ void SekClose()
 #endif
 
 #ifdef EMU_M68K
-		m68k_get_context(SekM68KContext[nSekActive]);
+//IOS_BUILD_PATCH
+        if (!bBurnUseASMCPUEmulation) m68k_get_context(SekM68KContext[nSekActive]);
 #endif
 
 #ifdef EMU_A68K
@@ -1192,7 +1520,15 @@ void SekSetIRQLine(const INT32 line, const INT32 status)
 #endif
 
 #ifdef EMU_M68K
-			m68k_set_irq(line);
+//IOS_BUILD_PATCH
+			if (!bBurnUseASMCPUEmulation) m68k_set_irq(line);
+            else {
+                m68k_ICount=PicoCpu[nSekActive].cycles;
+                nSekCyclesTotal += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
+                nSekCyclesDone += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
+                PicoCpu[nSekActive].irq = line;
+                PicoCpu[nSekActive].cycles=m68k_ICount = nSekCyclesToDo = -1;
+            }
 #endif
 
 #ifdef EMU_A68K
@@ -1211,7 +1547,9 @@ void SekSetIRQLine(const INT32 line, const INT32 status)
 #endif
 
 #ifdef EMU_M68K
-		m68k_set_irq(0);
+//IOS_BUILD_PATCH
+        if (!bBurnUseASMCPUEmulation) m68k_set_irq(0);
+        else PicoCpu[nSekActive].irq = 0;
 #endif
 
 #ifdef EMU_A68K
@@ -1227,7 +1565,8 @@ void SekRunAdjust(const INT32 nCycles)
 	if (!DebugCPU_SekInitted) bprintf(PRINT_ERROR, _T("SekRunAdjust called without init\n"));
 	if (nSekActive == -1) bprintf(PRINT_ERROR, _T("SekRunAdjust called when no CPU open\n"));
 #endif
-
+//IOS_BUILD_PATCH
+    if (!bBurnUseASMCPUEmulation) {
 	if (nCycles < 0 && m68k_ICount < -nCycles) {
 		SekRunEnd();
 		return;
@@ -1249,6 +1588,19 @@ void SekRunAdjust(const INT32 nCycles)
 #ifdef EMU_A68K
 	}
 #endif
+        //IOS_BUILD_PATCH
+    } else {
+        m68k_ICount=PicoCpu[nSekActive].cycles;
+        if (nCycles < 0 && m68k_ICount < -nCycles) {
+            SekRunEnd();
+            return;
+        }
+        
+        m68k_ICount += nCycles;
+        nSekCyclesToDo += nCycles;
+        nSekCyclesSegment += nCycles;
+        PicoCpu[nSekActive].cycles=m68k_ICount;
+    }
 
 }
 
@@ -1270,7 +1622,15 @@ void SekRunEnd()
 #endif
 
 #ifdef EMU_M68K
-		m68k_end_timeslice();
+//IOS_BUILD_PATCH
+		if (!bBurnUseASMCPUEmulation) m68k_end_timeslice();
+        else {
+            m68k_ICount=PicoCpu[nSekActive].cycles;
+            nSekCyclesTotal += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
+            nSekCyclesDone += (nSekCyclesToDo - nSekCyclesDone) - m68k_ICount;
+            nSekCyclesSegment = nSekCyclesDone;
+            PicoCpu[nSekActive].cycles=m68k_ICount = nSekCyclesToDo = -1;
+        }
 #endif
 
 #ifdef EMU_A68K
@@ -1313,14 +1673,41 @@ INT32 SekRun(const INT32 nCycles)
 #endif
 
 #ifdef EMU_M68K
-		nSekCyclesToDo = nCycles;
-
-		nSekCyclesSegment = m68k_execute(nCycles);
-
-		nSekCyclesTotal += nSekCyclesSegment;
-		nSekCyclesToDo = m68k_ICount = -1;
-
-		return nSekCyclesSegment;
+        if (!bBurnUseASMCPUEmulation) {
+            nSekCyclesToDo = nCycles;
+            
+            nSekCyclesSegment = m68k_execute(nCycles);
+            
+            nSekCyclesTotal += nSekCyclesSegment;
+            nSekCyclesToDo = m68k_ICount = -1;
+            
+            return nSekCyclesSegment;
+        } else {
+            nSekCyclesDone = 0;
+            nSekCyclesSegment = nCycles;
+            do {
+                m68k_ICount = PicoCpu[nSekActive].cycles = nSekCyclesToDo = nSekCyclesSegment - nSekCyclesDone;
+                
+                if (PicoCpu[nSekActive].irq == 0x80) {						// Cpu is in stopped state till interrupt
+                    // dprintf("Cpu is in stopped state till interrupt\n", nCycles);
+                    nSekCyclesDone = nSekCyclesSegment;
+                    nSekCyclesTotal += nSekCyclesSegment;
+                } else {
+                    CycloneRun(&PicoCpu[nSekActive]);
+                    m68k_ICount=PicoCpu[nSekActive].cycles;
+                    nSekCyclesDone += nSekCyclesToDo - m68k_ICount;
+                    nSekCyclesTotal += nSekCyclesToDo - m68k_ICount;
+                }
+            } while (nSekCyclesDone < nSekCyclesSegment);
+            
+            
+            nSekCyclesSegment = nSekCyclesDone;
+            PicoCpu[nSekActive].cycles = nSekCyclesToDo = m68k_ICount = -1;
+            nSekCyclesDone = 0;
+            
+            return nSekCyclesSegment;		
+            
+        }
 #else
 		return 0;
 #endif
@@ -1724,7 +2111,9 @@ INT32 SekGetPC(INT32)
 #endif
 
 #ifdef EMU_M68K
-		return m68k_get_reg(NULL, M68K_REG_PC);
+//IOS_BUILD_PATCH        
+        if (!bBurnUseASMCPUEmulation) return m68k_get_reg(NULL, M68K_REG_PC);
+        else return PicoCpu[nSekActive].pc-PicoCpu[nSekActive].membase;
 #else
 		return 0;
 #endif
@@ -1741,7 +2130,9 @@ INT32 SekDbgGetCPUType()
 	if (!DebugCPU_SekInitted) bprintf(PRINT_ERROR, _T("SekDbgGetCPUType called without init\n"));
 	if (nSekActive == -1) bprintf(PRINT_ERROR, _T("SekDbgGetCPUType called when no CPU open\n"));
 #endif
-
+//IOS_BUILD_PATCH
+    if (bBurnUseASMCPUEmulation) return 0x68000;
+    else {
 	switch (nSekCPUType[nSekActive]) {
 		case 0:
 		case 0x68000:
@@ -1751,7 +2142,7 @@ INT32 SekDbgGetCPUType()
 		case 0x68EC020:
 			return M68K_CPU_TYPE_68EC020;
 	}
-
+    }
 	return 0;
 }
 
@@ -1984,7 +2375,10 @@ INT32 SekScan(INT32 nAction)
 	nSekActive = -1;
 
 	for (INT32 i = 0; i <= nSekCount; i++) {
-		char szName[] = "MC68000 #n";
+//IOS_BUILD_PATCH
+		char szName[11];
+        if (bBurnUseASMCPUEmulation) strcpy(szName,"Cyclone #n");
+        else strcpy(szName,"MC68000 #n");
 #if defined EMU_A68K && defined EMU_M68K
 		INT32 nType = nSekCPUType[i];
 #endif
@@ -2035,13 +2429,39 @@ INT32 SekScan(INT32 nAction)
 		} else {
 #endif
 
-#ifdef EMU_M68K
-			if (nSekCPUType[i] != 0) {
-				ba.Data = SekM68KContext[i];
-				ba.nLen = nSekM68KContextSize[i];
-				ba.szName = szName;
-				BurnAcb(&ba);
-			}
+#ifdef EMU_M68K  
+//IOS_BUILD_PATCH
+            if (bBurnUseASMCPUEmulation) {
+                //TODO: when saving, pc=pc-membase
+                //TODO: when reading, pc=pc+membase
+                //also maybe save
+                //nSekCyclesTotal
+                //nSekIRQPending[SEK_MAX]
+                
+                //printf("rd1pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
+                PicoCpu[i].pc=PicoCpu[i].pc-PicoCpu[i].membase;
+                PicoCpu[i].prev_pc=PicoCpu[i].prev_pc-PicoCpu[i].membase;
+                //printf("rd2pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
+                //if (nSekCPUType != 0) {
+                ba.Data = &PicoCpu[i];
+                ba.nLen = 24 * 4;
+                ba.szName = szName;
+                BurnAcb(&ba);
+                
+                //printf("wr1pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
+                PicoCpu[i].pc=PicoCpu[i].pc+PicoCpu[i].membase;
+                PicoCpu[i].prev_pc=PicoCpu[i].prev_pc+PicoCpu[i].membase;
+                //printf("wr2pc: %08X, prev_pc: %08X, osp: %08X\n",PicoCpu[i].pc,PicoCpu[i].prev_pc,PicoCpu[i].osp);
+                
+                //}
+            } else {
+                if (nSekCPUType[i] != 0) {
+                    ba.Data = SekM68KContext[i];
+                    ba.nLen = nSekM68KContextSize[i];
+                    ba.szName = szName;
+                    BurnAcb(&ba);
+                }
+            }
 #endif
 
 #ifdef EMU_A68K
@@ -2052,3 +2472,16 @@ INT32 SekScan(INT32 nAction)
 
 	return 0;
 }
+
+//IOS_BUILD_PATCH
+#if TARGET_IPHONE_SIMULATOR
+void CycloneInit(void) {
+    
+}
+
+// Run cyclone. Cycles should be specified in context (pcy->cycles)
+void CycloneRun(struct Cyclone *pcy) {
+    
+}
+
+#endif

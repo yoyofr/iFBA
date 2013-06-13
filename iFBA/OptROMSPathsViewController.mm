@@ -148,6 +148,7 @@ static CADisplayLink* m_displayLink;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     szAppRomPathsSelected=indexPath.row;
     OptROMSSetPathsViewController *romsetvc=[[OptROMSSetPathsViewController alloc] initWithNibName:@"OptROMSPathsViewController" bundle:nil];
+    ((OptROMSSetPathsViewController*)romsetvc)->emuvc=emuvc;
     [self.navigationController pushViewController:romsetvc animated:YES];
     [romsetvc release];
 }

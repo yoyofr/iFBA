@@ -345,6 +345,7 @@ static CADisplayLink* m_displayLink;
     if (indexPath.section==1) {
         wiimoteSelected=indexPath.row;
         OptWiimoteBtnViewController *vc=[[OptWiimoteBtnViewController alloc] initWithNibName:@"OptWiimoteBtnViewController" bundle:nil];
+        ((OptWiimoteBtnViewController*)vc)->emuvc=emuvc;
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
         [tabView reloadData];

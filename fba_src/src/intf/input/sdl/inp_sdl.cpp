@@ -7,7 +7,7 @@
 
 static int* JoyPrevAxes = NULL;
 static int nJoystickCount = 0;						// Number of joysticks connected to this machine
-extern int vpad_button_nb;
+extern int vpad_button_nb,glob_ffingeron;
 extern float joy_analog_x[MAX_JOYSTICKS];
 extern float joy_analog_y[MAX_JOYSTICKS];
 extern float joy_analog_z[MAX_JOYSTICKS];
@@ -259,34 +259,34 @@ int SDLinpState(int code) {
             case 0x01: // right 
                 return joy_state[i][GN_RIGHT]|joy_state[i][GN_UPRIGHT]|joy_state[i][GN_DOWNRIGHT];
                 break;
-            case 0x02: // up 
+            case 0x02: // up
                 return joy_state[i][GN_UP]|joy_state[i][GN_UPLEFT]|joy_state[i][GN_UPRIGHT];
                 break;
             case 0x03: // down 
                 return joy_state[i][GN_DOWN]|joy_state[i][GN_DOWNLEFT]|joy_state[i][GN_DOWNRIGHT];
                 break;            
             case 0x80: //fire1
-                if (vpad_button_nb< VPAD_SPECIALS_BUTTON_NB+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+1;
+                if (vpad_button_nb< VPAD_SPECIALS_BUTTON_NB+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+1+glob_ffingeron;
                 return joy_state[i][GN_A];
                 break;
             case 0x81: //fire 2 
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+2) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+2;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+2) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+2+glob_ffingeron;
                 return joy_state[i][GN_B];
                 break;
             case 0x82: // etc 
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+3) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+3;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+3) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+3+glob_ffingeron;
                 return joy_state[i][GN_C];            
                 break;
             case 0x83: 
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+4) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+4) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4+glob_ffingeron;
                 return joy_state[i][GN_D];            
                 break;
             case 0x84:
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+5) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+5;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+5) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+5+glob_ffingeron;
                 return joy_state[i][GN_E];            
                 break;
             case 0x85: 
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+6) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+6;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+6) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+6+glob_ffingeron;
                 return joy_state[i][GN_F];            
                 break;
         }

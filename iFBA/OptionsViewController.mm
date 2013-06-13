@@ -149,6 +149,7 @@ extern int optionScope; //0:default, 1:current game
     switch (indexPath.row) {
         case 0://roms paths
             vc=[[OptROMSPathsViewController alloc] initWithNibName:@"OptROMSPathsViewController" bundle:nil];
+            ((OptROMSPathsViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];
             [vc release];
             break;
@@ -157,6 +158,7 @@ extern int optionScope; //0:default, 1:current game
             optionScope=0;
             cur_ifba_conf=(ifba_game_conf_t*)&ifba_conf;
             vc=[[OptOptionsViewController alloc] initWithNibName:@"OptOptionsViewController" bundle:nil];
+            ((OptOptionsViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];
             [vc release];
             break;
@@ -168,6 +170,7 @@ extern int optionScope; //0:default, 1:current game
                 cur_ifba_conf=&ifba_game_conf;
             } else cur_ifba_conf=(ifba_game_conf_t*)&ifba_game_conf;
             vc=[[OptOptionsViewController alloc] initWithNibName:@"OptOptionsViewController" bundle:nil];
+            ((OptOptionsViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];
             [vc release];
             break;

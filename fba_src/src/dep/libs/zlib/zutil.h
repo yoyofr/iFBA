@@ -215,7 +215,7 @@ extern const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 #endif
 
 /* Diagnostic functions */
-#ifdef DEBUG
+#ifdef zDEBUG
 #  include <stdio.h>
    extern int ZLIB_INTERNAL z_verbose;
    extern void ZLIB_INTERNAL z_error OF((char *m));

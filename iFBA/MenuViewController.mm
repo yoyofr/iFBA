@@ -143,14 +143,14 @@ EmuViewController *emuvc;
         memcpy(&ifba_game_conf,&ifba_conf,sizeof(ifba_game_conf_t));
         
         //update game stats
-        int playCount,fav;
+        int playCount,fav,playTime;
         char lastPlayed[11];
-        DBHelper::getGameStats(gameName, &playCount, &fav, lastPlayed);
+        DBHelper::getGameStats(gameName, &playCount, &fav, lastPlayed,&playTime);
         playCount++;
         time_t cur_time=time(NULL);
         strftime(lastPlayed,sizeof(lastPlayed),"%Y/%m/%d",localtime((const time_t*)&cur_time));
-        DBHelper::setGameStats(gameName, playCount, fav, lastPlayed);
-//        NSLog(@"Stats: pc:%d, fav:%d, lp:%s",playCount,fav,lastPlayed);
+        DBHelper::setGameStats(gameName, playCount, fav, lastPlayed,playTime);
+//        NSLog(@"Set Stats: pc:%d, fav:%d, lp:%s, pt:%d",playCount,fav,lastPlayed,playTime);
     }
     
     //check if game settings should be changed

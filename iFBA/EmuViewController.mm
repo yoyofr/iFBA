@@ -9,6 +9,20 @@
 #define min(a,b) (a<b?a:b)
 
 #import "fbaconf.h"
+#include "DBHelper.h"
+
+//hack
+float glob_mov_x,glob_mov_y;
+float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
+int glob_mov_init,glob_touchpad_cnt=0,glob_ffingeron=0;
+int glob_touchpad_fingerid=0;
+int glob_shootmode=0,glob_shooton=0,glob_autofirecpt;
+
+//
+
+long long playtime,playtime_lastclock;
+int playtime_upd=0;
+
 ifba_game_conf_t *cur_ifba_conf;
 ifba_conf_t ifba_conf;
 ifba_game_conf_t ifba_game_conf;
@@ -58,7 +72,7 @@ t_button_map default_joymap_iCade[]={
     {"Fire 3",3},
     {"Fire 4",5},
     {"Fire 5",6},
-    {"Fire 6",7},    
+    {"Fire 6",7},
 };
 
 int joymap_dir_iCade[8];
@@ -136,7 +150,7 @@ static unsigned short *vbuffer;
 static int visible_area_w,visible_area_h;
 static int vid_rotated,vid_aspectX,vid_aspectY;
 int nShouldExit;
-static GLuint txt_vbuffer;  
+static GLuint txt_vbuffer;
 static volatile float pb_value;
 static volatile int pb_total;
 static char pb_msg[256];
@@ -170,8 +184,8 @@ void computePadLayouts(int nb_button){
     int btnsize=(device_isIpad?64:48);
     switch (cur_ifba_conf->vpad_btnsize) {
         case 0:btnsize>>=1;break;
-            case 1:break;
-            case 2:btnsize<<=1;break;
+        case 1:break;
+        case 2:btnsize<<=1;break;
     }
     
     
@@ -187,7 +201,7 @@ void computePadLayouts(int nb_button){
     if (cur_ifba_conf->vpad_pad_manual_layout[1]==0){
         if (device_isIpad) {
             cur_ifba_conf->vpad_pad_x[1] = virtual_stick_maxdist+40;
-            cur_ifba_conf->vpad_pad_y[1] = 768-virtual_stick_maxdist-40;             
+            cur_ifba_conf->vpad_pad_y[1] = 768-virtual_stick_maxdist-40;
         } else {
             cur_ifba_conf->vpad_pad_x[1] = virtual_stick_maxdist;
             cur_ifba_conf->vpad_pad_y[1] = 320-virtual_stick_maxdist;
@@ -228,7 +242,7 @@ void computePadLayouts(int nb_button){
         cur_ifba_conf->vpad_button_y[3][0]=0;
         cur_ifba_conf->vpad_button_x[4][0]=768/2-32;
         cur_ifba_conf->vpad_button_y[4][0]=0;
-
+        
         cur_ifba_conf->vpad_button_x[0][1]=1024-64;
         cur_ifba_conf->vpad_button_y[0][1]=0;
         cur_ifba_conf->vpad_button_x[1][1]=1024-64;
@@ -279,7 +293,7 @@ void computePadLayouts(int nb_button){
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].h=btnsize*1.3f;  //touch area is 30% larger than drawing one
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].sh=btnsize;
     }
-
+    
 #define SET_BUTTON_LAYOUT(a,o,px,py) \
 if (cur_ifba_conf->vpad_button_manual_layout[a][o]==0) { \
 cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
@@ -295,44 +309,44 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
     }
     w-=10;
     h-=10; //dirty hack to compensate the +30% touch area size
-
-        switch (nb_button) { //verti
-            case 0:
-                break;
-            case 1:
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
-                break;
-            case 2:
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
-                break;
-            case 3:
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize*2.1f, h-btnsize*2.6f)                
-                break;
-            case 4:
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize*2.1f, h-btnsize*2.6f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*1.5f)                
-                break;
-            case 5:
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*3.15f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*2.1f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*3.15f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,0, w-btnsize*2.1f, h-btnsize*2.1f)                
-                break;
-            case 6:
-            default:
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*3.15f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*2.1f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*3.15f)
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,0, w-btnsize*2.1f, h-btnsize*2.1f)                
-                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,0, w-btnsize*2.1f, h-btnsize)                
-                break;        
+    
+    switch (nb_button) { //verti
+        case 0:
+            break;
+        case 1:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
+            break;
+        case 2:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
+            break;
+        case 3:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize*2.1f, h-btnsize*2.6f)
+            break;
+        case 4:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.6f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*1.5f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize*2.1f, h-btnsize*2.6f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*1.5f)
+            break;
+        case 5:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*3.15f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*3.15f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,0, w-btnsize*2.1f, h-btnsize*2.1f)
+            break;
+        case 6:
+        default:
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*3.15f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize*2.1f, h-btnsize*3.15f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,0, w-btnsize*2.1f, h-btnsize*2.1f)
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,0, w-btnsize*2.1f, h-btnsize)
+            break;
     }
     
     if (device_isIpad) {
@@ -358,20 +372,20 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
         case 3:
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*2.1f, h-btnsize*2.1f)
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize, h-btnsize*2.1f)
-            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize)                
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize)
             break;
         case 4:
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*2.1f, h-btnsize*2.1f)
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize, h-btnsize*2.1f)
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize*2.1f, h-btnsize)
-            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize, h-btnsize)                
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize, h-btnsize)
             break;
         case 5:
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*3.15f, h-btnsize*2.1f)
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize*2.1f, h-btnsize*2.1f)
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize*2.1f)
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize*2.1f, h-btnsize)
-            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,1, w-btnsize, h-btnsize)                                
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,1, w-btnsize, h-btnsize)
             break;
         case 6:
         default:
@@ -380,10 +394,10 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize*2.1f)
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize*3.15f, h-btnsize)
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,1, w-btnsize*2.1f, h-btnsize)
-            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,1, w-btnsize, h-btnsize)                                
+            SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,1, w-btnsize, h-btnsize)
             break;
     }
-
+    
 }
 
 int gTurboMode;
@@ -425,8 +439,14 @@ static int statusLoadMsgUpdated=0;
     if (self) {
         self.title = NSLocalizedString(@"Emu", @"Emu");
         //self.tabBarItem.image = [UIImage imageNamed:@"Emu"];
-        launchGame=0; 
+        launchGame=0;
         device_orientation=0; //portrait
+        
+        //DEBUG
+        //launchGame=1;
+        //sprintf(gameName,"dogyuun");
+        //
+        
         
         //WIIMOTE
         // create discovery controller
@@ -493,13 +513,12 @@ static int statusLoadMsgUpdated=0;
 }
 
 
+
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     context=self;
-    
-    
     
 	// Do any additional setup after loading the view, typically from a nib.
     m_oglView=(OGLView*)(self.view);
@@ -559,7 +578,7 @@ static int statusLoadMsgUpdated=0;
     vpad_button_spe_texture[2]=[self loadTexture:[UIImage imageNamed:@"button-menu.png"]];
     vpad_button_spe_texture[3]=[self loadTexture:[UIImage imageNamed:@"button-turbo.png"]];
     vpad_button_spe_texture[4]=[self loadTexture:[UIImage imageNamed:@"button-service.png"]];
-        
+    
     vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
     vpad_button_nb_save=vpad_button_nb;
     
@@ -598,7 +617,7 @@ static int statusLoadMsgUpdated=0;
         joy_analog_y[i]=0;
         joy_analog_l[i]=0;
         joy_analog_r[i]=0;
-    }        
+    }
 }
 
 
@@ -611,7 +630,7 @@ static int statusLoadMsgUpdated=0;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.hidden=YES;    
+    self.navigationController.navigationBar.hidden=YES;
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
     
@@ -653,7 +672,7 @@ static int statusLoadMsgUpdated=0;
                 case 7:joymap_dir_iCade[j-1]=GN_C;break;
                 case 8:joymap_dir_iCade[j-1]=GN_D;break;
                 case 9:joymap_dir_iCade[j-1]=GN_E;break;
-                case 10:joymap_dir_iCade[j-1]=GN_F;break;                    
+                case 10:joymap_dir_iCade[j-1]=GN_F;break;
             }
         }
     }
@@ -674,7 +693,7 @@ static int statusLoadMsgUpdated=0;
                     case 7:joymap_dir_wiimote[joy][j-1]=GN_C;break;
                     case 8:joymap_dir_wiimote[joy][j-1]=GN_D;break;
                     case 9:joymap_dir_wiimote[joy][j-1]=GN_E;break;
-                    case 10:joymap_dir_wiimote[joy][j-1]=GN_F;break;                    
+                    case 10:joymap_dir_wiimote[joy][j-1]=GN_F;break;
                 }
             }
         }
@@ -685,7 +704,7 @@ static int statusLoadMsgUpdated=0;
     control.active = YES;
     control.delegate = self;
     [control changeLang:ifba_conf.icade_lang];
-    [control release];    
+    [control release];
     
     
     
@@ -713,32 +732,38 @@ static int statusLoadMsgUpdated=0;
         }
     }
     
+    glob_touchpad_cnt=0;
+    
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(loopCheck)];
     m_displayLink.frameInterval = 2; //30fps
-	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 }
 
-- (void)viewDidAppear:(BOOL)animated {    
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (renderVPADonly) {
         nShouldExit=3;
     } else {
+        playtime=0;
+        playtime_lastclock=clock();
+        
+        
         //If resuming
         if (nShouldExit==2) {
             //launch new game ?
             if (launchGame==1) {//yes, exit current one
                 nShouldExit=1;
                 while (emuThread_running) {
-                    [NSThread sleepForTimeInterval:0.01]; //10ms        
+                    [NSThread sleepForTimeInterval:0.01]; //10ms
                 }
-                [NSThread sleepForTimeInterval:0.1]; //100ms        
+                [NSThread sleepForTimeInterval:0.1]; //100ms
             } else {//no, only resume
                 nShouldExit=0;
             }
         }
         //If required launch game / emuthread
-        if (launchGame==1) {    
-            nShouldExit=0;    
+        if (launchGame==1) {
+            nShouldExit=0;
             pb_value=0;
             pb_total=0;
             pb_msg[0]=0;
@@ -755,15 +780,15 @@ static int statusLoadMsgUpdated=0;
             [prgview release];
             
             statusview=[[UIView alloc] init];
-            statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-110,m_oglView.frame.size.width-20,80);        
-            [[statusview layer] setCornerRadius:15.0];	
+            statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-110,m_oglView.frame.size.width-20,80);
+            [[statusview layer] setCornerRadius:15.0];
             [[statusview layer] setBorderWidth:3.0];
             [[statusview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
             statusview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
             
             statusDownview=[[UIView alloc] init];
-            statusDownview.frame=CGRectMake(10,m_oglView.frame.size.height/2+40,m_oglView.frame.size.width-20,80);        
-            [[statusDownview layer] setCornerRadius:15.0];	
+            statusDownview.frame=CGRectMake(10,m_oglView.frame.size.height/2+40,m_oglView.frame.size.width-20,80);
+            [[statusDownview layer] setCornerRadius:15.0];
             [[statusDownview layer] setBorderWidth:3.0];
             [[statusDownview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
             statusDownview.backgroundColor=[UIColor colorWithRed:0.1f green:0.0f blue:0.25f alpha:1.0f];
@@ -808,8 +833,20 @@ static int statusLoadMsgUpdated=0;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];    
+	[super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
+    
+    if (renderVPADonly==0) {//was emulating a game
+        int playTime_incr=playtime/CLOCKS_PER_SEC;
+        
+        //update game stats
+        int playCount,fav,playTime;
+        char lastPlayed[11];
+        DBHelper::getGameStats(gameName, &playCount, &fav, lastPlayed,&playTime);
+        playTime+=playTime_incr;
+        DBHelper::setGameStats(gameName, playCount, fav, lastPlayed,playTime);
+        NSLog(@"exit emuview, set Stats: pc:%d, fav:%d, lp:%s, pt:%d",playCount,fav,lastPlayed,playTime);
+    }
     
     //reset rendering mode
     renderVPADonly=0;
@@ -818,11 +855,11 @@ static int statusLoadMsgUpdated=0;
     
     if (nShouldExit==1) {
         while (emuThread_running) {
-            [NSThread sleepForTimeInterval:0.01]; //10ms        
+            [NSThread sleepForTimeInterval:0.01]; //10ms
         }
     }
     if (bt&&ifba_conf.btstack_on) {
-        startWiimoteDetection();        
+        startWiimoteDetection();
     }
     
     if (prgview) {
@@ -853,21 +890,33 @@ static int statusLoadMsgUpdated=0;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    if ((interfaceOrientation==UIInterfaceOrientationPortrait)||(interfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
-        m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);
-        device_orientation=0;
-        
-    } else {
-        m_oglView.frame=CGRectMake(0,0,mDevice_hh,mDevice_ww);
-        device_orientation=1;
-    }
-    if (prgview) prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
-    if (statusview) statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-30,m_oglView.frame.size.width-20,30);
+    /*    if ((interfaceOrientation==UIInterfaceOrientationPortrait)||(interfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
+     m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);
+     device_orientation=0;
+     
+     } else {
+     m_oglView.frame=CGRectMake(0,0,mDevice_hh,mDevice_ww);
+     device_orientation=1;
+     }
+     if (prgview) prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
+     if (statusview) statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-30,m_oglView.frame.size.width-20,30);*/
     return YES;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    //[self shouldAutorotateToInterfaceOrientation:fromInterfaceOrientation];
+    //hack ios 6?
+    if ((fromInterfaceOrientation==UIInterfaceOrientationPortrait)||(fromInterfaceOrientation==UIInterfaceOrientationPortraitUpsideDown)) {
+        m_oglView.frame=CGRectMake(0,0,mDevice_hh,mDevice_ww);
+        device_orientation=1;
+    } else {
+        m_oglView.frame=CGRectMake(0,0,mDevice_ww,mDevice_hh);
+        device_orientation=0;
+    }
     [m_oglView didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    
+    if (prgview) prgview.frame=CGRectMake(10,m_oglView.frame.size.height/2,m_oglView.frame.size.width-20,30);
+    if (statusview) statusview.frame=CGRectMake(10,m_oglView.frame.size.height/2-30,m_oglView.frame.size.width-20,30);
 }
 
 /****************************************************/
@@ -914,7 +963,7 @@ static int statusLoadMsgUpdated=0;
             break;
         case iCadeJoystickLeft:
             joy_state[0][GN_LEFT]=state;
-            break;            
+            break;
         default:
             break;
     }
@@ -928,7 +977,7 @@ static int statusLoadMsgUpdated=0;
 }
 
 - (void)buttonUp:(iCadeState)button {
-    [self setICadeState:NO forButton:button];    
+    [self setICadeState:NO forButton:button];
 }
 
 /****************************************************/
@@ -994,11 +1043,14 @@ void stopWiimoteDetection(void) {
 }
 
 -(void) btstackManager:(BTstackManager*)manager deviceInfo:(BTDevice*)newDevice {
-    //	NSLog(@"Device Info: addr %@ name %@ COD 0x%06x", [newDevice addressString], [newDevice name], [newDevice classOfDevice] ); 
-	if ([newDevice name] && [[newDevice name] caseInsensitiveCompare:@"Nintendo RVL-CNT-01"] == NSOrderedSame){
-        //		NSLog(@"WiiMote found with address %@", [newDevice addressString]);
-		device = newDevice;
-		[[BTstackManager sharedInstance] stopDiscovery];
+    //	NSLog(@"Device Info: addr %@ name %@ COD 0x%06x", [newDevice addressString], [newDevice name], [newDevice classOfDevice] );
+	if ([newDevice name]){
+        NSRange r=[[newDevice name] rangeOfString:@"Nintendo RVL-CNT" options:NSCaseInsensitiveSearch];
+        if (r.location!=NSNotFound) {
+            //NSLog(@"WiiMote found with address %@", [newDevice addressString]);
+            device = newDevice;
+            [[BTstackManager sharedInstance] stopDiscovery];
+        }
 	}
 }
 
@@ -1022,7 +1074,7 @@ void stopWiimoteDetection(void) {
             
         case L2CAP_DATA_PACKET://0x06
         {
-            struct wiimote_t *wm = NULL; 
+            struct wiimote_t *wm = NULL;
             
             wm = wiimote_get_by_source_cid(channel);
             
@@ -1073,20 +1125,20 @@ void stopWiimoteDetection(void) {
                         
                         if(wiimote_handshake(wm,WM_RPT_READ,data,len))
                         {
-                            //btUsed = 1;                                                    
+                            //btUsed = 1;
                             //                            [inqViewControl showConnected:nil];
                             //                            [inqViewControl showConnecting:nil];
                             //Create UIAlertView alert
                             //                            [inqViewControl showConnecting:nil];
                             
-                            /*                            UIAlertView* alert = 
+                            /*                            UIAlertView* alert =
                              [[UIAlertView alloc] initWithTitle:@"Connection detected!"
                              message: [NSString stringWithFormat:@"%@ '%@' connection sucessfully completed!",
                              (wm->exp.type != EXP_NONE ? @"Classic Controller" : @"WiiMote"),
-                             [NSNumber numberWithInt:(wm->unid)+1]]        
+                             [NSNumber numberWithInt:(wm->unid)+1]]
                              delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                             [alert show];                                           
-                             //[alert dismissWithClickedButtonIndex:0 animated:TRUE];                                           
+                             [alert show];
+                             //[alert dismissWithClickedButtonIndex:0 animated:TRUE];
                              [alert release];
                              */
                             if(device!=nil)
@@ -1095,7 +1147,7 @@ void stopWiimoteDetection(void) {
                                 device = nil;
                             }
                             [[BTstackManager sharedInstance] startDiscovery];
-                        }										
+                        }
                         
                         return;
                     }
@@ -1114,15 +1166,15 @@ void stopWiimoteDetection(void) {
                         //handshake stuff!
                         if(wiimote_handshake(wm,WM_RPT_CTRL_STATUS,msg,-1))
                         {
-                            //btUsed = 1;                                                    
+                            //btUsed = 1;
                             //                            [inqViewControl showConnected:nil];
                             //                            [inqViewControl showConnecting:nil];
-                            /*                            UIAlertView* alert = 
+                            /*                            UIAlertView* alert =
                              [[UIAlertView alloc] initWithTitle:@"Connection detected!"
-                             message: [NSString stringWithFormat:@"WiiMote '%@' connection sucessfully completed!",[NSNumber numberWithInt:(wm->unid)+1]]        
+                             message: [NSString stringWithFormat:@"WiiMote '%@' connection sucessfully completed!",[NSNumber numberWithInt:(wm->unid)+1]]
                              delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                             [alert show];                                           
-                             //[alert dismissWithClickedButtonIndex:0 animated:TRUE];                                           
+                             [alert show];
+                             //[alert dismissWithClickedButtonIndex:0 animated:TRUE];
                              [alert release];*/
                             [device setConnectionState:kBluetoothConnectionConnected];
                             
@@ -1154,8 +1206,8 @@ void stopWiimoteDetection(void) {
                         printf("Unknown event, can not handle it [Code 0x%x].", event);
                         return;
                     }
-                }                   
-            }                                                                 
+                }
+            }
             break;
         }
         case HCI_EVENT_PACKET://0x04
@@ -1164,7 +1216,7 @@ void stopWiimoteDetection(void) {
                     
                 case L2CAP_EVENT_CHANNEL_OPENED:
                     
-                    // data: event (8), len(8), status (8), address(48), handle (16), psm (16), local_cid(16), remote_cid (16)                                         
+                    // data: event (8), len(8), status (8), address(48), handle (16), psm (16), local_cid(16), remote_cid (16)
                     if (packet[2] == 0) {
                         
                         // inform about new l2cap connection
@@ -1179,34 +1231,34 @@ void stopWiimoteDetection(void) {
                             // interupt channel openedn succesfully, now open control channel, too.
                             if(WIIMOTE_DBG)printf("open control channel\n");
                             bt_send_cmd(&l2cap_create_channel, event_addr, 0x11);
-                            struct wiimote_t *wm = NULL;  
+                            struct wiimote_t *wm = NULL;
                             wm = &joys[num_of_joys];
                             memset(wm, 0, sizeof(struct wiimote_t));
-                            wm->unid = num_of_joys;                                                        
+                            wm->unid = num_of_joys;
                             wm->i_source_cid = source_cid;
                             memcpy(&wm->addr,&event_addr,BD_ADDR_LEN);
-                            if(WIIMOTE_DBG)printf("addr %02x:%02x:%02x:%02x:%02x:%02x\n", wm->addr[0], wm->addr[1], wm->addr[2],wm->addr[3], wm->addr[4], wm->addr[5]);                                                    
+                            if(WIIMOTE_DBG)printf("addr %02x:%02x:%02x:%02x:%02x:%02x\n", wm->addr[0], wm->addr[1], wm->addr[2],wm->addr[3], wm->addr[4], wm->addr[5]);
                             if(WIIMOTE_DBG)printf("saved 0x%02x  0x%02x\n",source_cid,wm->i_source_cid);
                             wm->exp.type = EXP_NONE;
                             
                         } else {
                             
-                            //inicializamos el wiimote!   
-                            struct wiimote_t *wm = NULL;  
-                            wm = &joys[num_of_joys];                                                                                                                                                                  
-                            wm->wiiMoteConHandle = wiiMoteConHandle; 
-                            wm->c_source_cid = source_cid;                                                           
+                            //inicializamos el wiimote!
+                            struct wiimote_t *wm = NULL;
+                            wm = &joys[num_of_joys];
+                            wm->wiiMoteConHandle = wiiMoteConHandle;
+                            wm->c_source_cid = source_cid;
                             wm->state = WIIMOTE_STATE_CONNECTED;
                             num_of_joys++;
                             if(WIIMOTE_DBG)printf("Devices Number: %d\n",num_of_joys);
-                            wiimote_handshake(wm,-1,NULL,-1);                                                                                                                                                                                                                                                                      
+                            wiimote_handshake(wm,-1,NULL,-1);
                         }
                     }
                     break;
                 case L2CAP_EVENT_CHANNEL_CLOSED:
-                {                                
-                    // data: event (8), len(8), channel (16)                                                                                       
-                    uint16_t  source_cid = READ_BT_16(packet, 2);                                              
+                {
+                    // data: event (8), len(8), channel (16)
+                    uint16_t  source_cid = READ_BT_16(packet, 2);
                     //NSLog(@"Channel successfully closed: cid 0x%02x",source_cid);
                     
                     bd_addr_t addr;
@@ -1214,17 +1266,17 @@ void stopWiimoteDetection(void) {
                     if(unid!=-1)
                     {
                         //                        [inqViewControl removeDeviceForAddress:&addr];
-                        UIAlertView* alert = 
+                        UIAlertView* alert =
                         [[UIAlertView alloc] initWithTitle:@"Disconnection!"
-                                                   message:[NSString stringWithFormat:@"WiiMote '%@' disconnection detected.\nIs battery drainned?",[NSNumber numberWithInt:(unid+1)]] 
+                                                   message:[NSString stringWithFormat:@"WiiMote '%@' disconnection detected.\nIs battery drainned?",[NSNumber numberWithInt:(unid+1)]]
                                                   delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                        [alert show];                                           
+                        [alert show];
                         
                         [alert release];
                     }
                     
                 }
-                    break;                                        
+                    break;
                     
                 default:
                     break;
@@ -1255,6 +1307,21 @@ void stopWiimoteDetection(void) {
         NSLog(@"Error: cannot allocate argv[1]");
     }
     sprintf(argv[1],"%s",gameName);
+    
+    cur_ifba_conf->vpad_followfinger=0;
+    if (strcmp(gameName,"donpachi")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"donpachij")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"ddonpach")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"ddonpachj")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"feversos")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"dfeveron")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"bgaregga")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"bgareggat2")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"dogyuun")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (strcmp(gameName,"truxton2")==0) cur_ifba_conf->vpad_followfinger=1;
+    if (cur_ifba_conf->vpad_followfinger) printf("Using follow-finger touchscreen mode\n");
+    glob_ffingeron=cur_ifba_conf->vpad_followfinger;
+    
     fba_main(argc,(char**)argv);
     free (argv[0]);
     free (argv[1]);
@@ -1265,7 +1332,7 @@ void stopWiimoteDetection(void) {
 
 int vstick_update_status(int rx,int ry) {
     float angle;
-    //compute distance    
+    //compute distance
     float dist=(rx-cur_ifba_conf->vpad_pad_x[device_orientation])*(rx-cur_ifba_conf->vpad_pad_x[device_orientation])+(ry-cur_ifba_conf->vpad_pad_y[device_orientation])*(ry-cur_ifba_conf->vpad_pad_y[device_orientation]);
     
     
@@ -1292,7 +1359,7 @@ int vstick_update_status(int rx,int ry) {
         } else {
             if (dy>0) angle=M_PI/2;
             else angle=M_PI*3/2;
-        }        
+        }
         virtual_stick_angle=angle;
         
         joy_analog_x[0]=dx*2/virtual_stick_maxdist;
@@ -1331,71 +1398,140 @@ int vstick_update_status(int rx,int ry) {
 
 
 void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,float ly) {
-    //printf("touch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
+    //    printf("touch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
     int ret;
     switch (evt_type) {
-        case 1: //Pressed            
+        case 1: //Pressed
             virtual_stick_on=1;
-            if (vstick_update_status(x,y)>0) { //finger is on pad
-                //printf("padtouch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
-                
-                joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
-                joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
-                joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
-                joy_state[0][GN_RIGHT]=(virtual_stick_pad==GN_RIGHT?1:0);
-                joy_state[0][GN_UPRIGHT]=(virtual_stick_pad==GN_UPRIGHT?1:0);
-                joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
-                joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
-                joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
-                virtual_stick_padfinger=touch_id;
-            } else { //check if finger is on a button                
+            glob_touchpad_cnt++;
+            if (cur_ifba_conf->vpad_followfinger && glob_ffingeron) { //follow finger mode
+                //check if finger is on a button
+                int button_pressed=0;
                 for (int i=0;i<vpad_button_nb;i++) {
                     if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
                         (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)){
                         joy_state[0][virtual_stick[i].button_id]=1;
                         virtual_stick[i].finger_id=touch_id;
+                        button_pressed=1;
+                        
+                        //check if last button pressed to change fire 1 mode (repetitive or full pressed)
+                        if ((virtual_stick[i].button_id-GN_A)==(vpad_button_nb-VPAD_SPECIALS_BUTTON_NB-1)) glob_shootmode^=1;
+                        else {
+                            //cave 2 buttons style (shoot/laser | bomb
+                            switch (virtual_stick[i].button_id) {
+                                case GN_A: //shoot on/off
+                                    glob_shooton^=1;
+                                    break;
+                                case GN_SERVICE: //switch finger/normal touch control if at least 2 fingers press screen
+                                    if (glob_touchpad_cnt>=2) {
+                                        joy_state[0][GN_SERVICE]=0;
+                                        glob_ffingeron=0;
+                                    }
+                                    break;
+                            }
+                        }
                         //break;  //no break, allow 2 or more buttons with 1 finger
                     }
-                }       
+                }
+                if (!button_pressed) {
+                    glob_touchpad_fingerid=touch_id;
+                    glob_pos_x=x;
+                    glob_pos_y=y;
+                    glob_mov_x=glob_mov_y=0;
+                    glob_mov_init=1;
+                    glob_pos_xi=x;
+                    glob_pos_yi=y;
+                }
+            } else {
+                if (vstick_update_status(x,y)>0) { //finger is on pad
+                    //printf("padtouch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
+                    
+                    joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
+                    joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
+                    joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
+                    joy_state[0][GN_RIGHT]=(virtual_stick_pad==GN_RIGHT?1:0);
+                    joy_state[0][GN_UPRIGHT]=(virtual_stick_pad==GN_UPRIGHT?1:0);
+                    joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
+                    joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
+                    joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
+                    virtual_stick_padfinger=touch_id;
+                } else { //check if finger is on a button
+                    for (int i=0;i<vpad_button_nb;i++) {
+                        if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
+                            (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)){
+                            joy_state[0][virtual_stick[i].button_id]=1;
+                            virtual_stick[i].finger_id=touch_id;
+                            //break;  //no break, allow 2 or more buttons with 1 finger
+                            
+                            if ((virtual_stick[i].button_id==GN_SERVICE)&&cur_ifba_conf->vpad_followfinger) {//switch finger/normal touch control
+                                if (glob_touchpad_cnt>=2) {
+                                    joy_state[0][GN_SERVICE]=0;
+                                    glob_ffingeron=1;
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            
             break;
         case 2: //Moved
             virtual_stick_on=1;
-                        
             if (renderVPADonly) {
                 if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
                     cur_ifba_conf->vpad_pad_x[device_orientation]+=x-lx;
                     cur_ifba_conf->vpad_pad_y[device_orientation]+=y-ly;
                     cur_ifba_conf->vpad_pad_manual_layout[device_orientation]=1;
                 } else {
-                for (int i=VPAD_SPECIALS_BUTTON_NB;i<vpad_button_nb;i++) {
-                    if (virtual_stick[i].finger_id==touch_id) {
-                        //move button
-                        cur_ifba_conf->vpad_button_manual_layout[i][device_orientation]=1;
-                        cur_ifba_conf->vpad_button_x[i][device_orientation]+=x-lx;
-                        cur_ifba_conf->vpad_button_y[i][device_orientation]+=y-ly;
-                        break;
+                    for (int i=VPAD_SPECIALS_BUTTON_NB;i<vpad_button_nb;i++) {
+                        if (virtual_stick[i].finger_id==touch_id) {
+                            //move button
+                            cur_ifba_conf->vpad_button_manual_layout[i][device_orientation]=1;
+                            cur_ifba_conf->vpad_button_x[i][device_orientation]+=x-lx;
+                            cur_ifba_conf->vpad_button_y[i][device_orientation]+=y-ly;
+                            break;
+                        }
                     }
-                }
                 }
             } else {
                 
-                if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
-                    if ((ret=vstick_update_status(x,y))<=0) {
-                        if (ret<0) {
-                            virtual_stick_padfinger=0;
-                            joy_analog_x[0]=0;joy_analog_y[0]=0;
-                            joy_state[0][GN_UP]=0;
-                            joy_state[0][GN_DOWN]=0;
-                            joy_state[0][GN_LEFT]=0;
-                            joy_state[0][GN_RIGHT]=0;
-                            joy_state[0][GN_UPRIGHT]=0;
-                            joy_state[0][GN_DOWNRIGHT]=0;
-                            joy_state[0][GN_UPLEFT]=0;
-                            joy_state[0][GN_DOWNLEFT]=0;
+                if (cur_ifba_conf->vpad_followfinger && glob_ffingeron) {
+                    if (touch_id==glob_touchpad_fingerid) {
+                        glob_pos_x=x;
+                        glob_pos_y=y;
+                        if (lx) {
+                            glob_mov_x=x-lx;
                         }
-                    } else {
+                        if (ly) {
+                            glob_mov_y=-(y-ly);
+                        }
+                    }
+                } else {
+                    if (touch_id==virtual_stick_padfinger) { //is it the finger on pad
+                        if ((ret=vstick_update_status(x,y))<=0) {
+                            if (ret<0) {
+                                virtual_stick_padfinger=0;
+                                joy_analog_x[0]=0;joy_analog_y[0]=0;
+                                joy_state[0][GN_UP]=0;
+                                joy_state[0][GN_DOWN]=0;
+                                joy_state[0][GN_LEFT]=0;
+                                joy_state[0][GN_RIGHT]=0;
+                                joy_state[0][GN_UPRIGHT]=0;
+                                joy_state[0][GN_DOWNRIGHT]=0;
+                                joy_state[0][GN_UPLEFT]=0;
+                                joy_state[0][GN_DOWNLEFT]=0;
+                            }
+                        } else {
+                            joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
+                            joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
+                            joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
+                            joy_state[0][GN_RIGHT]=(virtual_stick_pad==GN_RIGHT?1:0);
+                            joy_state[0][GN_UPRIGHT]=(virtual_stick_pad==GN_UPRIGHT?1:0);
+                            joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
+                            joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
+                            joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
+                        }
+                    } else if (virtual_stick_padfinger==0) {
+                        if (vstick_update_status(x,y)) virtual_stick_padfinger=touch_id;
                         joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
                         joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
                         joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
@@ -1405,39 +1541,29 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
                         joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
                         joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
                     }
-                } else if (virtual_stick_padfinger==0) {
-                    if (vstick_update_status(x,y)) virtual_stick_padfinger=touch_id;
-                    joy_state[0][GN_UP]=(virtual_stick_pad==GN_UP?1:0);
-                    joy_state[0][GN_DOWN]=(virtual_stick_pad==GN_DOWN?1:0);
-                    joy_state[0][GN_LEFT]=(virtual_stick_pad==GN_LEFT?1:0);
-                    joy_state[0][GN_RIGHT]=(virtual_stick_pad==GN_RIGHT?1:0);
-                    joy_state[0][GN_UPRIGHT]=(virtual_stick_pad==GN_UPRIGHT?1:0);
-                    joy_state[0][GN_DOWNRIGHT]=(virtual_stick_pad==GN_DOWNRIGHT?1:0);
-                    joy_state[0][GN_UPLEFT]=(virtual_stick_pad==GN_UPLEFT?1:0);
-                    joy_state[0][GN_DOWNLEFT]=(virtual_stick_pad==GN_DOWNLEFT?1:0);
-                }
-                
-                for (int i=0;i<vpad_button_nb;i++) {                    
-                    //is there a button already pressed with this finger ?
-                    if (virtual_stick[i].finger_id==touch_id) {
-                        //a button was pressed and finger moved
-                        //check if finger is still in button area
-                        
-                        if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
-                            (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)){
-                            //break;  //no break, allow 2 or more buttons with 1 finger
+                    
+                    for (int i=0;i<vpad_button_nb;i++) {
+                        //is there a button already pressed with this finger ?
+                        if (virtual_stick[i].finger_id==touch_id) {
+                            //a button was pressed and finger moved
+                            //check if finger is still in button area
+                            
+                            if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
+                                (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)) {
+                                //break;  //no break, allow 2 or more buttons with 1 finger
+                            } else {
+                                //button not pressed anymore
+                                //do not break to check if finger moved to a new button
+                                virtual_stick[i].finger_id=0;
+                                joy_state[0][virtual_stick[i].button_id]=0;
+                            }
                         } else {
-                            //button not pressed anymore
-                            //do not break to check if finger moved to a new button
-                            virtual_stick[i].finger_id=0;
-                            joy_state[0][virtual_stick[i].button_id]=0;                            
-                        }
-                    } else {
-                        //did the finger move to a new button area ?
-                        if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
-                            (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)){
-                            joy_state[0][virtual_stick[i].button_id]=1;
-                            virtual_stick[i].finger_id=touch_id;
+                            //did the finger move to a new button area ?
+                            if ((x>cur_ifba_conf->vpad_button_x[i][device_orientation])&&(x<cur_ifba_conf->vpad_button_x[i][device_orientation]+virtual_stick[i].w)&&
+                                (y>cur_ifba_conf->vpad_button_y[i][device_orientation])&&(y<cur_ifba_conf->vpad_button_y[i][device_orientation]+virtual_stick[i].h)){
+                                joy_state[0][virtual_stick[i].button_id]=1;
+                                virtual_stick[i].finger_id=touch_id;
+                            }
                         }
                     }
                 }
@@ -1445,6 +1571,10 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
             break;
         case 0: //Release
             virtual_stick_on=1;
+            glob_touchpad_cnt--;
+            
+            if (touch_id==glob_touchpad_fingerid) glob_touchpad_fingerid=0;
+            
             if (virtual_stick_padfinger==touch_id) {
                 virtual_stick_padfinger=0;
                 virtual_stick_pad=0;
@@ -1457,10 +1587,10 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
                 joy_state[0][GN_DOWNRIGHT]=0;
                 joy_state[0][GN_UPLEFT]=0;
                 joy_state[0][GN_DOWNLEFT]=0;
-            } 
+            }
             
             
-            for (int i=0;i<VSTICK_NB_BUTTON;i++) 
+            for (int i=0;i<VSTICK_NB_BUTTON;i++)
                 if (virtual_stick[i].finger_id==touch_id) {
                     virtual_stick[i].finger_id=0;
                     joy_state[0][virtual_stick[i].button_id]=0;
@@ -1474,11 +1604,18 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
 }
 
 
+int StatedLoad(int slot);
 
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nXAspect,int nYAspect) {
-    
+    //DEBUG
+    /*    static int lstate=1;
+     if (lstate) {
+     lstate=0;
+     StatedLoad(0);
+     }*/
+    //DEBUG
     vid_rotated=rotated;
-    visible_area_w=w; 
+    visible_area_w=w;
     if (visible_area_w>TEXTURE_W) {
         NSLog(@"ERROR: width is too large (%d/%d)",visible_area_w,TEXTURE_W);
     }
@@ -1515,7 +1652,7 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     else if (cur_ifba_conf->vpad_padsize==1) virtual_stick_maxdist=80;
     else if (cur_ifba_conf->vpad_padsize==2) virtual_stick_maxdist=96;
     
-        
+    
     virtual_stick_maxdist2=virtual_stick_maxdist*virtual_stick_maxdist;
     virtual_stick_mindist2=virtual_stick_mindist*virtual_stick_mindist;
     
@@ -1526,23 +1663,23 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     
     //update viewport to match real device screen
     
-    glViewport(0, 0, cur_width, cur_height);                        
+    glViewport(0, 0, cur_width, cur_height);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);            
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     /* Enable Vertex Pointer */
     texcoords[0][0]=0; texcoords[0][1]=0;
     texcoords[1][0]=1; texcoords[1][1]=0;
     texcoords[2][0]=0; texcoords[2][1]=1;
     texcoords[3][0]=1; texcoords[3][1]=1;
     
-    for (int i=(cur_ifba_conf->vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {            
+    for (int i=(cur_ifba_conf->vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {
         if (renderVPADonly&&(i!=2)&&(i<VPAD_SPECIALS_BUTTON_NB)) continue;
-//        if (i<=VPAD_SPECIALS_BUTTON_NB) {
-            if (i>=VPAD_SPECIALS_BUTTON_NB) { 
-                glBindTexture(GL_TEXTURE_2D, vpad_button_texture[i-VPAD_SPECIALS_BUTTON_NB]);
-            }
-            else glBindTexture(GL_TEXTURE_2D, vpad_button_spe_texture[i]);
-//        }
+        //        if (i<=VPAD_SPECIALS_BUTTON_NB) {
+        if (i>=VPAD_SPECIALS_BUTTON_NB) {
+            glBindTexture(GL_TEXTURE_2D, vpad_button_texture[i-VPAD_SPECIALS_BUTTON_NB]);
+        }
+        else glBindTexture(GL_TEXTURE_2D, vpad_button_spe_texture[i]);
+        //        }
         
         vertices[0][0]=(float)(cur_ifba_conf->vpad_button_x[i][device_orientation]+((virtual_stick[i].w-virtual_stick[i].sw)>>1))/cur_width;
         vertices[0][1]=(float)(cur_ifba_conf->vpad_button_y[i][device_orientation]+((virtual_stick[i].h-virtual_stick[i].sh)>>1))/cur_height;
@@ -1572,127 +1709,128 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     }
     //now the stick
     
-    switch (cur_ifba_conf->vpad_style) {
-        case 0: //animated pad
-            glBindTexture(GL_TEXTURE_2D, vpad_animated_dpad[virtual_stick_pad]);    /* Bind The Texture */
-            vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
-            vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
-            
-            vertices[0][0]=vertices[0][0]*2-1;
-            vertices[1][0]=vertices[1][0]*2-1;
-            vertices[2][0]=vertices[2][0]*2-1;
-            vertices[3][0]=vertices[3][0]*2-1;
-            vertices[0][1]=-vertices[0][1]*2+1;
-            vertices[1][1]=-vertices[1][1]*2+1;
-            vertices[2][1]=-vertices[2][1]*2+1;
-            vertices[3][1]=-vertices[3][1]*2+1;
-            glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            break;
-        case 1: //animated stick
-            glBindTexture(GL_TEXTURE_2D, vpad_animated_stick[1]);    /* Bind The Texture */
-            vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
-            vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
-            
-            vertices[0][0]=vertices[0][0]*2-1;
-            vertices[1][0]=vertices[1][0]*2-1;
-            vertices[2][0]=vertices[2][0]*2-1;
-            vertices[3][0]=vertices[3][0]*2-1;
-            vertices[0][1]=-vertices[0][1]*2+1;
-            vertices[1][1]=-vertices[1][1]*2+1;
-            vertices[2][1]=-vertices[2][1]*2+1;
-            vertices[3][1]=-vertices[3][1]*2+1;
-            glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            
-            switch (virtual_stick_pad) {
-                case 0:
-                    virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=0;
-                    break;
-                case 1:
-                    virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=0;
-                    break;
-                case 2:
-                    virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
-                    break;
-                case 3:
-                    virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
-                    break;
-                case 4:
-                    virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
-                    break;
-                case 5:
-                    virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=0;
-                    break;
-                case 6:
-                    virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
-                    break;
-                case 7:
-                    virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
-                    break;
-                case 8:
-                    virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
-                    break;
-            }
-            
-            
-            glBindTexture(GL_TEXTURE_2D, vpad_animated_stick[0]);    /* Bind The Texture */
-            vertices[0][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[0][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[1][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
-            vertices[1][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[2][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[2][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[3][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[3][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
-            
-            vertices[0][0]=vertices[0][0]*2-1;
-            vertices[1][0]=vertices[1][0]*2-1;
-            vertices[2][0]=vertices[2][0]*2-1;
-            vertices[3][0]=vertices[3][0]*2-1;
-            vertices[0][1]=-vertices[0][1]*2+1;
-            vertices[1][1]=-vertices[1][1]*2+1;
-            vertices[2][1]=-vertices[2][1]*2+1;
-            vertices[3][1]=-vertices[3][1]*2+1;
-            glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            
-            break;
-        case 2: //not animated
-            glBindTexture(GL_TEXTURE_2D, vpad_dpad_texture);    /* Bind The Texture */
-            vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
-            vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;            
-            vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
-            vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
-            
-            vertices[0][0]=vertices[0][0]*2-1;
-            vertices[1][0]=vertices[1][0]*2-1;
-            vertices[2][0]=vertices[2][0]*2-1;
-            vertices[3][0]=vertices[3][0]*2-1;
-            vertices[0][1]=-vertices[0][1]*2+1;
-            vertices[1][1]=-vertices[1][1]*2+1;
-            vertices[2][1]=-vertices[2][1]*2+1;
-            vertices[3][1]=-vertices[3][1]*2+1;
-            glColor4ub(250,245,255,virtual_stick_buttons_alpha);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            break;
-    }
+    if (glob_ffingeron==0)
+        switch (cur_ifba_conf->vpad_style) {
+            case 0: //animated pad
+                glBindTexture(GL_TEXTURE_2D, vpad_animated_dpad[virtual_stick_pad]);    /* Bind The Texture */
+                vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
+                vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
+                
+                vertices[0][0]=vertices[0][0]*2-1;
+                vertices[1][0]=vertices[1][0]*2-1;
+                vertices[2][0]=vertices[2][0]*2-1;
+                vertices[3][0]=vertices[3][0]*2-1;
+                vertices[0][1]=-vertices[0][1]*2+1;
+                vertices[1][1]=-vertices[1][1]*2+1;
+                vertices[2][1]=-vertices[2][1]*2+1;
+                vertices[3][1]=-vertices[3][1]*2+1;
+                glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+                break;
+            case 1: //animated stick
+                glBindTexture(GL_TEXTURE_2D, vpad_animated_stick[1]);    /* Bind The Texture */
+                vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
+                vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
+                
+                vertices[0][0]=vertices[0][0]*2-1;
+                vertices[1][0]=vertices[1][0]*2-1;
+                vertices[2][0]=vertices[2][0]*2-1;
+                vertices[3][0]=vertices[3][0]*2-1;
+                vertices[0][1]=-vertices[0][1]*2+1;
+                vertices[1][1]=-vertices[1][1]*2+1;
+                vertices[2][1]=-vertices[2][1]*2+1;
+                vertices[3][1]=-vertices[3][1]*2+1;
+                glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+                
+                switch (virtual_stick_pad) {
+                    case 0:
+                        virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=0;
+                        break;
+                    case 1:
+                        virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=0;
+                        break;
+                    case 2:
+                        virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
+                        break;
+                    case 3:
+                        virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
+                        break;
+                    case 4:
+                        virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=-virtual_stick_maxdist*0.3f;
+                        break;
+                    case 5:
+                        virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=0;
+                        break;
+                    case 6:
+                        virtual_stick_posx_ofs=-virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
+                        break;
+                    case 7:
+                        virtual_stick_posx_ofs=0;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
+                        break;
+                    case 8:
+                        virtual_stick_posx_ofs=virtual_stick_maxdist*0.3f;virtual_stick_posy_ofs=virtual_stick_maxdist*0.3f;
+                        break;
+                }
+                
+                
+                glBindTexture(GL_TEXTURE_2D, vpad_animated_stick[0]);    /* Bind The Texture */
+                vertices[0][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[0][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[1][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
+                vertices[1][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[2][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[2][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[3][0]=(float)(virtual_stick_posx_ofs+cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[3][1]=(float)(virtual_stick_posy_ofs+cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
+                
+                vertices[0][0]=vertices[0][0]*2-1;
+                vertices[1][0]=vertices[1][0]*2-1;
+                vertices[2][0]=vertices[2][0]*2-1;
+                vertices[3][0]=vertices[3][0]*2-1;
+                vertices[0][1]=-vertices[0][1]*2+1;
+                vertices[1][1]=-vertices[1][1]*2+1;
+                vertices[2][1]=-vertices[2][1]*2+1;
+                vertices[3][1]=-vertices[3][1]*2+1;
+                glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+                
+                break;
+            case 2: //not animated
+                glBindTexture(GL_TEXTURE_2D, vpad_dpad_texture);    /* Bind The Texture */
+                vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[1][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;;
+                vertices[1][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]+virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[2][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]-virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[2][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
+                vertices[3][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+virtual_stick_maxdist*0.9f)/cur_width;
+                vertices[3][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-virtual_stick_maxdist*0.9f)/cur_height;
+                
+                vertices[0][0]=vertices[0][0]*2-1;
+                vertices[1][0]=vertices[1][0]*2-1;
+                vertices[2][0]=vertices[2][0]*2-1;
+                vertices[3][0]=vertices[3][0]*2-1;
+                vertices[0][1]=-vertices[0][1]*2+1;
+                vertices[1][1]=-vertices[1][1]*2+1;
+                vertices[2][1]=-vertices[2][1]*2+1;
+                vertices[3][1]=-vertices[3][1]*2+1;
+                glColor4ub(250,245,255,virtual_stick_buttons_alpha);
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+                break;
+        }
     
     
     
@@ -1725,9 +1863,9 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
             
             
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
-        } 
+        }
     }
-    glDisable(GL_BLEND);        
+    glDisable(GL_BLEND);
 }
 
 int ErrorWhileLoading(const char* pszText) {
@@ -1758,7 +1896,7 @@ int ProgressUpdateBurner(int nLen,int totalLen, const char* pszText) {
     } else {
         pb_total=0;
         pb_value=1;
-    }    
+    }
     
     if (pszText) strcpy(statusMsg,pszText);
     else statusMsg[0]=0;
@@ -1780,7 +1918,7 @@ int StopProgressBar() {
     if (renderVPADonly) [self doFrameVPAD];
     
     if (nShouldExit==2) {
-        self.navigationController.navigationBar.hidden=NO;        
+        self.navigationController.navigationBar.hidden=NO;
         [[self navigationController] popViewControllerAnimated:NO];
     }
     
@@ -1888,12 +2026,12 @@ int StopProgressBar() {
         case 3:
             texcoords[0][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[0][1]=(float)0/TEXTURE_H;
             texcoords[1][0]=(float)(visible_area_w)/TEXTURE_W; texcoords[1][1]=(float)(visible_area_h)/TEXTURE_H;
-            texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)0/TEXTURE_H;            
+            texcoords[2][0]=(float)0/TEXTURE_W; texcoords[2][1]=(float)0/TEXTURE_H;
             texcoords[3][0]=(float)0/TEXTURE_W; texcoords[3][1]=(float)(visible_area_h)/TEXTURE_H;
             break;
     }
     float ios_aspect=(float)width/(float)height;
-    float game_aspect=(float)vid_aspectX/(float)vid_aspectY;        
+    float game_aspect=(float)vid_aspectX/(float)vid_aspectY;
     
     switch (cur_ifba_conf->screen_mode) {
         case 0://org
@@ -1941,9 +2079,9 @@ int StopProgressBar() {
             break;
     }
     
-//    NSLog(@"%d / %d x %d / %f %f",cur_ifba_conf->screen_mode,rw,rh,ios_aspect,game_aspect);
+    //    NSLog(@"%d / %d x %d / %f %f",cur_ifba_conf->screen_mode,rw,rh,ios_aspect,game_aspect);
     
-    glViewport((width-rw)>>1, height-rh, rw, rh);                    
+    glViewport((width-rw)>>1, height-rh, rw, rh);
     if (vid_rotated&&(pb_value==1)) {
         vertices[0][0]=1; vertices[0][1]=-1;
         vertices[1][0]=-1; vertices[1][1]=-1;
@@ -1953,7 +2091,7 @@ int StopProgressBar() {
         vertices[0][0]=-1; vertices[0][1]=1;
         vertices[1][0]=1; vertices[1][1]=1;
         vertices[2][0]=-1; vertices[2][1]=-1;
-        vertices[3][0]=1; vertices[3][1]=-1;    
+        vertices[3][0]=1; vertices[3][1]=-1;
     }
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
@@ -1961,13 +2099,13 @@ int StopProgressBar() {
         case 0:break;
         case 1:
             glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);            
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             /* Enable Vertex Pointer */
             texcoords[0][0]=0; texcoords[0][1]=0;
             texcoords[1][0]=1.0f*rw/32.0f; texcoords[1][1]=0;
             texcoords[2][0]=0; texcoords[2][1]=1.0f*rh/32.0f;
             texcoords[3][0]=1.0f*rw/32.0f; texcoords[3][1]=1.0f*rh/32.0f;
-            glBindTexture(GL_TEXTURE_2D, filter_scanline_texture);    /* Bind The Texture */    
+            glBindTexture(GL_TEXTURE_2D, filter_scanline_texture);    /* Bind The Texture */
             glColor4ub(255,255,255,cur_ifba_conf->video_filter_strength);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glDisable(GL_BLEND);
@@ -1975,14 +2113,14 @@ int StopProgressBar() {
         case 2:
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glColor4ub(255,255,255,cur_ifba_conf->video_filter_strength);            
+            glColor4ub(255,255,255,cur_ifba_conf->video_filter_strength);
             /* Enable Vertex Pointer */
             zf=1.0f;
             texcoords[0][0]=0; texcoords[0][1]=0;
             texcoords[1][0]=1.0f*rw*zf/8.0f; texcoords[1][1]=0;
             texcoords[2][0]=0; texcoords[2][1]=1.0f*rh*zf/8.0f;
             texcoords[3][0]=1.0f*rw*zf/8.0f; texcoords[3][1]=1.0f*rh*zf/8.0f;
-            glBindTexture(GL_TEXTURE_2D, filter_crt_texture);    /* Bind The Texture */    
+            glBindTexture(GL_TEXTURE_2D, filter_crt_texture);    /* Bind The Texture */
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glDisable(GL_BLEND);
             break;
@@ -1990,6 +2128,14 @@ int StopProgressBar() {
     
     if (virtual_stick_on) [self drawVPad];
     [m_oglContext presentRenderbuffer:GL_RENDERBUFFER_OES];
+    
+    //get time
+    long long cur_clock=clock();
+    long long cur_delta=cur_clock-playtime_lastclock;
+    if (cur_delta<0) cur_delta=0;
+    playtime+=cur_delta;
+    playtime_lastclock=cur_clock;
+    //if (!((playtime_upd++)&31)) NSLog(@"%d",playtime/CLOCKS_PER_SEC);
     
     doFrame_inProgress=0;
 }

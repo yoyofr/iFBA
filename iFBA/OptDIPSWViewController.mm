@@ -164,6 +164,7 @@ static CADisplayLink* m_displayLink;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     OptDIPSWValueViewController *dipvaluevc=[[OptDIPSWValueViewController alloc] initWithNibName:@"OptDIPSWValueViewController" bundle:nil];
     dipvaluevc.current_dip_idx=indexPath.row;
+    ((OptDIPSWValueViewController*)dipvaluevc)->emuvc=emuvc;
     [self.navigationController pushViewController:dipvaluevc animated:YES];
     [dipvaluevc release];
     

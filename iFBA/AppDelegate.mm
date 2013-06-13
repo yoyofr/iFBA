@@ -164,6 +164,10 @@ valNb=[prefs objectForKey:a];
     GET_VALNB(@"vpad_style")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_style=0;
 	else ifba_conf.vpad_style = [valNb intValue];
+    GET_VALNB(@"vpad_followfinger")
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_followfinger=0;
+	else ifba_conf.vpad_followfinger = [valNb intValue];
+    
     
     //Emulation settings
     GET_VALNB(@"asm_68k")
@@ -357,6 +361,9 @@ valNb=[prefs objectForKey:keyStr];
     GET_VALNB(@"vpad_style")
 	if ((valNb == nil)) ifba_game_conf.vpad_style=0;
 	else ifba_game_conf.vpad_style = [valNb intValue];
+    GET_VALNB(@"vpad_followfinger")
+	if ((valNb == nil)) ifba_game_conf.vpad_followfinger=0;
+	else ifba_game_conf.vpad_followfinger = [valNb intValue];
     
     //Emulation settings
     GET_VALNB(@"asm_68k")
@@ -532,6 +539,9 @@ valNb=[prefs objectForKey:keyStr];
     SET_VALNB(@"vpad_padsize")
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_style ];
     SET_VALNB(@"vpad_style")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_followfinger ];
+    SET_VALNB(@"vpad_followfinger")
+    
     
     //emulation settings
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.asm_68k];
@@ -655,6 +665,9 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     SET_VALNB(@"vpad_padsize")
     valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_style ];
     SET_VALNB(@"vpad_style")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_followfinger ];
+    SET_VALNB(@"vpad_followfinger")
+    
     
     //emulation settings
     valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.asm_68k];
@@ -765,6 +778,7 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     REMOVE_KEY(@"vpad_padsize")
     REMOVE_KEY(@"btstack_on")
     REMOVE_KEY(@"vpad_style")
+    REMOVE_KEY(@"vpad_followfinger")
 	REMOVE_KEY(@"icade_lang")
     
     //emulation settings

@@ -197,9 +197,13 @@ NSMutableArray *filterEntries;
         filelist=[[NSMutableArray alloc] initWithCapacity:0];
         filepath=[[NSMutableArray alloc] initWithCapacity:0];
         
-        for (int i=0;i<DIRS_MAX;i++) {
-            if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
-            else cpath=nil;
+        for (int i=0;i<=DIRS_MAX;i++) {
+            if (i==DIRS_MAX) {
+                cpath=[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+            } else {
+                if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
+                else cpath=nil;
+            }
             if (cpath) {
                 dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
                 for (file in dirContent) {
@@ -227,7 +231,8 @@ NSMutableArray *filterEntries;
                 //[romlistLbl addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                 
                 int tmpchar=BurnDrvGetTextA(DRV_FULLNAME)[0];
-                if (tmpchar<'A') tmpchar='#';
+                if (tmpchar<'A') tmpchar='#';                                
+                
                 switch (ifba_conf.filter_type) {
                     case 2://genre
                         [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
@@ -258,9 +263,13 @@ NSMutableArray *filterEntries;
     } else {
         
         
-        for (int i=0;i<DIRS_MAX;i++) {
-            if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
-            else cpath=nil;
+        for (int i=0;i<=DIRS_MAX;i++) {
+            if (i==DIRS_MAX) {
+                cpath=[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+            } else {
+                if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
+                else cpath=nil;
+            }            
             if (cpath) {
                 dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
                 for (file in dirContent) {
@@ -528,6 +537,7 @@ NSMutableArray *filterEntries;
 		topLabel.highlightedTextColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 		topLabel.font = [UIFont boldSystemFontOfSize:16];
         topLabel.lineBreakMode=UILineBreakModeMiddleTruncation;
+//        topLabel.numberOfLines=0;
 		
 		//
 		// Create the label for the top row of text
@@ -617,9 +627,9 @@ NSMutableArray *filterEntries;
     cur_game_row=indexPath.row;
     cur_game_section=indexPath.section;
     
-    int playCount,fav;
+    int playCount,fav,playTime;
     char lastPlayed[11];
-    DBHelper::getGameStats([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], &playCount, &fav, lastPlayed);
+    DBHelper::getGameStats([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], &playCount, &fav, lastPlayed,&playTime);
 //    NSLog(@"Stats for %@: %d %d %s",[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension],playCount,fav,lastPlayed);
     
     DBHelper::getGameInfo([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], gameInfo);
@@ -640,6 +650,8 @@ NSMutableArray *filterEntries;
     }
     
     sprintf(gameName,"%s",[[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String]);
+    
+//    NSLog(@"launch: %s",gameName);
     launchGame=1;
     //change dir
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath objectAtIndex:index]];

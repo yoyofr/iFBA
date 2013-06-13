@@ -17,6 +17,11 @@
  #include "m68k/m68k.h"
 #endif
 
+//IOS_BUILD PATCH
+#include "cyclone.h"
+extern struct Cyclone PicoCpu[SEK_MAX];
+
+
 // Number of bits used for each page in the fast memory map
 #define SEK_BITS		(10)					// 10 = 0x0400 page size
 #define SEK_PAGE_COUNT  (1 << (24 - SEK_BITS))	// Number of pages
@@ -166,6 +171,8 @@ inline static INT32 SekSegmentCycles()
 #endif
 
 #ifdef EMU_M68K
+//IOS_BUILD PATCH    
+	if (bBurnUseASMCPUEmulation) m68k_ICount=PicoCpu[nSekActive].cycles;
 	return nSekCyclesDone + nSekCyclesToDo - m68k_ICount;
 #else
 	return nSekCyclesDone + nSekCyclesToDo;
@@ -185,6 +192,8 @@ inline static INT32 SekTotalCycles()
 #endif
 
 #ifdef EMU_M68K
+//IOS_BUILD PATCH    
+    if (bBurnUseASMCPUEmulation) m68k_ICount=PicoCpu[nSekActive].cycles;
 	return nSekCyclesTotal + nSekCyclesToDo - m68k_ICount;
 #else
 	return nSekCyclesTotal + nSekCyclesToDo;

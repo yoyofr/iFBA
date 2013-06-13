@@ -145,16 +145,19 @@ static CADisplayLink* m_displayLink;
     switch (indexPath.row) {
         case 0://Wiimote
             optWiimote=[[OptWiimoteViewController alloc] initWithNibName:@"OptWiimoteViewController" bundle:nil];
+            ((OptWiimoteViewController*)optWiimote)->emuvc=emuvc;
             [self.navigationController pushViewController:optWiimote animated:YES];
             [optWiimote release];
             break;
         case 1://iCade
             optiCade =[[OptiCadeViewController alloc] initWithNibName:@"OptiCadeViewController" bundle:nil];
+            ((OptiCadeViewController*)optiCade)->emuvc=emuvc;
             [self.navigationController pushViewController:optiCade animated:YES];
             [optiCade release];
             break;
         case 2://Virtual pad
             optVPad =[[OptVPadViewController alloc] initWithNibName:@"OptVPadViewController" bundle:nil];
+            ((OptVPadViewController*)optVPad)->emuvc=emuvc;
             [self.navigationController pushViewController:optVPad animated:YES];
             [optVPad release];
             break;

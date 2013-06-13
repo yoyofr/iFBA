@@ -168,10 +168,11 @@ INT32 MegadriveGetZipName(char** pszName, UINT32 i)
 		return 1;
 	}
 
+//IOS_BUILD_PATCH
 	// remove the "md_"
-	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
-		szFilename[j] = pszGameName[j + 3];
-	}
+//	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
+//		szFilename[j] = pszGameName[j + 3];
+//	}
 
 	*pszName = szFilename;
 

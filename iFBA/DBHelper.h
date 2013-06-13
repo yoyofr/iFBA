@@ -12,8 +12,10 @@
 namespace DBHelper 
 {
 	void getGameInfo(const char *gameName,char *gameInfo);
-    void setGameStats(const char *gameName,int playCount,int fav,char *lastPlayed);
-    void getGameStats(const char *gameName,int *playCount,int *fav,char *lastPlayed);
+    void setGameStats(const char *gameName,int playCount,int fav,char *lastPlayed,int playTime);
+    void getGameStats(const char *gameName,int *playCount,int *fav,char *lastPlayed,int *playTime);
+    
+    void createDB();
 }
 
 #endif
