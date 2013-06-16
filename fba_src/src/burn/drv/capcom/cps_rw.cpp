@@ -1,6 +1,16 @@
 #include "cps.h"
 // CPS - Read/Write
 
+//HACK
+extern int is_progear;
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y;
+extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
+extern int wait_control;
+extern void PatchMemoryProgear();
+//
+
+
 // Input bits
 #define INP(nnn) UINT8 CpsInp##nnn[8];
 CPSINPSET
@@ -561,6 +571,29 @@ INT32 CpsRwGetInp()
 		CpsPaddle1 += (CpsInpPaddle1 >> 8) & 0xff;
 		CpsPaddle2 += (CpsInpPaddle2 >> 8) & 0xff;
 	}
+    
+    //HACK
+    if (is_progear) {
+        if (glob_ffingeron) {
+            Inp001&=~((1<<4)); //clear fire 1
+            if (glob_mov_y>0) Inp001|=8;
+            if (glob_mov_y<0) Inp001|=4;
+            if (glob_mov_x<0) Inp001|=1;
+            if (glob_mov_x>0) Inp001|=2;
+            if (glob_shooton) {
+                switch (glob_shootmode) {
+                    case 0: //shoot
+                        if ((glob_autofirecpt%10)==0) Inp001|=1<<4;
+                        glob_autofirecpt++;
+                        break;
+                    case 1: //laser
+                        Inp001|=1<<4;
+                        break;
+                }
+            }
+        }
+    }
+    //
 	
 	StopOpposite(&Inp000);
 	StopOpposite(&Inp001);

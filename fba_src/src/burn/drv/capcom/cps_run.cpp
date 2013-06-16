@@ -1,6 +1,16 @@
 // CPS - Run
 #include "cps.h"
 
+//HACK
+int is_progear;
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y;
+extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
+extern int wait_control;
+extern void PatchMemoryProgear();
+//
+
+
 // Inputs:
 UINT8 CpsReset = 0;
 UINT8 Cpi01A = 0, Cpi01C = 0, Cpi01E = 0;
@@ -45,6 +55,10 @@ static INT32 DrvReset()
 {
 	// Reset machine
 	if (Cps == 2 || PangEEP || Cps1Qs == 1 || CpsBootlegEEPROM) EEPROMReset();
+    
+    //HACK
+    if (is_progear) wait_control=60;
+    //
 
 	SekOpen(0);
 	SekReset();
@@ -389,6 +403,13 @@ INT32 Cps2Frame()
 	SekSetCyclesScanline(nCpsCycles / nCpsNumScanlines);
 
 	CpsRwGetInp();											// Update the input port values
+    
+    //HACK for 'follow finger' touchpad mode
+    if (is_progear && glob_ffingeron) {
+        if ( wait_control==0 ) PatchMemoryProgear();
+        else wait_control--;
+    }
+    //
 	
 	// Check the volumes every 5 frames or so
 	if (GetCurrentFrame() % 5 == 0) {

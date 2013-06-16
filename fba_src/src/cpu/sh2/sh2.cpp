@@ -39,6 +39,9 @@
 //#include "tchar.h"
 //extern int (__cdecl *bprintf) (int nStatus, TCHAR* szFormat, ...);
 
+
+
+
 int has_sh2;
 
 /*typedef signed char INT8;
@@ -432,6 +435,7 @@ void __fastcall Sh2InnerWriteLong(unsigned int a, unsigned int d)
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2InnerWriteLong called without init\n"));
 #endif
 
+    
 	sh2_internal_w((a & 0x1fc)>>2, d, 0);
 }
 
@@ -698,6 +702,68 @@ SH2_INLINE UINT32 RL(UINT32 A)
 	return pSh2Ext->ReadLong[(uintptr_t)pr](A);
 }
 
+
+
+// HACK for touchpad 'follow finger' mode
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
+extern int glob_mov_init,glob_touchpad_cnt,glob_touchpad_fingerid,glob_ffingeron;
+extern int visible_area_w,visible_area_h;
+extern int glob_touchpad_hack;
+extern float glob_scr_ratioX,glob_scr_ratioY;
+extern int wait_control;
+
+static int pos_ofsx,pos_ofsy;
+
+void PatchMemorySH2(unsigned int adrX,unsigned int adrY,int minX,int maxX,int minY,int maxY) {
+    
+    unsigned char * pr;
+    int newd,shift;
+    UINT32 d;
+    pr = pSh2Ext->MemMap[(adrX >> SH2_SHIFT) + SH2_WADD];
+	
+    if ( glob_mov_init ) {
+        pos_ofsy=*((unsigned short *)(pr + ((adrY^2) & SH2_PAGEM)));
+        pos_ofsx=*((unsigned short *)(pr + ((adrX^2) & SH2_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    shift=1;
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
+    if (newd<minY) newd=minY;
+    if (newd>maxY) newd=maxY;
+    d=newd;
+    if (glob_touchpad_fingerid) *((unsigned short *)(pr + ((adrY^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
+    if (newd<minX) newd=minX;
+    if (newd>maxX) newd=maxX;
+    d=newd;
+    if (glob_touchpad_fingerid) *((unsigned short *)(pr + ((adrX^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_x=0;
+}
+
+
+void PatchMemorySH2FFinger() {
+    switch (glob_touchpad_hack) {
+        case 11:
+            //Gunbird 2
+            PatchMemorySH2(0x06055010,0x06055014,0x4,0xDC,0x18,0x116);
+            return;
+        case 12:
+            //Dragon Blaze
+            PatchMemorySH2(0x06070EF8,0x06070EFC,0x4,0xDB,0x18,0x106);
+            return;
+        default:break;
+            
+    }
+}
+
+
+//////////////
+
+
 SH2_INLINE void WB(UINT32 A, UINT8 V)
 {
 /*	if (A >= 0xe0000000) { sh2_internal_w((A & 0x1fc)>>2, V << (((~A) & 3)*8), ~(0xff << (((~A) & 3)*8))); return; }
@@ -723,10 +789,22 @@ SH2_INLINE void WW(UINT32 A, UINT16 V)
 	if (A >= 0xc0000000) { program_write_word_32be(A,V); return; }
 	if (A >= 0x40000000) return;
 	program_write_word_32be(A & AM,V); */
-
+    
 	unsigned char * pr;
 	pr = pSh2Ext->MemMap[(A >> SH2_SHIFT) + SH2_WADD];
 	if ((uintptr_t)pr >= SH2_MAXHANDLER) {
+        
+        //hack
+        if (glob_ffingeron&&glob_touchpad_fingerid&&(wait_control==0))
+            switch (glob_touchpad_hack) {
+                case 11: //gunbird 2
+                    if ( ((A==0x6055010)||(A==0x6055014)) ) return;
+                    break;
+                case 12: //dragon blaze
+                    if ( ((A==0x6070EF8)||(A==0x6070EFC)) ) return;
+                    break;
+            }
+    
 #ifdef LSB_FIRST
 		A ^= 2;
 #endif
@@ -742,6 +820,7 @@ SH2_INLINE void WL(UINT32 A, UINT32 V)
 	if (A >= 0xc0000000) { program_write_dword_32be(A,V); return; }
 	if (A >= 0x40000000) return;
 	program_write_dword_32be(A & AM,V); */
+    
 	unsigned char * pr;
 	pr = pSh2Ext->MemMap[(A >> SH2_SHIFT) + SH2_WADD];
 	if ((uintptr_t)pr >= SH2_MAXHANDLER) {

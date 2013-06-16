@@ -396,7 +396,6 @@ void __fastcall ps5_write_word(UINT32 address, UINT16 data)
 #ifdef LSB_FIRST
 	address ^= 2;
 #endif
-
 	if ((address & 0xfffffe00) == 0x4050000) {
 		*((UINT16 *)(DrvZoomRAM + (address & 0x1fe))) = data;
 		return;
@@ -726,9 +725,20 @@ static INT32 DrvExit()
 	return 0;
 }
 
+//HACK
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y;
+extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
+extern int wait_control;
+extern void PatchMemorySH2FFinger();
+//
+
 static INT32 DrvFrame()
 {
 	if (DrvReset) {
+        //HACK
+        wait_control=60;
+        //
 		DrvDoReset();
 	}
 
@@ -740,6 +750,34 @@ static INT32 DrvFrame()
 			DrvInputs ^= (DrvJoy1[i] & 1) << i;
 		}
 	}
+    //HACK
+    if (glob_ffingeron) {
+        DrvInputs&=~((1<<27)); //clear fire 1
+        if (glob_mov_y>0) DrvInputs^=1<<31;
+        if (glob_mov_y<0) DrvInputs^=1<<30;
+        if (glob_mov_x<0) DrvInputs^=1<<28;
+        if (glob_mov_x>0) DrvInputs^=1<<29;
+        if (glob_shooton) {
+            switch (glob_shootmode) {
+                case 0: //shoot
+                    if ((glob_autofirecpt%10)==0) DrvInputs|=1<<27;
+                    glob_autofirecpt++;
+                    break;
+                case 1: //laser
+                    DrvInputs|=1<<27;
+                    break;
+            }
+        }
+    }
+    //
+    //HACK for 'follow finger' touchpad mode
+    if (glob_ffingeron) {
+        if ( wait_control==0 ) {
+            PatchMemorySH2FFinger();
+        }
+        else wait_control--;
+    }
+    //
 
 	BurnTimerEndFrame(28636350 / 60);
 

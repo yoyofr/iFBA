@@ -311,10 +311,13 @@ inline static UINT16 FetchWord(UINT32 a)
 extern float glob_mov_x,glob_mov_y;
 extern float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
 extern int glob_mov_init,glob_touchpad_cnt,glob_touchpad_fingerid,glob_ffingeron;
-int pos_ofsx,pos_ofsy;
-int wait_control;
-int sek_touchpad_hack;
+extern int visible_area_w,visible_area_h;
+extern int glob_touchpad_hack;
+extern float glob_scr_ratioX,glob_scr_ratioY;
 
+
+static int pos_ofsx,pos_ofsy;
+int wait_control;
 
 void PatchMemoryDonpachi() {
     UINT8* pr;
@@ -327,14 +330,14 @@ void PatchMemoryDonpachi() {
         glob_mov_init=0;
     }
     
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*320/480);    
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*glob_scr_ratioY);
     if (newd<34*64) newd=34*64;
     if (newd>278*64) newd=278*64;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x10215E & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*240/320);
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*glob_scr_ratioX);
     if (newd<8*64) newd=8*64;
     if (newd>232*64) newd=232*64;
     d=newd;
@@ -353,14 +356,14 @@ void PatchMemoryDodonpachi() {
         glob_mov_init=0;
     }
     
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*320/480);
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*glob_scr_ratioY);
     if (newd<34*64) newd=34*64;
     if (newd>278*64) newd=278*64;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x102C92 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*240/320);
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*glob_scr_ratioX);
     if (newd<8*64) newd=8*64;
     if (newd>232*64) newd=232*64;
     d=newd;
@@ -379,14 +382,14 @@ void PatchMemoryFeversos() {
         glob_mov_init=0;
     }
     
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*320/480);
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*glob_scr_ratioY);
     if (newd<34*64) newd=34*64;
     if (newd>278*64) newd=278*64;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x105A1C & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*240/320);
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*glob_scr_ratioX);
     if (newd<8*64) newd=8*64;
     if (newd>232*64) newd=232*64;
     d=newd;
@@ -405,14 +408,14 @@ void PatchMemoryDogyuun() {
         glob_mov_init=0;
     }
     
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*128*320/480);
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*128*glob_scr_ratioY);
     if (newd<0x0800) newd=0x0800;
     if (newd>0x9400) newd=0x9400;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x102A80 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*128*240/320);
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*128*glob_scr_ratioX);
     if (newd<0x0600) newd=0x0600;
     if (newd>0x7200) newd=0x7200;
     d=newd;
@@ -457,14 +460,14 @@ void PatchMemoryGaregga() {
     }
     
     shift=128;
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*320/480);
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
     if (newd<0x0800/*34*shift*/) newd=0x0800/*34*shift*/;
     if (newd>0x8E00/*278*shift*/) newd=0x8E00/*278*shift*/;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x1015C4 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*240/320);
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
     if (newd<0x0400/*8*shift*/) newd=0x0400;//8*shift;
     if (newd>0x9B80/*232*shift*/) newd=0x9B80;//232*shift;
     d=newd;
@@ -483,20 +486,179 @@ void PatchMemoryTruxton2() {
         glob_mov_init=0;
     }
     
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*128*320/480);
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*128*glob_scr_ratioY);
     if (newd<0x0800) newd=0x0800;
     if (newd>0x9000) newd=0x9000;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x1005EA & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*128*240/320);
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*128*glob_scr_ratioX);
     if (newd<0x0800) newd=0x0800;
     if (newd>0x7100) newd=0x7100;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x1005EC & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_x=0;
 }
+
+void PatchMemoryKetsui() {
+    UINT8* pr;
+    int newd;
+    UINT16 d;
+    pr = FIND_W(0x80FEA4);
+    if ( glob_mov_init ) {
+        pos_ofsy=*((UINT16*)(pr + (0x80FEA4 & SEK_PAGEM)));
+        pos_ofsx=*((UINT16*)(pr + (0x80FEA6 & SEK_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*glob_scr_ratioY);
+    if (newd<0x0900) newd=0x0900;
+    if (newd>0x6500) newd=0x6500;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x80FEA4 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*glob_scr_ratioX);
+    if (newd<0x0300) newd=0x0300;
+    if (newd>0x3500) newd=0x3500;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0x80FEA6 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_x=0;
+}
+
+void PatchMemoryProgear() {
+    UINT8* pr;
+    int newd;
+    UINT16 d;
+    pr = FIND_W(0xFF42E4);
+    if ( glob_mov_init ) {
+        pos_ofsy=*((UINT16*)(pr + (0xFF42E4 & SEK_PAGEM)));
+        pos_ofsx=*((UINT16*)(pr + (0xFF42E6 & SEK_PAGEM)));
+        glob_mov_init=0;
+    }
+    
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*64*glob_scr_ratioY);
+    if (newd<0x0100) newd=0x0100;
+    if (newd>0x3600) newd=0x3600;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0xFF42E4 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*64*glob_scr_ratioX);
+    if (newd<0x04C0) newd=0x04C0;
+    if (newd>0x5AC0) newd=0x5AC0;
+    d=newd;
+    if (glob_touchpad_fingerid) *((UINT16*)(pr + (0xFF42E6 & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    glob_mov_x=0;
+}
+
+void PatchMemoryS1945() {
+    UINT8* pr;
+    int newd,shift;
+    UINT32 d;
+    pr = FIND_W(0xFE1118);
+    if ( glob_mov_init ) {
+        d=*((UINT32*)(pr + (0xFE111C & SEK_PAGEM)));
+        pos_ofsy=(d>>16)|(d<<16);
+        d=*((UINT32*)(pr + (0xFE1118 & SEK_PAGEM)));
+        pos_ofsx=(d>>16)|(d<<16);
+        glob_mov_init=0;
+    }
+    
+    shift=0x10000;
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
+    if (newd<0x00180000) newd=0x00180000;
+    if (newd>0x01100000) newd=0x01100000;
+    d=(newd>>16)|(newd<<16);
+    if (glob_touchpad_fingerid) *((UINT32*)(pr + (0xFE111C & SEK_PAGEM))) = (UINT32)BURN_ENDIAN_SWAP_INT32(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
+    if (newd<0x000A0000) newd=0x000A0000;
+    if (newd>0x00D50000) newd=0x00D50000;
+    d=(newd>>16)|(newd<<16);
+    if (glob_touchpad_fingerid) *((UINT32*)(pr + (0xFE1118 & SEK_PAGEM))) = (UINT32)BURN_ENDIAN_SWAP_INT32(d);
+    glob_mov_x=0;
+    
+    
+}
+
+void PatchMemoryGunbird() {
+    UINT8* pr;
+    int newd,shift;
+    UINT32 d;
+    pr = FIND_W(0xFE02D8);
+    if ( glob_mov_init ) {
+        d=*((UINT32*)(pr + (0xFE02DC & SEK_PAGEM)));
+        pos_ofsy=(d>>16)|(d<<16);
+        d=*((UINT32*)(pr + (0xFE02D8 & SEK_PAGEM)));
+        pos_ofsx=(d>>16)|(d<<16);
+        glob_mov_init=0;
+    }
+    
+    shift=0x10000;
+    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
+    if (newd<0x00200000) newd=0x00200000;
+    if (newd>0x01100000) newd=0x01100000;
+    d=(newd>>16)|(newd<<16);
+    if (glob_touchpad_fingerid) *((UINT32*)(pr + (0xFE02DC & SEK_PAGEM))) = (UINT32)BURN_ENDIAN_SWAP_INT32(d);
+    glob_mov_y=0;
+    
+    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
+    if (newd<0x000A0000) newd=0x000A0000;
+    if (newd>0x00D50000) newd=0x00D50000;
+    d=(newd>>16)|(newd<<16);
+    if (glob_touchpad_fingerid) *((UINT32*)(pr + (0xFE02D8 & SEK_PAGEM))) = (UINT32)BURN_ENDIAN_SWAP_INT32(d);
+    glob_mov_x=0;
+}
+
+void PatchMemoryFFinger() {
+    switch (glob_touchpad_hack) {
+        case 1://donpachi
+            PatchMemoryDonpachi();
+            return;
+        case 2:
+            //dodonpachi
+            PatchMemoryDodonpachi();
+            return;
+        case 3:
+            //feversos
+            PatchMemoryFeversos();
+            return;
+        case 4:
+            //garegga
+            PatchMemoryGaregga();
+            return;
+        case 5:
+            //dogyuun
+            PatchMemoryDogyuun();
+            return;
+        case 6:
+            //truxton2
+            PatchMemoryTruxton2();
+            return;
+        case 7:
+            //ketsui
+            PatchMemoryKetsui();
+            return;
+        case 8:
+            //progear
+            PatchMemoryProgear();
+            return;
+        case 9:
+            //s1945
+            PatchMemoryS1945();
+            return;
+        case 10:
+            //Gunbird
+            PatchMemoryGunbird();
+            return;
+        default:break;
+            
+    }
+}
+
 
 
 
@@ -509,30 +671,38 @@ inline static void WriteWord(UINT32 a, UINT16 d)
 
 	pr = FIND_W(a);
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
-        if (glob_ffingeron&&glob_touchpad_fingerid)
-        switch (sek_touchpad_hack) {
+        if (glob_ffingeron&&glob_touchpad_fingerid&&(wait_control==0))
+        switch (glob_touchpad_hack) {
             case 1: //donpachi
-                if ( ((a==0x10215E)||(a==0x102160)) && (wait_control==0)) return;
+                if ( ((a==0x10215E)||(a==0x102160)) ) return;
                 break;
             case 2:
                 //dodonpachi
-                if ( ((a==0x102C92)||(a==0x102C94)) && (wait_control==0)) return;
+                if ( ((a==0x102C92)||(a==0x102C94))) return;
                 break;
             case 3:
                 //feversos
-                if ( ((a==0x105A1C)||(a==0x105A1E)) && (wait_control==0)) return;
+                if ( ((a==0x105A1C)||(a==0x105A1E))) return;
                 break;
             case 4:
                 //garegga
-                if ( ((a==0x1015C4)||(a==0x101616)) && (wait_control==0) && (d!=0xD000) && (garegga_respawn==0)) return;
+                if ( ((a==0x1015C4)||(a==0x101616)) && (d!=0xD000) && (garegga_respawn==0)) return;
                 break;
             case 5:
                 //dogyuun
-                if ( ((a==0x102A80)||(a==0x102A82)) && (wait_control==0)) return;
+                if ( ((a==0x102A80)||(a==0x102A82))) return;
                 break;
             case 6:
                 //truxton2
-                if ( ((a==0x1005EA)||(a==0x1005EC)) && (wait_control==0)) return;
+                if ( ((a==0x1005EA)||(a==0x1005EC))) return;
+                break;
+            case 7:
+                //ketsui
+                if ( ((a==0x80FEA4)||(a==0x80FEA6))) return;
+                break;
+            case 8:
+                //progear
+                if ( ((a==0xFF42E4)||(a==0xFF42E6))) return;
                 break;
             default:break;
         }
@@ -598,9 +768,21 @@ inline static void WriteLong(UINT32 a, UINT32 d)
 	a &= 0xFFFFFF;
     
 //	bprintf(PRINT_NORMAL, _T("write32 0x%08X\n"), a);
+    //if ((a>=0xFE1118)&&(a<=0xFE111E)) printf("w32.%08X: %08X\n",a,d);
 
 	pr = FIND_W(a);
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
+        if (glob_ffingeron&&glob_touchpad_fingerid && (wait_control==0))
+            switch (glob_touchpad_hack) {
+                case 9: //strikers 1945
+                    if ( ((a==0xfe1118)||(a==0xfe111C))) return;
+                    break;
+                case 10: //gunbird
+                    if ( ((a==0xfe02D8)||(a==0xfe02DC))) return;
+                    break;
+                default:break;
+            }
+        
 		d = (d >> 16) | (d << 16);
 		*((UINT32*)(pr + (a & SEK_PAGEM))) = BURN_ENDIAN_SWAP_INT32(d);
 		return;
@@ -1150,8 +1332,6 @@ INT32 SekInit(INT32 nCount, INT32 nCPUType)
 	DebugCPU_SekInitted = 1;
 	
 	struct SekExt* ps = NULL;
-    
-    sek_touchpad_hack=0;
 
 #if !defined BUILD_A68K
 	bBurnUseASMCPUEmulation = false;

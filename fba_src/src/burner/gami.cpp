@@ -1,6 +1,8 @@
 // Burner Game Input
 #include "burner.h"
 
+extern char debug_root_path[512];
+
 //YOYOFR UPDATE
 // Player Default Controls
 INT32 nPlayerDefaultControls[4] = {1, 2, 3, 4};
@@ -1536,10 +1538,19 @@ INT32 GameInputAutoIni(INT32 nPlayer, TCHAR* lpszFile, bool bOverWrite)
 INT32 ConfigGameLoadHardwareDefaults()
 {
 #ifdef IOS_BUILD
+#ifdef RELEASE_DEBUG
+    TCHAR szDefaultCpsFile[512];
+    TCHAR szDefaultNeogeoFile[512];
+    TCHAR szDefaultPgmFile[512];
+    sprintf(szDefaultCpsFile,"%s/cps.ini",debug_root_path);
+    sprintf(szDefaultNeogeoFile,"%s/neogeo.ini",debug_root_path);	
+    sprintf(szDefaultPgmFile,"%s/pgm.ini",debug_root_path);
+#else
     TCHAR *szDefaultCpsFile = _T("/var/mobile/Documents/iFBA/cps.ini");
 	TCHAR *szDefaultNeogeoFile = _T("/var/mobile/Documents/iFBA/neogeo.ini");
 	TCHAR *szDefaultPgmFile = _T("/var/mobile/Documents/iFBA/pgm.ini");
-#else    
+#endif
+#else
 	TCHAR *szDefaultCpsFile = _T("config/presets/cps.ini");
 	TCHAR *szDefaultNeogeoFile = _T("config/presets/neogeo.ini");
 	TCHAR *szDefaultPgmFile = _T("config/presets/pgm.ini");

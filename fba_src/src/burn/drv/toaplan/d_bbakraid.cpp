@@ -887,6 +887,8 @@ static INT32 DrvExit()
 
 	EEPROMExit();
 
+//hack
+#if 0
 		if (bUseAsm68KCoreOldValue) {
 #if 1 && defined FBA_DEBUG
 			bprintf(PRINT_NORMAL, _T("Switching back to A68K core\n"));
@@ -894,7 +896,8 @@ static INT32 DrvExit()
 			bUseAsm68KCoreOldValue = false;
 			bBurnUseASMCPUEmulation = true;
 		}
-
+#endif
+    
 	BurnFree(Mem);
 
 	return 0;

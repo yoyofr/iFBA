@@ -349,7 +349,6 @@ inline static INT32 CheckSleep(INT32)
 extern float glob_mov_x,glob_mov_y;
 extern float glob_pos_x,glob_pos_y;
 extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
-extern int sek_touchpad_hack;
 extern int wait_control;
 extern void PatchMemoryTruxton2();
 //
@@ -395,7 +394,6 @@ static INT32 DrvFrame()
             }
         }
     }
-    sek_touchpad_hack=6;
     //
 
 	ToaClearOpposites(&DrvInput[0]);

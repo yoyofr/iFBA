@@ -8,6 +8,8 @@
 
 #define min(a,b) (a<b?a:b)
 
+#include "TestFlight.h"
+
 #import "fbaconf.h"
 #include "DBHelper.h"
 
@@ -17,6 +19,10 @@ float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
 int glob_mov_init,glob_touchpad_cnt=0,glob_ffingeron=0;
 int glob_touchpad_fingerid=0;
 int glob_shootmode=0,glob_shooton=0,glob_autofirecpt;
+//int glob_scr_width=320,glob_scr_height=480;
+int glob_touchpad_hack;
+static int is_progear=0;
+float glob_scr_ratioX=1,glob_scr_ratioY=1;
 
 //
 
@@ -147,7 +153,7 @@ extern bool bAppDoFast;
 void updateVbuffer(unsigned short *buff,int w,int h,int pitch);
 
 static unsigned short *vbuffer;
-static int visible_area_w,visible_area_h;
+int visible_area_w,visible_area_h;
 static int vid_rotated,vid_aspectX,vid_aspectY;
 int nShouldExit;
 static GLuint txt_vbuffer;
@@ -426,6 +432,7 @@ static UILabel *statusMsgview=nil;
 static UILabel *statusLoadMsgview=nil;
 static char statusMsg[512];
 static char statusLoadMsg[512];
+
 static int statusMsgUpdated=0;
 static int statusLoadMsgUpdated=0;
 
@@ -771,6 +778,75 @@ static int statusLoadMsgUpdated=0;
             vpad_button_nb_save=vpad_button_nb;
             computePadLayouts(vpad_button_nb-VPAD_SPECIALS_BUTTON_NB);
             
+            
+            //////////////
+            is_progear=0;
+            cur_ifba_conf->vpad_followfinger=0;
+            if (strcmp(gameName,"donpachi")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=1;
+            }
+            if (strcmp(gameName,"donpachij")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=1;
+            }
+            if (strcmp(gameName,"ddonpach")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=2;
+            }
+            if (strcmp(gameName,"ddonpachj")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=2;
+            }
+            if (strcmp(gameName,"feversos")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=3;
+            }
+            if (strcmp(gameName,"dfeveron")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=3;
+            }
+            if (strcmp(gameName,"bgaregga")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=4;
+            }
+            if (strcmp(gameName,"bgareggat2")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=4;
+            }
+            if (strcmp(gameName,"dogyuun")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=5;
+            }
+            if (strcmp(gameName,"truxton2")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=6;
+            }
+            if (strcmp(gameName,"ket")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=7;
+            }
+            if (strcmp(gameName,"progear")==0) {
+                cur_ifba_conf->vpad_followfinger=1; is_progear=1;glob_touchpad_hack=8;
+            }
+            if (strcmp(gameName,"s1945")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=9;
+            }
+            if (strcmp(gameName,"gunbird")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=10;
+            }
+            if (strcmp(gameName,"gunbird2")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=11;
+            }
+            if (strcmp(gameName,"dragnblz")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=12;
+            }
+            if (cur_ifba_conf->vpad_followfinger) {
+                [TestFlight passCheckpoint:@"FINGER_MODE"];
+                //printf("Using follow-finger touchscreen mode\n");
+                
+                UIAlertView* alert =
+                [[UIAlertView alloc] initWithTitle:@"Follow finger mode"
+                                           message:[NSString stringWithFormat:@"%s is compatible with follow finger mode.\nTap on 'service' button to switch between controls mode.\n\nFor classic 'service' button (if supported by game), hold one finger somewhere on the screen and press 'service' with a second finger.",gameName]
+                                          delegate:nil cancelButtonTitle:@"Close" otherButtonTitles: nil];
+                [alert show];
+                [alert release];
+            }
+            glob_ffingeron=cur_ifba_conf->vpad_followfinger;
+            
+            
+            //////////////////
+            
+            
             [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
             launchGame=0;
             prgview=[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -845,7 +921,7 @@ static int statusLoadMsgUpdated=0;
         DBHelper::getGameStats(gameName, &playCount, &fav, lastPlayed,&playTime);
         playTime+=playTime_incr;
         DBHelper::setGameStats(gameName, playCount, fav, lastPlayed,playTime);
-        NSLog(@"exit emuview, set Stats: pc:%d, fav:%d, lp:%s, pt:%d",playCount,fav,lastPlayed,playTime);
+        //NSLog(@"exit emuview, set Stats: pc:%d, fav:%d, lp:%s, pt:%d",playCount,fav,lastPlayed,playTime);
     }
     
     //reset rendering mode
@@ -1308,19 +1384,9 @@ void stopWiimoteDetection(void) {
     }
     sprintf(argv[1],"%s",gameName);
     
-    cur_ifba_conf->vpad_followfinger=0;
-    if (strcmp(gameName,"donpachi")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"donpachij")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"ddonpach")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"ddonpachj")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"feversos")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"dfeveron")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"bgaregga")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"bgareggat2")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"dogyuun")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (strcmp(gameName,"truxton2")==0) cur_ifba_conf->vpad_followfinger=1;
-    if (cur_ifba_conf->vpad_followfinger) printf("Using follow-finger touchscreen mode\n");
-    glob_ffingeron=cur_ifba_conf->vpad_followfinger;
+    //TFLog(@"Start game: %s",gameName);
+    [TestFlight passCheckpoint:[NSString stringWithFormat:@"Start game: %s",gameName]];
+    
     
     fba_main(argc,(char**)argv);
     free (argv[0]);
@@ -1398,8 +1464,11 @@ int vstick_update_status(int rx,int ry) {
 
 
 void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,float ly) {
-    //    printf("touch %08X, type %d, %f x %f\n",touch_id,evt_type,x,y);
+    //printf("%d/touch %08X, type %d, %f x %f\n",glob_touchpad_cnt,touch_id,evt_type,x,y);
     int ret;
+    
+    if (is_progear) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
+    
     switch (evt_type) {
         case 1: //Pressed
             virtual_stick_on=1;
@@ -1422,8 +1491,11 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
                                 case GN_A: //shoot on/off
                                     glob_shooton^=1;
                                     break;
+                                case GN_D:
+                                    if (is_progear) glob_shootmode^=1;
+                                    break;
                                 case GN_SERVICE: //switch finger/normal touch control if at least 2 fingers press screen
-                                    if (glob_touchpad_cnt>=2) {
+                                    if (glob_touchpad_cnt==1) {
                                         joy_state[0][GN_SERVICE]=0;
                                         glob_ffingeron=0;
                                     }
@@ -1433,7 +1505,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
                         //break;  //no break, allow 2 or more buttons with 1 finger
                     }
                 }
-                if (!button_pressed) {
+                if ((!button_pressed)&&(glob_touchpad_fingerid==0)) {
                     glob_touchpad_fingerid=touch_id;
                     glob_pos_x=x;
                     glob_pos_y=y;
@@ -1464,7 +1536,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
                             //break;  //no break, allow 2 or more buttons with 1 finger
                             
                             if ((virtual_stick[i].button_id==GN_SERVICE)&&cur_ifba_conf->vpad_followfinger) {//switch finger/normal touch control
-                                if (glob_touchpad_cnt>=2) {
+                                if (glob_touchpad_cnt==1) {
                                     joy_state[0][GN_SERVICE]=0;
                                     glob_ffingeron=1;
                                 }
@@ -1572,8 +1644,8 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
         case 0: //Release
             virtual_stick_on=1;
             glob_touchpad_cnt--;
-            
-            if (touch_id==glob_touchpad_fingerid) glob_touchpad_fingerid=0;
+            if (glob_touchpad_cnt<0) glob_touchpad_cnt=0;
+            if ((touch_id==glob_touchpad_fingerid)||(glob_touchpad_cnt==0)) glob_touchpad_fingerid=0;
             
             if (virtual_stick_padfinger==touch_id) {
                 virtual_stick_padfinger=0;
@@ -1641,6 +1713,8 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
 - (void)drawVPad {
     int cur_width=m_oglView.frame.size.width;
     int cur_height=m_oglView.frame.size.height;
+    
+    if (is_progear) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
     
     
     virtual_stick_buttons_alpha=64*cur_ifba_conf->vpad_alpha;
@@ -2056,10 +2130,10 @@ int StopProgressBar() {
             break;
         case 1://max with room for vpad
             if (ios_aspect>game_aspect) {
-                rh=height-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f);
+                rh=height-virtual_stick_maxdist*(device_isIpad?2.5f:1.2f);
                 rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
             } else {
-                rh=height-virtual_stick_maxdist*(device_isIpad?2.5f:1.1f);
+                rh=height-virtual_stick_maxdist*(device_isIpad?2.5f:1.2f);
                 rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
                 if (rw>width) {
                     rw=width;
@@ -2079,7 +2153,16 @@ int StopProgressBar() {
             break;
     }
     
-    //    NSLog(@"%d / %d x %d / %f %f",cur_ifba_conf->screen_mode,rw,rh,ios_aspect,game_aspect);
+    if (vid_rotated&1) {
+        glob_scr_ratioX=(float)visible_area_h/rw;
+        glob_scr_ratioY=(float)visible_area_w/rh;
+    } else {
+        glob_scr_ratioX=(float)visible_area_w/rw;
+        glob_scr_ratioY=(float)visible_area_h/rh;
+    }
+    //    static int yoyo=0;
+    //    yoyo++;
+    //    if ((yoyo%60)==0) NSLog(@"%d x %d / %d x %d / %f %f",rw,rh,visible_area_w,visible_area_h,glob_scr_ratioX,glob_scr_ratioY);
     
     glViewport((width-rw)>>1, height-rh, rw, rh);
     if (vid_rotated&&(pb_value==1)) {

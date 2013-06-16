@@ -1308,12 +1308,24 @@ static INT32 psikyoCheckSleep(INT32)
 	return 0;
 }
 
+//HACK
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y;
+extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
+extern int wait_control;
+extern void PatchMemoryFFinger();
+//
+
+
 static INT32 DrvFrame()
 {
 	INT32 nCyclesVBlank;
 	INT32 nInterleave = 16;
 
 	if (DrvReset) {														// Reset machine
+        //HACK
+        wait_control=60;
+        //		
 		DrvDoReset();
 	}
 
@@ -1327,11 +1339,40 @@ static INT32 DrvFrame()
 		DrvInput[1] |= (DrvInp1[i] & 1) << (i + 0);
 		DrvInput[1] |= (DrvInp2[i] & 1) << (i + 8);
 	}
+    //HACK
+    if (glob_ffingeron) {
+        DrvInput[0]&=~((1<<11)); //clear fire 1
+        if (glob_mov_y>0) DrvInput[0]|=1<<15;
+        if (glob_mov_y<0) DrvInput[0]|=1<<14;
+        if (glob_mov_x<0) DrvInput[0]|=1<<12;
+        if (glob_mov_x>0) DrvInput[0]|=1<<13;
+        if (glob_shooton) {
+            switch (glob_shootmode) {
+                case 0: //shoot
+                    if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<11;
+                    glob_autofirecpt++;
+                    break;
+                case 1: //laser
+                    DrvInput[0]|=1<<11;
+                    break;
+            }
+        }
+    }
+    //
 
 	SekNewFrame();
 	ZetNewFrame();
 	
 	SekOpen(0);
+    
+    //HACK for 'follow finger' touchpad mode
+    if (glob_ffingeron) {
+        if ( wait_control==0 ) {
+            PatchMemoryFFinger();
+        }
+        else wait_control--;
+    }
+    //
 
 	if (nPrevBurnCPUSpeedAdjust != nBurnCPUSpeedAdjust) {
 		// 68K CPU clock is 16MHz, modified by nBurnCPUSpeedAdjust

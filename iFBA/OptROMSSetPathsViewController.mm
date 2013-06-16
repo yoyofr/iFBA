@@ -10,6 +10,8 @@
 #include "burner.h"
 #import "fbaconf.h"
 
+extern char debug_root_path[512];
+
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern int szAppRomPathsSelected;
 static char currentPath[MAX_PATH];
@@ -131,7 +133,11 @@ static CADisplayLink* m_displayLink;
     dirlist=[[NSMutableArray alloc] initWithCapacity:0];
     
     if (currentPath[0]==0) {
+#ifdef RELEASE_DEBUG
+        strcpy(currentPath,debug_root_path);
+#else
         strcpy(currentPath,"/var/mobile/Documents/iFBA");
+#endif
     }
     cpath=[NSString stringWithFormat:@"%s",currentPath];
     if ([cpath compare:@"/"]!=NSOrderedSame) {//Not at root level, add ".." dir

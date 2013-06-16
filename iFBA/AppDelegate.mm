@@ -20,6 +20,7 @@ static float sys_brightness;
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
+#include "TestFlight.h"
 
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
@@ -96,6 +97,8 @@ valNb=[prefs objectForKey:a];
             
         }
     }
+    
+    
     GET_VALNB(@"btstack_on")
 	if ((valNb == nil)||reset_settings) ifba_conf.btstack_on=0;
 	else ifba_conf.btstack_on = [valNb intValue];
@@ -115,7 +118,7 @@ valNb=[prefs objectForKey:a];
 	if ((valNb == nil)||reset_settings) ifba_conf.aspect_ratio=1;
 	else ifba_conf.aspect_ratio = [valNb intValue];
     GET_VALNB(@"screen_mode")
-	if ((valNb == nil)||reset_settings) ifba_conf.screen_mode=2;
+	if ((valNb == nil)||reset_settings) ifba_conf.screen_mode=1;
 	else ifba_conf.screen_mode = [valNb intValue];
     GET_VALNB(@"filtering")
 	if ((valNb == nil)||reset_settings) ifba_conf.filtering=1;
@@ -847,6 +850,11 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+    [TestFlight takeOff:@"56f0ec34-3ad4-4db7-9a15-0edbd4f1f3ff"];
+    
+    
+    //TODO: to review
     if([[UIScreen screens]count]*0 > 1) { //if there are more than 1 screens connected to the device    
         CGSize max;
         UIScreenMode *maxScreenMode;
@@ -913,7 +921,7 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     //    NSLog(@"lowmem_device: %d",lowmem_device);
     
     /* Set working directory to resource path */
-    //NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *documentsDirectory=@"/var/mobile/Documents/iFBA";
     [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory withIntermediateDirectories:TRUE attributes:nil error:nil];
     [[NSFileManager defaultManager] changeCurrentDirectoryPath: documentsDirectory];
@@ -921,6 +929,7 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
 #if RELEASE_DEBUG
     strcpy(debug_root_path,[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] UTF8String]);
     strcpy(debug_bundle_path,[[[NSBundle mainBundle] resourcePath] UTF8String]);
+
 #endif
     
 
@@ -1013,6 +1022,8 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
         UIAlertView *settingsMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
         [settingsMsg show];
     }
+    
+    [TestFlight passCheckpoint:@"LAUNCH_OK"];
     return YES;
 }
 

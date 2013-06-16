@@ -2377,6 +2377,9 @@
 		33A7E73F14FA97E5007B42B9 /* sdl_font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */; };
 		33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33A7E74314FABEDB007B42B9 /* fastarm_memfunc.o */; };
 		33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AD897B14F85A4D00239FB6 /* Cyclone.o */; };
+		33B581FD176CC06B00421AE5 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33B581F9176CC06B00421AE5 /* libTestFlight.a */; };
+		33B581FE176CC06B00421AE5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 33B581FA176CC06B00421AE5 /* README.md */; };
+		33B581FF176CC06B00421AE5 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 33B581FB176CC06B00421AE5 /* release_notes.md */; };
 		33B584EF150E8463000B5D03 /* DPad_D.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584E6150E8463000B5D03 /* DPad_D.png */; };
 		33B584F0150E8463000B5D03 /* DPad_DL.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584E7150E8463000B5D03 /* DPad_DL.png */; };
 		33B584F1150E8463000B5D03 /* DPad_DR.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584E8150E8463000B5D03 /* DPad_DR.png */; };
@@ -4891,7 +4894,6 @@
 		336B529A14F4439B00CE9A63 /* s2650_intf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = s2650_intf.cpp; sourceTree = "<group>"; };
 		336B529B14F4439B00CE9A63 /* s2650_intf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = s2650_intf.h; sourceTree = "<group>"; };
 		336B529D14F4439B00CE9A63 /* sh2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sh2.cpp; sourceTree = "<group>"; };
-		336B529E14F4439B00CE9A63 /* sh2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sh2.h; sourceTree = "<group>"; };
 		336B52A214F4439B00CE9A63 /* z80.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = z80.cpp; sourceTree = "<group>"; };
 		336B52A314F4439B00CE9A63 /* z80.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = z80.h; sourceTree = "<group>"; };
 		336B52A414F4439B00CE9A63 /* z80daisy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = z80daisy.cpp; sourceTree = "<group>"; };
@@ -5050,6 +5052,10 @@
 		33AD897A14F85A4D00239FB6 /* cyclone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclone.h; sourceTree = "<group>"; };
 		33AD897B14F85A4D00239FB6 /* Cyclone.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Cyclone.o; sourceTree = "<group>"; };
 		33AD897C14F85A4D00239FB6 /* Cyclone.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = Cyclone.s; sourceTree = "<group>"; };
+		33B581F9176CC06B00421AE5 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		33B581FA176CC06B00421AE5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		33B581FB176CC06B00421AE5 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		33B581FC176CC06B00421AE5 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		33B584E6150E8463000B5D03 /* DPad_D.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_D.png; sourceTree = "<group>"; };
 		33B584E7150E8463000B5D03 /* DPad_DL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_DL.png; sourceTree = "<group>"; };
 		33B584E8150E8463000B5D03 /* DPad_DR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DPad_DR.png; sourceTree = "<group>"; };
@@ -5148,6 +5154,7 @@
 				33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */,
 				33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */,
 				334F5FB614FC000900ED3CDB /* libBTstack.dylib in Frameworks */,
+				33B581FD176CC06B00421AE5 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6227,7 +6234,6 @@
 			isa = PBXGroup;
 			children = (
 				336B529D14F4439B00CE9A63 /* sh2.cpp */,
-				336B529E14F4439B00CE9A63 /* sh2.h */,
 			);
 			path = sh2;
 			sourceTree = "<group>";
@@ -6436,6 +6442,7 @@
 		339E5FA314F1851D006FB970 = {
 			isa = PBXGroup;
 			children = (
+				33B581F8176CC06B00421AE5 /* TestFlightSDK1.2.6 */,
 				33065D68153987EC00EE27BC /* MediaPlayer.framework */,
 				336D5BBC151DE92E006D8984 /* libsqlite3.dylib */,
 				336B4FAC14F4439A00CE9A63 /* fbasrc */,
@@ -8395,6 +8402,17 @@
 			path = cyclone;
 			sourceTree = "<group>";
 		};
+		33B581F8176CC06B00421AE5 /* TestFlightSDK1.2.6 */ = {
+			isa = PBXGroup;
+			children = (
+				33B581F9176CC06B00421AE5 /* libTestFlight.a */,
+				33B581FA176CC06B00421AE5 /* README.md */,
+				33B581FB176CC06B00421AE5 /* release_notes.md */,
+				33B581FC176CC06B00421AE5 /* TestFlight.h */,
+			);
+			path = TestFlightSDK1.2.6;
+			sourceTree = "<group>";
+		};
 		33E88A1D150CADC80030EFF7 /* pce */ = {
 			isa = PBXGroup;
 			children = (
@@ -10303,6 +10321,8 @@
 				33065D75153A0EBA00EE27BC /* button_6.png in Resources */,
 				33A1E84E153B56BE00172A56 /* ddp2.ico in Resources */,
 				33A1E851153B56C900172A56 /* dmnfrnt.ico in Resources */,
+				33B581FE176CC06B00421AE5 /* README.md in Resources */,
+				33B581FF176CC06B00421AE5 /* release_notes.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10938,6 +10958,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iFBA/iFBA-Prefix.pch";
 				GCC_THUMB_SUPPORT = YES;
@@ -10947,8 +10968,11 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Lib\"",
 					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.5\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.6\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Distribution;
@@ -11034,6 +11058,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Lib\"",
 					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.5\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.6\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -11053,6 +11079,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Lib\"",
 					"\"$(SRCROOT)/TestFlightSDK0.8.3\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.5\"",
+					"\"$(SRCROOT)/TestFlightSDK1.2.6\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
