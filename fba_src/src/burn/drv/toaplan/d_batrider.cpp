@@ -824,11 +824,23 @@ static INT32 drvDraw()
 	return 0;
 }
 
+//HACK
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y;
+extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
+extern int wait_control;
+extern void PatchMemory68KFFinger();
+//
+
+
 static INT32 drvFrame()
 {
 	INT32 nInterleave = 8;
 
 	if (drvReset) {														// Reset machine
+		//HACK
+        wait_control=60;
+        //
 		drvDoReset();
 	}
 
@@ -841,6 +853,28 @@ static INT32 drvFrame()
 		drvInput[1] |= (drvJoy2[i] & 1) << i;
 		drvInput[2] |= (drvButton[i] & 1) << i;
 	}
+    
+    //HACK
+    if (glob_ffingeron) {
+        drvInput[0]&=~((1<<4)); //clear fire 1
+        if (glob_mov_y>0) drvInput[0]|=1;
+        if (glob_mov_y<0) drvInput[0]|=2;
+        if (glob_mov_x<0) drvInput[0]|=4;
+        if (glob_mov_x>0) drvInput[0]|=8;
+        if (glob_shooton) {
+            switch (glob_shootmode) {
+                case 0: //shoot
+                    if ((glob_autofirecpt%10)==0) drvInput[0]|=1<<4;
+                    glob_autofirecpt++;
+                    break;
+                case 1: //laser
+                    drvInput[0]|=1<<4;
+                    break;
+            }
+        }
+    }
+    //
+    
 	ToaClearOpposites(&drvInput[0]);
 	ToaClearOpposites(&drvInput[1]);
 
@@ -851,6 +885,14 @@ static INT32 drvFrame()
 	nCyclesDone[0] = nCyclesDone[1] = 0;
 
 	SekOpen(0);
+    
+    //HACK for 'follow finger' touchpad mode
+    if (glob_ffingeron) {
+        if ( wait_control==0 ) PatchMemory68KFFinger();
+        else wait_control--;
+    }
+    //
+    
 	
 	SekSetCyclesScanline(nCyclesTotal[0] / 262);
 	nToaCyclesDisplayStart = nCyclesTotal[0] - ((nCyclesTotal[0] * (TOA_VBLANK_LINES + 240)) / 262);

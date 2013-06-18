@@ -1313,7 +1313,7 @@ extern float glob_mov_x,glob_mov_y;
 extern float glob_pos_x,glob_pos_y;
 extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
 extern int wait_control;
-extern void PatchMemoryFFinger();
+extern void PatchMemory68KFFinger();
 //
 
 
@@ -1368,7 +1368,7 @@ static INT32 DrvFrame()
     //HACK for 'follow finger' touchpad mode
     if (glob_ffingeron) {
         if ( wait_control==0 ) {
-            PatchMemoryFFinger();
+            PatchMemory68KFFinger();
         }
         else wait_control--;
     }

@@ -21,7 +21,7 @@ int glob_touchpad_fingerid=0;
 int glob_shootmode=0,glob_shooton=0,glob_autofirecpt;
 //int glob_scr_width=320,glob_scr_height=480;
 int glob_touchpad_hack;
-static int is_progear=0;
+int is_progear=0,is_dimahoo=0;
 float glob_scr_ratioX=1,glob_scr_ratioY=1;
 
 //
@@ -781,6 +781,7 @@ static int statusLoadMsgUpdated=0;
             
             //////////////
             is_progear=0;
+            is_dimahoo=0;
             cur_ifba_conf->vpad_followfinger=0;
             if (strcmp(gameName,"donpachi")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=1;
@@ -829,6 +830,15 @@ static int statusLoadMsgUpdated=0;
             }
             if (strcmp(gameName,"dragnblz")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=12;
+            }
+            if (strcmp(gameName,"batrider")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=13;
+            }
+            if (strcmp(gameName,"bbakraid")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=14;
+            }
+            if (strcmp(gameName,"dimahoo")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=15;is_dimahoo=1;
             }
             if (cur_ifba_conf->vpad_followfinger) {
                 [TestFlight passCheckpoint:@"FINGER_MODE"];
@@ -1467,7 +1477,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
     //printf("%d/touch %08X, type %d, %f x %f\n",glob_touchpad_cnt,touch_id,evt_type,x,y);
     int ret;
     
-    if (is_progear) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
+    if (is_progear||is_dimahoo) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
     
     switch (evt_type) {
         case 1: //Pressed
@@ -1492,7 +1502,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
                                     glob_shooton^=1;
                                     break;
                                 case GN_D:
-                                    if (is_progear) glob_shootmode^=1;
+                                    if (is_progear||is_dimahoo) glob_shootmode^=1;
                                     break;
                                 case GN_SERVICE: //switch finger/normal touch control if at least 2 fingers press screen
                                     if (glob_touchpad_cnt==1) {
@@ -1645,7 +1655,10 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
             virtual_stick_on=1;
             glob_touchpad_cnt--;
             if (glob_touchpad_cnt<0) glob_touchpad_cnt=0;
-            if ((touch_id==glob_touchpad_fingerid)||(glob_touchpad_cnt==0)) glob_touchpad_fingerid=0;
+            if ((touch_id==glob_touchpad_fingerid)||(glob_touchpad_cnt==0)) {
+                glob_touchpad_fingerid=0;
+                glob_mov_x=glob_mov_y=0;
+            }
             
             if (virtual_stick_padfinger==touch_id) {
                 virtual_stick_padfinger=0;
@@ -1714,7 +1727,7 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     int cur_width=m_oglView.frame.size.width;
     int cur_height=m_oglView.frame.size.height;
     
-    if (is_progear) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
+    if (is_progear||is_dimahoo) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
     
     
     virtual_stick_buttons_alpha=64*cur_ifba_conf->vpad_alpha;

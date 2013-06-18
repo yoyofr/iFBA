@@ -1,9 +1,6 @@
 #include "cps.h"
 // CPS (general)
 
-//hack
-extern int is_progear;
-
 INT32 Cps = 0;							// 1 = CPS1, 2 = CPS2, 3 = CPS Changer
 INT32 Cps1Qs = 0;
 INT32 Cps1DisablePSnd = 0;				// Disables the Z80 as well
@@ -1244,10 +1241,6 @@ static INT32 CpsGetROMs(bool bLoad)
 {
 	struct BurnRomInfo ri;
     
-    //hack
-    is_progear = (strncmp(BurnDrvGetTextA(DRV_NAME), "progea", 6) == 0) ? 1 : 0;
-    
-
 	UINT8* CpsCodeLoad = CpsCode;
 	UINT8* CpsRomLoad = CpsRom;
 	UINT8* CpsGfxLoad = CpsGfx;

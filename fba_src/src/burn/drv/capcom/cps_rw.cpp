@@ -2,12 +2,11 @@
 // CPS - Read/Write
 
 //HACK
-extern int is_progear;
 extern float glob_mov_x,glob_mov_y;
 extern float glob_pos_x,glob_pos_y;
 extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
 extern int wait_control;
-extern void PatchMemoryProgear();
+extern int is_progear,is_dimahoo;
 //
 
 
@@ -573,8 +572,8 @@ INT32 CpsRwGetInp()
 	}
     
     //HACK
-    if (is_progear) {
         if (glob_ffingeron) {
+            if (is_progear||is_dimahoo) {
             Inp001&=~((1<<4)); //clear fire 1
             if (glob_mov_y>0) Inp001|=8;
             if (glob_mov_y<0) Inp001|=4;
@@ -592,7 +591,8 @@ INT32 CpsRwGetInp()
                 }
             }
         }
-    }
+        }
+
     //
 	
 	StopOpposite(&Inp000);

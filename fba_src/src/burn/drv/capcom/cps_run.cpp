@@ -2,12 +2,11 @@
 #include "cps.h"
 
 //HACK
-int is_progear;
 extern float glob_mov_x,glob_mov_y;
 extern float glob_pos_x,glob_pos_y;
 extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
 extern int wait_control;
-extern void PatchMemoryProgear();
+extern void PatchMemory68KFFinger();
 //
 
 
@@ -57,7 +56,7 @@ static INT32 DrvReset()
 	if (Cps == 2 || PangEEP || Cps1Qs == 1 || CpsBootlegEEPROM) EEPROMReset();
     
     //HACK
-    if (is_progear) wait_control=60;
+    if (glob_ffingeron) wait_control=60;
     //
 
 	SekOpen(0);
@@ -405,8 +404,8 @@ INT32 Cps2Frame()
 	CpsRwGetInp();											// Update the input port values
     
     //HACK for 'follow finger' touchpad mode
-    if (is_progear && glob_ffingeron) {
-        if ( wait_control==0 ) PatchMemoryProgear();
+    if (glob_ffingeron) {
+        if ( wait_control==0 ) PatchMemory68KFFinger();
         else wait_control--;
     }
     //
