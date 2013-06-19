@@ -4,7 +4,6 @@
 #include "v3021.h"
 
 //HACK
-int is_ketsui;
 extern float glob_mov_x,glob_mov_y;
 extern float glob_pos_x,glob_pos_y;
 extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
@@ -119,8 +118,6 @@ static INT32 pgmGetRoms(bool bLoad)
 {
 	INT32 kov2 = (strncmp(BurnDrvGetTextA(DRV_NAME), "kov2", 4) == 0) ? 1 : 0;
     
-    //hack
-    is_ketsui = (strncmp(BurnDrvGetTextA(DRV_NAME), "ket", 3) == 0) ? 1 : 0;
 	char* pRomName;
 	struct BurnRomInfo ri;
 	struct BurnRomInfo pi;
@@ -469,7 +466,7 @@ INT32 PgmDoReset()
 	}
     
     //HACK
-    if (is_ketsui) wait_control=60;
+    if (glob_ffingeron) wait_control=60;
     //
     
 	SekOpen(0);
@@ -779,7 +776,6 @@ INT32 pgmFrame()
 		}
         
         //HACK
-        if (is_ketsui) {
             if (glob_ffingeron) {
                 PgmInput[0]&=~((1<<5)); //clear fire 1
                 if (glob_mov_y>0) PgmInput[0]|=2;
@@ -798,8 +794,7 @@ INT32 pgmFrame()
                     }
                 }
             }
-            
-        }
+        
         //
         
 		// clear opposites
@@ -854,7 +849,7 @@ INT32 pgmFrame()
 	if (nEnableArm7) Arm7Open(0);
     
     //HACK for 'follow finger' touchpad mode
-    if (is_ketsui && glob_ffingeron) {
+    if (glob_ffingeron) {
         if ( wait_control==0 ) PatchMemory68KFFinger();
         else wait_control--;
     }

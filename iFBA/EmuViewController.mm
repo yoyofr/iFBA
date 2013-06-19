@@ -783,28 +783,16 @@ static int statusLoadMsgUpdated=0;
             is_progear=0;
             is_dimahoo=0;
             cur_ifba_conf->vpad_followfinger=0;
-            if (strcmp(gameName,"donpachi")==0) {
+            if ((strcmp(gameName,"donpachi")==0)||(strcmp(gameName,"donpachij")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=1;
             }
-            if (strcmp(gameName,"donpachij")==0) {
-                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=1;
-            }
-            if (strcmp(gameName,"ddonpach")==0) {
+            if ((strcmp(gameName,"ddonpach")==0)||(strcmp(gameName,"ddonpachj")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=2;
             }
-            if (strcmp(gameName,"ddonpachj")==0) {
-                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=2;
-            }
-            if (strcmp(gameName,"feversos")==0) {
+            if ((strcmp(gameName,"feversos")==0)||(strcmp(gameName,"dfeveron")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=3;
             }
-            if (strcmp(gameName,"dfeveron")==0) {
-                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=3;
-            }
-            if (strcmp(gameName,"bgaregga")==0) {
-                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=4;
-            }
-            if (strcmp(gameName,"bgareggat2")==0) {
+            if ((strcmp(gameName,"bgaregga")==0)||(strcmp(gameName,"bgareggat2")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=4;
             }
             if (strcmp(gameName,"dogyuun")==0) {
@@ -839,6 +827,18 @@ static int statusLoadMsgUpdated=0;
             }
             if (strcmp(gameName,"dimahoo")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=15;is_dimahoo=1;
+            }
+            if ((strcmp(gameName,"grindstm")==0)||(strcmp(gameName,"vfive")==0)) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=16;
+            }
+            if (strcmp(gameName,"batsugun")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=17;
+            }
+            if (strcmp(gameName,"esprade")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=18;
+            }
+            if (strcmp(gameName,"espgal")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=19;
             }
             if (cur_ifba_conf->vpad_followfinger) {
                 [TestFlight passCheckpoint:@"FINGER_MODE"];

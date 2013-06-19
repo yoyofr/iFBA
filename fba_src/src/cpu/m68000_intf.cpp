@@ -481,6 +481,22 @@ void PatchMemory68KFFinger() {
             //dimahoo
             PatchMemory68K_Word(0xFF1032,0xFF1030,0x000E,0x00EE,0x0067,0x0180,1);
             return;
+        case 16:
+            //grind stormer / vfive
+            PatchMemory68K_Word(0x1005F0,0x1005EE,0x0800,0x7000,0x1000,0x8C00,128);
+            return;
+        case 17:
+            //batsugun
+            PatchMemory68K_Word(0x1013FA,0x1013F8,0x0600,0x7200,0x1000,0x8C00,128);
+            return;
+        case 18:
+            //esp ra.de.
+            PatchMemory68K_Word(0x10270E,0x10270C,0x0200,0x3A00,0x0700,0x4600,64);
+            return;
+        case 19:
+            //esp galuda
+            PatchMemory68K_Word(0x80EE9A,0x80EE98,0x0300,0x3500,0x0700,0x6500,64);
+            return;
         default:break;
             
     }
@@ -547,6 +563,22 @@ inline static void WriteWord(UINT32 a, UINT16 d)
             case 15:
                 //dimahoo
                 if ( ((a==0xFF1030)||(a==0xFF1032))) return;
+                break;
+            case 16:
+                //grind stormer / vfive
+                if ( ((a==0x1005EE)||(a==0x1005F0))) return;
+                break;
+            case 17:
+                //batsugun
+                if ( ((a==0x1013F8)||(a==0x1013FA))) return;
+                break;
+            case 18:
+                //esp ra.de.
+                if ( ((a==0x10270C)||(a==0x10270E))) return;
+                break;
+            case 19:
+                //esp galuda
+                if ( ((a==0x80EE98)||(a==0x80EE9A))) return;
                 break;
             default:break;
         }

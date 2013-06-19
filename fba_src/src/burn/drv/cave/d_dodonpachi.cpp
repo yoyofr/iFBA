@@ -347,7 +347,6 @@ static INT32 DrvFrame()
         }
     }
     //
-
     
 	CaveClearOpposites(&DrvInput[0]);
 	CaveClearOpposites(&DrvInput[1]);

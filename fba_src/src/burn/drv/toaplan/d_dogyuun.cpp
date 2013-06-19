@@ -667,7 +667,6 @@ extern int wait_control;
 extern void PatchMemory68KFFinger();
 //
 
-
 static INT32 DrvFrame()
 {
 	INT32 nInterleave = 10;

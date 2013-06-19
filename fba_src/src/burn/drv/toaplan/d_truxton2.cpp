@@ -361,8 +361,7 @@ static INT32 DrvFrame()
 	if (DrvReset) {														// Reset machine
         //HACK
         wait_control=60;
-        //
-		
+        //		
 		DrvDoReset();
 	}
 
