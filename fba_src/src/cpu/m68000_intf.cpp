@@ -356,6 +356,7 @@ void PatchMemory68K_Long(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 
 void PatchMemory68K_Word(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 minY,UINT32 maxY,UINT32 shift) {
     UINT8* pr;
     UINT32 newd;
+    long long dtmp;
     UINT16 d;
     pr = FIND_W(adrX);
     if ( glob_mov_init ) {
@@ -364,16 +365,18 @@ void PatchMemory68K_Word(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 
         glob_mov_init=0;
     }
     
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
-    if (newd<minY) newd=minY;
-    if (newd>maxY) newd=maxY;
+    dtmp=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
+    if (dtmp<minY) dtmp=minY;
+    if (dtmp>maxY) dtmp=maxY;
+    newd=dtmp;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (adrY & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
-    if (newd<minX) newd=minX;
-    if (newd>maxX) newd=maxX;
+    dtmp=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
+    if (dtmp<minX) dtmp=minX;
+    if (dtmp>maxX) dtmp=maxX;
+    newd=dtmp;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (adrX & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_x=0;
@@ -510,6 +513,14 @@ void PatchMemory68KFFinger() {
             //Tengai (Samurai Blade)
             PatchMemory68K_Long(0xFE3434,0xFE3430,0x00100000,0x01200000,0x001E0000,0x00C80000,0x10000,-1);
             return;
+        case 22:
+            //gigawing
+            PatchMemory68K_Word(0xFFADF4,0xFFADF8,0x0010,0x016F,0x0010,0x00CF,1);
+            return;
+        case 23:
+            //mars matrix
+            PatchMemory68K_Word(0xFF42AA,0xFF42AE,0x000F,0x0170,0x000F,0x00D0,1);
+            return;
         default:break;
             
     }
@@ -600,6 +611,14 @@ inline static void WriteWord(UINT32 a, UINT16 d)
             case 21:
                 //Tengai (Samurai Blade)
                 if ( ((a==0xFE3430)||(a==0xFE3434))) return;
+                break;
+            case 22:
+                //gigawing
+                if ( ((a==0xFFADF4)||(a==0xFFADF8))) return;
+                break;
+            case 23:
+                //mars matrix
+                if ( ((a==0xFF42AA)||(a==0xFF42AE))) return;
                 break;
             default:break;
         }

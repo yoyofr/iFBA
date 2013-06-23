@@ -21,7 +21,7 @@ int glob_touchpad_fingerid=0;
 int glob_shootmode=0,glob_shooton=0,glob_autofirecpt;
 //int glob_scr_width=320,glob_scr_height=480;
 int glob_touchpad_hack;
-int is_progear=0,is_dimahoo=0;
+int cps2_buttons_limit=0;
 float glob_scr_ratioX=1,glob_scr_ratioY=1;
 
 //
@@ -780,8 +780,7 @@ static int statusLoadMsgUpdated=0;
             
             
             //////////////
-            is_progear=0;
-            is_dimahoo=0;
+            cps2_buttons_limit=0;
             cur_ifba_conf->vpad_followfinger=0;
             if ((strcmp(gameName,"donpachi")==0)||(strcmp(gameName,"donpachij")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=1;
@@ -805,7 +804,7 @@ static int statusLoadMsgUpdated=0;
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=7;
             }
             if (strcmp(gameName,"progear")==0) {
-                cur_ifba_conf->vpad_followfinger=1; is_progear=1;glob_touchpad_hack=8;
+                cur_ifba_conf->vpad_followfinger=1; cps2_buttons_limit=3;glob_touchpad_hack=8;
             }
             if (strcmp(gameName,"s1945")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=9;
@@ -826,7 +825,7 @@ static int statusLoadMsgUpdated=0;
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=14;
             }
             if (strcmp(gameName,"dimahoo")==0) {
-                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=15;is_dimahoo=1;
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=15;cps2_buttons_limit=3;
             }
             if ((strcmp(gameName,"grindstm")==0)||(strcmp(gameName,"vfive")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=16;
@@ -846,6 +845,13 @@ static int statusLoadMsgUpdated=0;
             if (strcmp(gameName,"tengai")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=21;
             }
+            if (strcmp(gameName,"gigawing")==0) {
+                cur_ifba_conf->vpad_followfinger=1; cps2_buttons_limit=3;glob_touchpad_hack=22;
+            }
+            if (strcmp(gameName,"mmatrix")==0) {
+                cur_ifba_conf->vpad_followfinger=1; cps2_buttons_limit=2;glob_touchpad_hack=23;
+            }
+            
             if (cur_ifba_conf->vpad_followfinger) {
                 [TestFlight passCheckpoint:@"FINGER_MODE"];
                 //printf("Using follow-finger touchscreen mode\n");
@@ -1483,7 +1489,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
     //printf("%d/touch %08X, type %d, %f x %f\n",glob_touchpad_cnt,touch_id,evt_type,x,y);
     int ret;
     
-    if (is_progear||is_dimahoo) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
+    if (cps2_buttons_limit) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+cps2_buttons_limit;
     
     switch (evt_type) {
         case 1: //Pressed
@@ -1507,8 +1513,11 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
                                 case GN_A: //shoot on/off
                                     glob_shooton^=1;
                                     break;
+                                case GN_C:
+                                    if (cps2_buttons_limit==3) glob_shootmode^=1;
+                                    break;
                                 case GN_D:
-                                    if (is_progear||is_dimahoo) glob_shootmode^=1;
+                                    if (cps2_buttons_limit==4) glob_shootmode^=1;
                                     break;
                                 case GN_SERVICE: //switch finger/normal touch control if at least 2 fingers press screen
                                     if (glob_touchpad_cnt==1) {
@@ -1733,7 +1742,7 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     int cur_width=m_oglView.frame.size.width;
     int cur_height=m_oglView.frame.size.height;
     
-    if (is_progear||is_dimahoo) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4;
+    if (cps2_buttons_limit) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+cps2_buttons_limit;
     
     
     virtual_stick_buttons_alpha=64*cur_ifba_conf->vpad_alpha;
