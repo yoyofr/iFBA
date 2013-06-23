@@ -840,6 +840,12 @@ static int statusLoadMsgUpdated=0;
             if (strcmp(gameName,"espgal")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=19;
             }
+            if ((strcmp(gameName,"samuraia")==0)||(strcmp(gameName,"sngkace")==0)) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=20;
+            }
+            if (strcmp(gameName,"tengai")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=21;
+            }
             if (cur_ifba_conf->vpad_followfinger) {
                 [TestFlight passCheckpoint:@"FINGER_MODE"];
                 //printf("Using follow-finger touchscreen mode\n");
@@ -1657,7 +1663,7 @@ void ios_fingerEvent(long touch_id, int evt_type, float x, float y,float lx,floa
             if (glob_touchpad_cnt<0) glob_touchpad_cnt=0;
             if ((touch_id==glob_touchpad_fingerid)||(glob_touchpad_cnt==0)) {
                 glob_touchpad_fingerid=0;
-                glob_mov_x=glob_mov_y=0;
+                glob_mov_x=glob_mov_y=0;                
             }
             
             if (virtual_stick_padfinger==touch_id) {

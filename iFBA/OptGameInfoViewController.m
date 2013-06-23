@@ -16,7 +16,10 @@ static unsigned int newgenreFilter;
 static unsigned int newgenreFilter_first=1;
 static CAGradientLayer *gradientF,*gradientH;
 
+static char text_link[512];
+
 char gameInfo[64*1024];
+char tmp_game_name[64];
 extern char gameName[64];
 
 //iCade & wiimote
@@ -31,7 +34,7 @@ static CADisplayLink* m_displayLink;
 
 
 @implementation OptGameInfoViewController
-@synthesize mnview,txtview;
+@synthesize mnview,txtview,webview,webviewVideo;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -54,6 +57,13 @@ static CADisplayLink* m_displayLink;
     [[txtview layer] setCornerRadius:15.0];	
 	//[[txtview layer] setBorderWidth:3.0];
 	//[[txtview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
+    
+    [[webview layer] setCornerRadius:15.0];
+    
+    [[webviewVideo layer] setCornerRadius:15.0];
+    
+    [[toolbar layer] setCornerRadius:15.0];
+    
     //ICADE & Wiimote
     ui_current_pos=0;
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
@@ -62,9 +72,10 @@ static CADisplayLink* m_displayLink;
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv release];
-    wiimoteBtnState=0;
-    
+    wiimoteBtnState=0;                    
 }
+
+NSString *yt_template = @"<html><head><style type=\"text/css\">body { background-color: transparent;color: white;}</style></head><body style=\"margin:0\"><embed id=\"yt\" src=\"%@\" type=\"application/x-shockwave-flash\" width=\"%0.0f\" height=\"%0.0f\"></embed></body></html>";
 
 -(void) viewWillAppear:(BOOL)animated {  //Not called in iOS 4.3 simulator... BUG?
     [super viewWillAppear:animated];    
@@ -81,8 +92,47 @@ static CADisplayLink* m_displayLink;
     m_displayLink.frameInterval = 3; //20fps
 	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
     
-    txtview.text=[NSString stringWithCString:gameInfo encoding:NSUTF8StringEncoding];
+    
+    memset(text_link,0,512);
+    char *link_start=strstr(gameInfo,"http://");
+    char *link_end=strstr(gameInfo,"\n");
+    if (link_start && link_end) {
+        char text_len=link_end-link_start;
+        strncpy(text_link,link_start,text_len);
+        txtview.text=[NSString stringWithCString:(char*)(link_end+1) encoding:NSUTF8StringEncoding];
+    } else {
+        txtview.text=[NSString stringWithCString:gameInfo encoding:NSUTF8StringEncoding];
+    }
+    
+    [webview loadHTMLString:[NSString stringWithFormat:@"<html><body><iframe src=""%s""></iframe></body></html>",text_link] baseURL:nil];
+
+    
+    
 }
+
+- (UIButton *)findButtonInView:(UIView *)view {
+    UIButton *button = nil;
+    
+    if ([view isMemberOfClass:[UIButton class]]) {
+        return (UIButton *)view;
+    }
+    
+    if (view.subviews && [view.subviews count] > 0) {
+        for (UIView *subview in view.subviews) {
+            button = [self findButtonInView:subview];
+            if (button) return button;
+        }
+    }
+    
+    return button;
+}
+
+/*- (void)webViewDidFinishLoad:(UIWebView *)_webView {
+    if (_webView==webviewVideo) {
+    UIButton *b = [self findButtonInView:_webView];
+    [b sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }
+}*/
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -111,6 +161,28 @@ static CADisplayLink* m_displayLink;
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     [self.mnview setNeedsLayout];
 }
+
+-(IBAction) showSummary {
+    webview.hidden=TRUE;
+    webviewVideo.hidden=TRUE;
+    txtview.hidden=FALSE;
+}
+-(IBAction) showArcadehistory {
+    webview.hidden=FALSE;
+    webviewVideo.hidden=TRUE;
+    txtview.hidden=TRUE;
+}
+-(IBAction) showVideo {
+    webviewVideo.hidden=FALSE;
+    webview.hidden=TRUE;
+    txtview.hidden=TRUE;
+//    NSURLRequest *videoReq = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.youtube.com/watch?v=9eFCK7JKfx0&rel=0&showsearch=0&modestbranding=1&showinfo=0"]];
+    NSURLRequest *videoReq = [NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.youtube.com/results?search_query=mame+%s",tmp_game_name]]];
+    [webviewVideo setDelegate:self];
+    [webviewVideo loadRequest:videoReq];
+}
+
+
 
 #pragma Wiimote/iCP support
 #define WII_BUTTON_UP(A) (wiimoteBtnState&A)&& !(pressedBtn&A)

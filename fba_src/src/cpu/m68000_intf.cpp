@@ -319,38 +319,43 @@ extern float glob_scr_ratioX,glob_scr_ratioY;
 static int pos_ofsx,pos_ofsy;
 int wait_control;
 
-void PatchMemory68K_Long(unsigned int adrX,unsigned int adrY,int minX,int maxX,int minY,int maxY,int shift) {
+void PatchMemory68K_Long(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 minY,UINT32 maxY,UINT32 shift,int ymul) {
     UINT8* pr;
-    int newd;
+    long long dtmp;
+    UINT32 newd;
     UINT32 d;
     pr = FIND_W(adrX);
     if ( glob_mov_init ) {
-        pos_ofsy=*((UINT32*)(pr + (adrY & SEK_PAGEM)));
-        pos_ofsy=(pos_ofsy>>16)|(pos_ofsy<<16);
-        pos_ofsx=*((UINT32*)(pr + (adrX & SEK_PAGEM)));
-        pos_ofsx=(pos_ofsx>>16)|(pos_ofsx<<16);
+        newd=*((UINT32*)(pr + (adrY & SEK_PAGEM)));
+        pos_ofsy=(newd>>16)|(newd<<16);
+        newd=*((UINT32*)(pr + (adrX & SEK_PAGEM)));
+        pos_ofsx=(newd>>16)|(newd<<16);
         glob_mov_init=0;
     }
     
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
-    if (newd<minY) newd=minY;
-    if (newd>maxY) newd=maxY;
+    dtmp=pos_ofsy+ymul*((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
+    if (dtmp<minY) dtmp=minY;
+    if (dtmp>maxY) dtmp=maxY;
+    newd=dtmp;
     d=(newd>>16)|(newd<<16);
     if (glob_touchpad_fingerid) *((UINT32*)(pr + (adrY & SEK_PAGEM))) = (UINT32)BURN_ENDIAN_SWAP_INT32(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
-    if (newd<minX) newd=minX;
-    if (newd>maxX) newd=maxX;
+    dtmp=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
+//    printf("%d %d %d %08X %08X %08X\n",pos_ofsx,glob_pos_x,glob_pos_xi,dtmp,minX,maxX);
+    if (dtmp<minX) dtmp=minX;
+    if (dtmp>maxX) dtmp=maxX;
+    newd=dtmp;
     d=(newd>>16)|(newd<<16);
+//    printf("%08X\n",d);
     if (glob_touchpad_fingerid) *((UINT32*)(pr + (adrX & SEK_PAGEM))) = (UINT32)BURN_ENDIAN_SWAP_INT32(d);
     glob_mov_x=0;
 }
 
 
-void PatchMemory68K_Word(unsigned int adrX,unsigned int adrY,int minX,int maxX,int minY,int maxY,int shift) {
+void PatchMemory68K_Word(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 minY,UINT32 maxY,UINT32 shift) {
     UINT8* pr;
-    int newd;
+    UINT32 newd;
     UINT16 d;
     pr = FIND_W(adrX);
     if ( glob_mov_init ) {
@@ -463,11 +468,11 @@ void PatchMemory68KFFinger() {
             return;
         case 9:
             //s1945
-            PatchMemory68K_Long(0xFE1118,0xFE111C,0x000A0000,0x00D50000,0x00180000,0x01100000,0x10000);
+            PatchMemory68K_Long(0xFE1118,0xFE111C,0x000A0000,0x00D50000,0x00180000,0x01100000,0x10000,1);
             return;
         case 10:
             //Gunbird
-            PatchMemory68K_Long(0xFE02D8,0xFE02DC,0x000A0000,0x00D50000,0x00200000,0x01100000,0x10000);
+            PatchMemory68K_Long(0xFE02D8,0xFE02DC,0x000A0000,0x00D50000,0x00200000,0x01100000,0x10000,1);
             return;
         case 13:
             //armed police batrider
@@ -496,6 +501,14 @@ void PatchMemory68KFFinger() {
         case 19:
             //esp galuda
             PatchMemory68K_Word(0x80EE9A,0x80EE98,0x0300,0x3500,0x0700,0x6500,64);
+            return;
+        case 20:
+            //Samurai Aces
+            PatchMemory68K_Long(0xFE1B14,0xFE1B18,0x00082000,0x00D96000,0x001FB000,0x01196000,0x10000,1);
+            return;
+        case 21:
+            //Tengai (Samurai Blade)
+            PatchMemory68K_Long(0xFE3434,0xFE3430,0x00100000,0x01200000,0x001E0000,0x00C80000,0x10000,-1);
             return;
         default:break;
             
@@ -580,6 +593,14 @@ inline static void WriteWord(UINT32 a, UINT16 d)
                 //esp galuda
                 if ( ((a==0x80EE98)||(a==0x80EE9A))) return;
                 break;
+            case 20:
+                //Samurai Aces
+                if ( ((a==0xFE1B14)||(a==0xFE1B18))) return;
+                break;
+            case 21:
+                //Tengai (Samurai Blade)
+                if ( ((a==0xFE3430)||(a==0xFE3434))) return;
+                break;
             default:break;
         }
         *((UINT16*)(pr + (a & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
@@ -655,6 +676,14 @@ inline static void WriteLong(UINT32 a, UINT32 d)
                     break;
                 case 10: //gunbird
                     if ( ((a==0xfe02D8)||(a==0xfe02DC))) return;
+                    break;
+                case 20:
+                    //Samurai Aces
+                    if ( ((a==0xFE1B14)||(a==0xFE1B18))) return;
+                    break;
+                case 21:
+                    //Tengai (Samurai Blade)
+                    if ( ((a==0xFE3430)||(a==0xFE3434))) return;
                     break;
                 default:break;
             }

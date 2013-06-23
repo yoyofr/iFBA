@@ -21,6 +21,7 @@ int InpDIPSWGetValueNb(int i);
 char *InpDIPSWGetValueString(int dip_idx,int val_idx);
 char *InpDIPSWGetDIPName(int dip_index);
 char *InpDIPSWGetCurrentValue(int dip_index,int *dip_current_value);
+int InpDIPSWGetValueIndex(int dip_idx,int val_idx);
 unsigned char InpDIPSWGetDIPValue(int dip_idx, int val_idx);
 int InpDIPSWSetCurrentValue(int dip_index,unsigned char dip_new_value);
 
@@ -140,8 +141,10 @@ static CADisplayLink* m_displayLink;
     }
         
     InpDIPSWGetCurrentValue(current_dip_idx,&current_dip_val);
+    int cur_row_idx=InpDIPSWGetValueIndex(current_dip_idx,indexPath.row);
     cell.textLabel.text=[NSString stringWithFormat:@"%s",InpDIPSWGetValueString(current_dip_idx,indexPath.row)];
-    if (current_dip_val==indexPath.row) cell.accessoryType=UITableViewCellAccessoryCheckmark;
+    
+    if (cur_row_idx==current_dip_val) cell.accessoryType=UITableViewCellAccessoryCheckmark;
     else cell.accessoryType=UITableViewCellAccessoryNone;
     
     
@@ -152,7 +155,6 @@ static CADisplayLink* m_displayLink;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     unsigned char tmp;
     tmp=InpDIPSWGetDIPValue(current_dip_idx,indexPath.row);
-//    NSLog(@"should change %d to %02X",current_dip_idx,tmp);
     InpDIPSWSetCurrentValue(current_dip_idx,tmp);
     [tabView reloadData];
 }

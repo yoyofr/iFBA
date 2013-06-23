@@ -33,6 +33,8 @@ extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
 extern char gameInfo[64*1024];
 
+extern char tmp_game_name[64];
+
 
 int *listSectionIndexes;
 int *listSortedList;
@@ -634,6 +636,8 @@ NSMutableArray *filterEntries;
     
     DBHelper::getGameInfo([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], gameInfo);
     if (gameInfo[0]) {
+        sprintf(tmp_game_name,"%s",[[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String]);
+        
         OptGameInfoViewController *infovc;
         infovc = [[OptGameInfoViewController alloc] initWithNibName:@"OptGameInfoViewController" bundle:nil];
         bypass_reinit_view=1;

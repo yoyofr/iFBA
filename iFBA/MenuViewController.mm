@@ -26,6 +26,7 @@ extern int pendingReset;
 extern unsigned int nBurnDrvCount;
 extern int launchGame;
 extern char gameName[64];
+extern char tmp_game_name[64];
 extern volatile int emuThread_running;
 extern int nShouldExit;
 extern int device_isIpad;
@@ -326,6 +327,8 @@ EmuViewController *emuvc;
                 case 4: //game info
                     DBHelper::getGameInfo(gameName, gameInfo);
                     if (gameInfo[0]) {
+                        sprintf(tmp_game_name,"%s",gameName);
+                        
                         OptGameInfoViewController *infovc;
                         infovc = [[OptGameInfoViewController alloc] initWithNibName:@"OptGameInfoViewController" bundle:nil];
                         [self.navigationController pushViewController:infovc animated:YES];
