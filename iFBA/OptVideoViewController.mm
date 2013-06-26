@@ -139,6 +139,9 @@ extern int optionScope;
                     footer=NSLocalizedString(@"Scaled resolution with vpad",@"");
                     break;
                 case 2:
+                    footer=NSLocalizedString(@"Scaled resolution with small margins",@"");
+                    break;
+                case 3:
                     footer=NSLocalizedString(@"Fullscreen",@"");
                     break;
             }
@@ -265,7 +268,7 @@ extern int optionScope;
         case 0://Screen mode
             cell.textLabel.text=NSLocalizedString(@"Screen mode",@"");
             
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 1 ", @" 2 ", @" 3 ", nil]];
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 1 ", @" 2 ", @" 3 ", @" 4 ", nil]];
             segconview.selectedSegmentIndex=OPTION(screen_mode);
             
             segconview.segmentedControlStyle = UISegmentedControlStylePlain;
@@ -368,7 +371,7 @@ extern int optionScope;
     switch (indexPath.section) {        
         case 0://Screen mode
             if (direction>0) {                
-                if (OPTION(screen_mode)<2) OPTION(screen_mode)++;
+                if (OPTION(screen_mode)<4) OPTION(screen_mode)++;
             } else {
                 if (OPTION(screen_mode)>0) OPTION(screen_mode)--;
             }            

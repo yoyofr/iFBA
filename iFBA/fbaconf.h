@@ -9,12 +9,25 @@
 #ifndef iFBA_fbaconf_h
 #define iFBA_fbaconf_h
 
+#define iFBA_VERSION_MAJOR 0
+#define iFBA_VERSION_MINOR 6
+
+#define MAX_FRAME_REPLAY 60*60*60
+#define MAX_REPLAY_DATA_BYTES 1024*1024
+
 #define MAX_JOYSTICKS 4
 #define VPAD_SPECIALS_BUTTON_NB 5
 #define VSTICK_NB_BUTTON 11
 
 #define MAX_LANG 2
 extern char iCade_langStr[MAX_LANG][32];
+
+//replay
+typedef struct {
+    unsigned int drvinput[2];
+    unsigned int patch_memX,patch_memY;
+} t_replay_data;
+
 
 typedef struct {
     char btn_name[16];

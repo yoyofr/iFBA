@@ -52,6 +52,7 @@
 "Screen mode"="Screen mode";
 "Original resolution"="Original resolution";
 "Fixed scaled resolution"="Fixed scaled resolution";
+"Scaled resolution with small margins"="Scaled resolution with small margins";
 "Scaled resolution with vpad"="Scaled resolution adapted to virtual pad";
 "Fullscreen"="Fullscreen";
 

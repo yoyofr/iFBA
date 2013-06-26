@@ -742,8 +742,7 @@ static INT32 DrvFrame()
 		DrvDoReset();
 	}
 
-	Sh2NewFrame();
-
+    Sh2NewFrame();
 	{
 		DrvInputs = ~0x60 | (DrvDips[0] & 0x60);
 		for (INT32 i = 0; i < 32; i++) {
@@ -751,8 +750,8 @@ static INT32 DrvFrame()
 		}
 	}
     //HACK
-    if (glob_ffingeron) {
-        DrvInputs&=~((1<<27)); //clear fire 1
+   if (glob_ffingeron) {
+        //DrvInputs&=~((1<<27)); //clear fire 1
         if (glob_mov_y>0) DrvInputs^=1<<31;
         if (glob_mov_y<0) DrvInputs^=1<<30;
         if (glob_mov_x<0) DrvInputs^=1<<28;
@@ -760,11 +759,11 @@ static INT32 DrvFrame()
         if (glob_shooton) {
             switch (glob_shootmode) {
                 case 0: //shoot
-                    if ((glob_autofirecpt%10)==0) DrvInputs|=1<<27;
+                    if ((glob_autofirecpt%10)<3) DrvInputs^=1<<27;
                     glob_autofirecpt++;
                     break;
                 case 1: //laser
-                    DrvInputs|=1<<27;
+                    DrvInputs^=1<<27;
                     break;
             }
         }
@@ -778,6 +777,9 @@ static INT32 DrvFrame()
         else wait_control--;
     }
     //
+    
+	
+    
 
 	BurnTimerEndFrame(28636350 / 60);
 

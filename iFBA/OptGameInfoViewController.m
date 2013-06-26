@@ -50,19 +50,19 @@ static CADisplayLink* m_displayLink;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [[mnview layer] setCornerRadius:15.0];	
-	[[mnview layer] setBorderWidth:3.0];
-	[[mnview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
+    //[[mnview layer] setCornerRadius:15.0];
+	//[[mnview layer] setBorderWidth:3.0];
+	//[[mnview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
     
-    [[txtview layer] setCornerRadius:15.0];	
+    //[[txtview layer] setCornerRadius:15.0];	
 	//[[txtview layer] setBorderWidth:3.0];
 	//[[txtview layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
     
-    [[webview layer] setCornerRadius:15.0];
+    //[[webview layer] setCornerRadius:15.0];
     
-    [[webviewVideo layer] setCornerRadius:15.0];
+    //[[webviewVideo layer] setCornerRadius:15.0];
     
-    [[toolbar layer] setCornerRadius:15.0];
+    //[[toolbar layer] setCornerRadius:15.0];
     
     //ICADE & Wiimote
     ui_current_pos=0;

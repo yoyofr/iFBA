@@ -54,6 +54,7 @@
 "Original resolution"="Résolution originale";
 "Fixed scaled resolution"="Mise à échelle fixe";
 "Scaled resolution with vpad"="Mise à échelle adaptée au pad virtuel";
+"Scaled resolution with small margins"="Mise à échelle avec faible marges sur les côtés";
 "Fullscreen"="Plein écran";
 
 "Video filter"="Filtre video";

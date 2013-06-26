@@ -14,16 +14,20 @@
 #include "DBHelper.h"
 
 //hack
-float glob_mov_x,glob_mov_y;
-float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
-int glob_mov_init,glob_touchpad_cnt=0,glob_ffingeron=0;
-int glob_touchpad_fingerid=0;
-int glob_shootmode=0,glob_shooton=0,glob_autofirecpt;
-//int glob_scr_width=320,glob_scr_height=480;
-int glob_touchpad_hack;
-int cps2_buttons_limit=0;
-float glob_scr_ratioX=1,glob_scr_ratioY=1;
+extern char debug_root_path[512];
 
+volatile float glob_mov_x,glob_mov_y;
+volatile float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
+volatile int glob_mov_init,glob_touchpad_cnt=0,glob_ffingeron=0;
+volatile int glob_touchpad_fingerid=0;
+volatile int glob_shootmode=0,glob_shooton=0,glob_autofirecpt;
+volatile int glob_touchpad_hack;
+volatile int cps2_buttons_limit=0;
+volatile float glob_scr_ratioX=1,glob_scr_ratioY=1;
+
+volatile t_replay_data glob_replay_data[MAX_FRAME_REPLAY]; //60fps => 1h max
+volatile unsigned char glob_replay_data_stream[MAX_REPLAY_DATA_BYTES];
+volatile unsigned int glob_framecpt,glob_replay_mode,glob_framecpt_max;
 //
 
 long long playtime,playtime_lastclock;
@@ -194,7 +198,9 @@ void computePadLayouts(int nb_button){
         case 2:btnsize<<=1;break;
     }
     
-    
+    ///////////////////////////
+    //PAD
+    ///////////////////////////
     if (cur_ifba_conf->vpad_pad_manual_layout[0]==0){
         if (device_isIpad) {
             cur_ifba_conf->vpad_pad_x[0] = virtual_stick_maxdist;
@@ -215,6 +221,9 @@ void computePadLayouts(int nb_button){
         }
     }
     
+    ///////////////////////////
+    //SPECIAL BUTTONS
+    ///////////////////////////
     for (int i=0;i<5;i++) {
         virtual_stick[i].r=0xFF;virtual_stick[i].g=0xFF;virtual_stick[i].b=0xFF;
     }
@@ -290,6 +299,10 @@ void computePadLayouts(int nb_button){
     }
     
     
+    ///////////////////////////
+    //FIRE BUTTONS
+    ///////////////////////////
+    
     for (int i=0;i<nb_button;i++) {
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].r=0xDF;
         virtual_stick[VPAD_SPECIALS_BUTTON_NB+i].g=0xDF;
@@ -316,6 +329,46 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
     w-=10;
     h-=10; //dirty hack to compensate the +30% touch area size
     
+    if (cur_ifba_conf->vpad_followfinger && glob_ffingeron) { //follow finger mode
+        switch (nb_button) { //verti
+            case 0:
+                break;
+            case 1:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize)
+                break;
+            case 2:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize)
+                break;
+            case 3:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize)
+                break;
+            case 4:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*4.2f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize, h-btnsize)
+                break;
+            case 5:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*5.25f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*4.2f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,0, w-btnsize, h-btnsize)
+                break;
+            case 6:
+            default:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,0, w-btnsize, h-btnsize*6.3f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,0, w-btnsize, h-btnsize*5.25f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,0, w-btnsize, h-btnsize*4.2f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,0, w-btnsize, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,0, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,0, w-btnsize, h-btnsize)
+                break;
+        }
+    } else {
     switch (nb_button) { //verti
         case 0:
             break;
@@ -354,6 +407,7 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,0, w-btnsize*2.1f, h-btnsize)
             break;
     }
+    }
     
     if (device_isIpad) {
         w=1024;
@@ -364,6 +418,48 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
     }
     w-=10;
     h-=10; //dirty hack to compensate the +30% touch area size
+    
+    if (cur_ifba_conf->vpad_followfinger && glob_ffingeron) { //follow finger mode
+        switch (nb_button) {//horiz
+            case 0:
+                break;
+            case 1:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize, h-btnsize*2.1f)
+                break;
+            case 2:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize, h-btnsize)
+                break;
+            case 3:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize)
+                break;
+            case 4:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize, h-btnsize*4.2f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize, h-btnsize*3.15f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize, h-btnsize)
+                break;
+            case 5:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*3.15f, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize*2.1f, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize*2.1f, h-btnsize)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,1, w-btnsize, h-btnsize)
+                break;
+            case 6:
+            default:
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB,1, w-btnsize*3.15f, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+1,1, w-btnsize*2.1f, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+2,1, w-btnsize, h-btnsize*2.1f)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+3,1, w-btnsize*3.15f, h-btnsize)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+4,1, w-btnsize*2.1f, h-btnsize)
+                SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,1, w-btnsize, h-btnsize)
+                break;
+        }
+
+    } else {
     
     switch (nb_button) {//horiz
         case 0:
@@ -403,7 +499,7 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
             SET_BUTTON_LAYOUT(VPAD_SPECIALS_BUTTON_NB+5,1, w-btnsize, h-btnsize)
             break;
     }
-    
+    }
 }
 
 int gTurboMode;
@@ -774,12 +870,45 @@ static int statusLoadMsgUpdated=0;
             pb_value=0;
             pb_total=0;
             pb_msg[0]=0;
-            vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
-            vpad_button_nb_save=vpad_button_nb;
-            computePadLayouts(vpad_button_nb-VPAD_SPECIALS_BUTTON_NB);
             
+            ////////////////
+            glob_replay_mode=2;
+            glob_framecpt_max=MAX_FRAME_REPLAY;
+            
+            if (glob_replay_mode==2) { //REPLAY
+                FILE *f;
+                char szName[256];
+#ifdef RELEASE_DEBUG
+                sprintf(szName, "%s/%s.replay", debug_root_path,gameName);
+#else
+                sprintf(szName, "/var/mobile/Documents/iFBA/%s.replay", gameName);
+#endif
+                
+                
+                f=fopen(szName,"rb");
+                if (!f) {
+                    NSLog(@"cannot read replay");
+                    glob_replay_mode=0;
+                } else {
+                    char szHeader[7];
+                    fread(szHeader,6,1,f);
+                    szHeader[6]=0;
+                    NSLog(@"File header: %s",szHeader);
+                    fread((void*)&glob_framecpt_max,sizeof(glob_framecpt_max),1,f);
+                    if (glob_framecpt_max>MAX_FRAME_REPLAY) {
+                        NSLog(@"Replay file corrupted: wrong max framecpt value");
+                        glob_replay_mode=0;
+                    } else {
+                        NSLog(@"Loading: %dKB",glob_framecpt_max*sizeof(t_replay_data)/1024);
+                        fread((void*)glob_replay_data,glob_framecpt_max*sizeof(t_replay_data),1,f);
+                    }
+                    fclose(f);
+                }
+            }
             
             //////////////
+            glob_shooton=0;
+            glob_shootmode=0;
             cps2_buttons_limit=0;
             cur_ifba_conf->vpad_followfinger=0;
             if ((strcmp(gameName,"donpachi")==0)||(strcmp(gameName,"donpachij")==0)) {
@@ -851,7 +980,12 @@ static int statusLoadMsgUpdated=0;
             if (strcmp(gameName,"mmatrix")==0) {
                 cur_ifba_conf->vpad_followfinger=1; cps2_buttons_limit=2;glob_touchpad_hack=23;
             }
-            
+            if (strcmp(gameName,"ddpdoj")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=24;
+            }
+            if (strcmp(gameName,"ddpdojblk")==0) {
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=25;
+            }
             if (cur_ifba_conf->vpad_followfinger) {
                 [TestFlight passCheckpoint:@"FINGER_MODE"];
                 //printf("Using follow-finger touchscreen mode\n");
@@ -863,10 +997,14 @@ static int statusLoadMsgUpdated=0;
                 [alert show];
                 [alert release];
             }
-            glob_ffingeron=cur_ifba_conf->vpad_followfinger;
-            
-            
+            glob_ffingeron=cur_ifba_conf->vpad_followfinger;                        
+                        
             //////////////////
+            vpad_button_nb=VPAD_SPECIALS_BUTTON_NB; //0button by default. Activated when scanned by emu
+            vpad_button_nb_save=vpad_button_nb;
+            
+            computePadLayouts(vpad_button_nb-VPAD_SPECIALS_BUTTON_NB);
+            
             
             
             [NSThread detachNewThreadSelector:@selector(emuThread) toTarget:self withObject:NULL];
@@ -951,10 +1089,38 @@ static int statusLoadMsgUpdated=0;
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     
+    if (glob_replay_mode==1) { //SAVE
+        FILE *f;
+        char szName[256];
+#ifdef RELEASE_DEBUG
+        sprintf(szName, "%s/%s.replay", debug_root_path,gameName);
+#else
+        sprintf(szName, "/var/mobile/Documents/iFBA/%s.replay", gameName);
+#endif
+        glob_framecpt_max=glob_framecpt;
+        
+        f=fopen(szName,"wb");
+        if (!f) {
+            NSLog(@"cannot save replay");
+        } else {
+            char szHeader[7]="iFBAXX";
+            szHeader[4]=iFBA_VERSION_MAJOR+48;
+            szHeader[5]=iFBA_VERSION_MINOR+48;
+            fwrite(szHeader,6,1,f);
+            glob_framecpt_max=glob_framecpt;
+            fwrite((void*)&glob_framecpt_max,sizeof(glob_framecpt_max),1,f);
+            NSLog(@"Saving: %dKB",glob_framecpt_max*sizeof(t_replay_data)/1024);
+            fwrite((void*)glob_replay_data,sizeof(t_replay_data)*glob_framecpt_max,1,f);
+            fclose(f);
+        }
+    }
+    
     if (nShouldExit==1) {
         while (emuThread_running) {
             [NSThread sleepForTimeInterval:0.01]; //10ms
         }
+        
+        
     }
     if (bt&&ifba_conf.btstack_on) {
         startWiimoteDetection();
@@ -1413,6 +1579,15 @@ void stopWiimoteDetection(void) {
     fba_main(argc,(char**)argv);
     free (argv[0]);
     free (argv[1]);
+    
+    if ((glob_replay_mode==2)&&(glob_framecpt==glob_framecpt_max)) {
+        UIAlertView* alert =
+        [[UIAlertView alloc] initWithTitle:@"Information"
+                                   message:@"End of replay. Tap on 'MENU' button."
+                                  delegate:nil cancelButtonTitle:@"Close" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+    }
     
     [pool release];
     emuThread_running=0;
@@ -2169,7 +2344,20 @@ int StopProgressBar() {
                 }
             }
             break;
-        case 2://full
+        case 2://max with margin on sides
+            if (ios_aspect>game_aspect) {
+                rh=height*0.9;
+                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+            } else {
+                rh=height*0.9;
+                rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                if (rw>width*0.9) {
+                    rw=width*0.9;
+                    rh=rw/(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
+                }
+            }
+            break;
+        case 3://full
             if (ios_aspect>game_aspect) {
                 rh=height;
                 rw=rh*(cur_ifba_conf->aspect_ratio?game_aspect:ios_aspect);
