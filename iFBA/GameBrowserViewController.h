@@ -11,8 +11,8 @@
 #import "OptSelGenresViewController.h"
 #import "EmuViewController.h"
 
-@interface GameBrowserViewController : UIViewController {
-    IBOutlet UITableView *tabView;    
+@interface GameBrowserViewController : UIViewController <UIActionSheetDelegate> {
+    IBOutlet UITableView *tabView;
     NSMutableArray *romlist,*romlist_mst,*romlistLbl,*rompath,*romlistSystem,*romlistGenre,*romavail,*sectionLbl,*sectionLblMin;
     NSMutableArray *indexTitles;
     NSMutableArray *burn_supportedRoms,*burn_supportedRomsNames;

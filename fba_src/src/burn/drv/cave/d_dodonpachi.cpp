@@ -2,6 +2,9 @@
 #include "cave.h"
 #include "ymz280b.h"
 
+//HACK
+#include "fbaconf.h"
+
 #define CAVE_VBLANK_LINES 12
 
 static UINT8 DrvJoy1[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -299,25 +302,7 @@ inline static INT32 CheckSleep(INT32)
 	return 0;
 }
 
-//HACK
-#include "fbaconf.h"
 
-extern float glob_mov_x,glob_mov_y;
-extern float glob_pos_x,glob_pos_y;
-extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
-extern int wait_control;
-extern void PatchMemory68KFFinger();
-
-extern t_replay_data glob_replay_data[MAX_FRAME_REPLAY]; //60fps => 1h max
-extern unsigned char glob_replay_data_stream[MAX_REPLAY_DATA_BYTES];
-extern unsigned int glob_framecpt,glob_replay_mode,glob_framecpt_max;
-
-//
-static UINT16 last_DrvInput[2] = {0x0000, 0x0000};
-//
-
-extern int nShouldExit;
-//
 
 static INT32 DrvFrame()
 {
@@ -328,15 +313,45 @@ static INT32 DrvFrame()
         //HACK
         wait_control=60;
         glob_framecpt=0;
+        glob_replay_last_dx16=glob_replay_last_dy16=0;
+        glob_replay_last_fingerOn=0;
         //
 		DrvDoReset();
 	}
     
     //	bprintf(PRINT_NORMAL, "\n");
     
-    if (glob_replay_mode==2) { //REPLAY
-        DrvInput[0]=glob_replay_data[glob_framecpt].drvinput[0];
-        DrvInput[1]=glob_replay_data[glob_framecpt].drvinput[1];
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
+        unsigned int next_frame_event;
+        next_frame_event=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8)
+        |((unsigned int)(glob_replay_data_stream[glob_replay_data_index+2])<<16)|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+3])<<24);
+        
+        
+        if (glob_framecpt==next_frame_event) {
+            glob_replay_data_index+=4;
+            glob_replay_flag=glob_replay_data_stream[glob_replay_data_index++];
+            if (glob_replay_flag&REPLAY_FLAG_TOUCHONOFF) {
+                glob_replay_last_fingerOn^=1;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSX) {
+                glob_replay_last_dx16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) {
+                glob_replay_last_dy16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) {
+                last_DrvInput[0]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) {
+                last_DrvInput[1]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+        }
+        DrvInput[0]=last_DrvInput[0];
+        DrvInput[1]=last_DrvInput[1];
         
     } else {
         // Compile digital inputs
@@ -372,57 +387,40 @@ static INT32 DrvFrame()
         
         //HACK
         //replay data - drvinputs
-        if (glob_replay_mode==1) {//SAVE REPLAY
-            
+        
+        if (glob_replay_mode==REPLAY_RECORD_MODE) {//SAVE REPLAY
+            glob_replay_flag=0;
             if (glob_framecpt==0) {//first frame
-                //STORE FLAG
-                glob_replay_data_stream[glob_replay_data_index++]=0xFF; //flag: 0xFF -> init
-                //STORE FRAME_INDEX
+                //STORE FRAME_INDEX (0)
                 glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
                 glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
                 glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
                 glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
-                //STORE INPUTS
+                //STORE FLAG (00001100b)
+                glob_replay_data_stream[glob_replay_data_index++]=REPLAY_FLAG_IN0|REPLAY_FLAG_IN1;
+                //STORE INPUT0 & INPUT1
                 glob_replay_data_stream[glob_replay_data_index++]=DrvInput[0]&0xFF;
                 glob_replay_data_stream[glob_replay_data_index++]=(DrvInput[0]>>8)&0xFF;
                 glob_replay_data_stream[glob_replay_data_index++]=DrvInput[1]&0xFF;
                 glob_replay_data_stream[glob_replay_data_index++]=(DrvInput[1]>>8)&0xFF;
+                
                 last_DrvInput[0]=DrvInput[0];
                 last_DrvInput[1]=DrvInput[1];
             } else {
-                unsigned char chg_flag=0;
-                if (last_DrvInput[0]!=DrvInput[0]) chg_flag|=1;
-                if (last_DrvInput[1]!=DrvInput[1]) chg_flag|=2;
-                if (chg_flag) {
-                    //STORE FLAG
-                    glob_replay_data_stream[glob_replay_data_index++]=chg_flag;
-                    //STORE FRAME_INDEX
-                    glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
-                    glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
-                    glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
-                    glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
-                    
-                }
-                if (chg_flag&1) {
-                    //STORE INPUT0
-                    glob_replay_data_stream[glob_replay_data_index++]=DrvInput[0]&0xFF;
-                    glob_replay_data_stream[glob_replay_data_index++]=(DrvInput[0]>>8)&0xFF;
+                
+                if (last_DrvInput[0]!=DrvInput[0]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN0;
                     last_DrvInput[0]=DrvInput[0];
                 }
-                if (chg_flag&2) {
-                    //STORE INPUT1
-                    glob_replay_data_stream[glob_replay_data_index++]=DrvInput[1]&0xFF;
-                    glob_replay_data_stream[glob_replay_data_index++]=(DrvInput[1]>>8)&0xFF;
+                if (last_DrvInput[1]!=DrvInput[1]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN1;
                     last_DrvInput[1]=DrvInput[1];
                 }
             }
             
-            glob_replay_data[glob_framecpt].drvinput[0]=DrvInput[0];
-            glob_replay_data[glob_framecpt].drvinput[1]=DrvInput[1];
         }
         
     }
-    
     
 	SekNewFrame();
     
@@ -442,6 +440,44 @@ static INT32 DrvFrame()
         else wait_control--;
     }
     
+    //8 bits => 0/1: touch off/on switch
+    //          1/2: posX
+    //          2/4: posY
+    //          3/8: input0
+    //          4/16: input1
+    //          5/32: ...
+    //          6/64:
+    //          7/128:
+    
+    if (glob_replay_mode==REPLAY_RECORD_MODE) {
+        if (glob_replay_flag) {
+            //STORE FRAME_INDEX
+            glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+            //STORE FLAG
+            glob_replay_data_stream[glob_replay_data_index++]=glob_replay_flag;
+            
+            if (glob_replay_flag&REPLAY_FLAG_POSX) { //MEMX HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dx16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dx16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) { //MEMY HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dy16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dy16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) { //INPUT0 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[0]&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(last_DrvInput[0]>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) { //INPUT1 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[1]&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(last_DrvInput[1]>>8)&0xFF;
+            }
+            
+        }
+    }
     
     
     
@@ -505,13 +541,11 @@ static INT32 DrvFrame()
     
 	SekClose();
     
-    if (glob_framecpt<glob_framecpt_max) glob_framecpt++;
-    else if (glob_replay_mode==2) {
+    glob_framecpt++;
+    if ((glob_replay_mode==REPLAY_PLAYBACK_MODE)&&(glob_replay_data_index>=glob_replay_data_index_max)) {
         //should end replay here
         nShouldExit=1;
     }
-    
-    //
     
     
 	return 0;

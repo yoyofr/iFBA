@@ -3,6 +3,10 @@
 #include "m68000_intf.h"
 #include "m68000_debug.h"
 
+// HACK for touchpad 'follow finger' mode
+#include "fbaconf.h"
+static int pos_ofsx,pos_ofsy;
+
 //IOS_BUILD PATCH
 struct Cyclone PicoCpu[SEK_MAX];
 static bool bCycloneInited = false;
@@ -307,21 +311,8 @@ inline static UINT16 FetchWord(UINT32 a)
 	return pSekExt->ReadWord[(uintptr_t)pr](a);
 }
 
-// HACK for touchpad 'follow finger' mode
-#include "fbaconf.h"
-extern float glob_mov_x,glob_mov_y;
-extern float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
-extern int glob_mov_init,glob_touchpad_cnt,glob_touchpad_fingerid,glob_ffingeron;
-extern int visible_area_w,visible_area_h;
-extern int glob_touchpad_hack;
-extern float glob_scr_ratioX,glob_scr_ratioY;
-
-extern t_replay_data glob_replay_data[MAX_FRAME_REPLAY]; //60fps => 1h max
-extern unsigned int glob_framecpt,glob_replay_mode,glob_framecpt_max;
 
 
-static int pos_ofsx,pos_ofsy;
-int wait_control;
 
 void PatchMemory68K_Long(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 minY,UINT32 maxY,UINT32 shift,int ymul) {
     UINT8* pr;
@@ -361,17 +352,15 @@ void PatchMemory68K_Word(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 
     UINT8* pr;
     UINT32 newd;
     long long dtmp;
-    UINT16 d;
+    UINT16 d,dx,dy;
     pr = FIND_W(adrX);
     
-    if (glob_replay_mode==2) {//REPLAY
-        if (glob_replay_data[glob_framecpt].patch_memY!=0xFFFFFFFF) {
-            d=glob_replay_data[glob_framecpt].patch_memY;
-            *((UINT16*)(pr + (adrY & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
-        }
-        if (glob_replay_data[glob_framecpt].patch_memX!=0xFFFFFFFF) {
-            d=glob_replay_data[glob_framecpt].patch_memX;
-            *((UINT16*)(pr + (adrX & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) {//REPLAY playback
+        if (glob_replay_last_fingerOn) {
+            dx=glob_replay_last_dx16;
+            dy=glob_replay_last_dy16;
+            *((UINT16*)(pr + (adrX & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(dx);
+            *((UINT16*)(pr + (adrY & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(dy);
         }
     } else {
         
@@ -385,22 +374,44 @@ void PatchMemory68K_Word(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 
         if (dtmp<minY) dtmp=minY;
         if (dtmp>maxY) dtmp=maxY;
         newd=dtmp;
-        d=newd;
-        if (glob_touchpad_fingerid) {
-            *((UINT16*)(pr + (adrY & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
-            if (glob_replay_mode==1) glob_replay_data[glob_framecpt].patch_memY=d;
-        } else if (glob_replay_mode==1) glob_replay_data[glob_framecpt].patch_memY=0xFFFFFFFF;
+        dy=newd;
         glob_mov_y=0;
         
         dtmp=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
         if (dtmp<minX) dtmp=minX;
         if (dtmp>maxX) dtmp=maxX;
         newd=dtmp;
-        d=newd;
-        if (glob_touchpad_fingerid) {
-            *((UINT16*)(pr + (adrX & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
-            if (glob_replay_mode==1) glob_replay_data[glob_framecpt].patch_memX=d;
-        } else if (glob_replay_mode==1) glob_replay_data[glob_framecpt].patch_memX=0xFFFFFFFF;
+        dx=newd;
+        
+        if (glob_touchpad_fingerid) { //TOUCH ACTIVE, need to patch mem
+            *((UINT16*)(pr + (adrX & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(dx);
+            *((UINT16*)(pr + (adrY & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(dy);
+            if (glob_replay_mode==REPLAY_RECORD_MODE) {  //Recording replay
+                
+                if (glob_replay_last_fingerOn==0) {
+                    glob_replay_flag|=REPLAY_FLAG_TOUCHONOFF; //change touch status
+                    glob_replay_last_fingerOn=1;
+                }
+                if (glob_replay_last_dx16!=dx) {
+                    glob_replay_flag|=REPLAY_FLAG_POSX; //change patch memX
+                    glob_replay_last_dx16=dx;
+                }
+                if (glob_replay_last_dy16!=dy) {
+                    glob_replay_flag|=REPLAY_FLAG_POSY; //change patch memY
+                    glob_replay_last_dy16=dy;
+                }
+                
+                
+            }
+        } else {  //TOUCH NOT ACTIVE
+            if (glob_replay_mode==REPLAY_RECORD_MODE) {
+                if (glob_replay_last_fingerOn) {
+                    glob_replay_flag|=REPLAY_FLAG_TOUCHONOFF; //change touch status
+                    glob_replay_last_fingerOn=0;
+                }
+            }
+        }
+        
         glob_mov_x=0;
     }
 }
@@ -561,12 +572,10 @@ inline static void WriteWord(UINT32 a, UINT16 d)
 {
 	UINT8* pr;
     
-    if (glob_replay_mode==2) {//REPLAY
-        if ((glob_replay_data[glob_framecpt].patch_memY!=0xFFFFFFFF)||(glob_replay_data[glob_framecpt].patch_memX!=0xFFFFFFFF)) {
-            glob_touchpad_fingerid=1;
-        } else glob_touchpad_fingerid=0;
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) {//REPLAY
+        glob_touchpad_fingerid=glob_replay_last_fingerOn;
     }
-            
+    
     
 	a &= 0xFFFFFF;
     //	bprintf(PRINT_NORMAL, _T("write16 0x%08X\n"), a);
@@ -2579,7 +2588,7 @@ INT32 SekScan(INT32 nAction)
 		} else {
 #endif
             
-#ifdef EMU_M68K  
+#ifdef EMU_M68K
             //IOS_BUILD_PATCH
             if (bBurnUseASMCPUEmulation) {
                 //TODO: when saving, pc=pc-membase

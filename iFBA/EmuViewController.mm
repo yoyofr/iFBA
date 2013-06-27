@@ -10,11 +10,14 @@
 
 #include "TestFlight.h"
 
+#define EMUVIEWCONTROLLER
 #import "fbaconf.h"
 #include "DBHelper.h"
 
 //hack
 extern char debug_root_path[512];
+
+extern signed int nBurnFPS; //100*FPS
 
 volatile float glob_mov_x,glob_mov_y;
 volatile float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
@@ -24,10 +27,18 @@ volatile int glob_shootmode=0,glob_shooton=0,glob_autofirecpt;
 volatile int glob_touchpad_hack;
 volatile int cps2_buttons_limit=0;
 volatile float glob_scr_ratioX=1,glob_scr_ratioY=1;
+int wait_control;
 
-volatile t_replay_data glob_replay_data[MAX_FRAME_REPLAY]; //60fps => 1h max
+
+int LoadReplay(int slot);
+int SaveReplay(int slot);
 volatile unsigned char glob_replay_data_stream[MAX_REPLAY_DATA_BYTES];
-volatile unsigned int glob_framecpt,glob_replay_mode,glob_framecpt_max;
+volatile unsigned int glob_framecpt,glob_replay_mode,glob_framecpt_max,glob_replay_data_index,glob_replay_data_index_max;
+unsigned char glob_replay_flag;
+unsigned int glob_replay_last_dx16,glob_replay_last_dy16;
+unsigned char glob_replay_last_fingerOn;
+volatile int glob_replay_currentslot;
+unsigned int last_DrvInput[10];
 //
 
 long long playtime,playtime_lastclock;
@@ -871,39 +882,15 @@ static int statusLoadMsgUpdated=0;
             pb_total=0;
             pb_msg[0]=0;
             
-            ////////////////
-            glob_replay_mode=2;
-            glob_framecpt_max=MAX_FRAME_REPLAY;
+            ////////////////            
+            glob_framecpt_max=0;
+            glob_replay_data_index=0;
+            glob_framecpt=0;
+            glob_replay_data_index_max=MAX_REPLAY_DATA_BYTES;
             
-            if (glob_replay_mode==2) { //REPLAY
-                FILE *f;
-                char szName[256];
-#ifdef RELEASE_DEBUG
-                sprintf(szName, "%s/%s.replay", debug_root_path,gameName);
-#else
-                sprintf(szName, "/var/mobile/Documents/iFBA/%s.replay", gameName);
-#endif
+            if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
+                if (LoadReplay(glob_replay_currentslot)!=0) glob_replay_mode=0;
                 
-                
-                f=fopen(szName,"rb");
-                if (!f) {
-                    NSLog(@"cannot read replay");
-                    glob_replay_mode=0;
-                } else {
-                    char szHeader[7];
-                    fread(szHeader,6,1,f);
-                    szHeader[6]=0;
-                    NSLog(@"File header: %s",szHeader);
-                    fread((void*)&glob_framecpt_max,sizeof(glob_framecpt_max),1,f);
-                    if (glob_framecpt_max>MAX_FRAME_REPLAY) {
-                        NSLog(@"Replay file corrupted: wrong max framecpt value");
-                        glob_replay_mode=0;
-                    } else {
-                        NSLog(@"Loading: %dKB",glob_framecpt_max*sizeof(t_replay_data)/1024);
-                        fread((void*)glob_replay_data,glob_framecpt_max*sizeof(t_replay_data),1,f);
-                    }
-                    fclose(f);
-                }
             }
             
             //////////////
@@ -1089,30 +1076,8 @@ static int statusLoadMsgUpdated=0;
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     
-    if (glob_replay_mode==1) { //SAVE
-        FILE *f;
-        char szName[256];
-#ifdef RELEASE_DEBUG
-        sprintf(szName, "%s/%s.replay", debug_root_path,gameName);
-#else
-        sprintf(szName, "/var/mobile/Documents/iFBA/%s.replay", gameName);
-#endif
-        glob_framecpt_max=glob_framecpt;
-        
-        f=fopen(szName,"wb");
-        if (!f) {
-            NSLog(@"cannot save replay");
-        } else {
-            char szHeader[7]="iFBAXX";
-            szHeader[4]=iFBA_VERSION_MAJOR+48;
-            szHeader[5]=iFBA_VERSION_MINOR+48;
-            fwrite(szHeader,6,1,f);
-            glob_framecpt_max=glob_framecpt;
-            fwrite((void*)&glob_framecpt_max,sizeof(glob_framecpt_max),1,f);
-            NSLog(@"Saving: %dKB",glob_framecpt_max*sizeof(t_replay_data)/1024);
-            fwrite((void*)glob_replay_data,sizeof(t_replay_data)*glob_framecpt_max,1,f);
-            fclose(f);
-        }
+    if (glob_replay_mode==REPLAY_RECORD_MODE) { //SAVE
+        SaveReplay(glob_replay_currentslot);
     }
     
     if (nShouldExit==1) {
@@ -1580,7 +1545,7 @@ void stopWiimoteDetection(void) {
     free (argv[0]);
     free (argv[1]);
     
-    if ((glob_replay_mode==2)&&(glob_framecpt==glob_framecpt_max)) {
+    if ((launchGame==0)&&(glob_replay_mode==REPLAY_PLAYBACK_MODE)&&(glob_replay_data_index>=glob_replay_data_index_max)) {
         UIAlertView* alert =
         [[UIAlertView alloc] initWithTitle:@"Information"
                                    message:@"End of replay. Tap on 'MENU' button."
@@ -2490,5 +2455,73 @@ int StopProgressBar() {
     doFrame_inProgress=0;
 }
 
+
+///////////////////////////////////////////////////////////////////
+int SaveReplay(int slot) {
+    FILE *f;
+    char szName[256];
+#ifdef RELEASE_DEBUG
+    sprintf(szName, "%s/%s.%02d.replay", debug_root_path,gameName,slot);
+#else
+    sprintf(szName, "/var/mobile/Documents/iFBA/%s.%02d.replay", gameName,slot);
+#endif
+    glob_framecpt_max=glob_framecpt;
+    glob_replay_data_index_max=glob_replay_data_index;
+    
+    f=fopen(szName,"wb");
+    if (!f) {
+        NSLog(@"cannot save replay");
+        return -1;
+    } else {
+        char szHeader[7]="iFBAXX";
+        szHeader[4]=iFBA_VERSION_MAJOR+48;
+        szHeader[5]=iFBA_VERSION_MINOR+48;
+        fwrite(szHeader,6,1,f);
+        glob_framecpt_max=glob_framecpt;
+        fwrite((void*)&glob_framecpt_max,sizeof(glob_framecpt_max),1,f);
+        NSLog(@"Saving: %dKB",glob_replay_data_index_max/1024);
+        
+        fwrite((void*)&glob_replay_data_index_max,sizeof(glob_replay_data_index_max),1,f);
+        fwrite((void*)&nBurnFPS,sizeof(nBurnFPS),1,f);
+        fwrite((void*)glob_replay_data_stream,glob_replay_data_index_max,1,f);
+        fclose(f);
+    }
+    return 0;
+}
+int LoadReplay(int slot) {
+    FILE *f;
+    char szName[256];
+#ifdef RELEASE_DEBUG
+    sprintf(szName, "%s/%s.%02d.replay", debug_root_path,gameName,slot);
+#else
+    sprintf(szName, "/var/mobile/Documents/iFBA/%s.%02d.replay", gameName,slot);
+#endif
+    
+    
+    f=fopen(szName,"rb");
+    if (!f) {
+        NSLog(@"cannot read replay");
+        return -1;
+    } else {
+        char szHeader[7];
+        signed int tmpFPS;
+        fread(szHeader,6,1,f);
+        szHeader[6]=0;
+        NSLog(@"File header: %s",szHeader);
+        fread((void*)&glob_framecpt_max,sizeof(glob_framecpt_max),1,f);
+        fread((void*)&glob_replay_data_index_max,sizeof(glob_replay_data_index_max),1,f);
+        fread((void*)&tmpFPS,sizeof(tmpFPS),1,f);
+        if (glob_replay_data_index_max>MAX_REPLAY_DATA_BYTES) {
+            NSLog(@"Replay file corrupted: wrong max value for replay_index_max");
+            fclose(f);
+            return -2;
+        } else {
+            NSLog(@"Loading: %dKB / FPS: %d / Estimated running time: %d:%02d",glob_replay_data_index_max/1024,tmpFPS,glob_framecpt_max*100/tmpFPS/60,(glob_framecpt_max*100/tmpFPS)%60);
+            fread((void*)glob_replay_data_stream,glob_replay_data_index_max,1,f);
+        }
+        fclose(f);
+    }
+    return 0;
+}
 
 @end

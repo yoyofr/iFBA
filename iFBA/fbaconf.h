@@ -12,7 +12,15 @@
 #define iFBA_VERSION_MAJOR 0
 #define iFBA_VERSION_MINOR 6
 
-#define MAX_FRAME_REPLAY 60*60*60
+#define REPLAY_FLAG_TOUCHONOFF (1<<0)
+#define REPLAY_FLAG_POSX (1<<1)
+#define REPLAY_FLAG_POSY (1<<2)
+#define REPLAY_FLAG_IN0 (1<<3)
+#define REPLAY_FLAG_IN1 (1<<4)
+#define REPLAY_FLAG_IN2 (1<<5)
+#define REPLAY_FLAG_IN3 (1<<6)
+#define REPLAY_RECORD_MODE 1
+#define REPLAY_PLAYBACK_MODE 2
 #define MAX_REPLAY_DATA_BYTES 1024*1024
 
 #define MAX_JOYSTICKS 4
@@ -129,5 +137,34 @@ extern int game_has_options;
 
 extern t_button_map default_joymap_iCade[VSTICK_NB_BUTTON];
 extern t_button_map default_joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
+
+
+#ifndef EMUVIEWCONTROLLER
+
+extern int glob_mov_init,glob_touchpad_cnt,glob_ffingeron;
+extern float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
+extern int glob_touchpad_fingerid;
+extern int glob_touchpad_hack;
+extern float glob_scr_ratioX,glob_scr_ratioY;
+
+
+//follow finger
+extern void PatchMemory68KFFinger();
+extern float glob_mov_x,glob_mov_y;
+extern float glob_pos_x,glob_pos_y;
+extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
+extern int wait_control;
+//replay
+extern unsigned char glob_replay_data_stream[MAX_REPLAY_DATA_BYTES];
+extern unsigned int glob_framecpt,glob_replay_mode,glob_framecpt_max,glob_replay_data_index,glob_replay_data_index_max;
+extern unsigned char glob_replay_flag;
+extern unsigned int glob_replay_last_dx16,glob_replay_last_dy16;
+extern unsigned char glob_replay_last_fingerOn;
+//
+extern unsigned int last_DrvInput[10];
+//
+extern int nShouldExit;
+//
+#endif
 
 #endif

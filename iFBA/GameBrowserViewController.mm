@@ -33,6 +33,10 @@ extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
 extern char gameInfo[64*1024];
 
+
+extern unsigned int glob_replay_mode;
+extern int glob_replay_currentslot;
+
 extern char tmp_game_name[64];
 
 
@@ -44,6 +48,9 @@ int listNbSection;
 extern char gameName[64];
 extern int launchGame;
 static int cur_game_section,cur_game_row;
+
+UIActionSheet *gameMenu,*replaySlotMenu;
+
 NSString *genreList[20]={
     @"H-Shooter",
     @"V-Shooter",
@@ -64,7 +71,7 @@ NSString *genreList[20]={
     @"Misc",
     @"Mahjong",
     @"Racing",
-    @"Shoot"    
+    @"Shoot"
 };
 NSMutableArray *filterEntries;
 
@@ -108,7 +115,7 @@ NSMutableArray *filterEntries;
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.    
+	// Do any additional setup after loading the view, typically from a nib.
     
     selgenrevc=[[OptSelGenresViewController alloc] initWithNibName:@"OptSelGenresViewController" bundle:nil];
     
@@ -139,6 +146,10 @@ NSMutableArray *filterEntries;
     iCaderv.delegate = self;
     [iCaderv release];
     wiimoteBtnState=0;
+    
+    
+    gameMenu=[[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+                                otherButtonTitles:@"Launch game",@"Launch & Record replay",@"Playback replay",nil];
 }
 
 
@@ -233,24 +244,24 @@ NSMutableArray *filterEntries;
                 //[romlistLbl addObject:[NSString stringWithFormat:@"%s/%d",BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                 
                 int tmpchar=BurnDrvGetTextA(DRV_FULLNAME)[0];
-                if (tmpchar<'A') tmpchar='#';                                
+                if (tmpchar<'A') tmpchar='#';
                 
                 switch (ifba_conf.filter_type) {
                     case 2://genre
-                        [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                        [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                         break;
                     case 1://system
-                        [romlistLbl addObject:[NSString stringWithFormat:@"%s/%s/%d",BurnDrvGetTextA(DRV_SYSTEM),BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                        [romlistLbl addObject:[NSString stringWithFormat:@"%s/%s/%d",BurnDrvGetTextA(DRV_SYSTEM),BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                         break;
                     case 0: //game name
                     default:
-                        [romlistLbl addObject:[NSString stringWithFormat:@"%c/%s/%d",tmpchar,BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                        [romlistLbl addObject:[NSString stringWithFormat:@"%c/%s/%d",tmpchar,BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                         break;
                 }
                 
                 //check if file is existing
                 NSUInteger ind=[filelist indexOfObject:[burn_supportedRoms objectAtIndex:i]];
-                if (ind!=NSNotFound) {                    
+                if (ind!=NSNotFound) {
                     [rompath addObject:[filepath objectAtIndex:ind]];
                     [romavail addObject:[NSNumber numberWithBool:TRUE]];
                 } else {
@@ -271,14 +282,14 @@ NSMutableArray *filterEntries;
             } else {
                 if (szAppRomPaths[i][0]) cpath=[NSString stringWithFormat:@"%s",szAppRomPaths[i]];
                 else cpath=nil;
-            }            
+            }
             if (cpath) {
                 dirContent=[mFileMngr contentsOfDirectoryAtPath:cpath error:&error];
                 for (file in dirContent) {
                     NSString *extension=[[[file lastPathComponent] pathExtension] uppercaseString];
                     
                     if ([filetype_extROMFILE indexOfObject:extension]!=NSNotFound) {
-                        NSUInteger ind;                                        
+                        NSUInteger ind;
                         ind=[burn_supportedRoms indexOfObject:[[[file lastPathComponent] stringByDeletingPathExtension] lowercaseString]];
                         if (ind!=NSNotFound) {
                             nBurnDrvActive=ind;
@@ -294,14 +305,14 @@ NSMutableArray *filterEntries;
                                 
                                 switch (ifba_conf.filter_type) {
                                     case 2://genre
-                                        [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                                        [romlistLbl addObject:[NSString stringWithFormat:@"%@/%s/%d",[self genreStr:genre],BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                                         break;
                                     case 1://system
-                                        [romlistLbl addObject:[NSString stringWithFormat:@"%s/%s/%d",BurnDrvGetTextA(DRV_SYSTEM),BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                                        [romlistLbl addObject:[NSString stringWithFormat:@"%s/%s/%d",BurnDrvGetTextA(DRV_SYSTEM),BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                                         break;
                                     case 0: //game name
                                     default:
-                                        [romlistLbl addObject:[NSString stringWithFormat:@"%c/%s/%d",tmpchar,BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];                        
+                                        [romlistLbl addObject:[NSString stringWithFormat:@"%c/%s/%d",tmpchar,BurnDrvGetTextA(DRV_FULLNAME),currentIdx++] ];
                                         break;
                                 }
                             }
@@ -335,7 +346,7 @@ NSMutableArray *filterEntries;
                 listNbSection++;
                 [sectionLbl addObject:tmpStr2];
                 [sectionLblMin addObject:[tmpStr2 substringToIndex:min(2,[tmpStr2 length])]];
-            }            
+            }
         }
         
         listSectionIndexes=(int *)malloc(listNbSection*sizeof(int));
@@ -384,18 +395,18 @@ NSMutableArray *filterEntries;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    cur_game_section=-1;
+    //    cur_game_section=-1;
     
     /* Wiimote check => rely on cadisplaylink*/
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
     m_displayLink.frameInterval = 3; //20fps
-	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
     if (ifba_conf.filter_missing) [btn_missing setStyle:UIBarButtonItemStyleDone];
     else [btn_missing setStyle:UIBarButtonItemStyleBordered];
     
     
-    [self buildFilters];    
+    [self buildFilters];
     [self scanRomsDirs];
     [[self tabView] reloadData];
     if (cur_game_section>=0) {[self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
@@ -406,10 +417,10 @@ NSMutableArray *filterEntries;
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
-    }    
+    }
     
     if (bypass_reinit_view) bypass_reinit_view=0;
-        
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -460,7 +471,7 @@ NSMutableArray *filterEntries;
 	[super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {    
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
 
@@ -484,7 +495,7 @@ NSMutableArray *filterEntries;
     return listSectionCount[section];
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {    
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (listSectionCount[section]) {
         NSString *tmpStr=[romlistLbl objectAtIndex:listSortedList[listSectionIndexes[section]]];
         return [tmpStr substringToIndex:[tmpStr rangeOfString:@"/"].location];
@@ -539,7 +550,7 @@ NSMutableArray *filterEntries;
 		topLabel.highlightedTextColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 		topLabel.font = [UIFont boldSystemFontOfSize:16];
         topLabel.lineBreakMode=UILineBreakModeMiddleTruncation;
-//        topLabel.numberOfLines=0;
+        //        topLabel.numberOfLines=0;
 		
 		//
 		// Create the label for the top row of text
@@ -565,7 +576,7 @@ NSMutableArray *filterEntries;
         iconview=(UIImageView*)[cell viewWithTag:ICON_TAG];
 	}
     
-    iconview.frame=CGRectMake(0,0,32,32);    
+    iconview.frame=CGRectMake(0,0,32,32);
     
     bottomLabel.frame = CGRectMake( 32/*1.0 * cell.indentationWidth*/,
 								   24,
@@ -612,11 +623,11 @@ NSMutableArray *filterEntries;
     iconview.image=img;
     
     
-    NSString *tmpStr=[[romlistLbl objectAtIndex:index] stringByDeletingLastPathComponent];    
+    NSString *tmpStr=[[romlistLbl objectAtIndex:index] stringByDeletingLastPathComponent];
     topLabel.text=[tmpStr substringFromIndex:[tmpStr rangeOfString:@"/"].location+1  ];
     bottomLabel.text=[NSString stringWithFormat:@"%@ - %@ - %@",[romlist objectAtIndex:index],[romlistSystem objectAtIndex:index],[self genreStr:[(NSNumber*)[romlistGenre objectAtIndex:index] intValue]]   ];
     
-    //cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];	
+    //cell.textLabel.text=[romlistLbl[indexPath.section] objectAtIndex:indexPath.row];
 	cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
     
     return cell;
@@ -632,7 +643,7 @@ NSMutableArray *filterEntries;
     int playCount,fav,playTime;
     char lastPlayed[11];
     DBHelper::getGameStats([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], &playCount, &fav, lastPlayed,&playTime);
-//    NSLog(@"Stats for %@: %d %d %s",[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension],playCount,fav,lastPlayed);
+    //    NSLog(@"Stats for %@: %d %d %s",[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension],playCount,fav,lastPlayed);
     
     DBHelper::getGameInfo([[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String], gameInfo);
     if (gameInfo[0]) {
@@ -642,38 +653,134 @@ NSMutableArray *filterEntries;
         infovc = [[OptGameInfoViewController alloc] initWithNibName:@"OptGameInfoViewController" bundle:nil];
         bypass_reinit_view=1;
         [self.navigationController pushViewController:infovc animated:YES];
-        [infovc release];        
+        [infovc release];
     }
 }
 
+extern char debug_root_path[512];
+int GetReplayInfo(int slot,char *info) {
+    FILE *f;
+    char szName[256];
+#ifdef RELEASE_DEBUG
+    sprintf(szName, "%s/%s.%02d.replay", debug_root_path,gameName,slot);
+#else
+    sprintf(szName, "/var/mobile/Documents/iFBA/%s.%02d.replay", gameName,slot);
+#endif
+    
+    f=fopen(szName,"rb");
+    if (!f) {
+//        NSLog(@"cannot read replay");
+        return -1;
+    } else {
+        char szHeader[7];
+        signed int tmpFPS;
+        int framecpt,index_max;
+        fread(szHeader,6,1,f);
+        szHeader[6]=0;
+        fread((void*)&framecpt,sizeof(framecpt),1,f);
+        fread((void*)&index_max,sizeof(index_max),1,f);
+        fread((void*)&tmpFPS,sizeof(tmpFPS),1,f);
+        if (index_max>MAX_REPLAY_DATA_BYTES) {
+            NSLog(@"Replay file corrupted: wrong max value for replay_index_max");
+            fclose(f);
+            return -2;
+        } else {
+            sprintf(info,"%d:%02d (%dKB)",framecpt*100/tmpFPS/60,(framecpt*100/tmpFPS)%60,(index_max+18)/1024);
+        }
+        fclose(f);
+    }
+    return 0;
+}
+
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    NSString *replaySlotLbl[10];
+    char szTmp[64];
+    static int cancelIndex=0;
+    
+    if (actionSheet==gameMenu) {
+        switch (buttonIndex) {
+            case 0:
+                launchGame=1;
+                glob_replay_mode=0;
+                break;
+            case 1:
+                glob_replay_mode=REPLAY_RECORD_MODE;
+                
+                replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+                
+                
+                //check current replay slots
+                
+                for (int i=0;i<10;i++) {
+                    if (GetReplayInfo(i,szTmp)==0) [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"%d - %s",i,szTmp]];
+                    else [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"%d - Free",i]];
+                    cancelIndex++;
+                }
+                [replaySlotMenu addButtonWithTitle:@"Cancel"];
+                replaySlotMenu.cancelButtonIndex=cancelIndex;
+                [replaySlotMenu showInView:self.view];
+                [replaySlotMenu release];
+
+                break;
+            case 2:
+                glob_replay_mode=REPLAY_PLAYBACK_MODE;
+                replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+                
+                cancelIndex=0;
+                //check current replay slots
+                for (int i=0;i<10;i++) {
+                    if (GetReplayInfo(i,szTmp)==0) {
+                        [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"%d - %s",i,szTmp]];
+                        cancelIndex++;
+                    }
+                }
+                [replaySlotMenu addButtonWithTitle:@"Cancel"];
+                replaySlotMenu.cancelButtonIndex=cancelIndex;
+                [replaySlotMenu showInView:self.view];
+                [replaySlotMenu release];
+
+                break;
+        }
+    }
+    if (actionSheet==replaySlotMenu) {
+        if ((buttonIndex<cancelIndex)) {
+            launchGame=1;
+            glob_replay_currentslot=buttonIndex;
+        }
+    }
+    
+    if (launchGame==1) [[self navigationController] popViewControllerAnimated:NO];
+    
+}
+
+
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
-    if (ifba_conf.filter_missing) {        
+    if (ifba_conf.filter_missing) {
         NSNumber *nb=[romavail objectAtIndex:index];
         if (![nb boolValue]) return;
     }
     
     sprintf(gameName,"%s",[[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String]);
-    
-//    NSLog(@"launch: %s",gameName);
-    launchGame=1;
     //change dir
+    
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath objectAtIndex:index]];
     
-    //    NSLog(@"gamename: %s",gameName);
-    //    NSLog(@"rompath: %@",[rompath objectAtIndex:index]);
-    
-    [[self navigationController] popViewControllerAnimated:NO];
+    [gameMenu showInView:self.view];
 }
 
 /*- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
  if (editingStyle==UITableViewCellEditingStyleDelete) {
  char tmp_str[512];
- #ifdef RELEASE_DEBUG    
+ #ifdef RELEASE_DEBUG
  sprintf(tmp_str,"%s/%s_%02x", debug_root_path, gameName,indexPath.row);
- #else        
+ #else
  sprintf(tmp_str,"/var/mobile/Documents/iFBA/%s_%02x",gameName,indexPath.row);
- #endif        
+ #endif
  NSError *error;
  [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.fs",tmp_str] error:&error];
  [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%s.png",tmp_str] error:&error];
@@ -685,7 +792,7 @@ NSMutableArray *filterEntries;
  }
  
  - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.    
+ // Return NO if you do not want the item to be re-orderable.
  return NO;
  }
  
@@ -697,8 +804,8 @@ NSMutableArray *filterEntries;
 #pragma Actions
 
 -(IBAction) backToEmu {
-//    launchGame=2;
-//    [self.navigationController popToRootViewControllerAnimated:NO];
+    //    launchGame=2;
+    //    [self.navigationController popToRootViewControllerAnimated:NO];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
     [self.navigationController pushViewController:emuvc animated:NO];
@@ -713,8 +820,8 @@ NSMutableArray *filterEntries;
     [alertMsg show];
 }
 -(IBAction) showGenres{
-    [self presentSemiModalViewController:selgenrevc];    
-    [tabView reloadData];            
+    [self presentSemiModalViewController:selgenrevc];
+    [tabView reloadData];
 }
 -(IBAction) changeFilter:(id)sender {
     ifba_conf.filter_type++;
@@ -791,7 +898,7 @@ NSMutableArray *filterEntries;
         }
     }
     else {
-        if (button&iCadeJoystickDown) {            
+        if (button&iCadeJoystickDown) {
             if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
             else { //next section
                 if (ui_currentIndex_s<[tabView numberOfSections]-1) {
@@ -799,9 +906,9 @@ NSMutableArray *filterEntries;
                 } else {
                     ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
                 }
-            }             
+            }
         } else if (button&iCadeJoystickUp) {
-            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row            
+            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row
             else { //prev section
                 if (ui_currentIndex_s>0) {
                     ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
@@ -825,7 +932,7 @@ NSMutableArray *filterEntries;
             [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
         } else if (button&iCadeButtonB) { //back
             [[self navigationController] popViewControllerAnimated:YES];
-        } else if (button&iCadeButtonC) { //history            
+        } else if (button&iCadeButtonC) { //history
             [self tableView:tabView accessoryButtonTappedForRowWithIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
         } else if (button&iCadeButtonD) { //filters
             cur_game_row=ui_currentIndex_r;
