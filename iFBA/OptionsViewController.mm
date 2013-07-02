@@ -156,7 +156,7 @@ extern int optionScope; //0:default, 1:current game
             
         case 1://default options
             optionScope=0;
-            cur_ifba_conf=(ifba_game_conf_t*)&ifba_conf;
+            cur_ifba_conf=(ifba_conf_t*)&ifba_conf;
             vc=[[OptOptionsViewController alloc] initWithNibName:@"OptOptionsViewController" bundle:nil];
             ((OptOptionsViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];
@@ -164,11 +164,11 @@ extern int optionScope; //0:default, 1:current game
             break;
         case 2://game options
             optionScope=1;
-            if (!game_has_options) {
-                memcpy(&ifba_game_conf,&ifba_conf,sizeof(ifba_game_conf_t));
+            if (game_has_options==0) {
+                memcpy(&ifba_game_conf,&ifba_conf,sizeof(ifba_conf_t));
                 game_has_options=1;
                 cur_ifba_conf=&ifba_game_conf;
-            } else cur_ifba_conf=(ifba_game_conf_t*)&ifba_game_conf;
+            } else cur_ifba_conf=(ifba_conf_t*)&ifba_game_conf;
             vc=[[OptOptionsViewController alloc] initWithNibName:@"OptOptionsViewController" bundle:nil];
             ((OptOptionsViewController*)vc)->emuvc=emuvc;
             [self.navigationController pushViewController:vc animated:YES];

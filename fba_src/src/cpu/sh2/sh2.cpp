@@ -718,6 +718,7 @@ static int pos_ofsx,pos_ofsy;
 void PatchMemorySH2(unsigned int adrX,unsigned int adrY,int minX,int maxX,int minY,int maxY) {
     
     unsigned char * pr;
+    long long dtmp;
     int newd,shift;
     UINT32 d;
     pr = pSh2Ext->MemMap[(adrX >> SH2_SHIFT) + SH2_WADD];
@@ -729,16 +730,18 @@ void PatchMemorySH2(unsigned int adrX,unsigned int adrY,int minX,int maxX,int mi
     }
     
     shift=1;
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
-    if (newd<minY) newd=minY;
-    if (newd>maxY) newd=maxY;
+    dtmp=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
+    if (dtmp<minY) dtmp=minY;
+    if (dtmp>maxY) dtmp=maxY;
+    newd=dtmp;
     d=newd;
     if (glob_touchpad_fingerid) *((unsigned short *)(pr + ((adrY^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
-    if (newd<minX) newd=minX;
-    if (newd>maxX) newd=maxX;
+    dtmp=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
+    if (dtmp<minX) dtmp=minX;
+    if (dtmp>maxX) dtmp=maxX;
+    newd=dtmp;
     d=newd;
     if (glob_touchpad_fingerid) *((unsigned short *)(pr + ((adrX^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_x=0;

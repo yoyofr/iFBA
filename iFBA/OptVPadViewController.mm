@@ -106,6 +106,11 @@ extern char gameName[64];
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
+    [[[UIApplication sharedApplication] delegate] saveSettings];
+    if (game_has_options) { //settings already loaded, ensure any modification are saved
+        [[[UIApplication sharedApplication] delegate] saveSettings:[NSString stringWithFormat:@"%s",gameName]];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -279,15 +284,18 @@ extern char gameName[64];
     return cell;
 }
 
+extern void resetPadLayouts();
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section==2) {//Position
         if (indexPath.row==0) {//change layout
             renderVPADonly=1;
-            //EmuViewController *vc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];                    
+            //EmuViewController *vc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];
             [self.navigationController pushViewController:emuvc animated:NO];
 //            [vc release];
         } else if (indexPath.row==1) {//Reset x,y ofs to default
+            //TODO
+            resetPadLayouts();
             [tableView reloadData];
         }
     }
@@ -299,6 +307,7 @@ extern char gameName[64];
 //    [self.navigationController popToRootViewControllerAnimated:NO];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
     [self.navigationController pushViewController:emuvc animated:NO];
 
 }

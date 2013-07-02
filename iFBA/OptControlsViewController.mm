@@ -169,6 +169,7 @@ static CADisplayLink* m_displayLink;
 //    [self.navigationController popToRootViewControllerAnimated:NO];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
     [self.navigationController pushViewController:emuvc animated:NO];
 
 }

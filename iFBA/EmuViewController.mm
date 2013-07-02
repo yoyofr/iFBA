@@ -44,9 +44,9 @@ unsigned int last_DrvInput[10];
 long long playtime,playtime_lastclock;
 int playtime_upd=0;
 
-ifba_game_conf_t *cur_ifba_conf;
+ifba_conf_t *cur_ifba_conf;
 ifba_conf_t ifba_conf;
-ifba_game_conf_t ifba_game_conf;
+ifba_conf_t ifba_game_conf;
 int optionScope; //0:default, 1:current game
 int game_has_options;
 
@@ -198,6 +198,25 @@ int vpad_button_nb_save;
 float virtual_stick_angle;
 typedef struct {int button_id,w,h,sw,sh;unsigned char r,g,b;long finger_id;} t_touch_area;
 t_touch_area virtual_stick[VSTICK_NB_BUTTON];
+
+void resetPadLayouts() {
+    UIInterfaceOrientation cur_or=[[UIApplication sharedApplication] statusBarOrientation];
+    if ((cur_or==UIInterfaceOrientationLandscapeLeft)||(cur_or==UIInterfaceOrientationLandscapeRight)) device_orientation=1;
+    else device_orientation=0;
+    
+    if (vpad_button_nb) {
+        for (int i=VPAD_SPECIALS_BUTTON_NB;i<vpad_button_nb;i++) {
+                cur_ifba_conf->vpad_button_manual_layout[i][device_orientation]=0;
+//                cur_ifba_conf->vpad_button_manual_layout[i][1]=0;
+        }
+    } else {
+        for (int i=VPAD_SPECIALS_BUTTON_NB;i<VSTICK_NB_BUTTON;i++) {
+                cur_ifba_conf->vpad_button_manual_layout[i][device_orientation]=0;
+//                cur_ifba_conf->vpad_button_manual_layout[i][1]=0;
+        }
+    }
+    
+}
 
 void computePadLayouts(int nb_button){
     int w;
@@ -749,8 +768,8 @@ static int statusLoadMsgUpdated=0;
     
     
     //assign good conf
-    if (game_has_options) cur_ifba_conf=&ifba_game_conf;
-    else cur_ifba_conf=(ifba_game_conf_t*)&ifba_conf;
+    if (game_has_options) cur_ifba_conf=(ifba_conf_t*)&ifba_game_conf;
+    else cur_ifba_conf=(ifba_conf_t*)&ifba_conf;
     
     
     UIInterfaceOrientation cur_or=[[UIApplication sharedApplication] statusBarOrientation];
@@ -2479,7 +2498,7 @@ int SaveReplay(int slot) {
         fwrite(szHeader,6,1,f);
         glob_framecpt_max=glob_framecpt;
         fwrite((void*)&glob_framecpt_max,sizeof(glob_framecpt_max),1,f);
-        NSLog(@"Saving: %dKB",glob_replay_data_index_max/1024);
+//        NSLog(@"Saving: %dKB",glob_replay_data_index_max/1024);
         
         fwrite((void*)&glob_replay_data_index_max,sizeof(glob_replay_data_index_max),1,f);
         fwrite((void*)&nBurnFPS,sizeof(nBurnFPS),1,f);
@@ -2496,7 +2515,6 @@ int LoadReplay(int slot) {
 #else
     sprintf(szName, "/var/mobile/Documents/iFBA/%s.%02d.replay", gameName,slot);
 #endif
-    
     
     f=fopen(szName,"rb");
     if (!f) {

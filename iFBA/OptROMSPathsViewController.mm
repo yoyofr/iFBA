@@ -88,7 +88,7 @@ static CADisplayLink* m_displayLink;
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
-    m_displayLink=nil;
+    m_displayLink=nil;    
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -178,6 +178,7 @@ static CADisplayLink* m_displayLink;
 //    [self.navigationController popToRootViewControllerAnimated:NO];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
     [self.navigationController pushViewController:emuvc animated:NO];
 
 }

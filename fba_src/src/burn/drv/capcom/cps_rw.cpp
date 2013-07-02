@@ -2,11 +2,7 @@
 // CPS - Read/Write
 
 //HACK
-extern float glob_mov_x,glob_mov_y;
-extern float glob_pos_x,glob_pos_y;
-extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
-extern int wait_control;
-extern int cps2_buttons_limit;
+#include "fbaconf.h"
 //
 
 
@@ -571,13 +567,58 @@ INT32 CpsRwGetInp()
 		CpsPaddle2 += (CpsInpPaddle2 >> 8) & 0xff;
 	}
     
+    //hack
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
+        unsigned int next_frame_event;
+        next_frame_event=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8)
+        |((unsigned int)(glob_replay_data_stream[glob_replay_data_index+2])<<16)|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+3])<<24);
+        
+        
+        if (glob_framecpt==next_frame_event) {
+            glob_replay_data_index+=4;
+            glob_replay_flag=glob_replay_data_stream[glob_replay_data_index++];
+            if (glob_replay_flag&REPLAY_FLAG_TOUCHONOFF) {
+                glob_replay_last_fingerOn^=1;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSX) {
+                glob_replay_last_dx16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) {
+                glob_replay_last_dy16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) {
+                last_DrvInput[0]=glob_replay_data_stream[glob_replay_data_index];
+                glob_replay_data_index+=1;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) {
+                last_DrvInput[1]=glob_replay_data_stream[glob_replay_data_index];
+                glob_replay_data_index++;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN2) {
+                last_DrvInput[2]=glob_replay_data_stream[glob_replay_data_index];
+                glob_replay_data_index+=1;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN3) {
+                last_DrvInput[3]=glob_replay_data_stream[glob_replay_data_index];
+                glob_replay_data_index+=1;
+            }
+        }
+        Inp020=last_DrvInput[0];
+        Inp001=last_DrvInput[1];
+        Inp021=last_DrvInput[2];
+        Inp000=last_DrvInput[3];
+        
+    } else {
+
     //HACK
         if (glob_ffingeron) {
             Inp001&=~((1<<4)); //clear fire 1
             if (glob_mov_y>0) Inp001|=8;
             if (glob_mov_y<0) Inp001|=4;
-            if (glob_mov_x<0) Inp001|=1;
-            if (glob_mov_x>0) Inp001|=2;
+            if (glob_mov_x<0) Inp001|=2;
+            if (glob_mov_x>0) Inp001|=1;
             if (glob_shooton) {
                 switch (glob_shootmode) {
                     case 0: //shoot
@@ -595,6 +636,54 @@ INT32 CpsRwGetInp()
 	
 	StopOpposite(&Inp000);
 	StopOpposite(&Inp001);
+        
+        //HACK
+        //replay data - drvinputs
+        
+        if ((glob_replay_mode==REPLAY_RECORD_MODE)&&(glob_replay_data_index<MAX_REPLAY_DATA_BYTES-MAX_REPLAY_FRAME_SIZE)) {//SAVE REPLAY
+            glob_replay_flag=0;
+            if (glob_framecpt==0) {//first frame
+                //STORE FRAME_INDEX (0)
+                glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+                //STORE FLAG
+                glob_replay_data_stream[glob_replay_data_index++]=REPLAY_FLAG_IN0|REPLAY_FLAG_IN1|REPLAY_FLAG_IN2|REPLAY_FLAG_IN3;
+                //STORE INPUTS
+                glob_replay_data_stream[glob_replay_data_index++]=Inp020;
+                glob_replay_data_stream[glob_replay_data_index++]=Inp001;
+                glob_replay_data_stream[glob_replay_data_index++]=Inp021;
+                glob_replay_data_stream[glob_replay_data_index++]=Inp000;
+                
+                last_DrvInput[0]=Inp020;
+                last_DrvInput[1]=Inp001;
+                last_DrvInput[2]=Inp021;
+                last_DrvInput[3]=Inp000;
+            } else {
+                
+                if (last_DrvInput[0]!=Inp020) {
+                    glob_replay_flag|=REPLAY_FLAG_IN0;
+                    last_DrvInput[0]=Inp020;
+                }
+                if (last_DrvInput[1]!=Inp001) {
+                    glob_replay_flag|=REPLAY_FLAG_IN1;
+                    last_DrvInput[1]=Inp001;
+                }
+                if (last_DrvInput[2]!=Inp021) {
+                    glob_replay_flag|=REPLAY_FLAG_IN2;
+                    last_DrvInput[2]=Inp021;
+                }
+                if (last_DrvInput[3]!=Inp000) {
+                    glob_replay_flag|=REPLAY_FLAG_IN3;
+                    last_DrvInput[3]=Inp000;
+                }
+            }
+            
+        }
+        
+    }
+
 
 	// Ghouls uses a 4-way stick
 	if (Ghouls) {

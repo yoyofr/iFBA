@@ -280,7 +280,7 @@ valNb=[prefs objectForKey:a];
     
     if (gameStr==nil) return 1;
     
-    memset(&ifba_game_conf,0,sizeof(ifba_game_conf_t));
+    memset(&ifba_game_conf,0,sizeof(ifba_conf_t));
     
     
     //TEMP HACK
@@ -412,58 +412,58 @@ valNb=[prefs objectForKey:keyStr];
     for (int j=0;j<VSTICK_NB_BUTTON;j++) {
         keyStr=[NSString stringWithFormat:@"%@_vpad_button_manual_layout%02X_0",gameStr,j];
         valNb=[prefs objectForKey:keyStr];        
-        if (valNb != nil) ifba_conf.vpad_button_manual_layout[j][0]=[valNb intValue];
-        else ifba_conf.vpad_button_manual_layout[j][0]=0;        
+        if (valNb != nil) ifba_game_conf.vpad_button_manual_layout[j][0]=[valNb intValue];
+        else ifba_game_conf.vpad_button_manual_layout[j][0]=0;
         keyStr=[NSString stringWithFormat:@"%@_vpad_button_manual_layout%02X_1",gameStr,j];
         valNb=[prefs objectForKey:keyStr];        
-        if (valNb != nil) ifba_conf.vpad_button_manual_layout[j][1]=[valNb intValue];
-        else ifba_conf.vpad_button_manual_layout[j][1]=0;
+        if (valNb != nil) ifba_game_conf.vpad_button_manual_layout[j][1]=[valNb intValue];
+        else ifba_game_conf.vpad_button_manual_layout[j][1]=0;
         
         keyStr=[NSString stringWithFormat:@"%@_vpad_button_x%02X_0",gameStr,j];
         valNb=[prefs objectForKey:keyStr];        
-        if (valNb != nil) ifba_conf.vpad_button_x[j][0]=[valNb floatValue];
-        else ifba_conf.vpad_button_manual_layout[j][0]=0;
+        if (valNb != nil) ifba_game_conf.vpad_button_x[j][0]=[valNb floatValue];
+        else ifba_game_conf.vpad_button_manual_layout[j][0]=0;
         keyStr=[NSString stringWithFormat:@"%@_vpad_button_x%02X_1",gameStr,j];
         valNb=[prefs objectForKey:keyStr];        
-        if (valNb != nil) ifba_conf.vpad_button_x[j][1]=[valNb floatValue];
-        else ifba_conf.vpad_button_manual_layout[j][1]=0;
+        if (valNb != nil) ifba_game_conf.vpad_button_x[j][1]=[valNb floatValue];
+        else ifba_game_conf.vpad_button_manual_layout[j][1]=0;
         
         keyStr=[NSString stringWithFormat:@"%@_vpad_button_y%02X_0",gameStr,j];
         valNb=[prefs objectForKey:keyStr];        
-        if (valNb != nil) ifba_conf.vpad_button_y[j][0]=[valNb floatValue];
-        else ifba_conf.vpad_button_manual_layout[j][0]=0;
+        if (valNb != nil) ifba_game_conf.vpad_button_y[j][0]=[valNb floatValue];
+        else ifba_game_conf.vpad_button_manual_layout[j][0]=0;
         keyStr=[NSString stringWithFormat:@"%@_vpad_button_y%02X_1",gameStr,j];
         valNb=[prefs objectForKey:keyStr];        
-        if (valNb != nil) ifba_conf.vpad_button_y[j][1]=[valNb floatValue];
-        else ifba_conf.vpad_button_manual_layout[j][1]=0;
+        if (valNb != nil) ifba_game_conf.vpad_button_y[j][1]=[valNb floatValue];
+        else ifba_game_conf.vpad_button_manual_layout[j][1]=0;
         
     }
     keyStr=[NSString stringWithFormat:@"%@_vpad_pad_manual_layout_0",gameStr];
     valNb=[prefs objectForKey:keyStr];        
-    if (valNb != nil) ifba_conf.vpad_pad_manual_layout[0]=[valNb intValue];
-    else ifba_conf.vpad_pad_manual_layout[0]=0;
+    if (valNb != nil) ifba_game_conf.vpad_pad_manual_layout[0]=[valNb intValue];
+    else ifba_game_conf.vpad_pad_manual_layout[0]=0;
     keyStr=[NSString stringWithFormat:@"%@_vpad_pad_manual_layout_1",gameStr];
     valNb=[prefs objectForKey:keyStr];        
-    if (valNb != nil) ifba_conf.vpad_pad_manual_layout[1]=[valNb intValue];
-    else ifba_conf.vpad_pad_manual_layout[1]=0;
+    if (valNb != nil) ifba_game_conf.vpad_pad_manual_layout[1]=[valNb intValue];
+    else ifba_game_conf.vpad_pad_manual_layout[1]=0;
     
     keyStr=[NSString stringWithFormat:@"%@_vpad_pad_x_0",gameStr];
     valNb=[prefs objectForKey:keyStr];        
-    if (valNb != nil) ifba_conf.vpad_pad_x[0]=[valNb floatValue];
-    else ifba_conf.vpad_pad_manual_layout[0]=0;
+    if (valNb != nil) ifba_game_conf.vpad_pad_x[0]=[valNb floatValue];
+    else ifba_game_conf.vpad_pad_manual_layout[0]=0;
     keyStr=[NSString stringWithFormat:@"%@_vpad_pad_x_1",gameStr];
     valNb=[prefs objectForKey:keyStr];        
-    if (valNb != nil) ifba_conf.vpad_pad_x[1]=[valNb floatValue];
-    else ifba_conf.vpad_pad_manual_layout[1]=0;
+    if (valNb != nil) ifba_game_conf.vpad_pad_x[1]=[valNb floatValue];
+    else ifba_game_conf.vpad_pad_manual_layout[1]=0;
     
     keyStr=[NSString stringWithFormat:@"%@_vpad_pad_y_0",gameStr];
     valNb=[prefs objectForKey:keyStr];        
-    if (valNb != nil) ifba_conf.vpad_pad_y[0]=[valNb floatValue];
-    else ifba_conf.vpad_pad_manual_layout[0]=0;
+    if (valNb != nil) ifba_game_conf.vpad_pad_y[0]=[valNb floatValue];
+    else ifba_game_conf.vpad_pad_manual_layout[0]=0;
     keyStr=[NSString stringWithFormat:@"%@_vpad_pad_y_1",gameStr];
     valNb=[prefs objectForKey:keyStr];        
-    if (valNb != nil) ifba_conf.vpad_pad_y[1]=[valNb floatValue];
-    else ifba_conf.vpad_pad_manual_layout[1]=0;
+    if (valNb != nil) ifba_game_conf.vpad_pad_y[1]=[valNb floatValue];
+    else ifba_game_conf.vpad_pad_manual_layout[1]=0;
     
 #undef GET_VALNB
     return 0;
@@ -700,41 +700,41 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     
     //TOUCHPAD
     for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-        valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_manual_layout[j][0]];
+        valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_button_manual_layout[j][0]];
         [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_button_manual_layout%02X_0",gameStr,j]];
         [valNb release];
-        valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_button_manual_layout[j][1]];
+        valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_button_manual_layout[j][1]];
         [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_button_manual_layout%02X_1",gameStr,j]];
         [valNb release];
-        valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_button_x[j][0]];
+        valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_button_x[j][0]];
         [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_button_x%02X_0",gameStr,j]];
         [valNb release];
-        valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_button_x[j][1]];
+        valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_button_x[j][1]];
         [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_button_x%02X_1",gameStr,j]];
         [valNb release];
-        valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_button_y[j][0]];
+        valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_button_y[j][0]];
         [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_button_y%02X_0",gameStr,j]];
         [valNb release];
-        valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_button_y[j][1]];
+        valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_button_y[j][1]];
         [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_button_y%02X_1",gameStr,j]];
         [valNb release];
     }
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_pad_manual_layout[0]];
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_pad_manual_layout[0]];
     [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_pad_manual_layout_0",gameStr]];
     [valNb release];
-    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_pad_manual_layout[1]];
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_pad_manual_layout[1]];
     [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_pad_manual_layout_1",gameStr]];
     [valNb release];
-    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_pad_x[0]];
+    valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_pad_x[0]];
     [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_pad_x_0",gameStr]];
     [valNb release];
-    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_pad_x[1]];
+    valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_pad_x[1]];
     [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_pad_x_1",gameStr]];
     [valNb release];
-    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_pad_y[0]];
+    valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_pad_y[0]];
     [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_pad_y_0",gameStr]];
     [valNb release];
-    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_pad_y[1]];
+    valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_pad_y[1]];
     [prefs setObject:valNb forKey:[NSString stringWithFormat:@"%@_vpad_pad_y_1",gameStr]];
     [valNb release];
     

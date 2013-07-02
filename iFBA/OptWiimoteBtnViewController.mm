@@ -110,6 +110,11 @@ int mOptWiimoteButtonSelected;
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
+    [[[UIApplication sharedApplication] delegate] saveSettings];
+    if (game_has_options) { //settings already loaded, ensure any modification are saved
+        [[[UIApplication sharedApplication] delegate] saveSettings:[NSString stringWithFormat:@"%s",gameName]];
+    }
 }
 #pragma mark - UITableView
 
@@ -208,6 +213,7 @@ int mOptWiimoteButtonSelected;
 //    [self.navigationController popToRootViewControllerAnimated:NO];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
     [self.navigationController pushViewController:emuvc animated:NO];
 
 }

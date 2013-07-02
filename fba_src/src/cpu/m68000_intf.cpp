@@ -421,6 +421,7 @@ static int raizing_respawn=0;
 void PatchMemory68KRaizing(unsigned int adrX,unsigned int adrY,int minX,int maxX,int minY,int maxY,int shift,int resp1,int resp2,int resp3) {
     UINT8* pr;
     int newd;
+    long long dtmp;
     UINT16 d;
     
     pr = FIND_W(adrY);
@@ -451,22 +452,22 @@ void PatchMemory68KRaizing(unsigned int adrX,unsigned int adrY,int minX,int maxX
         glob_mov_init=0;
     }
     
-    newd=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
-    if (newd<minY) newd=minY;
-    if (newd>maxY) newd=maxY;
+    dtmp=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
+    if (dtmp<minY) dtmp=minY;
+    if (dtmp>maxY) dtmp=maxY;
+    newd=dtmp;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (adrY & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_y=0;
     
-    newd=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
-    if (newd<minX) newd=minX;
-    if (newd>maxX) newd=maxX;
+    dtmp=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
+    if (dtmp<minX) dtmp=minX;
+    if (dtmp>maxX) dtmp=maxX;
+    newd=dtmp;
     d=newd;
     if (glob_touchpad_fingerid) *((UINT16*)(pr + (adrX & SEK_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
     glob_mov_x=0;
 }
-
-
 
 
 void PatchMemory68KFFinger() {
@@ -553,7 +554,14 @@ void PatchMemory68KFFinger() {
             return;
         case 23:
             //mars matrix
-            PatchMemory68K_Word(0xFF42AA,0xFF42AE,0x000F,0x0170,0x000F,0x00D0,1);
+            //check address dynamically
+        {
+            UINT8 *pr=FIND_W(0xFF45DA);
+            UINT32 base_address;
+            base_address=0xFF0000+ *((UINT16*)(pr + (0xFF45DA & SEK_PAGEM)));
+            //printf("found: %04X\n",base_address);
+            PatchMemory68K_Word(base_address+0x12,base_address+0x16,0x000F,0x0170,0x000F,0x00D0,1);
+        }
             return;
         case 24:
             //ddp doj
@@ -665,7 +673,13 @@ inline static void WriteWord(UINT32 a, UINT16 d)
                     break;
                 case 23:
                     //mars matrix
-                    if ( ((a==0xFF42AA)||(a==0xFF42AE))) return;
+                    //check address dynamically
+                {
+                    UINT8 *pr=FIND_W(0xFF45DA);
+                    UINT32 base_address;
+                    base_address=0xFF0000+ *((UINT16*)(pr + (0xFF45DA & SEK_PAGEM)));
+                    if ( (base_address!=0xFF0000)&&((a==base_address+0x12)||(a==base_address+0x16))) return;
+                }
                     break;
                 case 24:
                     //ddp doj
@@ -739,7 +753,11 @@ inline static void WriteLong(UINT32 a, UINT32 d)
 	a &= 0xFFFFFF;
     
     //	bprintf(PRINT_NORMAL, _T("write32 0x%08X\n"), a);
-    //if ((a>=0xFE1118)&&(a<=0xFE111E)) printf("w32.%08X: %08X\n",a,d);
+
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) {//REPLAY
+        glob_touchpad_fingerid=glob_replay_last_fingerOn;
+    }
+
     
 	pr = FIND_W(a);
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
@@ -759,6 +777,17 @@ inline static void WriteLong(UINT32 a, UINT32 d)
                     //Tengai (Samurai Blade)
                     if ( ((a==0xFE3430)||(a==0xFE3434))) return;
                     break;
+                case 23:
+                    //mars matrix
+                    //check address dynamically
+                {
+                    UINT8 *pr=FIND_W(0xFF45DA);
+                    UINT32 base_address;
+                    base_address=0xFF0000+ *((UINT16*)(pr + (0xFF45DA & SEK_PAGEM)));
+                    if ( (base_address!=0xFF0000)&&((a==base_address+0x12)||(a==base_address+0x16))) return;
+                }
+                    break;
+                    
                 default:break;
             }
         

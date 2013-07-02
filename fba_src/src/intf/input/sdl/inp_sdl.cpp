@@ -16,7 +16,7 @@ extern float joy_analog_r[MAX_JOYSTICKS];
 extern void updateWiimotes(void);
 int pendingReset=0;
 
-extern ifba_game_conf_t *cur_ifba_conf;
+extern ifba_conf_t *cur_ifba_conf;
 
 // Sets up one Joystick (for example the range of the joystick's axes)
 static int SDLinpJoystickInit(int i)

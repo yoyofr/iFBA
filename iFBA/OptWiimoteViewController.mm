@@ -125,6 +125,11 @@ static CADisplayLink* m_displayLink;
     //    if (bt&&ifba_conf.btstack_on) [bt deactivate];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
+    [[[UIApplication sharedApplication] delegate] saveSettings];
+    if (game_has_options) { //settings already loaded, ensure any modification are saved
+        [[[UIApplication sharedApplication] delegate] saveSettings:[NSString stringWithFormat:@"%s",gameName]];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -451,6 +456,7 @@ static CADisplayLink* m_displayLink;
 //    [self.navigationController popToRootViewControllerAnimated:NO];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
     [self.navigationController pushViewController:emuvc animated:NO];
 
 }

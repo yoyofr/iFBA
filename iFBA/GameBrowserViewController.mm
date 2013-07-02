@@ -6,12 +6,18 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#define REPLAY_COVERAGE @"donpachi,dodonpachi,esprade,feversos,mmatrix,progear,gigawing"
+
 #import "GameBrowserViewController.h"
 #import "OptGameInfoViewController.h"
+#import "ReplayWebController.h"
+#import "SendReplayController.h"
 #include "string.h"
 #include "burner.h"
 #include "fbaconf.h"
 #include "DBHelper.h"
+
+#include "Replay.h"
 
 #define MAX_FILTER 3
 //0: game name
@@ -50,6 +56,8 @@ extern int launchGame;
 static int cur_game_section,cur_game_row;
 
 UIActionSheet *gameMenu,*replaySlotMenu;
+UIAlertView *alertYesNo;
+static int replay_index[10];
 
 NSString *genreList[20]={
     @"H-Shooter",
@@ -149,7 +157,9 @@ NSMutableArray *filterEntries;
     
     
     gameMenu=[[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
-                                otherButtonTitles:@"Launch game",@"Launch & Record replay",@"Playback replay",nil];
+                                otherButtonTitles:@"Launch game",@"Launch & Record replay",@"Playback replay",@"Share replay online",@"Get replay online",nil];
+    
+    
 }
 
 
@@ -657,74 +667,166 @@ NSMutableArray *filterEntries;
     }
 }
 
-extern char debug_root_path[512];
-int GetReplayInfo(int slot,char *info) {
-    FILE *f;
-    char szName[256];
-#ifdef RELEASE_DEBUG
-    sprintf(szName, "%s/%s.%02d.replay", debug_root_path,gameName,slot);
-#else
-    sprintf(szName, "/var/mobile/Documents/iFBA/%s.%02d.replay", gameName,slot);
-#endif
-    
-    f=fopen(szName,"rb");
-    if (!f) {
-//        NSLog(@"cannot read replay");
-        return -1;
-    } else {
-        char szHeader[7];
-        signed int tmpFPS;
-        int framecpt,index_max;
-        fread(szHeader,6,1,f);
-        szHeader[6]=0;
-        fread((void*)&framecpt,sizeof(framecpt),1,f);
-        fread((void*)&index_max,sizeof(index_max),1,f);
-        fread((void*)&tmpFPS,sizeof(tmpFPS),1,f);
-        if (index_max>MAX_REPLAY_DATA_BYTES) {
-            NSLog(@"Replay file corrupted: wrong max value for replay_index_max");
-            fclose(f);
-            return -2;
-        } else {
-            sprintf(info,"%d:%02d (%dKB)",framecpt*100/tmpFPS/60,(framecpt*100/tmpFPS)%60,(index_max+18)/1024);
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (alertView==alertYesNo) {
+        if (buttonIndex == 0) {
+            // Yes, do something
+            launchGame=1;
+            [[self navigationController] popViewControllerAnimated:NO];
         }
-        fclose(f);
     }
+    
+    
+}
+
+static int replay_slot[10];
+
+-(int) SendReplay:(int) slot {
+    NSArray *nameArray = [[NSHost currentHost] names];
+//    NSString *user = [nameArray objectAtIndex:0];
+    
+    NSString *author=[nameArray objectAtIndex:0];//@"yoyofr";
+    NSString *description=@"not implemented yet";
+    
+    
+    //NSLog(@"author: %@",user);
+    
+    //get upload url
+    NSURL *urlGetUploadURL = [NSURL URLWithString:[NSString stringWithFormat:@"%sauto",IFBAONLINE]];
+    NSString *urlString;
+    NSURLRequest *requestUpload = [NSURLRequest requestWithURL:urlGetUploadURL];
+    
+    NSURLResponse *response;
+    NSError *error=nil;
+    //send it synchronous
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:requestUpload returningResponse:&response error:&error];
+//    NSLog(@"data length: %d",[responseData length]);
+    urlString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    // check for an error. If there is a network error, you should handle it here.
+    if(error) {
+        NSLog(@"SendReplay error: %@",[error localizedDescription]);
+        return -1;
+    }
+    
+    // add file data
+    char *replay_data;
+    char replay_date[11];
+    int replay_length;
+    int replay_data_len,err;
+    if (err=GetReplayFileData(slot,&replay_data,&replay_data_len,replay_date,&replay_length)) {
+        NSLog(@"GetReplayFileData: error %d",err);
+        return -2;
+    }
+    NSData *fileData;
+    fileData=[NSData dataWithBytes:replay_data length:replay_data_len];
+    free(replay_data);
+    
+    NSLog(@"url used: %@",urlString);
+
+    NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+    [request setURL:[NSURL URLWithString:urlString]];
+    [request setHTTPMethod:@"POST"];
+    
+    NSMutableData *body = [NSMutableData data];
+    
+    
+    NSString *boundary = [NSString stringWithString:@"0xKhTmLbOuNdArY---This_Is_ThE_BoUnDaRyy---pqo"];
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+    [request addValue:contentType forHTTPHeaderField:@"Content-Type"];
+    
+    
+    // Param1: gamename
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"game\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"%s",gameName] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    
+    // Param2: date
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"date\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"%s",replay_date] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // Param3: length(in seconds)
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"length\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"%d",replay_length] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // Param4: author
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"author\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:author] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // Param5: description
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"desc\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:description] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //replay data
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%s\"\r\n",gameName] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:@"Content-Type: application/octet-stream\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[NSData dataWithData:fileData]];
+    [body appendData:[[NSString stringWithString:@"Content-Transfer-Encoding: binary\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    
+    // close form
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // set request body
+    [request setHTTPBody:body];
+    
+    //return and test
+    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"%@", returnString);        
     return 0;
 }
 
-
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    NSString *replaySlotLbl[10];
     char szTmp[64];
     static int cancelIndex=0;
     
     if (actionSheet==gameMenu) {
         switch (buttonIndex) {
-            case 0:
+            case 0://LAUNCH
+                
                 launchGame=1;
                 glob_replay_mode=0;
                 break;
-            case 1:
+            case 1://LAUNCH & RECORD REPLAY
                 glob_replay_mode=REPLAY_RECORD_MODE;
-                
                 replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
                 
                 
                 //check current replay slots
-                
+                cancelIndex=0;
                 for (int i=0;i<10;i++) {
-                    if (GetReplayInfo(i,szTmp)==0) [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"%d - %s",i,szTmp]];
-                    else [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"%d - Free",i]];
+                    if (GetReplayInfo(i,szTmp)==0) {
+                        replay_slot[i]=1;
+                        [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"#%d. %s",i,szTmp]];
+                    }
+                    else {
+                        replay_slot[i]=0;
+                        [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"#%d. Free",i]];
+                    }
                     cancelIndex++;
                 }
                 [replaySlotMenu addButtonWithTitle:@"Cancel"];
                 replaySlotMenu.cancelButtonIndex=cancelIndex;
                 [replaySlotMenu showInView:self.view];
-                [replaySlotMenu release];
+                [replaySlotMenu autorelease];
 
                 break;
-            case 2:
+            case 2://LAUNCH & PLAYBACK REPLAY
                 glob_replay_mode=REPLAY_PLAYBACK_MODE;
                 replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
                 
@@ -732,22 +834,75 @@ int GetReplayInfo(int slot,char *info) {
                 //check current replay slots
                 for (int i=0;i<10;i++) {
                     if (GetReplayInfo(i,szTmp)==0) {
-                        [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"%d - %s",i,szTmp]];
+                        [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"#%d. %s",i,szTmp]];
+                        replay_index[cancelIndex]=i;
                         cancelIndex++;
                     }
                 }
                 [replaySlotMenu addButtonWithTitle:@"Cancel"];
                 replaySlotMenu.cancelButtonIndex=cancelIndex;
                 [replaySlotMenu showInView:self.view];
-                [replaySlotMenu release];
-
+                [replaySlotMenu autorelease];
+                break;
+            case 3: //SHARE REPLAY ONLINE
+                glob_replay_mode=REPLAY_SHARE_ONLINE;
+                replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+                
+                cancelIndex=0;
+                //check current replay slots
+                for (int i=0;i<10;i++) {
+                    if (GetReplayInfo(i,szTmp)==0) {
+                        [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"#%d. %s",i,szTmp]];
+                        replay_index[cancelIndex]=i;
+                        cancelIndex++;
+                    }
+                }
+                [replaySlotMenu addButtonWithTitle:@"Cancel"];
+                replaySlotMenu.cancelButtonIndex=cancelIndex;
+                [replaySlotMenu showInView:self.view];
+                [replaySlotMenu autorelease];
+                
+                break;
+            case 4: //BROWSE ONLINE REPLAY
+                glob_replay_mode=REPLAY_BROWSE_ONLINE;
+                
+                ReplayWebController *replayWeb;
+                replayWeb = [[ReplayWebController alloc] initWithNibName:@"ReplayWebController" bundle:nil];
+                //bypass_reinit_view=1;
+                [self.navigationController pushViewController:replayWeb animated:YES];
+                [replayWeb release];
+                
                 break;
         }
     }
     if (actionSheet==replaySlotMenu) {
-        if ((buttonIndex<cancelIndex)) {
-            launchGame=1;
-            glob_replay_currentslot=buttonIndex;
+        if (buttonIndex<cancelIndex) {
+            switch (glob_replay_mode) {
+                case REPLAY_SHARE_ONLINE:
+                    glob_replay_currentslot=replay_index[buttonIndex];
+                    ////////////////////////////////////////
+                    //[self SendReplay:glob_replay_currentslot];
+                    
+                    SendReplayController *replaySend;
+                    replaySend = [[SendReplayController alloc] initWithNibName:@"SendReplayController" bundle:nil];
+                    //bypass_reinit_view=1;
+                    [self.navigationController pushViewController:replaySend animated:YES];
+                    [replaySend release];
+                    
+                    ///////////////////////////////////////
+                    break;
+                case REPLAY_RECORD_MODE:
+                    glob_replay_currentslot=buttonIndex;
+                    if (replay_slot[glob_replay_currentslot]) {
+                        alertYesNo=[[[UIAlertView alloc] initWithTitle:@"Warning" message:@"Slot already used, existing replay will be lost. Do you confirm ?"delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No",nil] autorelease];
+                        [alertYesNo show];
+                    } else launchGame=1;
+                    break;
+                case REPLAY_PLAYBACK_MODE:
+                    glob_replay_currentslot=replay_index[buttonIndex];
+                    launchGame=1;
+                    break;
+            }
         }
     }
     

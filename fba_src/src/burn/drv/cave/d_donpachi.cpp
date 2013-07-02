@@ -393,6 +393,7 @@ static INT32 DrvFrame()
 		DrvDoReset();
 	}
     
+    //hack
     if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
         unsigned int next_frame_event;
         next_frame_event=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8)
@@ -460,7 +461,7 @@ static INT32 DrvFrame()
         //HACK
         //replay data - drvinputs
         
-        if (glob_replay_mode==REPLAY_RECORD_MODE) {//SAVE REPLAY
+        if ((glob_replay_mode==REPLAY_RECORD_MODE)&&(glob_replay_data_index<MAX_REPLAY_DATA_BYTES-MAX_REPLAY_FRAME_SIZE)) {//SAVE REPLAY
             glob_replay_flag=0;
             if (glob_framecpt==0) {//first frame
                 //STORE FRAME_INDEX (0)

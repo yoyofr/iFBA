@@ -140,8 +140,9 @@ EmuViewController *emuvc;
 #endif
     
     if (launchGame==1) {
+        //by default, use standard settings. Specific game settings check later (below)
         game_has_options=0;
-        memcpy(&ifba_game_conf,&ifba_conf,sizeof(ifba_game_conf_t));
+        memcpy(&ifba_game_conf,&ifba_conf,sizeof(ifba_conf_t));
         
         //update game stats
         int playCount,fav,playTime;
@@ -160,14 +161,14 @@ EmuViewController *emuvc;
     }
     
     if (launchGame) { //a game is selected
-        if (game_has_options==0) { //no settings loaded yet    
+        if (game_has_options==0) { //no specific setting loaded yet
             //check if settings exist for current game
             if ([[[UIApplication sharedApplication] delegate] loadSettings:[NSString stringWithFormat:@"%s",gameName]]==0) { //yes, apply settings
                 game_has_options=1;
-                cur_ifba_conf=(ifba_game_conf_t*)&ifba_game_conf;
+                cur_ifba_conf=(ifba_conf_t*)&ifba_game_conf;
             }
             else {//no, use default settings
-                cur_ifba_conf=(ifba_game_conf_t*)&ifba_conf;
+                cur_ifba_conf=(ifba_conf_t*)&ifba_conf;
             }
         }
         
