@@ -257,7 +257,10 @@ inline static void WriteByte(UINT32 a, UINT8 d)
     
 	pr = FIND_W(a);
 	if ((uintptr_t)pr >= SEK_MAXHANDLER) {
+        
+        
 		a ^= 1;
+        
         pr[a & SEK_PAGEM] = (UINT8)d;
         
         
@@ -348,7 +351,7 @@ void PatchMemory68K_Long(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 
 }
 
 
-void PatchMemory68K_Word(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 minY,UINT32 maxY,UINT32 shift) {
+void PatchMemory68K_Word(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 minY,UINT32 maxY,float shift) {
     UINT8* pr;
     UINT32 newd;
     long long dtmp;
@@ -382,9 +385,6 @@ void PatchMemory68K_Word(UINT32 adrX,UINT32 adrY,UINT32 minX,UINT32 maxX,UINT32 
         if (dtmp>maxX) dtmp=maxX;
         newd=dtmp;
         dx=newd;
-        
-        
-        
         glob_mov_x=0;
         
         if (glob_touchpad_fingerid) { //TOUCH ACTIVE, need to patch mem            
@@ -694,6 +694,11 @@ void PatchMemory68KFFinger() {
             //varth
             PatchMemory68K_WordOfs(0xFF8308,0xFF830C,0xFF82BC,0x0020,0x0160,0x0020,0x0154,1);
             return;
+        case 27:
+            //mahoudai
+            PatchMemory68K_Word(0x10171A,0x101718,0x4800,0xB800,0x3800,0xC800,128);
+            return;
+            
         default:break;
     }
 }
@@ -823,6 +828,10 @@ inline static void WriteWord(UINT32 a, UINT16 d)
 
                         return;
                     }
+                    break;
+                case 27:
+                    //mahoudai
+                    if ( ((a==0x101718)||(a==0x10171A))) return;
                     break;
                 default:break;
             }

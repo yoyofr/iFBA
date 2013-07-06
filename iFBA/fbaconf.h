@@ -15,9 +15,9 @@
 #define iFBA_VERSION_MAJOR 0
 #define iFBA_VERSION_MINOR 6
 
-#define REPLAY_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,ddonpach,ddonpachj,ddpdoj,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,espgal,esprade,feversos,gigawing,grindstm,grindstma,ket,mmatrix,progear,truxton2,varth,varthr1,varthu,varthj,vfive"
+#define REPLAY_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,ddonpach,ddonpachj,ddpdoj,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,espgal,esprade,feversos,gigawing,grindstm,grindstma,ket,mahoudai,mmatrix,progear,sstriker,sstrikera,truxton2,varth,varthr1,varthu,varthj,vfive"
 
-#define FFINGER_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,ddonpach,ddonpachj,ddpdoj,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,dragnblz,espgal,esprade,feversos,gigawing,grindstm,grindstma,gunbird,gunbird2,ket,mmatrix,progear,s1945,samuraia,sngkace,tengai,truxton2,varth,varthr1,varthu,varthj,vfive"
+#define FFINGER_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,ddonpach,ddonpachj,ddpdoj,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,dragnblz,espgal,esprade,feversos,gigawing,grindstm,grindstma,gunbird,gunbird2,ket,mahoudai,mmatrix,progear,s1945,samuraia,sngkace,sstriker,sstrikera,tengai,truxton2,varth,varthr1,varthu,varthj,vfive"
 
 #define REPLAY_FLAG_TOUCHONOFF (1<<0)
 #define REPLAY_FLAG_POSX (1<<1)

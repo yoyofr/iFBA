@@ -997,6 +997,12 @@ static int statusLoadMsgUpdated=0;
                 //not working well
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=26;
             }
+            if ((strcmp(gameName,"mahoudai")==0)||(strcmp(gameName,"sstriker")==0)||(strcmp(gameName,"sstrikera")==0)) {
+                //not working well
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=27;
+            }
+            
+            
             if (cur_ifba_conf->vpad_followfinger) {
                 [TestFlight passCheckpoint:@"FINGER_MODE"];
                 //printf("Using follow-finger touchscreen mode\n");
