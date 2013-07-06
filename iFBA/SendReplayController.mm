@@ -60,6 +60,9 @@ extern int glob_replay_currentslot;
     NSArray *nameArray = [[NSHost currentHost] names];
     authorTextField.text=[nameArray objectAtIndex:0];
     
+    [cancelBtn setType:BButtonTypeDanger];
+    [uploadBtn setType:BButtonTypePrimary];
+    
     //ICADE & Wiimote
     ui_current_pos=0;
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
@@ -84,6 +87,10 @@ extern int glob_replay_currentslot;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShown:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv becomeFirstResponder];
@@ -91,6 +98,9 @@ extern int glob_replay_currentslot;
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
 }
@@ -99,6 +109,63 @@ extern int glob_replay_currentslot;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+-(void) dealloc {
+    [dismissKeybBtn release];
+    [super dealloc];
+}
+
+- (void)moveTextViewForKeyboard:(NSNotification*)aNotification up:(BOOL)up {
+    NSDictionary* userInfo = [aNotification userInfo];
+    NSTimeInterval animationDuration;
+    UIViewAnimationCurve animationCurve;
+    CGRect keyboardEndFrame;
+    
+    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
+    
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    [UIView setAnimationCurve:animationCurve];
+    
+    CGRect newFrame = self.view.frame;
+    
+    if (keyboardEndFrame.size.height > keyboardEndFrame.size.width)
+    {   //we must be in landscape
+        if (keyboardEndFrame.origin.x==0)
+        {   //upside down so need to flip origin
+            newFrame.origin = CGPointMake(keyboardEndFrame.size.width, 0);
+        }
+        
+        newFrame.size.width -= keyboardEndFrame.size.width * (up?1:-1);
+        
+    } else
+    {   //in portrait
+        if (keyboardEndFrame.origin.y==0)
+        {
+            //upside down so need to flip origin
+            newFrame.origin = CGPointMake(0, keyboardEndFrame.size.height);
+        }
+        newFrame.size.height -= keyboardEndFrame.size.height * (up?1:-1);
+        
+    }
+    self.view.frame = newFrame;
+    
+    [UIView commitAnimations];
+}
+
+- (void)keyboardWillShown:(NSNotification*)aNotification
+{
+//    buttonDone.enabled = true;
+    [self moveTextViewForKeyboard:aNotification up:YES];
+}
+
+- (void)keyboardWillHide:(NSNotification*)aNotification
+{
+//    buttonDone.enabled = false;
+    [self moveTextViewForKeyboard:aNotification up:NO];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {    
@@ -118,6 +185,12 @@ extern int glob_replay_currentslot;
 -(void)textViewDidBeginEditing:(UITextView *)textView {
     self.navigationItem.rightBarButtonItem=dismissKeybBtn;
 }
+
+- (void)textViewDidChange:(UITextView *)textView {
+    // scroll to current line
+//    [textView scrollRangeToVisible:NSMakeRange([textView.text length],0)];
+}
+
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     self.navigationItem.rightBarButtonItem=dismissKeybBtn;
@@ -249,7 +322,6 @@ extern int glob_replay_currentslot;
     } else NSLog(@"ko: %@",[error localizedDescription]);
     
     
-    
     //return and test
     //NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     //NSString *returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
@@ -283,7 +355,12 @@ extern int glob_replay_currentslot;
 
 
 -(IBAction) uploadClicked {
-    [self SendReplay];
+    int err=[self SendReplay];
+    if (err) {
+        UIAlertView *alert;
+		alert = [[[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"SendReplay error(%d)",err] delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+		[alert show];
+    }
 }
 
 -(IBAction) cancelClicked {

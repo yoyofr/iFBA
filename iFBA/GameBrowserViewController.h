@@ -10,8 +10,9 @@
 #import <UIKit/UIView.h>
 #import "OptSelGenresViewController.h"
 #import "EmuViewController.h"
+#import "iCadeReaderView.h"
 
-@interface GameBrowserViewController : UIViewController <UIActionSheetDelegate> {
+@interface GameBrowserViewController : UIViewController <UIActionSheetDelegate,iCadeEventDelegate> {
     IBOutlet UITableView *tabView;
     NSMutableArray *romlist,*romlist_mst,*romlistLbl,*rompath,*romlistSystem,*romlistGenre,*romavail,*sectionLbl,*sectionLblMin;
     NSMutableArray *indexTitles;

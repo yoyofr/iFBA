@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#define REPLAY_COVERAGE @"donpachi,dodonpachi,esprade,feversos,mmatrix,progear,gigawing"
-
 #import "GameBrowserViewController.h"
 #import "OptGameInfoViewController.h"
 #import "ReplayWebController.h"
@@ -42,6 +40,7 @@ extern char gameInfo[64*1024];
 
 extern unsigned int glob_replay_mode;
 extern int glob_replay_currentslot;
+int replay_supported;
 
 extern char tmp_game_name[64];
 
@@ -154,11 +153,6 @@ NSMutableArray *filterEntries;
     iCaderv.delegate = self;
     [iCaderv release];
     wiimoteBtnState=0;
-    
-    
-    gameMenu=[[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
-                                otherButtonTitles:@"Launch game",@"Launch & Record replay",@"Playback replay",@"Share replay online",@"Get replay online",nil];
-    
     
 }
 
@@ -447,6 +441,7 @@ NSMutableArray *filterEntries;
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
     
+    [burn_supportedRoms removeAllObjects];
     [burn_supportedRoms release];
     
     if (romlist) [romlist release];
@@ -496,16 +491,19 @@ NSMutableArray *filterEntries;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
+    if (!listSectionCount) return 0;
 	return listNbSection;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
+    if (!listSectionCount) return 0;
     return listSectionCount[section];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (!listSectionCount) return nil;
     if (listSectionCount[section]) {
         NSString *tmpStr=[romlistLbl objectAtIndex:listSortedList[listSectionIndexes[section]]];
         return [tmpStr substringToIndex:[tmpStr rangeOfString:@"/"].location];
@@ -803,6 +801,7 @@ static int replay_slot[10];
                 glob_replay_mode=0;
                 break;
             case 1://LAUNCH & RECORD REPLAY
+                if (!replay_supported) break;
                 glob_replay_mode=REPLAY_RECORD_MODE;
                 replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
                 
@@ -827,6 +826,7 @@ static int replay_slot[10];
 
                 break;
             case 2://LAUNCH & PLAYBACK REPLAY
+                if (!replay_supported) break;
                 glob_replay_mode=REPLAY_PLAYBACK_MODE;
                 replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
                 
@@ -845,6 +845,7 @@ static int replay_slot[10];
                 [replaySlotMenu autorelease];
                 break;
             case 3: //SHARE REPLAY ONLINE
+                if (!replay_supported) break;
                 glob_replay_mode=REPLAY_SHARE_ONLINE;
                 replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
                 
@@ -925,7 +926,23 @@ static int replay_slot[10];
     
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:[rompath objectAtIndex:index]];
     
+    NSArray *replay_coverage=[REPLAY_COVERAGE componentsSeparatedByString:@","];
+    NSString *tmpGame=[NSString stringWithFormat:@"%s",gameName];
+    replay_supported=0;
+    for (int i=0;i<[replay_coverage count];i++) {
+        if ([tmpGame caseInsensitiveCompare:[replay_coverage objectAtIndex:i]]==NSOrderedSame) {replay_supported=1;break;}
+        
+    }
+    
+    if (replay_supported) {
+        gameMenu=[[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+                                    otherButtonTitles:@"Launch game",@"Launch & Record replay",@"Playback replay",@"Share replay online",@"Get replay online",nil];
+    } else {
+        gameMenu=[[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+                                    otherButtonTitles:@"Launch game",nil];
+    }
     [gameMenu showInView:self.view];
+    [gameMenu autorelease];
 }
 
 /*- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

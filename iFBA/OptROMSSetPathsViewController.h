@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "EmuViewController.h"
+#import "iCadeReaderView.h"
 
-@interface OptROMSSetPathsViewController : UIViewController {
+@interface OptROMSSetPathsViewController : UIViewController <iCadeEventDelegate> {
     IBOutlet UITableView *tabView;
     IBOutlet UIBarButtonItem *btn_backToEmu;
 @public

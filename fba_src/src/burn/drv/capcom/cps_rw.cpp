@@ -598,17 +598,22 @@ INT32 CpsRwGetInp()
             }
             if (glob_replay_flag&REPLAY_FLAG_IN2) {
                 last_DrvInput[2]=glob_replay_data_stream[glob_replay_data_index];
-                glob_replay_data_index+=1;
+                glob_replay_data_index++;
             }
             if (glob_replay_flag&REPLAY_FLAG_IN3) {
                 last_DrvInput[3]=glob_replay_data_stream[glob_replay_data_index];
-                glob_replay_data_index+=1;
+                glob_replay_data_index++;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN4) {
+                last_DrvInput[4]=glob_replay_data_stream[glob_replay_data_index];
+                glob_replay_data_index++;
             }
         }
         Inp020=last_DrvInput[0];
         Inp001=last_DrvInput[1];
         Inp021=last_DrvInput[2];
         Inp000=last_DrvInput[3];
+        Inp018=last_DrvInput[4];
         
     } else {
 
@@ -649,17 +654,19 @@ INT32 CpsRwGetInp()
                 glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
                 glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
                 //STORE FLAG
-                glob_replay_data_stream[glob_replay_data_index++]=REPLAY_FLAG_IN0|REPLAY_FLAG_IN1|REPLAY_FLAG_IN2|REPLAY_FLAG_IN3;
+                glob_replay_data_stream[glob_replay_data_index++]=REPLAY_FLAG_IN0|REPLAY_FLAG_IN1|REPLAY_FLAG_IN2|REPLAY_FLAG_IN3|REPLAY_FLAG_IN4;
                 //STORE INPUTS
                 glob_replay_data_stream[glob_replay_data_index++]=Inp020;
                 glob_replay_data_stream[glob_replay_data_index++]=Inp001;
                 glob_replay_data_stream[glob_replay_data_index++]=Inp021;
                 glob_replay_data_stream[glob_replay_data_index++]=Inp000;
+                glob_replay_data_stream[glob_replay_data_index++]=Inp018;
                 
                 last_DrvInput[0]=Inp020;
                 last_DrvInput[1]=Inp001;
                 last_DrvInput[2]=Inp021;
                 last_DrvInput[3]=Inp000;
+                last_DrvInput[4]=Inp018;
             } else {
                 
                 if (last_DrvInput[0]!=Inp020) {
@@ -677,6 +684,10 @@ INT32 CpsRwGetInp()
                 if (last_DrvInput[3]!=Inp000) {
                     glob_replay_flag|=REPLAY_FLAG_IN3;
                     last_DrvInput[3]=Inp000;
+                }
+                if (last_DrvInput[4]!=Inp018) {
+                    glob_replay_flag|=REPLAY_FLAG_IN4;
+                    last_DrvInput[4]=Inp018;
                 }
             }
             

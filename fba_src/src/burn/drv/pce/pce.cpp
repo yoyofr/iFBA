@@ -115,9 +115,9 @@ INT32 TgGetZipName(char** pszName, UINT32 i)
 	}
 
 	// remove the "tg_"
-	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
-		szFilename[j] = pszGameName[j + 3];
-	}
+//	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
+//		szFilename[j] = pszGameName[j + 3];
+//	}
 
 	*pszName = szFilename;
 
@@ -145,9 +145,9 @@ INT32 SgxGetZipName(char** pszName, UINT32 i)
 	}
 
 	// remove the "sgx_"
-	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
-		szFilename[j] = pszGameName[j + 4];
-	}
+//	for (UINT32 j = 0; j < strlen(pszGameName); j++) {
+//		szFilename[j] = pszGameName[j + 4];
+//	}
 
 	*pszName = szFilename;
 

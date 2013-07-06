@@ -224,7 +224,7 @@ EmuViewController *emuvc;
             nbRows=1;
             break;
         case 2:
-            nbRows=1;
+            nbRows=2;
             break;
         case 3:
             nbRows=1;
@@ -273,11 +273,11 @@ EmuViewController *emuvc;
                     cell.textLabel.text=NSLocalizedString(@"Information",@"");
                 } else if (indexPath.row==5) cell.textLabel.text=NSLocalizedString(@"Close game",@"");
                 else if (indexPath.row==6) {
-                    cell.textLabel.text=NSLocalizedString(@"Load game",@"");
+                    cell.textLabel.text=NSLocalizedString(@"Games",@"");
                     //                    cell.backgroundColor=[UIColor colorWithRed:0.8f green:1.0f blue:0.8f alpha:1.0f];
                 }
             } else {
-                if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Load game",@"");            
+                if (indexPath.row==0) cell.textLabel.text=NSLocalizedString(@"Games",@"");            
             }
             break;
         case 1:
@@ -286,6 +286,8 @@ EmuViewController *emuvc;
         case 2:
             if (indexPath.row==0) {
                 cell.textLabel.text=NSLocalizedString(@"About",@"");                
+            } else if (indexPath.row==1) {
+                cell.textLabel.text=@"Beta info";
             }
             break;
         case 3:
@@ -374,7 +376,10 @@ EmuViewController *emuvc;
             NSString *msgString=[NSString stringWithFormat:NSLocalizedString(@"About_Msg",@""),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],nBurnDrvCount];
             UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
             [aboutMsg show];
-        } else if (indexPath.row==1) {//beta test-feedback
+        } else if (indexPath.row==1) {//beta test-info
+            NSString *msgString=[NSString stringWithFormat:@"'follow-finger' coverage:\n%@\n----------------------------------\nReplay coverage:\n%@",[FFINGER_COVERAGE stringByReplacingOccurrencesOfString:@"," withString:@"\n"],[REPLAY_COVERAGE stringByReplacingOccurrencesOfString:@"," withString:@"\n"]];
+            UIAlertView *aboutBetaMsg=[[[UIAlertView alloc] initWithTitle:@"Beta info" message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
+            [aboutBetaMsg show];
         }
     } else if (indexPath.section==3) { //Donate
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GR6NNLLWD62BN"]];

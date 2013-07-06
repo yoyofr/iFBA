@@ -10,9 +10,9 @@
 #import "TDSemiModal.h"
 #import <QuartzCore/CADisplayLink.h>
 #import <QuartzCore/QuartzCore.h>
+#import "iCadeReaderView.h"
 
-
-@interface ReplayWebController : TDSemiModalViewController <UIWebViewDelegate,UIActionSheetDelegate> {
+@interface ReplayWebController : TDSemiModalViewController <UIWebViewDelegate,UIActionSheetDelegate,iCadeEventDelegate> {
     IBOutlet UIWebView *webview;
 }
 

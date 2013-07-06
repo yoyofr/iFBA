@@ -11,10 +11,11 @@
 #import "BTstack/BTDiscoveryViewController.h"
 #import "BTstackManager.h"
 #import "EmuViewController.h"
+#import "iCadeReaderView.h"
 
 @class BTstackManager;
 
-@interface OptWiimoteViewController : UIViewController <BTstackManagerDelegate, BTstackManagerListener> {
+@interface OptWiimoteViewController : UIViewController <BTstackManagerDelegate, BTstackManagerListener,iCadeEventDelegate> {
     IBOutlet UITableView *tabView;
     
     BTstackManager *bt;

@@ -10,9 +10,10 @@
 #import "TDSemiModal.h"
 #import <QuartzCore/CADisplayLink.h>
 #import <QuartzCore/QuartzCore.h>
+#import "iCadeReaderView.h"
 
 
-@interface OptSelGenresViewController : TDSemiModalViewController {
+@interface OptSelGenresViewController : TDSemiModalViewController <iCadeEventDelegate> {
     IBOutlet UIView *mnview,*footer,*header;
     IBOutlet UITableView *tabview;
     CADisplayLink* m_displayLink;

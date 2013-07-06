@@ -75,8 +75,6 @@ static CADisplayLink* m_displayLink;
     wiimoteBtnState=0;                    
 }
 
-NSString *yt_template = @"<html><head><style type=\"text/css\">body { background-color: transparent;color: white;}</style></head><body style=\"margin:0\"><embed id=\"yt\" src=\"%@\" type=\"application/x-shockwave-flash\" width=\"%0.0f\" height=\"%0.0f\"></embed></body></html>";
-
 -(void) viewWillAppear:(BOOL)animated {  //Not called in iOS 4.3 simulator... BUG?
     [super viewWillAppear:animated];    
     
@@ -146,6 +144,9 @@ NSString *yt_template = @"<html><head><style type=\"text/css\">body { background
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
+    [webview stopLoading];
+    [webviewVideo stopLoading];
 }
 - (void)viewDidUnload
 {

@@ -1,6 +1,10 @@
 #include "toaplan.h"
 // Batrider
 
+//HACK
+#include "fbaconf.h"
+
+
 static UINT8 drvButton[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static UINT8 drvJoy1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static UINT8 drvJoy2[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -22,7 +26,7 @@ static void Map68KTextROM(bool bMapTextROM);
 static struct BurnInputInfo batriderInputList[] = {
 	{"P1 Coin",		BIT_DIGITAL,	drvButton + 3,	"p1 coin"},
 	{"P1 Start",	BIT_DIGITAL,	drvButton + 5,	"p1 start"},
-
+    
 	{"P1 Up",		BIT_DIGITAL,	drvJoy1 + 0,	"p1 up"},
 	{"P1 Down",		BIT_DIGITAL,	drvJoy1 + 1,	"p1 down"},
 	{"P1 Left",		BIT_DIGITAL,	drvJoy1 + 2,	"p1 left"},
@@ -30,10 +34,10 @@ static struct BurnInputInfo batriderInputList[] = {
 	{"P1 Shoot 1",	BIT_DIGITAL,	drvJoy1 + 4,	"p1 fire 1"},
 	{"P1 Shoot 2",	BIT_DIGITAL,	drvJoy1 + 5,	"p1 fire 2"},
 	{"P1 Shoot 3",	BIT_DIGITAL,	drvJoy1 + 6,	"p1 fire 3"},
-
+    
 	{"P2 Coin",		BIT_DIGITAL,	drvButton + 4,	"p2 coin"},
 	{"P2 Start",	BIT_DIGITAL,	drvButton + 6,	"p2 start"},
-
+    
 	{"P2 Up",		BIT_DIGITAL,	drvJoy2 + 0,	"p2 up"},
 	{"P2 Down",		BIT_DIGITAL,	drvJoy2 + 1,	"p2 down"},
 	{"P2 Left",		BIT_DIGITAL,	drvJoy2 + 2,	"p2 left"},
@@ -41,7 +45,7 @@ static struct BurnInputInfo batriderInputList[] = {
 	{"P2 Shoot 1",	BIT_DIGITAL,	drvJoy2 + 4,	"p2 fire 1"},
 	{"P2 Shoot 2",	BIT_DIGITAL,	drvJoy2 + 5,	"p2 fire 2"},
 	{"P2 Shoot 3",	BIT_DIGITAL,	drvJoy2 + 6,	"p2 fire 3"},
-
+    
 	{"Reset",		BIT_DIGITAL,	  &drvReset,		"reset"},
 	{"Test",	  BIT_DIGITAL,	 drvButton + 2,	"diag"},
 	{"Service",	BIT_DIGITAL,	 drvButton + 0,	"service"},
@@ -59,7 +63,7 @@ static struct BurnDIPInfo batriderDIPList[] = {
 	{0x15,	0xFF,  0xFF,	0x00,	  NULL},
 	{0x16,	0xFF,  0xFF,	0x00,	  NULL},
 	{0x17,	0xFF,  0xFF,	0x00,	  NULL},
-
+    
 	// DIP 1
 	{0,		0xFE, 0,	2,	  "Test mode"},
 	{0x15,	0x01, 0x01,	0x00, "Normal"},
@@ -121,7 +125,7 @@ static struct BurnDIPInfo batriderDIPList[] = {
 	{0x15,	0x00, 0x1C, 0x1C, NULL},
 	{0x15,	0x02, 0x80,	0x80, "On"},
 	{0x15,	0x00, 0x1C, 0x1C, NULL},
-
+    
 	// DIP 2
 	{0,		0xFE, 0,	4,	  "Start rank"},
 	{0x16,	0x01, 0x03, 0x00, "Normal"},
@@ -139,11 +143,11 @@ static struct BurnDIPInfo batriderDIPList[] = {
 	{0x16,	0x01, 0x30, 0x20, "2"},
 	{0x16,	0x01, 0x30, 0x30, "1"},
 	{0,		0xFE, 0,	4,	  "Extra player"},
-  {0x16,	0x01, 0xC0, 0x00, "1500000 each"},
-  {0x16,	0x01, 0xC0, 0x40, "1000000 each"},
-  {0x16,	0x01, 0xC0, 0x80, "2000000 each"},
-  {0x16,	0x01, 0xC0, 0xC0, "No extra player"},
-
+    {0x16,	0x01, 0xC0, 0x00, "1500000 each"},
+    {0x16,	0x01, 0xC0, 0x40, "1000000 each"},
+    {0x16,	0x01, 0xC0, 0x80, "2000000 each"},
+    {0x16,	0x01, 0xC0, 0xC0, "No extra player"},
+    
 	// DIP 3
 	{0,		0xFE, 0,	2,	  "Screen flip"},
 	{0x17,	0x01, 0x01, 0x00, "Off"},
@@ -176,7 +180,7 @@ static struct BurnDIPInfo batriderDIPList[] = {
 	{0x15,	0x00, 0x1C, 0x1C, NULL},
 	{0x17,	0x02, 0x80, 0x80, "Enable"},
 	{0x15,	0x00, 0x1C, 0x1C, NULL},
-
+    
 	// Region
 	{0,		0xFD, 0,	26,	  "Region"},
 	{0x18,	0x01, 0x1F, 0x00, "Nippon"},
@@ -271,10 +275,10 @@ static INT32 MemIndex()
 	RamEnd		= Next;
 	ToaPalette	= (UINT32*)Next; Next += nColCount * sizeof(UINT32);
 	MemEnd		= Next;
-
+    
  	ExtraTSelect= Ram01;							// Extra text layer scroll
 	ExtraTScroll= Ram01 + 0x000200;					// Extra text layer offset
-
+    
 	return 0;
 }
 
@@ -285,7 +289,7 @@ static void drvZ80Bankswitch(INT32 nBank)
 		UINT8* nStartAddress = RomZ80 + (nBank << 14);
 		ZetMapArea(0x8000, 0xBFFF, 0, nStartAddress);
 		ZetMapArea(0x8000, 0xBFFF, 2, nStartAddress);
-
+        
 		nCurrentBank = nBank;
 	}
 }
@@ -294,40 +298,40 @@ static void drvZ80Bankswitch(INT32 nBank)
 static INT32 drvScan(INT32 nAction, INT32* pnMin)
 {
 	struct BurnArea ba;
-
+    
 	if (pnMin) {						// Return minimum compatible version
 		*pnMin = 0x029496;
 	}
 	if (nAction & ACB_VOLATILE) {		// Scan volatile ram
-
+        
 		memset(&ba, 0, sizeof(ba));
 		ba.Data		= RamStart;
 		ba.nLen		= RamEnd - RamStart;
 		ba.szName	= "RAM";
 		BurnAcb(&ba);
-
+        
 		SekScan(nAction);				// Scan 68000
 		ZetScan(nAction);				// Scan Z80
 		SCAN_VAR(nCurrentBank);
-
+        
 		MSM6295Scan(0, nAction);
 		MSM6295Scan(1, nAction);
 		BurnYM2151Scan(nAction);
-
+        
 		ToaScanGP9001(nAction, pnMin);
-
+        
 		SCAN_VAR(nIRQPending);
 		SCAN_VAR(nTextROMStatus);
-
+        
 		SCAN_VAR(drvInput);
-
+        
 		if (nAction & ACB_WRITE) {
 			INT32 n = nTextROMStatus;
 			nTextROMStatus = -1;
 			SekOpen(0);
 			Map68KTextROM(n);
 			SekClose();
-
+            
 			n = nCurrentBank;
 			nCurrentBank = -1;
 			ZetOpen(0);
@@ -335,7 +339,7 @@ static INT32 drvScan(INT32 nAction, INT32* pnMin)
 			ZetClose();
 		}
 	}
-
+    
 	return 0;
 }
 
@@ -345,34 +349,34 @@ static INT32 LoadRoms()
 	if (ToaLoadCode(Rom01, 0, 4)) {
 		return 1;
 	}
-
+    
 	// Load GP9001 tile data
 	ToaLoadGP9001Tiles(GP9001ROM[0], 4, 4, nGP9001ROMSize[0]);
-
+    
 	// Load the Z80 ROM
 	if (BurnLoadRom(RomZ80, 8, 1)) {
 		return 1;
 	}
-
+    
 	// Load MSM6295 ADPCM data
 	BurnLoadRom(MSM6295ROM + 0x000000, 9, 1);
 	BurnLoadRom(MSM6295ROM + 0x100000, 10, 1);
-
+    
 	return 0;
 }
 
 UINT8 __fastcall batriderZIn(UINT16 nAddress)
 {
 	nAddress &= 0xFF;
-
+    
 	switch (nAddress) {
-
-		// The sound commands sent by the 68000 are read from these locations
+            
+            // The sound commands sent by the 68000 are read from these locations
 		case 0x48:
 			return RamShared[0];
 		case 0x4A:
 			return RamShared[1];
-
+            
 		case 0x81:
 			return BurnYM2151ReadStatus();
 		case 0x82:
@@ -380,46 +384,46 @@ UINT8 __fastcall batriderZIn(UINT16 nAddress)
 		case 0x84:
 			return MSM6295ReadStatus(1);
 	}
-
+    
 	return 0;
 }
 
 void __fastcall batriderZOut(UINT16 nAddress, UINT8 nValue)
 {
 	nAddress &= 0xFF;
-
+    
 	switch (nAddress) {
-
-		// The 68000 expects to read back the sound command it sent
+            
+            // The 68000 expects to read back the sound command it sent
 		case 0x40:
 			RamShared[4] = nValue;
 			break;
 		case 0x42:
 			RamShared[5] = nValue;
 			break;
-
+            
 		case 0x44:								// ???
 		case 0x46:								// Acknowledge interrupt
 			break;
-
+            
 		case 0x80:
 			BurnYM2151SelectRegister(nValue);
 			break;
 		case 0x81:
 			BurnYM2151WriteRegister(nValue);
 			break;
-
+            
 		case 0x82:
 			MSM6295Command(0, nValue);
 			break;
 		case 0x84:
 			MSM6295Command(1, nValue);
 			break;
-
+            
 		case 0x88: {
 			drvZ80Bankswitch(nValue);
 			break;
-
+            
 		case 0xC0:
 			MSM6295SampleInfo[0][0] = MSM6295ROM + ((nValue & 0x0F) << 16);
 			MSM6295SampleData[0][0] = MSM6295ROM + ((nValue & 0x0F) << 16);
@@ -453,10 +457,10 @@ static INT32 drvZInit()
 	// Init the Z80
 	ZetInit(0);
 	ZetOpen(0);
-
+    
 	ZetSetInHandler(batriderZIn);
 	ZetSetOutHandler(batriderZOut);
-
+    
 	// ROM bank 1
 	ZetMapArea(0x0000, 0x7FFF, 0, RomZ80 + 0x0000); // Direct Read from ROM
 	ZetMapArea(0x0000, 0x7FFF, 2, RomZ80 + 0x0000); // Direct Fetch from ROM
@@ -467,18 +471,18 @@ static INT32 drvZInit()
 	ZetMapArea(0xC000, 0xDFFF, 0, RamZ80);			// Direct Read from RAM
 	ZetMapArea(0xC000, 0xDFFF, 1, RamZ80);			// Direct Write to RAM
 	ZetMapArea(0xC000, 0xDFFF, 2, RamZ80);			//
-
+    
 	ZetClose();
-
+    
 	nCurrentBank = 2;
-
+    
 	return 0;
 }
 
 UINT8 __fastcall batriderReadByte(UINT32 sekAddress)
 {
 	switch (sekAddress) {
-
+            
 		case 0x500000:								// Player 2 inputs
 			return drvInput[1];
 		case 0x500001:								// Player 1 inputs
@@ -491,16 +495,16 @@ UINT8 __fastcall batriderReadByte(UINT32 sekAddress)
 			return drvInput[4];
 		case 0x500005:								// Dipswitch 1
 			return drvInput[3];
-
+            
 		default: {
-//			printf("Attempt to read %06X (byte).\n", sekAddress);
-
+            //			printf("Attempt to read %06X (byte).\n", sekAddress);
+            
 			if ((sekAddress & 0x00F80000) == 0x00300000) {
 				return RomZ80[(sekAddress & 0x7FFFF) >> 1];
 			}
 		}
 	}
-
+    
 	return 0;
 }
 
@@ -509,34 +513,34 @@ UINT16 __fastcall batriderReadWord(UINT32 sekAddress)
 	switch (sekAddress) {
 		case 0x500006:
 			return ToaScanlineRegister();
-
-		// These addresses contain the response of the Z80 to the sound commands
+            
+            // These addresses contain the response of the Z80 to the sound commands
 		case 0x500008:
 			return RamShared[4];
 		case 0x50000A:
 			return RamShared[5];
-
+            
 		case 0x50000C:
 			// This address echos the value written to 0x500060
 			return nData;
-
+            
 		default: {
-//			printf("Attempt to read %06X (word).\n", sekAddress);
+            //			printf("Attempt to read %06X (word).\n", sekAddress);
 		}
 	}
-
+    
 	return 0;
 }
 
 void __fastcall batriderWriteByte(UINT32 sekAddress, UINT8)	// UINT8 byteValue
 {
 	switch (sekAddress) {
-
+            
 		case 0x500011:								// Coin control
 			break;
-
-//		default:
-//			printf("Attempt to write %06X (byte) -> %04X.\n", sekAddress, byteValue);
+            
+            //		default:
+            //			printf("Attempt to write %06X (byte) -> %04X.\n", sekAddress, byteValue);
 	}
 }
 
@@ -545,7 +549,7 @@ void __fastcall batriderWriteWord(UINT32 sekAddress, UINT16 wordValue)
 	switch (sekAddress) {
 		case 0x500020: {
 			RamShared[0] = wordValue;
-
+            
 			// The 68K program normally writes 0x500020/0x500022 as a single longword,
 			// except during the communications test.
 			if (wordValue == 0x55) {
@@ -556,36 +560,36 @@ void __fastcall batriderWriteWord(UINT32 sekAddress, UINT16 wordValue)
 		}
 		case 0x500022:
 			RamShared[1] = wordValue;
-
+            
 			// Sound commands are processed by the Z80 using an NMI
 			// So, trigger a Z80 NMI and execute it
 			ZetNmi();
 			nCyclesDone[1] += ZetRun(0x1800);
 			break;
-
+            
 		case 0x500024:
 			// Writes to this address only occur in situations where the program sets
 			// 0x20FA19 (Ram02[0x7A18]) to 0xFF, and then sits in a loop waiting for it to become 0x00
 			// Interrupt 4 does this (the same code is also conditionally called from interrupt 2)
-
+            
 			nIRQPending = 1;
 			SekSetIRQLine(4, SEK_IRQSTATUS_ACK);
 			break;
-
+            
 		case 0x500060:
 			// Bit 0 of the value written to this location must be echod at 0x50000C
 			nData = wordValue;
 			break;
-
+            
 		case 0x500080:
 			Map68KTextROM(false);
 			break;
-
+            
 		case 0x500082:								// Acknowledge interrupt
 			SekSetIRQLine(0, SEK_IRQSTATUS_NONE);
 			nIRQPending = 0;
 			break;
-
+            
 		case 0x5000C0:
 		case 0x5000C1:
 		case 0x5000C2:
@@ -603,9 +607,9 @@ void __fastcall batriderWriteWord(UINT32 sekAddress, UINT16 wordValue)
 		case 0x5000CE:
 			GP9001TileBank[(sekAddress & 0x0F) >> 1] = ((wordValue & 0x0F) << 15);
 			break;
-
-//		default:
-//			printf("Attempt to write %06X (word) -> %04X.\n", sekAddress, wordValue);
+            
+            //		default:
+            //			printf("Attempt to write %06X (word) -> %04X.\n", sekAddress, wordValue);
 	}
 }
 
@@ -616,29 +620,29 @@ UINT16 __fastcall batriderReadWordGP9001(UINT32 sekAddress)
 			return ToaGP9001ReadRAM_Hi(0);
 		case 0x40000A:
 			return ToaGP9001ReadRAM_Lo(0);
-
+            
 	}
-
+    
 	return 0;
 }
 
 void __fastcall batriderWriteWordGP9001(UINT32 sekAddress, UINT16 wordValue)
 {
 	switch (sekAddress) {
-
+            
 		case 0x400000:
 			ToaGP9001WriteRegister(wordValue);
 			break;
-
+            
 		case 0x400004:
 			ToaGP9001SelectRegister(wordValue);
 			break;
-
+            
 		case 0x400008:
 		case 0x40000A:
 			ToaGP9001WriteRAM(wordValue, 0);
 			break;
-
+            
 		case 0x40000C:								// Set GP9001 VRAM address-pointer
 			ToaGP9001SetRAMPointer(wordValue);
 			break;
@@ -660,7 +664,7 @@ static void Map68KTextROM(bool bMapTextROM)
 	if (bMapTextROM) {
 		if (nTextROMStatus != 1) {
 			SekMapMemory(ExtraTROM,	0x200000, 0x207FFF, SM_RAM);	// Extra text tile memory
-
+            
 			nTextROMStatus = 1;
 		}
 	} else {
@@ -668,7 +672,7 @@ static void Map68KTextROM(bool bMapTextROM)
 			SekMapMemory(ExtraTRAM,	0x200000, 0x201FFF, SM_RAM);	// Extra text tilemap RAM
 			SekMapMemory(RamPal,	0x202000, 0x202FFF, SM_RAM);	// Palette RAM
 			SekMapMemory(Ram01,		0x203000, 0x207FFF, SM_RAM);	// Extra text Scroll & offset; RAM
-
+            
 			nTextROMStatus = 0;
 		}
 	}
@@ -678,41 +682,41 @@ static INT32 drvDoReset()
 {
 	// Insert region code into 68K ROM, code by BisonSAS
 	UINT8 nRegion = drvRegion & 0x1F;
-  if (nRegion<=25) {
-  	Rom01[0x00000^1]=(UINT8)(nRegion<<13) | (drvRegion & 0x1F);
-  }
-
+    if (nRegion<=25) {
+        Rom01[0x00000^1]=(UINT8)(nRegion<<13) | (drvRegion & 0x1F);
+    }
+    
 	SekOpen(0);
-
+    
 	nIRQPending = 0;
-  SekSetIRQLine(0, SEK_IRQSTATUS_NONE);
-
+    SekSetIRQLine(0, SEK_IRQSTATUS_NONE);
+    
 	Map68KTextROM(true);
-
+    
 	SekReset();
 	SekClose();
-
+    
 	ZetOpen(0);
 	ZetReset();
 	ZetClose();
-
+    
 	MSM6295Reset(0);
 	MSM6295Reset(1);
 	BurnYM2151Reset();
-
+    
 	return 0;
 }
 
 static INT32 drvInit()
 {
 	INT32 nLen;
-
+    
 #ifdef DRIVER_ROTATION
 	bToaRotateScreen = true;
 #endif
-
+    
 	nGP9001ROMSize[0] = 0x01000000;
-
+    
 	// Find out how much memory is needed
 	Mem = NULL;
 	MemIndex();
@@ -722,52 +726,52 @@ static INT32 drvInit()
 	}
 	memset(Mem, 0, nLen);										// Zero memory
 	MemIndex();													// Index the allocated memory
-
+    
 	if (LoadRoms()) {
 		return 1;
 	}
-
+    
 	{
 		SekInit(0, 0x68000);									// Allocate 68000
 	    SekOpen(0);
-
+        
 		// Map 68000 memory:
 		SekMapMemory(Rom01, 0x000000, 0x1FFFFF, SM_ROM);		// CPU 0 ROM
 		SekMapMemory(Ram02, 0x208000, 0x20FFFF, SM_RAM);
-
+        
 		Map68KTextROM(true);
-
+        
 		SekSetReadWordHandler(0, batriderReadWord);
 		SekSetReadByteHandler(0, batriderReadByte);
 		SekSetWriteWordHandler(0, batriderWriteWord);
 		SekSetWriteByteHandler(0, batriderWriteByte);
-
+        
 		SekMapHandler(1,	0x400000, 0x400400, SM_RAM);		// GP9001 addresses
-
+        
 		SekSetReadWordHandler(1, batriderReadWordGP9001);
 		SekSetWriteWordHandler(1, batriderWriteWordGP9001);
-
+        
 		SekMapHandler(2,	0x300000, 0x37FFFF, SM_ROM);		// Z80 ROM
-
+        
 		SekSetReadByteHandler(2, batriderReadByteZ80ROM);
 		SekSetReadWordHandler(2, batriderReadWordZ80ROM);
-
+        
 		SekClose();
 	}
-
+    
 	nSpriteYOffset = 0x0001;
-
+    
 	nLayer0XOffset = -0x01D6;
 	nLayer1XOffset = -0x01D8;
 	nLayer2XOffset = -0x01DA;
-
+    
 	ToaInitGP9001();
-
+    
 	nExtraTXOffset = 0x2C;
 	ToaExtraTextInit();
-
+    
 	drvZInit();				// Initialize Z80
-
+    
 	BurnYM2151Init(32000000 / 8);
 	BurnYM2151SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 	
@@ -775,14 +779,14 @@ static INT32 drvInit()
 	MSM6295Init(1, 32000000 / 10 / 165, 1);
 	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 	MSM6295SetRoute(1, 1.00, BURN_SND_ROUTE_BOTH);
-
+    
 	nToaPalLen = nColCount;
 	ToaPalSrc = RamPal;
 	ToaPalInit();
-
+    
 	nTextROMStatus = -1;
 	bDrawScreen = true;
-
+    
 	drvDoReset(); // Reset machine
 	return 0;
 }
@@ -792,15 +796,15 @@ static INT32 drvExit()
 	MSM6295Exit(0);
 	MSM6295Exit(1);
 	BurnYM2151Exit();
-
+    
 	ToaPalExit();
 	ToaExitGP9001();
 	ToaExtraTextExit();
 	ToaZExit();				// Z80 exit
 	SekExit();				// Deallocate 68000
-
+    
 	BurnFree(Mem);
-
+    
 	return 0;
 }
 
@@ -812,78 +816,153 @@ inline static INT32 CheckSleep(INT32)
 static INT32 drvDraw()
 {
 	ToaClearScreen(0);
-
+    
 	if (bDrawScreen) {
 		ToaGetBitmap();
 		ToaRenderGP9001();					// Render GP9001 graphics
 		ToaExtraTextLayer();				// Render extra text layer
 	}
-
+    
 	ToaPalUpdate();							// Update the palette
-
+    
 	return 0;
 }
-
-//HACK
-extern float glob_mov_x,glob_mov_y;
-extern float glob_pos_x,glob_pos_y;
-extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
-extern int wait_control;
-extern void PatchMemory68KFFinger();
-//
-
 
 static INT32 drvFrame()
 {
 	INT32 nInterleave = 8;
-
+    
 	if (drvReset) {														// Reset machine
 		//HACK
         wait_control=60;
+        glob_framecpt=0;
+        glob_replay_last_dx16=glob_replay_last_dy16=0;
+        glob_replay_last_fingerOn=0;
         //
 		drvDoReset();
 	}
-
-	// Compile digital inputs
-	drvInput[0] = 0x00;													// Buttons
-	drvInput[1] = 0x00;													// Player 1
-	drvInput[2] = 0x00;													// Player 2
-	for (INT32 i = 0; i < 8; i++) {
-		drvInput[0] |= (drvJoy1[i] & 1) << i;
-		drvInput[1] |= (drvJoy2[i] & 1) << i;
-		drvInput[2] |= (drvButton[i] & 1) << i;
-	}
     
-    //HACK
-    if (glob_ffingeron) {
-        drvInput[0]&=~((1<<4)); //clear fire 1
-        if (glob_mov_y>0) drvInput[0]|=1;
-        if (glob_mov_y<0) drvInput[0]|=2;
-        if (glob_mov_x<0) drvInput[0]|=4;
-        if (glob_mov_x>0) drvInput[0]|=8;
-        if (glob_shooton) {
-            switch (glob_shootmode) {
-                case 0: //shoot
-                    if ((glob_autofirecpt%10)==0) drvInput[0]|=1<<4;
-                    glob_autofirecpt++;
-                    break;
-                case 1: //laser
-                    drvInput[0]|=1<<4;
-                    break;
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
+        unsigned int next_frame_event;
+        next_frame_event=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8)
+        |((unsigned int)(glob_replay_data_stream[glob_replay_data_index+2])<<16)|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+3])<<24);
+        
+        
+        if (glob_framecpt==next_frame_event) {
+            glob_replay_data_index+=4;
+            glob_replay_flag=glob_replay_data_stream[glob_replay_data_index++];
+            if (glob_replay_flag&REPLAY_FLAG_TOUCHONOFF) {
+                glob_replay_last_fingerOn^=1;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSX) {
+                glob_replay_last_dx16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) {
+                glob_replay_last_dy16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) {
+                last_DrvInput[0]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) {
+                last_DrvInput[1]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN2) {
+                last_DrvInput[2]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
             }
         }
+        drvInput[0]=last_DrvInput[0];
+        drvInput[1]=last_DrvInput[1];
+        drvInput[2]=last_DrvInput[2];
+        
+    } else {
+        
+        
+        // Compile digital inputs
+        drvInput[0] = 0x00;													// Buttons
+        drvInput[1] = 0x00;													// Player 1
+        drvInput[2] = 0x00;													// Player 2
+        for (INT32 i = 0; i < 8; i++) {
+            drvInput[0] |= (drvJoy1[i] & 1) << i;
+            drvInput[1] |= (drvJoy2[i] & 1) << i;
+            drvInput[2] |= (drvButton[i] & 1) << i;
+        }
+        
+        //HACK
+        if (glob_ffingeron) {
+            drvInput[0]&=~((1<<4)); //clear fire 1
+            if (glob_mov_y>0) drvInput[0]|=1;
+            if (glob_mov_y<0) drvInput[0]|=2;
+            if (glob_mov_x<0) drvInput[0]|=4;
+            if (glob_mov_x>0) drvInput[0]|=8;
+            if (glob_shooton) {
+                switch (glob_shootmode) {
+                    case 0: //shoot
+                        if ((glob_autofirecpt%10)==0) drvInput[0]|=1<<4;
+                        glob_autofirecpt++;
+                        break;
+                    case 1: //laser
+                        drvInput[0]|=1<<4;
+                        break;
+                }
+            }
+        }
+        //
+        
+        ToaClearOpposites(&drvInput[0]);
+        ToaClearOpposites(&drvInput[1]);
+        
+        //HACK
+        //replay data - drvinputs
+        
+        if ((glob_replay_mode==REPLAY_RECORD_MODE)&&(glob_replay_data_index<MAX_REPLAY_DATA_BYTES-MAX_REPLAY_FRAME_SIZE)) {//SAVE REPLAY
+            glob_replay_flag=0;
+            if (glob_framecpt==0) {//first frame
+                //STORE FRAME_INDEX (0)
+                glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+                //STORE FLAG (00001100b)
+                glob_replay_data_stream[glob_replay_data_index++]=REPLAY_FLAG_IN0|REPLAY_FLAG_IN1|REPLAY_FLAG_IN2;
+                //STORE INPUTS
+                glob_replay_data_stream[glob_replay_data_index++]=drvInput[0];
+                glob_replay_data_stream[glob_replay_data_index++]=drvInput[1];
+                glob_replay_data_stream[glob_replay_data_index++]=drvInput[2];
+                
+                last_DrvInput[0]=drvInput[0];
+                last_DrvInput[1]=drvInput[1];
+                last_DrvInput[2]=drvInput[2];
+            } else {
+                
+                if (last_DrvInput[0]!=drvInput[0]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN0;
+                    last_DrvInput[0]=drvInput[0];
+                }
+                if (last_DrvInput[1]!=drvInput[1]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN1;
+                    last_DrvInput[1]=drvInput[1];
+                }
+                if (last_DrvInput[2]!=drvInput[2]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN2;
+                    last_DrvInput[2]=drvInput[2];
+                }
+            }
+            
+        }
+        
     }
-    //
     
-	ToaClearOpposites(&drvInput[0]);
-	ToaClearOpposites(&drvInput[1]);
-
 	SekNewFrame();
-
+    
 	nCyclesTotal[0] = (INT32)((INT64)16000000 * nBurnCPUSpeedAdjust / (0x0100 * 60));
 	nCyclesTotal[1] = TOA_Z80_SPEED / 60;
 	nCyclesDone[0] = nCyclesDone[1] = 0;
-
+    
 	SekOpen(0);
     
     //HACK for 'follow finger' touchpad mode
@@ -892,25 +971,66 @@ static INT32 drvFrame()
         else wait_control--;
     }
     //
+    //8 bits => 0/1: touch off/on switch
+    //          1/2: posX
+    //          2/4: posY
+    //          3/8: input0
+    //          4/16: input1
+    //          5/32: ...
+    //          6/64:
+    //          7/128:
+    
+    if (glob_replay_mode==REPLAY_RECORD_MODE) {
+        if (glob_replay_flag) {
+            //STORE FRAME_INDEX
+            glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+            //STORE FLAG
+            glob_replay_data_stream[glob_replay_data_index++]=glob_replay_flag;
+            
+            if (glob_replay_flag&REPLAY_FLAG_POSX) { //MEMX HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dx16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dx16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) { //MEMY HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dy16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dy16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) { //INPUT0 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[0];
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) { //INPUT1 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[1];
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN2) { //INPUT2 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[2];
+            }
+            
+        }
+    }
     
 	
 	SekSetCyclesScanline(nCyclesTotal[0] / 262);
 	nToaCyclesDisplayStart = nCyclesTotal[0] - ((nCyclesTotal[0] * (TOA_VBLANK_LINES + 240)) / 262);
 	nToaCyclesVBlankStart = nCyclesTotal[0] - ((nCyclesTotal[0] * TOA_VBLANK_LINES) / 262);
 	bVBlank = false;
-
+    
 	INT32 nSoundBufferPos = 0;
-
+    
+    
+    
 	ZetOpen(0);
 	for (INT32 i = 1; i <= nInterleave; i++) {
     	INT32 nCurrentCPU;
 		INT32 nNext;
-
+        
 		// Run 68000
-
+        
 		nCurrentCPU = 0;
 		nNext = i * nCyclesTotal[nCurrentCPU] / nInterleave;
-
+        
 		// Trigger VBlank interrupt
 		if (!bVBlank && nNext > nToaCyclesVBlankStart) {
 			if (nCyclesDone[nCurrentCPU] < nToaCyclesVBlankStart) {
@@ -921,32 +1041,32 @@ static INT32 drvFrame()
 					nCyclesDone[nCurrentCPU] += SekIdle(nCyclesSegment);
 				}
 			}
-
+            
 			ToaBufferGP9001Sprites();
 			if (pBurnDraw) {											// Draw screen if needed
 				drvDraw();
 			}
-
+            
 			nIRQPending = 1;
 			SekSetIRQLine(2, SEK_IRQSTATUS_ACK);
-
+            
 			bVBlank = true;
 		}
-
+        
 		nCyclesSegment = nNext - nCyclesDone[nCurrentCPU];
 		if (!CheckSleep(nCurrentCPU)) {									// See if this CPU is busywaiting
 			nCyclesDone[nCurrentCPU] += SekRun(nCyclesSegment);
 		} else {
 			nCyclesDone[nCurrentCPU] += SekIdle(nCyclesSegment);
 		}
-
+        
 		if ((i & 1) == 0) {
 			// Run Z80
 			nCurrentCPU = 1;
 			nNext = i * nCyclesTotal[nCurrentCPU] / nInterleave;
 			nCyclesSegment = nNext - nCyclesDone[nCurrentCPU];
 			nCyclesDone[nCurrentCPU] += ZetRun(nCyclesSegment);
-
+            
 			// Render sound segment
 			if (pBurnSoundOut) {
 				INT32 nSegmentLength = (nBurnSoundLen * i / nInterleave) - nSoundBufferPos;
@@ -958,7 +1078,7 @@ static INT32 drvFrame()
 			}
 		}
 	}
-
+    
 	SekClose();
 	
 	{
@@ -975,7 +1095,13 @@ static INT32 drvFrame()
 	}
 	
 	ZetClose();
-
+    
+    glob_framecpt++;
+    if ((glob_replay_mode==REPLAY_PLAYBACK_MODE)&&(glob_replay_data_index>=glob_replay_data_index_max)) {
+        //should end replay here
+        nShouldExit=1;
+    }
+    
 	return 0;
 }
 
@@ -985,14 +1111,14 @@ static struct BurnRomInfo batridRomDesc[] = {
 	{ "prg2.u21",     0x080000, 0xBDAA5FBF, BRF_ESS | BRF_PRG }, //  1
 	{ "prg1b.u23",    0x080000, 0x8E70B492, BRF_ESS | BRF_PRG }, //  2				(odd)
 	{ "prg3.u24",     0x080000, 0x7AA9F941, BRF_ESS | BRF_PRG }, //  3
-
+    
 	{ "rom-1.bin",    0x400000, 0x0DF69CA2, BRF_GRA },			 //  4 GP9001 Tile data
 	{ "rom-3.bin",    0x400000, 0x60167D38, BRF_GRA },			 //  5
 	{ "rom-2.bin",    0x400000, 0x1BFEA593, BRF_GRA },			 //  6
 	{ "rom-4.bin",    0x400000, 0xBEE03c94, BRF_GRA },			 //  7
-
+    
 	{ "snd.u77",      0x040000, 0x56682696, BRF_ESS | BRF_PRG }, //  8 Z80 program
-
+    
 	{ "rom-5.bin",    0x100000, 0x4274DAf6, BRF_SND },			 //  9 MSM6295 #1 ADPCM data
 	{ "rom-6.bin",    0x100000, 0x2A1C2426, BRF_SND },			 // 10 MSM6295 #2 ADPCM data
 };
@@ -1006,14 +1132,14 @@ static struct BurnRomInfo batriduRomDesc[] = {
 	{ "prg2.u21",     0x080000, 0xBDAA5FBF, BRF_ESS | BRF_PRG }, //  1
 	{ "prg1b.u23",    0x080000, 0x8E70B492, BRF_ESS | BRF_PRG }, //  2				(odd)
 	{ "prg3.u24",     0x080000, 0x7AA9F941, BRF_ESS | BRF_PRG }, //  3
-
+    
 	{ "rom-1.bin",    0x400000, 0x0DF69CA2, BRF_GRA },			 //  4 GP9001 Tile data
 	{ "rom-3.bin",    0x400000, 0x60167D38, BRF_GRA },			 //  5
 	{ "rom-2.bin",    0x400000, 0x1BFEA593, BRF_GRA },			 //  6
 	{ "rom-4.bin",    0x400000, 0xBEE03c94, BRF_GRA },			 //  7
-
+    
 	{ "snd.u77",      0x040000, 0x56682696, BRF_ESS | BRF_PRG }, //  8 Z80 program
-
+    
 	{ "rom-5.bin",    0x100000, 0x4274DAf6, BRF_SND },			 //  9 MSM6295 #1 ADPCM data
 	{ "rom-6.bin",    0x100000, 0x2A1C2426, BRF_SND },			 // 10 MSM6295 #2 ADPCM data
 };
@@ -1027,14 +1153,14 @@ static struct BurnRomInfo batridcRomDesc[] = {
 	{ "prg2.u21",     0x080000, 0xBDAA5FBF, BRF_ESS | BRF_PRG }, //  1
 	{ "prg1b.u23",    0x080000, 0x8E70B492, BRF_ESS | BRF_PRG }, //  2				(odd)
 	{ "prg3.u24",     0x080000, 0x7AA9F941, BRF_ESS | BRF_PRG }, //  3
-
+    
 	{ "rom-1.bin",    0x400000, 0x0DF69CA2, BRF_GRA },			 //  4 GP9001 Tile data
 	{ "rom-3.bin",    0x400000, 0x60167D38, BRF_GRA },			 //  5
 	{ "rom-2.bin",    0x400000, 0x1BFEA593, BRF_GRA },			 //  6
 	{ "rom-4.bin",    0x400000, 0xBEE03c94, BRF_GRA },			 //  7
-
+    
 	{ "snd.u77",      0x040000, 0x56682696, BRF_ESS | BRF_PRG }, //  8 Z80 program
-
+    
 	{ "rom-5.bin",    0x100000, 0x4274DAf6, BRF_SND },			 //  9 MSM6295 #1 ADPCM data
 	{ "rom-6.bin",    0x100000, 0x2A1C2426, BRF_SND },			 // 10 MSM6295 #2 ADPCM data
 };
@@ -1048,14 +1174,14 @@ static struct BurnRomInfo batridjRomDesc[] = {
 	{ "prg2.u21",     0x080000, 0xBDAA5FBF, BRF_ESS | BRF_PRG }, //  1
 	{ "prg1b.u23",    0x080000, 0x8E70B492, BRF_ESS | BRF_PRG }, //  2				(odd)
 	{ "prg3.u24",     0x080000, 0x7AA9F941, BRF_ESS | BRF_PRG }, //  3
-
+    
 	{ "rom-1.bin",    0x400000, 0x0DF69CA2, BRF_GRA },			 //  4 GP9001 Tile data
 	{ "rom-3.bin",    0x400000, 0x60167D38, BRF_GRA },			 //  5
 	{ "rom-2.bin",    0x400000, 0x1BFEA593, BRF_GRA },			 //  6
 	{ "rom-4.bin",    0x400000, 0xBEE03c94, BRF_GRA },			 //  7
-
+    
 	{ "snd.u77",      0x040000, 0x56682696, BRF_ESS | BRF_PRG }, //  8 Z80 program
-
+    
 	{ "rom-5.bin",    0x100000, 0x4274DAf6, BRF_SND },			 //  9 MSM6295 #1 ADPCM data
 	{ "rom-6.bin",    0x100000, 0x2A1C2426, BRF_SND },			 // 10 MSM6295 #2 ADPCM data
 };
@@ -1069,14 +1195,14 @@ static struct BurnRomInfo batridkRomDesc[] = {
 	{ "prg2.u21",     0x080000, 0xBDAA5FBF, BRF_ESS | BRF_PRG }, //  1
 	{ "prg1b.u23",    0x080000, 0x8E70B492, BRF_ESS | BRF_PRG }, //  2				(odd)
 	{ "prg3.u24",     0x080000, 0x7AA9F941, BRF_ESS | BRF_PRG }, //  3
-
+    
 	{ "rom-1.bin",    0x400000, 0x0DF69CA2, BRF_GRA },			 //  4 GP9001 Tile data
 	{ "rom-3.bin",    0x400000, 0x60167D38, BRF_GRA },			 //  5
 	{ "rom-2.bin",    0x400000, 0x1BFEA593, BRF_GRA },			 //  6
 	{ "rom-4.bin",    0x400000, 0xBEE03c94, BRF_GRA },			 //  7
-
+    
 	{ "snd.u77",      0x040000, 0x56682696, BRF_ESS | BRF_PRG }, //  8 Z80 program
-
+    
 	{ "rom-5.bin",    0x100000, 0x4274DAf6, BRF_SND },			 //  9 MSM6295 #1 ADPCM data
 	{ "rom-6.bin",    0x100000, 0x2A1C2426, BRF_SND },			 // 10 MSM6295 #2 ADPCM data
 };
@@ -1090,14 +1216,14 @@ static struct BurnRomInfo batridjaRomDesc[] = {
 	{ "prg2.u21",     0x080000, 0xBDAA5FBF, BRF_ESS | BRF_PRG }, //  1
 	{ "prg1.u23",     0x080000, 0x8ae7f592, BRF_ESS | BRF_PRG }, //  2				(odd)
 	{ "prg3.u24",     0x080000, 0x7AA9F941, BRF_ESS | BRF_PRG }, //  3
-
+    
 	{ "rom-1.bin",    0x400000, 0x0DF69CA2, BRF_GRA },			 //  4 GP9001 Tile data
 	{ "rom-3.bin",    0x400000, 0x60167D38, BRF_GRA },			 //  5
 	{ "rom-2.bin",    0x400000, 0x1BFEA593, BRF_GRA },			 //  6
 	{ "rom-4.bin",    0x400000, 0xBEE03c94, BRF_GRA },			 //  7
-
+    
 	{ "snd.u77",      0x040000, 0x56682696, BRF_ESS | BRF_PRG }, //  8 Z80 program
-
+    
 	{ "rom-5.bin",    0x100000, 0x4274DAf6, BRF_SND },			 //  9 MSM6295 #1 ADPCM data
 	{ "rom-6.bin",    0x100000, 0x2A1C2426, BRF_SND },			 // 10 MSM6295 #2 ADPCM data
 };
@@ -1111,14 +1237,14 @@ static struct BurnRomInfo batridtaRomDesc[] = {
 	{ "prg2.u21",     0x080000, 0xBDAA5FBF, BRF_ESS | BRF_PRG }, //  1
 	{ "prg1.u23",     0x080000, 0x8ae7f592, BRF_ESS | BRF_PRG }, //  2				(odd)
 	{ "prg3.u24",     0x080000, 0x7AA9F941, BRF_ESS | BRF_PRG }, //  3
-
+    
 	{ "rom-1.bin",    0x400000, 0x0DF69CA2, BRF_GRA },			 //  4 GP9001 Tile data
 	{ "rom-3.bin",    0x400000, 0x60167D38, BRF_GRA },			 //  5
 	{ "rom-2.bin",    0x400000, 0x1BFEA593, BRF_GRA },			 //  6
 	{ "rom-4.bin",    0x400000, 0xBEE03c94, BRF_GRA },			 //  7
-
+    
 	{ "snd.u77",      0x040000, 0x56682696, BRF_ESS | BRF_PRG }, //  8 Z80 program
-
+    
 	{ "rom-5.bin",    0x100000, 0x4274DAf6, BRF_SND },			 //  9 MSM6295 #1 ADPCM data
 	{ "rom-6.bin",    0x100000, 0x2A1C2426, BRF_SND },			 // 10 MSM6295 #2 ADPCM data
 };

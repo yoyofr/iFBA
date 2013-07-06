@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "EmuViewController.h"
+#import "iCadeReaderView.h"
 
-@interface OptSaveStateViewController : UIViewController {
+@interface OptSaveStateViewController : UIViewController <iCadeEventDelegate> {
     IBOutlet UITableView *tabView;
     IBOutlet UIImageView *imgview;
     IBOutlet UIBarButtonItem *btn_backToEmu;

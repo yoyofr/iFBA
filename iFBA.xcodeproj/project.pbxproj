@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3305D59B1783F658003EFA55 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3305D59A1783F658003EFA55 /* Default-568h@2x.png */; };
 		33065D69153987EC00EE27BC /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33065D68153987EC00EE27BC /* MediaPlayer.framework */; };
 		33065D70153A0EBA00EE27BC /* button_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 33065D6A153A0EBA00EE27BC /* button_1.png */; };
 		33065D71153A0EBA00EE27BC /* button_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 33065D6B153A0EBA00EE27BC /* button_2.png */; };
@@ -2430,6 +2431,10 @@
 		33E47CEA1781865300A1F2AD /* SendReplayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33E47CE81781865100A1F2AD /* SendReplayController.mm */; };
 		33E47CEB1781865300A1F2AD /* SendReplayController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33E47CE91781865200A1F2AD /* SendReplayController.xib */; };
 		33E47CF81781EC7C00A1F2AD /* Replay.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33E47CF61781EC7900A1F2AD /* Replay.mm */; };
+		33E47D021783678100A1F2AD /* BButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E47CFB1783678100A1F2AD /* BButton.m */; };
+		33E47D031783678100A1F2AD /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E47CFD1783678100A1F2AD /* NSString+FontAwesome.m */; };
+		33E47D041783678100A1F2AD /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33E47CFF1783678100A1F2AD /* FontAwesome.ttf */; };
+		33E47D051783678100A1F2AD /* UIColor+BButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E47D011783678100A1F2AD /* UIColor+BButton.m */; };
 		33E88A21150CADC80030EFF7 /* d_pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A1E150CADC80030EFF7 /* d_pce.cpp */; };
 		33E88A22150CADC80030EFF7 /* pce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A1F150CADC80030EFF7 /* pce.cpp */; };
 		33E88A26150CAEDC0030EFF7 /* d_actfancr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E88A24150CAEDC0030EFF7 /* d_actfancr.cpp */; };
@@ -2451,6 +2456,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3305D59A1783F658003EFA55 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		33065D68153987EC00EE27BC /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		33065D6A153A0EBA00EE27BC /* button_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_1.png; sourceTree = "<group>"; };
 		33065D6B153A0EBA00EE27BC /* button_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_2.png; sourceTree = "<group>"; };
@@ -5151,6 +5157,13 @@
 		33E47CE91781865200A1F2AD /* SendReplayController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendReplayController.xib; sourceTree = "<group>"; };
 		33E47CF61781EC7900A1F2AD /* Replay.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Replay.mm; sourceTree = "<group>"; };
 		33E47CF71781EC7A00A1F2AD /* Replay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Replay.h; sourceTree = "<group>"; };
+		33E47CFA1783678100A1F2AD /* BButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BButton.h; sourceTree = "<group>"; };
+		33E47CFB1783678100A1F2AD /* BButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BButton.m; sourceTree = "<group>"; };
+		33E47CFC1783678100A1F2AD /* NSString+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FontAwesome.h"; sourceTree = "<group>"; };
+		33E47CFD1783678100A1F2AD /* NSString+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FontAwesome.m"; sourceTree = "<group>"; };
+		33E47CFF1783678100A1F2AD /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		33E47D001783678100A1F2AD /* UIColor+BButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+BButton.h"; sourceTree = "<group>"; };
+		33E47D011783678100A1F2AD /* UIColor+BButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+BButton.m"; sourceTree = "<group>"; };
 		33E88A1E150CADC80030EFF7 /* d_pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_pce.cpp; sourceTree = "<group>"; };
 		33E88A1F150CADC80030EFF7 /* pce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pce.cpp; sourceTree = "<group>"; };
 		33E88A20150CADC80030EFF7 /* pce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pce.h; sourceTree = "<group>"; };
@@ -6497,6 +6510,7 @@
 		339E5FA314F1851D006FB970 = {
 			isa = PBXGroup;
 			children = (
+				3305D59A1783F658003EFA55 /* Default-568h@2x.png */,
 				33B581F8176CC06B00421AE5 /* TestFlightSDK1.2.6 */,
 				33E47C661780C6F600A1F2AD /* ASIHTTPRequest */,
 				336D5BBC151DE92E006D8984 /* libsqlite3.dylib */,
@@ -6550,6 +6564,7 @@
 				339E5FC214F1851E006FB970 /* AppDelegate.mm */,
 				336D5BBE151DE94A006D8984 /* DBHelper.h */,
 				336D5BBF151DE94A006D8984 /* DBHelper.mm */,
+				33E47CF91783678000A1F2AD /* BButton */,
 				33231BE614FBA67A00AD7823 /* BTstack */,
 				33231BFC14FBA67A00AD7823 /* iCade */,
 				331F348F14FD96D7004668BC /* fbaconf.h */,
@@ -8510,6 +8525,28 @@
 			path = ASIHTTPRequest;
 			sourceTree = "<group>";
 		};
+		33E47CF91783678000A1F2AD /* BButton */ = {
+			isa = PBXGroup;
+			children = (
+				33E47CFA1783678100A1F2AD /* BButton.h */,
+				33E47CFB1783678100A1F2AD /* BButton.m */,
+				33E47CFC1783678100A1F2AD /* NSString+FontAwesome.h */,
+				33E47CFD1783678100A1F2AD /* NSString+FontAwesome.m */,
+				33E47CFE1783678100A1F2AD /* resources */,
+				33E47D001783678100A1F2AD /* UIColor+BButton.h */,
+				33E47D011783678100A1F2AD /* UIColor+BButton.m */,
+			);
+			path = BButton;
+			sourceTree = SOURCE_ROOT;
+		};
+		33E47CFE1783678100A1F2AD /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				33E47CFF1783678100A1F2AD /* FontAwesome.ttf */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
 		33E88A1D150CADC80030EFF7 /* pce */ = {
 			isa = PBXGroup;
 			children = (
@@ -10423,6 +10460,8 @@
 				33E47C5917800ECC00A1F2AD /* ReplayWebController.xib in Resources */,
 				33E47C651780919500A1F2AD /* MIMETYPES.plist in Resources */,
 				33E47CEB1781865300A1F2AD /* SendReplayController.xib in Resources */,
+				33E47D041783678100A1F2AD /* FontAwesome.ttf in Resources */,
+				3305D59B1783F658003EFA55 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11014,6 +11053,9 @@
 				33E47CE01780C93400A1F2AD /* Reachability.m in Sources */,
 				33E47CEA1781865300A1F2AD /* SendReplayController.mm in Sources */,
 				33E47CF81781EC7C00A1F2AD /* Replay.mm in Sources */,
+				33E47D021783678100A1F2AD /* BButton.m in Sources */,
+				33E47D031783678100A1F2AD /* NSString+FontAwesome.m in Sources */,
+				33E47D051783678100A1F2AD /* UIColor+BButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11074,6 +11116,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iFBA/iFBA-Prefix.pch";
 				GCC_THUMB_SUPPORT = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "iFBA/iFBA-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
@@ -11164,6 +11207,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iFBA/iFBA-Prefix.pch";
 				GCC_THUMB_SUPPORT = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "iFBA/iFBA-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
@@ -11182,9 +11226,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iFBA/iFBA-Prefix.pch";
 				GCC_THUMB_SUPPORT = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "iFBA/iFBA-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
@@ -11195,6 +11242,8 @@
 					"\"$(SRCROOT)/TestFlightSDK1.2.6\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -10,9 +10,9 @@
 #import "TDSemiModal.h"
 #import <QuartzCore/CADisplayLink.h>
 #import <QuartzCore/QuartzCore.h>
+#import "iCadeReaderView.h"
 
-
-@interface OptGameInfoViewController : TDSemiModalViewController <UIWebViewDelegate> {
+@interface OptGameInfoViewController : TDSemiModalViewController <UIWebViewDelegate,iCadeEventDelegate> {
     IBOutlet UIView *mnview;
     IBOutlet UITextView *txtview;
     IBOutlet UIWebView *webview;

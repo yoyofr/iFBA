@@ -32,6 +32,7 @@ int GetReplayInfo(int slot,char *info) {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy/MM/dd"];
     NSString *dateStr=[dateFormatter stringFromDate:fdate];
+    [dateFormatter release];
     
     f=fopen(szName,"rb");
     if (!f) {
@@ -76,6 +77,7 @@ int GetReplayFileData(int slot,char **data,int *data_length,char *replay_date,in
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy/MM/dd"];
     NSString *dateStr=[dateFormatter stringFromDate:fdate];
+    [dateFormatter release];
     
     f=fopen(szName,"rb");
     if (!f) {

@@ -2,6 +2,10 @@
 #include "nec_intf.h"
 // Batsugun & Batsugun Special Version
 
+//HACK
+#include "fbaconf.h"
+
+
 static UINT8 DrvButton[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static UINT8 DrvJoy1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static UINT8 DrvJoy2[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -580,14 +584,6 @@ inline static INT32 CheckSleep(INT32)
 	return 0;
 }
 
-//HACK
-extern float glob_mov_x,glob_mov_y;
-extern float glob_pos_x,glob_pos_y;
-extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
-extern int wait_control;
-extern void PatchMemory68KFFinger();
-//
-
 
 static INT32 DrvFrame()
 {
@@ -596,9 +592,51 @@ static INT32 DrvFrame()
 	if (DrvReset) {														// Reset machine
 		//HACK
         wait_control=60;
+        glob_framecpt=0;
+        glob_replay_last_dx16=glob_replay_last_dy16=0;
+        glob_replay_last_fingerOn=0;
         //
 		DrvDoReset();
 	}
+    
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
+        unsigned int next_frame_event;
+        next_frame_event=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8)
+        |((unsigned int)(glob_replay_data_stream[glob_replay_data_index+2])<<16)|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+3])<<24);
+        
+        
+        if (glob_framecpt==next_frame_event) {
+            glob_replay_data_index+=4;
+            glob_replay_flag=glob_replay_data_stream[glob_replay_data_index++];
+            if (glob_replay_flag&REPLAY_FLAG_TOUCHONOFF) {
+                glob_replay_last_fingerOn^=1;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSX) {
+                glob_replay_last_dx16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) {
+                glob_replay_last_dy16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) {
+                last_DrvInput[0]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) {
+                last_DrvInput[1]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN2) {
+                last_DrvInput[2]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
+            }
+        }
+        DrvInput[0]=last_DrvInput[0];
+        DrvInput[1]=last_DrvInput[1];
+        DrvInput[2]=last_DrvInput[2];
+        
+    } else {
 
 	// Compile digital inputs
 	DrvInput[0] = 0x00;													// Buttons
@@ -631,6 +669,47 @@ static INT32 DrvFrame()
     //
 	ToaClearOpposites(&DrvInput[0]);
 	ToaClearOpposites(&DrvInput[1]);
+        
+        //HACK
+        //replay data - drvinputs
+        
+        if ((glob_replay_mode==REPLAY_RECORD_MODE)&&(glob_replay_data_index<MAX_REPLAY_DATA_BYTES-MAX_REPLAY_FRAME_SIZE)) {//SAVE REPLAY
+            glob_replay_flag=0;
+            if (glob_framecpt==0) {//first frame
+                //STORE FRAME_INDEX (0)
+                glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+                //STORE FLAG (00001100b)
+                glob_replay_data_stream[glob_replay_data_index++]=REPLAY_FLAG_IN0|REPLAY_FLAG_IN1|REPLAY_FLAG_IN2;
+                //STORE INPUTS
+                glob_replay_data_stream[glob_replay_data_index++]=DrvInput[0];
+                glob_replay_data_stream[glob_replay_data_index++]=DrvInput[1];
+                glob_replay_data_stream[glob_replay_data_index++]=DrvInput[2];
+                
+                last_DrvInput[0]=DrvInput[0];
+                last_DrvInput[1]=DrvInput[1];
+                last_DrvInput[2]=DrvInput[2];
+            } else {
+                
+                if (last_DrvInput[0]!=DrvInput[0]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN0;
+                    last_DrvInput[0]=DrvInput[0];
+                }
+                if (last_DrvInput[1]!=DrvInput[1]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN1;
+                    last_DrvInput[1]=DrvInput[1];
+                }
+                if (last_DrvInput[2]!=DrvInput[2]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN2;
+                    last_DrvInput[2]=DrvInput[2];
+                }
+            }
+            
+        }
+        
+    }
 
 	SekNewFrame();
 	VezNewFrame();
@@ -648,6 +727,46 @@ static INT32 DrvFrame()
         else wait_control--;
     }
     //
+    //
+    //8 bits => 0/1: touch off/on switch
+    //          1/2: posX
+    //          2/4: posY
+    //          3/8: input0
+    //          4/16: input1
+    //          5/32: ...
+    //          6/64:
+    //          7/128:
+    
+    if (glob_replay_mode==REPLAY_RECORD_MODE) {
+        if (glob_replay_flag) {
+            //STORE FRAME_INDEX
+            glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+            //STORE FLAG
+            glob_replay_data_stream[glob_replay_data_index++]=glob_replay_flag;
+            
+            if (glob_replay_flag&REPLAY_FLAG_POSX) { //MEMX HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dx16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dx16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) { //MEMY HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dy16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dy16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) { //INPUT0 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[0];
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) { //INPUT1 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[1];
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN2) { //INPUT2 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[2];
+            }
+            
+        }
+    }
 	
 	SekSetCyclesScanline(nCyclesTotal[0] / 262);
 	nToaCyclesDisplayStart = nCyclesTotal[0] - ((nCyclesTotal[0] * (TOA_VBLANK_LINES + 240)) / 262);
@@ -721,13 +840,20 @@ static INT32 DrvFrame()
 	if (pBurnDraw) {
 		DrvDraw();												// Draw screen if needed
 	}
+    
+    glob_framecpt++;
+    if ((glob_replay_mode==REPLAY_PLAYBACK_MODE)&&(glob_replay_data_index>=glob_replay_data_index_max)) {
+        //should end replay here
+        nShouldExit=1;
+    }
+    
 
    return 0;
 }
 
 struct BurnDriver BurnDrvBatsugun = {
 	"batsugun", NULL, NULL, NULL, "1993",
-	"Batsugun (set 1)\0", NULL, "Toaplan", "Dual Toaplan GP9001 based",
+	"Batsugun (set 1)\0", NULL, "Dual Toaplan", "Dual Toaplan GP9001 based",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | TOA_ROTATE_GRAPHICS_CCW, 2, HARDWARE_TOAPLAN_68K_Zx80, GBF_VERSHOOT, 0,
 	NULL, batsugunRomInfo, batsugunRomName, NULL, NULL, batsugunInputInfo, batsugunDIPInfo,
@@ -737,7 +863,7 @@ struct BurnDriver BurnDrvBatsugun = {
 
 struct BurnDriver BurnDrvBatsugunSP = {
 	"batsugunsp", "batsugun", NULL, NULL, "1993",
-	"Batsugun (Special Ver.)\0", NULL, "Dual Toaplan", "Toaplan GP9001 based",
+	"Batsugun (Special Ver.)\0", NULL, "Dual Toaplan", "Dual Toaplan GP9001 based",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | TOA_ROTATE_GRAPHICS_CCW, 2, HARDWARE_TOAPLAN_68K_Zx80, GBF_VERSHOOT, 0,
 	NULL, batugnspRomInfo, batugnspRomName, NULL, NULL, batsugunInputInfo, batsugunDIPInfo,

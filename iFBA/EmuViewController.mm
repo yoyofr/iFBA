@@ -35,7 +35,7 @@ int SaveReplay(int slot);
 volatile unsigned char glob_replay_data_stream[MAX_REPLAY_DATA_BYTES];
 volatile unsigned int glob_framecpt,glob_replay_mode,glob_framecpt_max,glob_replay_data_index,glob_replay_data_index_max;
 unsigned char glob_replay_flag;
-unsigned int glob_replay_last_dx16,glob_replay_last_dy16;
+unsigned int glob_replay_last_dx16,glob_replay_last_dy16,glob_delta_dy16;
 unsigned char glob_replay_last_fingerOn;
 volatile int glob_replay_currentslot;
 unsigned int last_DrvInput[10];
@@ -926,10 +926,10 @@ static int statusLoadMsgUpdated=0;
             if ((strcmp(gameName,"feversos")==0)||(strcmp(gameName,"dfeveron")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=3;
             }
-            if ((strcmp(gameName,"bgaregga")==0)||(strcmp(gameName,"bgareggat2")==0)) {
+            if ((strcmp(gameName,"bgaregga")==0)||(strcmp(gameName,"bgareggabl")==0)||(strcmp(gameName,"bgareggacn")==0)||(strcmp(gameName,"bgareggahk")==0)||(strcmp(gameName,"bgaregganv")==0)||(strcmp(gameName,"bgareggat2")==0)||(strcmp(gameName,"bgareggatw")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=4;
             }
-            if (strcmp(gameName,"dogyuun")==0) {
+            if ((strcmp(gameName,"dogyuun")==0)||(strcmp(gameName,"dogyuuna")==0)||(strcmp(gameName,"dogyuunt")==0)){
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=5;
             }
             if (strcmp(gameName,"truxton2")==0) {
@@ -953,19 +953,20 @@ static int statusLoadMsgUpdated=0;
             if (strcmp(gameName,"dragnblz")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=12;
             }
-            if (strcmp(gameName,"batrider")==0) {
+            if ((strcmp(gameName,"batrider")==0)||(strcmp(gameName,"batrideru")==0)||(strcmp(gameName,"batriderc")==0)||(strcmp(gameName,"batriderj")==0)||(strcmp(gameName,"batriderk")==0)||(strcmp(gameName,"batriderja")==0)||
+                (strcmp(gameName,"batridert")==0)){
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=13;
             }
-            if (strcmp(gameName,"bbakraid")==0) {
+            if ((strcmp(gameName,"bbakraid")==0)||(strcmp(gameName,"bbakraidj")==0)||(strcmp(gameName,"bbakraidja")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=14;
             }
             if (strcmp(gameName,"dimahoo")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=15;cps2_buttons_limit=3;
             }
-            if ((strcmp(gameName,"grindstm")==0)||(strcmp(gameName,"vfive")==0)) {
+            if ((strcmp(gameName,"grindstm")==0)||(strcmp(gameName,"grindstma")==0)||(strcmp(gameName,"vfive")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=16;
             }
-            if (strcmp(gameName,"batsugun")==0) {
+            if ((strcmp(gameName,"batsugun")==0)||(strcmp(gameName,"batsugunsp")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=17;
             }
             if (strcmp(gameName,"esprade")==0) {
@@ -991,6 +992,10 @@ static int statusLoadMsgUpdated=0;
             }
             if (strcmp(gameName,"ddpdojblk")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=25;
+            }
+            if ((strcmp(gameName,"varth")==0)||(strcmp(gameName,"varthr1")==0)||(strcmp(gameName,"varthu")==0)||(strcmp(gameName,"varthj")==0)) {
+                //not working well
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=26;
             }
             if (cur_ifba_conf->vpad_followfinger) {
                 [TestFlight passCheckpoint:@"FINGER_MODE"];
@@ -1097,6 +1102,7 @@ static int statusLoadMsgUpdated=0;
     
     if (glob_replay_mode==REPLAY_RECORD_MODE) { //SAVE
         SaveReplay(glob_replay_currentslot);
+        [TestFlight passCheckpoint:@"Save replay"];        
     }
     
     if (nShouldExit==1) {
@@ -2525,7 +2531,7 @@ int LoadReplay(int slot) {
         signed int tmpFPS;
         fread(szHeader,6,1,f);
         szHeader[6]=0;
-        NSLog(@"File header: %s",szHeader);
+//        NSLog(@"File header: %s",szHeader);
         fread((void*)&glob_framecpt_max,sizeof(glob_framecpt_max),1,f);
         fread((void*)&glob_replay_data_index_max,sizeof(glob_replay_data_index_max),1,f);
         fread((void*)&tmpFPS,sizeof(tmpFPS),1,f);
@@ -2534,7 +2540,8 @@ int LoadReplay(int slot) {
             fclose(f);
             return -2;
         } else {
-            NSLog(@"Loading: %dKB / FPS: %d / Estimated running time: %d:%02d",glob_replay_data_index_max/1024,tmpFPS,glob_framecpt_max*100/tmpFPS/60,(glob_framecpt_max*100/tmpFPS)%60);
+//            NSLog(@"Loading: %dKB / FPS: %d / Estimated running time: %d:%02d",glob_replay_data_index_max/1024,tmpFPS,glob_framecpt_max*100/tmpFPS/60,(glob_framecpt_max*100/tmpFPS)%60);
+            [TestFlight passCheckpoint:@"Load replay"];
             fread((void*)glob_replay_data_stream,glob_replay_data_index_max,1,f);
         }
         fclose(f);

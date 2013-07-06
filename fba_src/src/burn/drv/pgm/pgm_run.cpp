@@ -833,8 +833,7 @@ INT32 pgmFrame()
                         break;
                 }
             }
-        }
-        
+        }        
         //
         
 		// clear opposites

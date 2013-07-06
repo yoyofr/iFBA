@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "TDSemiModal.h"
 #import "EmuViewController.h"
+#import "iCadeReaderView.h"
 
-@interface OptiCadeViewController : UIViewController {
+@interface OptiCadeViewController : UIViewController <iCadeEventDelegate> {
     IBOutlet UITableView *tabView;
     TDSemiModalViewController *optgetButton;
     IBOutlet UIBarButtonItem *btn_backToEmu;

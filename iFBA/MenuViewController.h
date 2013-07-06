@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIView.h>
+#import "iCadeReaderView.h"
 
 
-@interface MenuViewController : UIViewController {
+@interface MenuViewController : UIViewController <iCadeEventDelegate> {
     IBOutlet UITableView *tabView;
     IBOutlet UIBarButtonItem *btn_backToEmu;
     UIViewController *gamebrowservc;

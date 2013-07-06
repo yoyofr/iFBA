@@ -1,6 +1,10 @@
 #include "toaplan.h"
 // Truxton 2
 
+//HACK
+#include "fbaconf.h"
+
+
 static UINT8 DrvButton[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static UINT8 DrvJoy1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static UINT8 DrvJoy2[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -22,7 +26,7 @@ static UINT8 nIRQPending;
 static struct BurnInputInfo truxton2InputList[] = {
 	{"P1 Coin",		BIT_DIGITAL,	DrvButton + 3,	"p1 coin"},
 	{"P1 Start",	BIT_DIGITAL,	DrvButton + 5,	"p1 start"},
-
+    
 	{"P1 Up",		BIT_DIGITAL,	DrvJoy1 + 0,	"p1 up"},
 	{"P1 Down",		BIT_DIGITAL,	DrvJoy1 + 1,	"p1 down"},
 	{"P1 Left",		BIT_DIGITAL,	DrvJoy1 + 2,	"p1 left"},
@@ -30,10 +34,10 @@ static struct BurnInputInfo truxton2InputList[] = {
 	{"P1 Button 1",	BIT_DIGITAL,	DrvJoy1 + 4,	"p1 fire 1"},
 	{"P1 Button 2",	BIT_DIGITAL,	DrvJoy1 + 5,	"p1 fire 2"},
 	{"P1 Button 3",	BIT_DIGITAL,	DrvJoy1 + 6,	"p1 fire 3"},
-
+    
 	{"P2 Coin",		BIT_DIGITAL,	DrvButton + 4,	"p2 coin"},
 	{"P2 Start",	BIT_DIGITAL,	DrvButton + 6,	"p2 start"},
-
+    
 	{"P2 Up",		BIT_DIGITAL,	DrvJoy2 + 0,	"p2 up"},
 	{"P2 Down",		BIT_DIGITAL,	DrvJoy2 + 1,	"p2 down"},
 	{"P2 Left",		BIT_DIGITAL,	DrvJoy2 + 2,	"p2 left"},
@@ -41,7 +45,7 @@ static struct BurnInputInfo truxton2InputList[] = {
 	{"P2 Button 1",	BIT_DIGITAL,	DrvJoy2 + 4,	"p2 fire 1"},
 	{"P2 Button 2",	BIT_DIGITAL,	DrvJoy2 + 5,	"p2 fire 2"},
 	{"P2 Button 3",	BIT_DIGITAL,	DrvJoy2 + 6,	"p2 fire 3"},
-
+    
 	{"Reset",		BIT_DIGITAL,	&DrvReset,		"reset"},
 	{"Diagnostics",	BIT_DIGITAL,	DrvButton + 0,	"diag"},
 	{"Dip A",		BIT_DIPSWITCH,	DrvInput + 3,	"dip"},
@@ -56,7 +60,7 @@ static struct BurnDIPInfo truxton2DIPList[] = {
 	{0x14,	0xFF, 0xFE,	0x00, NULL},
 	{0x15,	0xFF, 0xFF,	0x00, NULL},
 	{0x16,	0xFF, 0x0F,	0x02, NULL},
-
+    
 	// DIP 1
 	{0,		0xFE, 0,	2,	  NULL},
 	{0x14,	0x01, 0x02,	0x00, "Normal screen"},
@@ -67,8 +71,8 @@ static struct BurnDIPInfo truxton2DIPList[] = {
 	{0,		0xFE, 0,	2,	  "Advertise sound"},
 	{0x14,	0x01, 0x08,	0x00, "On"},
 	{0x14,	0x01, 0x08,	0x08, "Off"},
-
-		// Normal coin settings
+    
+    // Normal coin settings
 	{0,		0xFE, 0,	4,	  "Coin A"},
 	{0x14,	0x82, 0x30,	0x00, "1 coin 1 play"},
 	{0x16,	0x00, 0x0F, 0x02, NULL},
@@ -87,7 +91,7 @@ static struct BurnDIPInfo truxton2DIPList[] = {
 	{0x16,	0x00, 0x0F, 0x02, NULL},
 	{0x14,	0x82, 0xC0,	0xC0, "2 coins 3 plays"},
 	{0x16,	0x00, 0x0F, 0x02, NULL},
-
+    
 	// European coin settings
 	{0,		0xFE, 0,	4,	  "Coin A"},
 	{0x14,	0x02, 0x30,	0x00, "1 coin 1 play"},
@@ -107,7 +111,7 @@ static struct BurnDIPInfo truxton2DIPList[] = {
 	{0x16,	0x00, 0x0F, 0x02, NULL},
 	{0x14,	0x02, 0xC0,	0xC0, "1 coin 6 plays"},
 	{0x16,	0x00, 0x0F, 0x02, NULL},
-
+    
 	// DIP 2
 	{0,		0xFE, 0,	4,	  "Game difficulty"},
 	{0x15,	0x01, 0x03,	0x00, "B"},
@@ -130,7 +134,7 @@ static struct BurnDIPInfo truxton2DIPList[] = {
 	{0,		0xFE, 0,	2,	  "Continue play"},
     {0x15,	0x01, 0x80,	0x00, "On"},
 	{0x15,	0x01, 0x80,	0x80, "Off"},
-
+    
 	// DIP 3
 	{0,		0xFE, 0,	7,	  "For"},
 	{0x16,	0x01, 0x0F,	0x00, "Japan"},
@@ -156,7 +160,7 @@ STDDIPINFO(truxton2)
 UINT8 __fastcall truxton2ReadByte(UINT32 sekAddress)
 {
 	switch (sekAddress) {
-
+            
 		case 0x700007:								// Player 1 inputs
 			return DrvInput[0];
 		case 0x700009:								// Player 2 inputs
@@ -169,15 +173,15 @@ UINT8 __fastcall truxton2ReadByte(UINT32 sekAddress)
 			return DrvInput[4];
 		case 0x700005:								// Dipswitch C - Territory
 			return DrvInput[5];
-
+            
 		case 0x700011:
 			return MSM6295ReadStatus(0);
 		case 0x700017:
 			return BurnYM2151ReadStatus();
-
+            
 		default: {
-//			printf("Attempt to read byte value of location %x\n", sekAddress);
-
+            //			printf("Attempt to read byte value of location %x\n", sekAddress);
+            
 			if ((sekAddress & 0x00FF0000) == 0x00500000) {
 				return ExtraTROM[(sekAddress & 0xFFFF) >> 1];
 			}
@@ -189,18 +193,18 @@ UINT8 __fastcall truxton2ReadByte(UINT32 sekAddress)
 UINT16 __fastcall truxton2ReadWord(UINT32 sekAddress)
 {
 	switch (sekAddress) {
-
+            
 		case 0x200004:
 			return ToaGP9001ReadRAM_Hi(0);
 		case 0x200006:
 			return ToaGP9001ReadRAM_Lo(0);
-
+            
 		case 0x20000C:
 			return ToaVBlankRegister();
-
+            
 		case 0x600000:
 			return ToaScanlineRegister();
-
+            
 		case 0x700006:								// Player 1 inputs
 			return DrvInput[0];
 		case 0x700008:								// Player 2 inputs
@@ -213,15 +217,15 @@ UINT16 __fastcall truxton2ReadWord(UINT32 sekAddress)
 			return DrvInput[4];
 		case 0x700004:								// Dipswitch C - Territory
 			return DrvInput[5];
-
+            
 		case 0x700010:
 			return MSM6295ReadStatus(0);
 		case 0x700016:
 			return BurnYM2151ReadStatus();
-
+            
 		default: {
-// 			printf("Attempt to read word value of location %x\n", sekAddress);
-
+            // 			printf("Attempt to read word value of location %x\n", sekAddress);
+            
 			if ((sekAddress & 0x00FF0000) == 0x00500000) {
 				return ExtraTROM[(sekAddress & 0xFFFF) >> 1] | (ExtraTROM[0x8000 + ((sekAddress & 0xFFFF) >> 1)] << 8);
 			}
@@ -236,17 +240,17 @@ void __fastcall truxton2WriteByte(UINT32 sekAddress, UINT8 byteValue)
 		case 0x700011:
 			MSM6295Command(0, byteValue);
 			break;
-
+            
 		case 0x700015:
 			BurnYM2151SelectRegister(byteValue);
 			break;
 		case 0x700017:
 			BurnYM2151WriteRegister(byteValue);
 			break;
-
+            
 		default: {
-//			printf("Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
-
+            //			printf("Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
+            
 			if ((sekAddress & 0x00FF0000) == 0x00500000) {
 				ExtraTROM[(sekAddress & 0xFFFF) >> 1] = byteValue;
 			}
@@ -260,20 +264,20 @@ void __fastcall truxton2WriteWord(UINT32 sekAddress, UINT16 wordValue)
 		case 0x200000:								// Set GP9001 VRAM address-pointer
 			ToaGP9001SetRAMPointer(wordValue);
 			break;
-
+            
 		case 0x200004:
 		case 0x200006:
 			ToaGP9001WriteRAM(wordValue, 0);
 			break;
-
+            
 		case 0x200008:
 			ToaGP9001SelectRegister(wordValue);
 			break;
-
+            
 		case 0x20000C:
 			ToaGP9001WriteRegister(wordValue);
 			break;
-
+            
 		case 0x700010:
 			MSM6295Command(0, wordValue & 0xFF);
 			break;
@@ -283,10 +287,10 @@ void __fastcall truxton2WriteWord(UINT32 sekAddress, UINT16 wordValue)
 		case 0x700016:
 			BurnYM2151WriteRegister(wordValue);
 			break;
-
+            
 		default: {
-//			printf("Attempt to write word value %x to location %x\n", wordValue, sekAddress);
-
+            //			printf("Attempt to write word value %x to location %x\n", wordValue, sekAddress);
+            
 			if ((sekAddress & 0x00FF0000) == 0x00500000) {
 				ExtraTROM[(sekAddress & 0xFFFF) >> 1] = wordValue & 0xFF;
 				ExtraTROM[0x8000 + ((sekAddress & 0xFFFF) >> 1)] = wordValue << 8;
@@ -299,15 +303,15 @@ static INT32 DrvExit()
 {
 	MSM6295Exit(0);
 	BurnYM2151Exit();
-
+    
 	ToaPalExit();
-
+    
 	ToaExtraTextExit();
 	ToaExitGP9001();
 	SekExit();				// Deallocate 68000s
-
+    
 	BurnFree(Mem);
-
+    
 	return 0;
 }
 
@@ -318,25 +322,25 @@ static INT32 DrvDoReset()
     SekSetIRQLine(0, SEK_IRQSTATUS_NONE);
 	SekReset();
 	SekClose();
-
+    
 	MSM6295Reset(0);
 	BurnYM2151Reset();
-
+    
 	return 0;
 }
 
 static INT32 DrvDraw()
 {
 	ToaClearScreen(0);
-
+    
 	if (bDrawScreen) {
 		ToaGetBitmap();
 		ToaRenderGP9001();					// Render GP9001 graphics
 		ToaExtraTextLayer();				// Render extra text layer
 	}
-
+    
 	ToaPalUpdate();							// Update the palette
-
+    
 	return 0;
 }
 
@@ -345,61 +349,135 @@ inline static INT32 CheckSleep(INT32)
 	return 0;
 }
 
-//HACK
-extern float glob_mov_x,glob_mov_y;
-extern float glob_pos_x,glob_pos_y;
-extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
-extern int wait_control;
-extern void PatchMemory68KFFinger();
-//
-
-
 static INT32 DrvFrame()
 {
 	INT32 nInterleave = 8;
-
+    
 	if (DrvReset) {														// Reset machine
         //HACK
         wait_control=60;
-        //		
+        glob_framecpt=0;
+        glob_replay_last_dx16=glob_replay_last_dy16=0;
+        glob_replay_last_fingerOn=0;
+        //
 		DrvDoReset();
 	}
-
-	// Compile digital inputs
-	DrvInput[0] = 0x00;													// Buttons
-	DrvInput[1] = 0x00;													// Player 1
-	DrvInput[2] = 0x00;													// Player 2
-	for (INT32 i = 0; i < 8; i++) {
-		DrvInput[0] |= (DrvJoy1[i] & 1) << i;
-		DrvInput[1] |= (DrvJoy2[i] & 1) << i;
-		DrvInput[2] |= (DrvButton[i] & 1) << i;
-	}
-    //HACK
-    if (glob_ffingeron) {
-        DrvInput[0]&=~((1<<4)); //clear fire 1
-        if (glob_mov_y>0) DrvInput[0]|=1;
-        if (glob_mov_y<0) DrvInput[0]|=2;
-        if (glob_mov_x<0) DrvInput[0]|=4;
-        if (glob_mov_x>0) DrvInput[0]|=8;
-        if (glob_shooton) {
-            switch (glob_shootmode) {
-                case 0: //shoot
-                    if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
-                    glob_autofirecpt++;
-                    break;
-                case 1: //laser
-                    DrvInput[0]|=1<<4;
-                    break;
+    
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
+        unsigned int next_frame_event;
+        next_frame_event=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8)
+        |((unsigned int)(glob_replay_data_stream[glob_replay_data_index+2])<<16)|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+3])<<24);
+        
+        
+        if (glob_framecpt==next_frame_event) {
+            glob_replay_data_index+=4;
+            glob_replay_flag=glob_replay_data_stream[glob_replay_data_index++];
+            if (glob_replay_flag&REPLAY_FLAG_TOUCHONOFF) {
+                glob_replay_last_fingerOn^=1;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSX) {
+                glob_replay_last_dx16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) {
+                glob_replay_last_dy16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) {
+                last_DrvInput[0]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) {
+                last_DrvInput[1]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN2) {
+                last_DrvInput[2]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index]);
+                glob_replay_data_index++;
             }
         }
+        DrvInput[0]=last_DrvInput[0];
+        DrvInput[1]=last_DrvInput[1];
+        DrvInput[2]=last_DrvInput[2];
+        
+    } else {
+        
+        // Compile digital inputs
+        DrvInput[0] = 0x00;													// Buttons
+        DrvInput[1] = 0x00;													// Player 1
+        DrvInput[2] = 0x00;													// Player 2
+        for (INT32 i = 0; i < 8; i++) {
+            DrvInput[0] |= (DrvJoy1[i] & 1) << i;
+            DrvInput[1] |= (DrvJoy2[i] & 1) << i;
+            DrvInput[2] |= (DrvButton[i] & 1) << i;
+        }
+        //HACK
+        if (glob_ffingeron) {
+            DrvInput[0]&=~((1<<4)); //clear fire 1
+            if (glob_mov_y>0) DrvInput[0]|=1;
+            if (glob_mov_y<0) DrvInput[0]|=2;
+            if (glob_mov_x<0) DrvInput[0]|=4;
+            if (glob_mov_x>0) DrvInput[0]|=8;
+            if (glob_shooton) {
+                switch (glob_shootmode) {
+                    case 0: //shoot
+                        if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
+                        glob_autofirecpt++;
+                        break;
+                    case 1: //laser
+                        DrvInput[0]|=1<<4;
+                        break;
+                }
+            }
+        }
+        //
+        
+        ToaClearOpposites(&DrvInput[0]);
+        ToaClearOpposites(&DrvInput[1]);
+        
+        //HACK
+        //replay data - drvinputs
+        
+        if ((glob_replay_mode==REPLAY_RECORD_MODE)&&(glob_replay_data_index<MAX_REPLAY_DATA_BYTES-MAX_REPLAY_FRAME_SIZE)) {//SAVE REPLAY
+            glob_replay_flag=0;
+            if (glob_framecpt==0) {//first frame
+                //STORE FRAME_INDEX (0)
+                glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+                //STORE FLAG (00001100b)
+                glob_replay_data_stream[glob_replay_data_index++]=REPLAY_FLAG_IN0|REPLAY_FLAG_IN1|REPLAY_FLAG_IN2;
+                //STORE INPUTS
+                glob_replay_data_stream[glob_replay_data_index++]=DrvInput[0];
+                glob_replay_data_stream[glob_replay_data_index++]=DrvInput[1];
+                glob_replay_data_stream[glob_replay_data_index++]=DrvInput[2];
+                
+                last_DrvInput[0]=DrvInput[0];
+                last_DrvInput[1]=DrvInput[1];
+                last_DrvInput[2]=DrvInput[2];
+            } else {
+                
+                if (last_DrvInput[0]!=DrvInput[0]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN0;
+                    last_DrvInput[0]=DrvInput[0];
+                }
+                if (last_DrvInput[1]!=DrvInput[1]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN1;
+                    last_DrvInput[1]=DrvInput[1];
+                }
+                if (last_DrvInput[2]!=DrvInput[2]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN2;
+                    last_DrvInput[2]=DrvInput[2];
+                }
+            }
+            
+        }
+        
     }
-    //
-
-	ToaClearOpposites(&DrvInput[0]);
-	ToaClearOpposites(&DrvInput[1]);
-
+    
 	SekNewFrame();
-
+    
 	nCyclesTotal[0] = (INT32)((INT64)16000000 * nBurnCPUSpeedAdjust / (0x0100 * 60));
 	nCyclesDone[0] = 0;
 	
@@ -410,24 +488,66 @@ static INT32 DrvFrame()
         else wait_control--;
     }
     //
+    //
+    //
+    //
+    //8 bits => 0/1: touch off/on switch
+    //          1/2: posX
+    //          2/4: posY
+    //          3/8: input0
+    //          4/16: input1
+    //          5/32: ...
+    //          6/64:
+    //          7/128:
     
-
+    if (glob_replay_mode==REPLAY_RECORD_MODE) {
+        if (glob_replay_flag) {
+            //STORE FRAME_INDEX
+            glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+            //STORE FLAG
+            glob_replay_data_stream[glob_replay_data_index++]=glob_replay_flag;
+            
+            if (glob_replay_flag&REPLAY_FLAG_POSX) { //MEMX HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dx16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dx16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) { //MEMY HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dy16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dy16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) { //INPUT0 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[0];
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) { //INPUT1 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[1];
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN2) { //INPUT2 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[2];
+            }
+            
+        }
+    }
+    
+    
 	SekSetCyclesScanline(nCyclesTotal[0] / 262);
 	nToaCyclesDisplayStart = nCyclesTotal[0] - ((nCyclesTotal[0] * (TOA_VBLANK_LINES + 240)) / 262);
 	nToaCyclesVBlankStart = nCyclesTotal[0] - ((nCyclesTotal[0] * TOA_VBLANK_LINES) / 262);
 	bVBlank = false;
-
+    
 	INT32 nSoundBufferPos = 0;
-
+    
 	for (INT32 i = 0; i < nInterleave; i++) {
     	INT32 nCurrentCPU;
 		INT32 nNext;
-
+        
 		// Run 68000
-
+        
 		nCurrentCPU = 0;
 		nNext = (i + 1) * nCyclesTotal[nCurrentCPU] / nInterleave;
-
+        
 		// Trigger VBlank interrupt
 		if (!bVBlank && nNext > nToaCyclesVBlankStart) {
 			if (nCyclesDone[nCurrentCPU] < nToaCyclesVBlankStart) {
@@ -438,15 +558,15 @@ static INT32 DrvFrame()
 					nCyclesDone[nCurrentCPU] += SekIdle(nCyclesSegment);
 				}
 			}
-
+            
 			nIRQPending  = 1;
 			SekSetIRQLine(2, SEK_IRQSTATUS_AUTO);
-
+            
 			ToaBufferGP9001Sprites();
-
+            
 			bVBlank = true;
 		}
-
+        
 		nCyclesSegment = nNext - nCyclesDone[nCurrentCPU];
 		if (bVBlank || (!CheckSleep(nCurrentCPU))) {					// See if this CPU is busywaiting
 			nIRQPending = 0;
@@ -454,7 +574,7 @@ static INT32 DrvFrame()
 		} else {
 			nCyclesDone[nCurrentCPU] += SekIdle(nCyclesSegment);
 		}
-
+        
 		if ((i & 1) == 0) {
 			// Render sound segment
 			if (pBurnSoundOut) {
@@ -466,7 +586,7 @@ static INT32 DrvFrame()
 			}
 		}
 	}
-
+    
 	{
 		// Make sure the buffer is entirely filled.
 		if (pBurnSoundOut) {
@@ -480,11 +600,17 @@ static INT32 DrvFrame()
 	}
 	
 	SekClose();
-
+    
 	if (pBurnDraw != NULL) {
 		DrvDraw();												// Draw screen if needed
 	}
-
+    
+    glob_framecpt++;
+    if ((glob_replay_mode==REPLAY_PLAYBACK_MODE)&&(glob_replay_data_index>=glob_replay_data_index_max)) {
+        //should end replay here
+        nShouldExit=1;
+    }
+    
 	return 0;
 }
 
@@ -508,7 +634,7 @@ static INT32 MemIndex()
 	RamEnd		= Next;
 	ToaPalette	= (UINT32 *)Next; Next += nColCount * sizeof(UINT32);
 	MemEnd		= Next;
-
+    
 	return 0;
 }
 
@@ -520,7 +646,7 @@ static INT32 LoadRoms()
 	
 	// Load GP9001 tile data
 	ToaLoadGP9001Tiles(GP9001ROM[0], 1, 2, nGP9001ROMSize[0]);
-
+    
 	// Load MSM6295 ADPCM data
 	BurnLoadRom(MSM6295ROM, 3, 1);
 	return 0;
@@ -532,40 +658,40 @@ static INT32 DrvScan(INT32 nAction, INT32* pnMin)
 	if (pnMin) {						// Return minimum compatible version
 		*pnMin = 0x029497;
 	}
-
+    
 	if (nAction & ACB_VOLATILE) {		// Scan volatile data
 		struct BurnArea ba;
-
+        
 		memset(&ba, 0, sizeof(ba));
     	ba.Data		= RamStart;
 		ba.nLen		= RamEnd - RamStart;
 		ba.szName	= "RAM";
 		BurnAcb(&ba);
-
+        
 		SekScan(nAction);				// scan 68000 states
-
+        
 		MSM6295Scan(0, nAction);
 		BurnYM2151Scan(nAction);
-
+        
 		ToaScanGP9001(nAction, pnMin);
-
+        
 		SCAN_VAR(DrvInput);
 		SCAN_VAR(nIRQPending);
 	}
-
+    
 	return 0;
 }
 
 static INT32 DrvInit()
 {
 	INT32 nLen;
-
+    
 #ifdef DRIVER_ROTATION
 	bToaRotateScreen = true;
 #endif
-
+    
 	nGP9001ROMSize[0] = 0x200000;
-
+    
 	// Find out how much memory is needed
 	Mem = NULL;
 	MemIndex();
@@ -575,16 +701,16 @@ static INT32 DrvInit()
 	}
 	memset(Mem, 0, nLen);										// blank all memory
 	MemIndex();													// Index the allocated memory
-
+    
 	// Load the roms into memory
 	if (LoadRoms()) {
 		return 1;
 	}
-
+    
 	{
 		SekInit(0, 0x68000);										// Allocate 68000
 	    SekOpen(0);
-
+        
 		// Map 68000 memory:
 		SekMapMemory(Rom01,			0x000000, 0x07FFFF, SM_ROM);	// CPU 0 ROM
 		SekMapMemory(Ram01,			0x100000, 0x10FFFF, SM_RAM);
@@ -592,48 +718,48 @@ static INT32 DrvInit()
 		SekMapMemory(ExtraTRAM,		0x400000, 0x401FFF, SM_RAM);
 		SekMapMemory(ExtraTSelect,	0x402000, 0x402FFF, SM_RAM);	// 0x502000 - Scroll; 0x502200 - RAM
 		SekMapMemory(ExtraTScroll,	0x403000, 0x403FFF, SM_RAM);	// 0x203000 - Offset; 0x503200 - RAM
-
+        
 		SekSetReadWordHandler(0, truxton2ReadWord);
 		SekSetReadByteHandler(0, truxton2ReadByte);
 		SekSetWriteWordHandler(0, truxton2WriteWord);
 		SekSetWriteByteHandler(0, truxton2WriteByte);
-
+        
 		SekClose();
 	}
-
+    
 	nLayer0XOffset = -0x01D6;
 	nLayer1XOffset = -0x01D8;
 	nLayer2XOffset = -0x01DA;
-
+    
 	nSpriteYOffset = 0x0001;
 	ToaInitGP9001();
-
+    
 	ToaExtraTextInit();
-
+    
 	nToaPalLen = nColCount;
 	ToaPalSrc = RamPal;
 	ToaPalInit();
-
+    
 	BurnYM2151Init(27000000 / 8);
 	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_1, 1.00, BURN_SND_ROUTE_LEFT);
 	BurnYM2151SetRoute(BURN_SND_YM2151_YM2151_ROUTE_2, 1.00, BURN_SND_ROUTE_RIGHT);
 	MSM6295Init(0, 27000000 / 10 / 132, 1);
 	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
-
+    
 	bDrawScreen = true;
-
+    
 	DrvDoReset(); // Reset machine
-
+    
 	return 0;
 }
 
 // Rom information
 static struct BurnRomInfo truxton2RomDesc[] = {
 	{ "tp024_1.bin",  0x080000, 0xf5cfe6ee, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
-
+    
 	{ "tp024_4.bin",  0x100000, 0x805C449E, BRF_GRA },			 //  1 GP9001 Tile data
 	{ "tp024_3.bin",  0x100000, 0x47587164, BRF_GRA },			 //  2
-
+    
 	{ "tp024_2.bin",  0x080000, 0xF2F6CAE4, BRF_SND },			 //  3 MSM6295 ADPCM data
 };
 
