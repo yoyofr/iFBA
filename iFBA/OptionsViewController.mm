@@ -121,19 +121,109 @@ extern int optionScope; //0:default, 1:current game
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    const NSInteger TOP_LABEL_TAG = 1001;
+	const NSInteger BOTTOM_LABEL_TAG = 1002;
+    UILabel *topLabel;
+	UILabel *bottomLabel;
     
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
+//        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+		//
+		// Create the label for the top row of text
+		//
+		topLabel = [[[UILabel alloc] init] autorelease];
+		[cell.contentView addSubview:topLabel];
+		
+		//
+		// Configure the properties for the text that are the same on every row
+		//
+		topLabel.tag = TOP_LABEL_TAG;
+		topLabel.backgroundColor = [UIColor clearColor];
+		topLabel.textColor = [UIColor colorWithRed:.0 green:.0 blue:.0 alpha:1.0];
+		topLabel.highlightedTextColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+		topLabel.font = [UIFont boldSystemFontOfSize:16];
+        topLabel.lineBreakMode=UILineBreakModeMiddleTruncation;
+        //        topLabel.numberOfLines=0;
+		
+		//
+		// Create the label for the top row of text
+		//
+		bottomLabel = [[[UILabel alloc] init] autorelease];
+		[cell.contentView addSubview:bottomLabel];
+		//
+		// Configure the properties for the text that are the same on every row
+		//
+		bottomLabel.tag = BOTTOM_LABEL_TAG;
+		bottomLabel.backgroundColor = [UIColor clearColor];
+		bottomLabel.textColor = [UIColor colorWithRed:0.0 green:0 blue:0.1 alpha:1.0];
+		bottomLabel.highlightedTextColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
+		bottomLabel.font = [UIFont systemFontOfSize:12];
+        bottomLabel.lineBreakMode=UILineBreakModeMiddleTruncation;
+        
+    } else {
+		topLabel = (UILabel *)[cell viewWithTag:TOP_LABEL_TAG];
+		bottomLabel = (UILabel *)[cell viewWithTag:BOTTOM_LABEL_TAG];
+	}
+    
+    bottomLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+                                   24,
+                                   tableView.bounds.size.width - 32-1.0 * cell.indentationWidth-40,
+                                   0);
+    topLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+                                2,
+                                tableView.bounds.size.width - 32-1.0 * cell.indentationWidth-40,
+                                40);
 
+    
+    cell.textLabel.backgroundColor=[UIColor clearColor];
+    
+    
+    
     switch (indexPath.row) {
-        case 0:cell.textLabel.text=NSLocalizedString(@"ROMS Paths",@"");
+        case 0:topLabel.text=NSLocalizedString(@"ROMS Paths",@"");
+            bottomLabel.text=nil;
+            cell.backgroundColor=[UIColor whiteColor];
             break;
-        case 1:cell.textLabel.text=NSLocalizedString(@"Default Options",@"");
+        case 1:topLabel.text=NSLocalizedString(@"Default Options",@"");
+            if (!game_has_options) {
+                bottomLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+                                               24,
+                                               tableView.bounds.size.width - 32-1.0 * cell.indentationWidth-40,
+                                               14);
+                topLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+                                            2,
+                                            tableView.bounds.size.width - 32-1.0 * cell.indentationWidth-40,
+                                            20);
+
+                bottomLabel.text=@"Active config";
+                cell.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gradcell.png"]];
+            } else {
+                bottomLabel.text=nil;
+                cell.backgroundColor=[UIColor whiteColor];
+            }
             break;
-        case 2:cell.textLabel.text=NSLocalizedString(@"Game Options",@"");
+        case 2:
+            topLabel.text=NSLocalizedString(@"Game Options",@"");
+            
+            if (game_has_options) {
+                bottomLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+                                               24,
+                                               tableView.bounds.size.width - 32-1.0 * cell.indentationWidth-40,
+                                               14);
+                topLabel.frame = CGRectMake( 1.0 * cell.indentationWidth,
+                                            2,
+                                            tableView.bounds.size.width - 32-1.0 * cell.indentationWidth-40,
+                                            20);
+
+                bottomLabel.text=@"Active config";
+                cell.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gradcell.png"]];
+            } else {
+                bottomLabel.text=nil;
+                cell.backgroundColor=[UIColor whiteColor];
+            }
             break;
         
     }

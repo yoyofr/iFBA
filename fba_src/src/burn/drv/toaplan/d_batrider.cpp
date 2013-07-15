@@ -894,20 +894,23 @@ static INT32 drvFrame()
         
         //HACK
         if (glob_ffingeron) {
-            drvInput[0]&=~((1<<4)); //clear fire 1
             if (glob_mov_y>0) drvInput[0]|=1;
             if (glob_mov_y<0) drvInput[0]|=2;
             if (glob_mov_x<0) drvInput[0]|=4;
             if (glob_mov_x>0) drvInput[0]|=8;
-            if (glob_shooton) {
-                switch (glob_shootmode) {
-                    case 0: //shoot
-                        if ((glob_autofirecpt%10)==0) drvInput[0]|=1<<4;
-                        glob_autofirecpt++;
-                        break;
-                    case 1: //laser
-                        drvInput[0]|=1<<4;
-                        break;
+            if (cur_ifba_conf->vpad_followfinger_firemode==0) {
+                drvInput[0]&=~((1<<4)); //clear fire 1
+                
+                if (glob_shooton) {
+                    switch (glob_shootmode) {
+                        case 0: //shoot
+                            if ((glob_autofirecpt%10)==0) drvInput[0]|=1<<4;
+                            glob_autofirecpt++;
+                            break;
+                        case 1: //laser
+                            drvInput[0]|=1<<4;
+                            break;
+                    }
                 }
             }
         }

@@ -17,6 +17,7 @@ extern void updateWiimotes(void);
 int pendingReset=0;
 
 extern ifba_conf_t *cur_ifba_conf;
+extern int cps2_buttons_limit;
 
 // Sets up one Joystick (for example the range of the joystick's axes)
 static int SDLinpJoystickInit(int i)
@@ -266,28 +267,33 @@ int SDLinpState(int code) {
                 return joy_state[i][GN_DOWN]|joy_state[i][GN_DOWNLEFT]|joy_state[i][GN_DOWNRIGHT];
                 break;            
             case 0x80: //fire1
-                if (vpad_button_nb< VPAD_SPECIALS_BUTTON_NB+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+1+glob_ffingeron;
+                if (vpad_button_nb< VPAD_SPECIALS_BUTTON_NB+1+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+1+((cur_ifba_conf->vpad_followfinger_firemode==0) && glob_ffingeron?1:0);
                 return joy_state[i][GN_A];
                 break;
-            case 0x81: //fire 2 
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+2) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+2+glob_ffingeron;
+            case 0x81: //fire 2
+                if (cps2_buttons_limit<2) break;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+2+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+2+((cur_ifba_conf->vpad_followfinger_firemode==0) && glob_ffingeron?1:0);
                 return joy_state[i][GN_B];
                 break;
-            case 0x82: // etc 
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+3) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+3+glob_ffingeron;
-                return joy_state[i][GN_C];            
+            case 0x82: // etc
+                if (cps2_buttons_limit<3) break;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+3+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+3+((cur_ifba_conf->vpad_followfinger_firemode==0) && glob_ffingeron?1:0);
+                return joy_state[i][GN_C];
                 break;
-            case 0x83: 
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+4) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4+glob_ffingeron;
-                return joy_state[i][GN_D];            
+            case 0x83:
+                if (cps2_buttons_limit<4) break;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+4+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+4+((cur_ifba_conf->vpad_followfinger_firemode==0) && glob_ffingeron?1:0);
+                return joy_state[i][GN_D];
                 break;
             case 0x84:
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+5) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+5+glob_ffingeron;
-                return joy_state[i][GN_E];            
+                if (cps2_buttons_limit<5) break;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+5+1) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+5+((cur_ifba_conf->vpad_followfinger_firemode==0) && glob_ffingeron?1:0);
+                return joy_state[i][GN_E];
                 break;
-            case 0x85: 
-                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+6) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+6+glob_ffingeron;
-                return joy_state[i][GN_F];            
+            case 0x85: //max 6 buttons
+                if (cps2_buttons_limit<6) break;
+                if (vpad_button_nb<VPAD_SPECIALS_BUTTON_NB+6) vpad_button_nb=VPAD_SPECIALS_BUTTON_NB+6;//+((cur_ifba_conf->vpad_followfinger_firemode==0) && glob_ffingeron?1:0);
+                return joy_state[i][GN_F];
                 break;
         }
         

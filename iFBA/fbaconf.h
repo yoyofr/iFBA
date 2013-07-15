@@ -15,9 +15,9 @@
 #define iFBA_VERSION_MAJOR 0
 #define iFBA_VERSION_MINOR 6
 
-#define REPLAY_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,ddonpach,ddonpachj,ddpdoj,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,espgal,esprade,feversos,gigawing,grindstm,grindstma,ket,mahoudai,mmatrix,progear,sstriker,sstrikera,truxton2,varth,varthr1,varthu,varthj,vfive"
+#define REPLAY_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,blazstar,daioh,daioha,ddonpach,ddonpachj,ddp2,ddp2100,ddp2101,ddpdoj,ddpdoja,ddpdojb,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,dragnblz,espgal,esprade,feversos,gigawing,grindstm,grindstma,gunbird,gunbird2,ironclad,ket,kingdmgp,mahoudai,mmatrix,pulstar,progear,s1945,s1945ii,s1945iii,samuraia,shippumd,sngkace,sstriker,sstrikera,tengai,tengaij,truxton2,varth,varthr1,varthu,varthj,vfive"
 
-#define FFINGER_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,ddonpach,ddonpachj,ddpdoj,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,dragnblz,espgal,esprade,feversos,gigawing,grindstm,grindstma,gunbird,gunbird2,ket,mahoudai,mmatrix,progear,s1945,samuraia,sngkace,sstriker,sstrikera,tengai,truxton2,varth,varthr1,varthu,varthj,vfive"
+#define FFINGER_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,blazstar,daioh,daioha,ddonpach,ddonpachj,ddp2,ddp2100,ddp2101,ddpdoj,ddpdoja,ddpdojb,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,dragnblz,espgal,esprade,feversos,gigawing,grindstm,grindstma,gunbird,gunbird2,ironclad,ket,kingdmgp,mahoudai,mmatrix,pulstar,progear,s1945,s1945ii,s1945iii,samuraia,shippumd,sngkace,sstriker,sstrikera,tengai,tengaij,truxton2,varth,varthr1,varthu,varthj,vfive"
 
 #define REPLAY_FLAG_TOUCHONOFF (1<<0)
 #define REPLAY_FLAG_POSX (1<<1)
@@ -79,6 +79,8 @@ typedef struct {
     unsigned char vpad_padsize;
     unsigned char vpad_style;
     unsigned char vpad_followfinger;
+    unsigned char vpad_followfinger_firemode;
+    float vpad_followfinger_sensibility;
     float vpad_pad_x[2],vpad_pad_y[2];
     int vpad_pad_manual_layout[2];
     float vpad_button_x[VSTICK_NB_BUTTON][2],vpad_button_y[VSTICK_NB_BUTTON][2];
@@ -121,6 +123,7 @@ extern float glob_scr_ratioX,glob_scr_ratioY;
 
 //follow finger
 extern void PatchMemory68KFFinger();
+extern void PatchMemorySH2FFinger();
 extern float glob_mov_x,glob_mov_y;
 extern float glob_pos_x,glob_pos_y;
 extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;

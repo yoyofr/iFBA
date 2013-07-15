@@ -120,7 +120,7 @@ static UINT8 CpsReadPort(const UINT32 ia)
 		d = (UINT8)~Cpi01E;
 		return d;
 	}
-
+    
 	if (Cps == 2) {
 		// Used on CPS2 only I think
 		if (ia == 0x020) {
@@ -133,7 +133,7 @@ static UINT8 CpsReadPort(const UINT32 ia)
 			d |= EEPROMRead();
 			return d;
 		}
-
+        
 		// CPS2 Volume control
 		if (ia == 0x030) {
 			if (Ssf2tb) {
@@ -148,12 +148,12 @@ static UINT8 CpsReadPort(const UINT32 ia)
 			d = Cps2VolumeStates[Cps2Volume] & 0xff;
 			return d;
 		}
-
+        
 		if (ia >= 0x0100 && ia < 0x0200) {
 			static INT32 nRasterLine;
-
-//			bprintf(PRINT_NORMAL, _T("  - port 0x%02X (%3i)\n"), ia & 255, SekCurrentScanline());
-
+            
+            //			bprintf(PRINT_NORMAL, _T("  - port 0x%02X (%3i)\n"), ia & 255, SekCurrentScanline());
+            
 			// The linecounters seem to return the line at which the last IRQ triggered by this counter is scheduled minus the current line
 			if ((ia & 0x0FE) == 0x50) {
 				if ((ia & 1) == 0) {
@@ -171,7 +171,7 @@ static UINT8 CpsReadPort(const UINT32 ia)
 					return nRasterLine & 0xFF;
 				}
 			}
-
+            
 		}
 	} else {
 		// Board ID
@@ -190,7 +190,7 @@ static UINT8 CpsReadPort(const UINT32 ia)
 				d = (UINT8)CpsBID[1];
 				return d;
 			}
-		
+            
 			if (ia == 0x1c9) {
 				d = (UINT8)CpsBID[2];
 				return d;
@@ -229,7 +229,7 @@ static UINT8 CpsReadPort(const UINT32 ia)
 		if (ia == 0x029) {
 			d = (UINT8)~Inp029;
 			return d;
-		}		
+		}
 		if (ia == 0x176) {
 			d = (UINT8)~Inp176;
 			return d;
@@ -237,7 +237,7 @@ static UINT8 CpsReadPort(const UINT32 ia)
 		if (ia == 0x177) {
 			d = (UINT8)~Inp177;
 			return d;
-		}		
+		}
 		if (ia == 0x179) {
 			d = (UINT8)~Inp179;
 			return d;
@@ -245,11 +245,11 @@ static UINT8 CpsReadPort(const UINT32 ia)
 		if (ia == 0x186) {
 			d = (UINT8)~Inp186;
 			return d;
-		}		
+		}
 		if (ia == 0x1fd) {
 			d = (UINT8)~Inp1fd;
 			return d;
-		}		
+		}
 		if (ia == 0xC000) {
 			d = (UINT8)~Inpc000;
 			return d;
@@ -281,11 +281,11 @@ static UINT8 CpsReadPort(const UINT32 ia)
 			if (ia == 0x05D) {
 				return (nDial05d >> 16) & 0xFF;
 			}
-		}	
+		}
 	}
 	
-//	bprintf(PRINT_NORMAL, _T("Read Port %x\n"), ia);
-
+    //	bprintf(PRINT_NORMAL, _T("Read Port %x\n"), ia);
+    
 	return d;
 }
 
@@ -297,15 +297,15 @@ void CpsWritePort(const UINT32 ia, UINT8 d)
 			// CPS1 sound code
 			if (ia == 0x181 || (Port6SoundWrite && (ia == 0x006 || ia == 0x007))) {
 				PsndSyncZ80((INT64)SekTotalCycles() * nCpsZ80Cycles / nCpsCycles);
-
+                
 				PsndCode = d;
 				return;
 			}
-
+            
 			// CPS1 sound fade
 			if (ia == 0x189) {
 				PsndSyncZ80((INT64)SekTotalCycles() * nCpsZ80Cycles / nCpsCycles);
-
+                
 				PsndFade = d;
 				return;
 			}
@@ -316,7 +316,7 @@ void CpsWritePort(const UINT32 ia, UINT8 d)
 				}
 			}
 		}
-
+        
 		if (ia == 0x041) {
 			nDial055 = 0;
 		}
@@ -324,14 +324,14 @@ void CpsWritePort(const UINT32 ia, UINT8 d)
 			nDial05d = 0;
 		}
 	}
-
+    
 	if (Cps == 1 && Cps1QsHack == 1) {
 		if (ia == 0x181) {
 			// Pass the Sound Code to the Q-Sound Shared Ram
 			CpsZRamC0[0x001] = d;
 		}
 	}
-
+    
 	// CPS registers
 	if (ia >= 0x100 && ia < 0x200) {
 		//Pang3 EEPROM
@@ -347,17 +347,17 @@ void CpsWritePort(const UINT32 ia, UINT8 d)
 		}
 		return;
 	}
-
+    
 	if (Cps == 2) {
 		if (ia == 0x40) {
 			EEPROMWrite(d & 0x20, d& 0x40, d & 0x10);
 			return;
 		}
-
+        
 		// CPS2 object bank select
 		if ((ia & 0x1FF) == 0x0E1) {
-//			bprintf(PRINT_NORMAL, _T("  - %2i (%3i)\n"), d & 1, SekCurrentScanline());
-//			CpsObjGet();
+            //			bprintf(PRINT_NORMAL, _T("  - %2i (%3i)\n"), d & 1, SekCurrentScanline());
+            //			CpsObjGet();
 			CpsMapObjectBanks(d & 1);
 			return;
 		}
@@ -366,7 +366,7 @@ void CpsWritePort(const UINT32 ia, UINT8 d)
 			ReadPaddle = d & 0x02;
 		}
 	}
-
+    
 	if (Cps1Qs == 1 || CpsBootlegEEPROM) {
 		//CPS1 EEPROM write
 		if (ia == 0xc007) {
@@ -375,7 +375,7 @@ void CpsWritePort(const UINT32 ia, UINT8 d)
 		}
 	}
 	
-//	bprintf(PRINT_NORMAL, _T("Write Port %x, %x\n"), ia, d);
+    //	bprintf(PRINT_NORMAL, _T("Write Port %x, %x\n"), ia, d);
 }
 
 UINT8 __fastcall CpsReadByte(UINT32 a)
@@ -384,24 +384,24 @@ UINT8 __fastcall CpsReadByte(UINT32 a)
 	if ((a & 0xFF8000) == 0x800000) {
 		return CpsReadPort(a & 0x1FF);
 	}
-
+    
 	if (Cps == 2) {
 		if ((a & 0xFF8000) == 0x660000) {
 			if (a == 0x664001) {
 				return n664001;
 			}
 		}
-
+        
 		return 0x00;
 	}
-
+    
 	if (a >= 0xF1C000 && a <= 0xF1C007) {
 		return CpsReadPort(a & 0xC00F);
 	}
 	
 	if (Dinohunt && a == 0xfc0001) return (UINT8)~Inpc001;
 	
-//	bprintf(PRINT_NORMAL, _T("Read Byte %x\n"), a);
+    //	bprintf(PRINT_NORMAL, _T("Read Byte %x\n"), a);
 	
 	return 0x00;
 }
@@ -428,7 +428,7 @@ void __fastcall CpsWriteByte(UINT32 a,UINT8 d)
 			
 			return;
 		}
-
+        
 		return;
 	}
 	
@@ -440,7 +440,7 @@ void __fastcall CpsWriteByte(UINT32 a,UINT8 d)
 		}
 	}
 	
-//	bprintf(PRINT_NORMAL, _T("Write Byte %x, %x\n"), a, d);
+    //	bprintf(PRINT_NORMAL, _T("Write Byte %x, %x\n"), a, d);
 }
 
 UINT16 __fastcall CpsReadWord(UINT32 a)
@@ -453,7 +453,7 @@ UINT16 __fastcall CpsReadWord(UINT32 a)
 		return (UINT16)((nCalc[0] * nCalc[1]));
 	}
 	
-//	bprintf(PRINT_NORMAL, _T("Read Word %x\n"), a);
+    //	bprintf(PRINT_NORMAL, _T("Read Word %x\n"), a);
 	
 	SEK_DEF_READ_WORD(0, a);
 }
@@ -465,14 +465,14 @@ void __fastcall CpsWriteWord(UINT32 a, UINT16 d)
 		nCalc[0] = d;
 	if ((a & 0xFF8FFF) == 0x800100 + CpsMProt[1])
 		nCalc[1] = d;
-
+    
 	if (a == 0x804040) {
 		if ((d & 0x0008) == 0) {
 			if (!Cps2DisableQSnd) ZetReset();
 		}
 	}
 	
-//	bprintf(PRINT_NORMAL, _T("Write Word %x, %x\n"), a, d);
+    //	bprintf(PRINT_NORMAL, _T("Write Word %x, %x\n"), a, d);
 	
 	SEK_DEF_WRITE_WORD(0, a, d);
 }
@@ -483,13 +483,13 @@ static INT32 InpBlank()
 #define INP(nnn) Inp##nnn = 0; memset(CpsInp##nnn, 0, sizeof(CpsInp##nnn));
 	CPSINPSET
 #undef INP
-
+    
 #define INP(nnnn) Inp##nnnn = 0; memset(CpsInp##nnnn, 0, sizeof(CpsInp##nnnn));
 	CPSINPEX
 #undef INP
-
+    
 	CpsInp055 = CpsInp05d = 0;
-
+    
 	return 0;
 }
 
@@ -520,18 +520,18 @@ INT32 CpsRwGetInp()
 {
 	// Compile separate buttons into Inpxxx
 #define INP(nnn) \
-  { INT32 i = 0; Inp##nnn = 0; \
-    for (i = 0; i < 8; i++) { Inp##nnn |= (CpsInp##nnn[i] & 1) << i; }  }
+{ INT32 i = 0; Inp##nnn = 0; \
+for (i = 0; i < 8; i++) { Inp##nnn |= (CpsInp##nnn[i] & 1) << i; }  }
 	CPSINPSET
 #undef INP
-
-
+    
+    
 #define INP(nnnn) \
-  { INT32 i = 0; Inp##nnnn = 0; \
-    for (i = 0; i < 8; i++) { Inp##nnnn |= (CpsInp##nnnn[i] & 1) << i; }  }
+{ INT32 i = 0; Inp##nnnn = 0; \
+for (i = 0; i < 8; i++) { Inp##nnnn |= (CpsInp##nnnn[i] & 1) << i; }  }
 	CPSINPEX
 #undef INP
-
+    
 	if (Forgottn) {
 		// Handle analog controls
 		nDial055 += (INT32)((INT16)CpsInp055);
@@ -546,7 +546,7 @@ INT32 CpsRwGetInp()
 				if (CpsInpPaddle1 > 0x8000) {
 					CpsPaddle1Value = 2;
 				}
-	
+                
 				if (CpsInpPaddle1 < 0x7fff) {
 					CpsPaddle1Value = 1;
 				}
@@ -556,7 +556,7 @@ INT32 CpsRwGetInp()
 				if (CpsInpPaddle2 > 0x8000) {
 					CpsPaddle2Value = 2;
 				}
-	
+                
 				if (CpsInpPaddle2 < 0x7fff) {
 					CpsPaddle2Value = 1;
 				}
@@ -616,31 +616,33 @@ INT32 CpsRwGetInp()
         Inp018=last_DrvInput[4];
         
     } else {
-
-    //HACK
+        
+        //HACK
         if (glob_ffingeron) {
-            Inp001&=~((1<<4)); //clear fire 1
             if (glob_mov_y>0) Inp001|=8;
             if (glob_mov_y<0) Inp001|=4;
             if (glob_mov_x<0) Inp001|=2;
             if (glob_mov_x>0) Inp001|=1;
-            if (glob_shooton) {
-                switch (glob_shootmode) {
-                    case 0: //shoot
-                        if ((glob_autofirecpt%10)==0) Inp001|=1<<4;
-                        glob_autofirecpt++;
-                        break;
-                    case 1: //laser
-                        Inp001|=1<<4;
-                        break;
+            if (cur_ifba_conf->vpad_followfinger_firemode==0) {
+                Inp001&=~((1<<4)); //clear fire 1
+                if (glob_shooton) {
+                    switch (glob_shootmode) {
+                        case 0: //shoot
+                            if ((glob_autofirecpt%10)==0) Inp001|=1<<4;
+                            glob_autofirecpt++;
+                            break;
+                        case 1: //laser
+                            Inp001|=1<<4;
+                            break;
+                    }
                 }
             }
         }
-
-    //
-	
-	StopOpposite(&Inp000);
-	StopOpposite(&Inp001);
+        
+        //
+        
+        StopOpposite(&Inp000);
+        StopOpposite(&Inp001);
         
         //HACK
         //replay data - drvinputs
@@ -694,25 +696,25 @@ INT32 CpsRwGetInp()
         }
         
     }
-
-
+    
+    
 	// Ghouls uses a 4-way stick
 	if (Ghouls) {
 		static UINT8 nPrevInp000, nPrevInp001;
-
+        
 		if ((Inp000 & 0x03) && (Inp000 & 0x0C)) {
 			Inp000 ^= (nPrevInp000 & 0x0F);
 		} else {
 			nPrevInp000 = Inp000;
 		}
-
+        
 		if ((Inp001 & 0x03) && (Inp001 & 0x0C)) {
 			Inp001 ^= (nPrevInp001 & 0x0F);
 		} else {
 			nPrevInp001 = Inp001;
 		}
 	}
-
+    
 	if (nMaxPlayers > 2) {
 		if (Cps == 2) {
 			StopOpposite(&Inp011);
@@ -732,11 +734,11 @@ INT32 CpsRwGetInp()
 			}
 		}
 	}
-
+    
 	return 0;
 }
 
 void CpsSoundCmd(UINT16 sound_code) {
-//	CpsWritePort(0x181, sound_code);
+    //	CpsWritePort(0x181, sound_code);
 	PsndCode = sound_code;
 }

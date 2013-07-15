@@ -3,6 +3,8 @@
 #include "burn_ym2610.h"
 #include "burn_ymf278b.h"
 
+#include "fbaconf.h"
+
 INT32 PsikyoHardwareVersion;
 
 static UINT8 DrvJoy1[8] = {0, };
@@ -42,7 +44,7 @@ static INT32 (*CheckSleep)(INT32);
 static struct BurnInputInfo gunbirdInputList[] = {
 	{"P1 Coin",		BIT_DIGITAL,	DrvInp1 + 0,	"p1 coin"},
 	{"P1 Start",	BIT_DIGITAL,	DrvJoy1 + 0,	"p1 start"},
-
+    
 	{"P1 Up",		BIT_DIGITAL,	DrvJoy1 + 7, 	"p1 up"},
 	{"P1 Down",		BIT_DIGITAL,	DrvJoy1 + 6, 	"p1 down"},
 	{"P1 Left",		BIT_DIGITAL,	DrvJoy1 + 4, 	"p1 left"},
@@ -50,10 +52,10 @@ static struct BurnInputInfo gunbirdInputList[] = {
 	{"P1 Button 1",	BIT_DIGITAL,	DrvJoy1 + 3,	"p1 fire 1"},
 	{"P1 Button 2",	BIT_DIGITAL,	DrvJoy1 + 2,	"p1 fire 2"},
 	{"P1 Button 3",	BIT_DIGITAL,	DrvJoy1 + 1,	"p1 fire 3"},
-
+    
 	{"P2 Coin",		BIT_DIGITAL,	DrvInp1 + 1,	"p2 coin"},
 	{"P2 Start",	BIT_DIGITAL,	DrvJoy2 + 0,	"p2 start"},
-
+    
 	{"P2 Up",		BIT_DIGITAL,	DrvJoy2 + 7, 	"p2 up"},
 	{"P2 Down",		BIT_DIGITAL,	DrvJoy2 + 6, 	"p2 down"},
 	{"P2 Left",		BIT_DIGITAL,	DrvJoy2 + 4, 	"p2 left"},
@@ -61,12 +63,12 @@ static struct BurnInputInfo gunbirdInputList[] = {
 	{"P2 Button 1",	BIT_DIGITAL,	DrvJoy2 + 3,	"p2 fire 1"},
 	{"P2 Button 2",	BIT_DIGITAL,	DrvJoy2 + 2,	"p2 fire 2"},
 	{"P2 Button 3",	BIT_DIGITAL,	DrvJoy2 + 1,	"p2 fire 3"},
-
+    
 	{"Reset",		BIT_DIGITAL,	&DrvReset,		"reset"},
 	{"Test",	  BIT_DIGITAL,	DrvInp1 + 5,	"diag"},
 	{"Service",	BIT_DIGITAL,	DrvInp1 + 4,	"service"},
-//	{"Tilt",		BIT_DIGITAL,	DrvInp1 + 6,	"tilt"},
-
+    //	{"Tilt",		BIT_DIGITAL,	DrvInp1 + 6,	"tilt"},
+    
 	{"Dip 1",		BIT_DIPSWITCH,	((UINT8*)(DrvInput + 2)) + 1,	"dip"},
 	{"Dip 2",		BIT_DIPSWITCH,	((UINT8*)(DrvInput + 2)) + 0,	"dip"},
 	{"Dip 3",		BIT_DIPSWITCH,	((UINT8*)(DrvInput + 3)) + 0,	"dip"},
@@ -77,7 +79,7 @@ STDINPUTINFO(gunbird)
 static struct BurnInputInfo btlkroadInputList[] = {
 	{"P1 Coin",		BIT_DIGITAL,	DrvInp1 + 0,	"p1 coin"},
 	{"P1 Start",	BIT_DIGITAL,	DrvJoy1 + 0,	"p1 start"},
-
+    
 	{"P1 Up",		  BIT_DIGITAL,	DrvJoy1 + 7, 	"p1 up"},
 	{"P1 Down",		BIT_DIGITAL,	DrvJoy1 + 6, 	"p1 down"},
 	{"P1 Left",		BIT_DIGITAL,	DrvJoy1 + 4, 	"p1 left"},
@@ -88,10 +90,10 @@ static struct BurnInputInfo btlkroadInputList[] = {
 	{"P1 Weak kick",	  BIT_DIGITAL,	DrvInp2 + 7,	"p1 fire 4"},
 	{"P1 Medium kick",	BIT_DIGITAL,	DrvInp2 + 6,	"p1 fire 5"},
 	{"P1 Strong kick",	BIT_DIGITAL,	DrvInp2 + 5,	"p1 fire 6"},
-
+    
 	{"P2 Coin",		BIT_DIGITAL,	DrvInp1 + 1,	"p2 coin"},
 	{"P2 Start",	BIT_DIGITAL,	DrvJoy2 + 0,	"p2 start"},
-
+    
 	{"P2 Up",		  BIT_DIGITAL,	DrvJoy2 + 7, 	"p2 up"},
 	{"P2 Down",		BIT_DIGITAL,	DrvJoy2 + 6, 	"p2 down"},
 	{"P2 Left",		BIT_DIGITAL,	DrvJoy2 + 4, 	"p2 left"},
@@ -102,12 +104,12 @@ static struct BurnInputInfo btlkroadInputList[] = {
 	{"P2 Weak kick",	  BIT_DIGITAL,	DrvInp2 + 3,	"p2 fire 4"},
 	{"P2 Medium kick",	BIT_DIGITAL,	DrvInp2 + 2,	"p2 fire 5"},
 	{"P2 Strong kick",	BIT_DIGITAL,	DrvInp2 + 1,	"p2 fire 6"},
-
+    
 	{"Reset",		BIT_DIGITAL,	&DrvReset,		"reset"},
 	{"Test",	  BIT_DIGITAL,	DrvInp1 + 5,	"diag"},
 	{"Service",	BIT_DIGITAL,	DrvInp1 + 4,	"service"},
-//	{"Tilt",		BIT_DIGITAL,	DrvInp1 + 6,	"tilt"},
-
+    //	{"Tilt",		BIT_DIGITAL,	DrvInp1 + 6,	"tilt"},
+    
 	{"Dip 1",		BIT_DIPSWITCH,	((UINT8*)(DrvInput + 2)) + 1,	"dip"},
 	{"Dip 2",		BIT_DIPSWITCH,	((UINT8*)(DrvInput + 2)) + 0,	"dip"},
 	{"Region",		BIT_DIPSWITCH,	((UINT8*)(DrvInput + 3)) + 0,	"dip"},
@@ -120,7 +122,7 @@ static struct BurnDIPInfo samuraiaDIPList[] = {
 	// Defaults
 	{0x15,	0xFF, 0xFF,	0x00, NULL},
 	{0x16,	0xFF, 0xFF,	0x02, NULL},
-
+    
 	// DIP 1
 	{0,		0xFE, 0,	2,	  "Coin slot"},
 	{0x15,	0x82, 0x01,	0x00, "Same"},
@@ -191,7 +193,7 @@ static struct BurnDIPInfo gunbirdDIPList[] = {
 	// Defaults
 	{0x15,	0xFF, 0xFF,	0x00, NULL},
 	{0x16,	0xFF, 0xFF,	0x02, NULL},
-
+    
 	// DIP 1
 	{0,		0xFE, 0,	2,	  "Coin slot"},
 	{0x15,	0x82, 0x01,	0x00, "Same"},
@@ -264,7 +266,7 @@ static struct BurnDIPInfo btlkroadDIPList[] = {
 	{0x1C,	0xFF, 0xFF,	0x02, NULL},
 	{0x1D,	0xFF, 0xFF,	0x0F, NULL},
 	{0x1E,	0xFF, 0xFF,	0x00, NULL},
-
+    
 	// DIP 1
 	{0,		0xFE, 0,	2,	  "Coin slot"},
 	{0x1B,	0x82, 0x01,	0x00, "Same"},
@@ -324,7 +326,7 @@ static struct BurnDIPInfo btlkroadDIPList[] = {
 	{0,		0xFE, 0,	2,	  "Test mode"},
 	{0x1C,	0x01, 0x80,	0x00, "Off"},
 	{0x1C,	0x01, 0x80,	0x80, "On"},
-
+    
 	// Region
 	{0,		0xFE, 0,	6,	  "Region"},
 	{0x1D,	0x01, 0xFF,	0x00, "Japan"},
@@ -333,7 +335,7 @@ static struct BurnDIPInfo btlkroadDIPList[] = {
 	{0x1D,	0x01, 0xFF,	0x05, "Hong Kong"},
 	{0x1D,	0x01, 0xFF,	0x09, "Taiwan"},
 	{0x1D,	0x01, 0xFF,	0x0F, "World"},
-
+    
 	// Debug Dip
 	{0,		0xFE, 0,	2,	  "Debug test menu"},
 	{0x1E,	0x82, 0x80,	0x00, "Off"},
@@ -346,7 +348,7 @@ static struct BurnDIPInfo s1945DIPList[] = {
 	// Defaults
 	{0x15,	0xFF, 0xFF,	0x00, NULL},
 	{0x16,	0xFF, 0xFF,	0x02, NULL},
-
+    
 	// DIP 1
 	{0,		0xFE, 0,	2,	  "Coin slot"},
 	{0x15,	0x01, 0x01,	0x00, "Same"},
@@ -402,7 +404,7 @@ static struct BurnDIPInfo tengaiDIPList[] = {
 	{0x15,	0xFF, 0xFF,	0x00, NULL},
 	{0x16,	0xFF, 0xFF,	0x02, NULL},
 	{0x17,	0xFF, 0xFF,	0x0F, NULL},
-
+    
 	{0,		0xFE, 0,	2,	  "Coin slot"},
 	{0x15,	0x82, 0x01,	0x00, "Same"},
 	{0x15,	0x00, 0xFF, 0xFF, NULL},
@@ -473,7 +475,7 @@ static struct BurnDIPInfo NoRegionDIPList[] = {
 static struct BurnDIPInfo samuraiaRegionDIPList[] = {
 	// Defaults
 	{0x17,	0xFF, 0xFF,	0x00, NULL},
-
+    
 	// Region
 	{0,		0xFE, 0,	5,	  "Region"},
 	{0x17,	0x01, 0xFF,	0x00, "World"},
@@ -486,7 +488,7 @@ static struct BurnDIPInfo samuraiaRegionDIPList[] = {
 static struct BurnDIPInfo gunbirdRegionDIPList[] = {
 	// Defaults
 	{0x17,	0xFF, 0xFF,	0x00, NULL},
-
+    
 	// Region
 	{0,		0xFE, 0,	5,	  "Region"},
 	{0x17,	0x01, 0xFF,	0x00, "World"},
@@ -499,7 +501,7 @@ static struct BurnDIPInfo gunbirdRegionDIPList[] = {
 static struct BurnDIPInfo s1945aRegionDIPList[] = {
 	// Defaults
 	{0x17,	0xFF, 0xFF,	0x01, NULL},
-
+    
 	// Region
 	{0,		0xFE, 0,	2,	  "Region"},
 	{0x17,	0x01, 0xFF,	0x00, "Japan"},
@@ -509,7 +511,7 @@ static struct BurnDIPInfo s1945aRegionDIPList[] = {
 static struct BurnDIPInfo tengaiRegionDIPList[] = {
 	// Defaults
 	{0x17,	0xFF, 0xFF,	0x00, NULL},
-
+    
 	// Region
 	{0,		0xFE, 0,	5,	  "Region"},
 	{0x17,	0x01, 0xFF,	0x01, "U.S.A. & Canada"},
@@ -522,7 +524,7 @@ static struct BurnDIPInfo tengaiRegionDIPList[] = {
 static struct BurnDIPInfo tengaijRegionDIPList[] = {
 	// Defaults
 	{0x17,	0xFF, 0xFF,	0x00, NULL},
-
+    
 	// Region
 	{0,		0xFE, 0,	2,	  "Region"},
 	{0x17,	0x01, 0xFF,	0x00, "Japan"},
@@ -555,10 +557,10 @@ static void samuraiaZ80SetBank(INT32 nBank)
 		UINT8* nStartAddress = PsikyoZ80ROM + (nBank << 15);
 		ZetMapArea(0x8000, 0xFFFF, 0, nStartAddress);
 		ZetMapArea(0x8000, 0xFFFF, 2, nStartAddress);
-
+        
 		nPsikyoZ80Bank = nBank;
 	}
-
+    
 	return;
 }
 
@@ -569,10 +571,10 @@ static void gunbirdZ80SetBank(INT32 nBank)
 		UINT8* nStartAddress = PsikyoZ80ROM + 0x00200 + (nBank << 15);
 		ZetMapArea(0x8200, 0xFFFF, 0, nStartAddress);
 		ZetMapArea(0x8200, 0xFFFF, 2, nStartAddress);
-
+        
 		nPsikyoZ80Bank = nBank;
 	}
-
+    
 	return;
 }
 
@@ -582,13 +584,13 @@ static void gunbirdZ80SetBank(INT32 nBank)
 static inline void PsikyoSynchroniseZ80(INT32 nExtraCycles)
 {
 	INT32 nCycles = ((INT64)SekTotalCycles() * nCyclesTotal[1] / nCyclesTotal[0]) + nExtraCycles;
-
+    
 	if (nCycles <= ZetTotalCycles()) {
 		return;
 	}
-
+    
 	nCycles68KSync = nCycles - nExtraCycles;
-
+    
 	BurnTimerUpdate(nCycles);
 }
 
@@ -596,8 +598,8 @@ static inline void PsikyoSynchroniseZ80(INT32 nExtraCycles)
 
 static void PsikyoFMIRQHandler(INT32, INT32 nStatus)
 {
-//	bprintf(PRINT_NORMAL, _T("  - IRQ -> %i.\n"), nStatus);
-
+    //	bprintf(PRINT_NORMAL, _T("  - IRQ -> %i.\n"), nStatus);
+    
 	if (nStatus) {
 		ZetSetIRQLine(0xFF, ZET_IRQSTATUS_ACK);
 	} else {
@@ -626,14 +628,14 @@ UINT8 __fastcall samuraiaZ80In(UINT16 nAddress)
 		case 0x02:
 			return BurnYM2610Read(2);
 		case 0x08:									// Read sound command
-//			bprintf(PRINT_NORMAL, _T("  - Sound command received (0x%02X).\n"), nSoundlatch);
+            //			bprintf(PRINT_NORMAL, _T("  - Sound command received (0x%02X).\n"), nSoundlatch);
 			return nSoundlatch;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, _T("  - Z80 read port 0x%04X.\n"), nAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, _T("  - Z80 read port 0x%04X.\n"), nAddress);
+            //		}
 	}
-
+    
 	return 0;
 }
 
@@ -646,21 +648,21 @@ void __fastcall samuraiaZ80Out(UINT16 nAddress, UINT8 nValue)
 		case 0x03:
 			BurnYM2610Write(nAddress & 3, nValue);
 			break;
-
+            
 		case 0x04:
 			samuraiaZ80SetBank(nValue);
 			break;
-
+            
 		case 0x0C:									// Write reply to sound commands
-//			bprintf(PRINT_NORMAL, _T("  - Sound reply sent (0x%02X).\n"), nValue);
-
+            //			bprintf(PRINT_NORMAL, _T("  - Sound reply sent (0x%02X).\n"), nValue);
+            
 			nSoundlatchAck = 1;
-
+            
 			break;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, _T("  - Z80 port 0x%04X -> 0x%02X.\n"), nAddress, nValue);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, _T("  - Z80 port 0x%04X -> 0x%02X.\n"), nAddress, nValue);
+            //		}
 	}
 }
 
@@ -668,20 +670,20 @@ UINT8 __fastcall gunbirdZ80In(UINT16 nAddress)
 {
 	switch (nAddress & 0xFF) {
 		case 0x04:
-//			bprintf(PRINT_NORMAL, _T("    read 0 %6i\n"), ZetTotalCycles());
+            //			bprintf(PRINT_NORMAL, _T("    read 0 %6i\n"), ZetTotalCycles());
 			return BurnYM2610Read(0);
 		case 0x06:
-//			bprintf(PRINT_NORMAL, _T("    read 2 %6i\n"), ZetTotalCycles());
+            //			bprintf(PRINT_NORMAL, _T("    read 2 %6i\n"), ZetTotalCycles());
 			return BurnYM2610Read(2);
 		case 0x08:									// Read sound command
-//			bprintf(PRINT_NORMAL, _T("  - Sound command received (0x%02X).\n"), nSoundlatch);
+            //			bprintf(PRINT_NORMAL, _T("  - Sound command received (0x%02X).\n"), nSoundlatch);
 			return nSoundlatch;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, _T("  - Z80 read port 0x%04X.\n"), nAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, _T("  - Z80 read port 0x%04X.\n"), nAddress);
+            //		}
 	}
-
+    
 	return 0;
 }
 
@@ -699,15 +701,15 @@ void __fastcall gunbirdZ80Out(UINT16 nAddress, UINT8 nValue)
 			break;
 		}
 		case 0x0C:									// Write reply to sound commands
-//			bprintf(PRINT_NORMAL, _T("  - Sound reply sent (0x%02X).\n"), nValue);
-
+            //			bprintf(PRINT_NORMAL, _T("  - Sound reply sent (0x%02X).\n"), nValue);
+            
 			nSoundlatchAck = 1;
-
+            
 			break;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, _T("  - Z80 port 0x%04X -> 0x%02X.\n"), nAddress, nValue);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, _T("  - Z80 port 0x%04X -> 0x%02X.\n"), nAddress, nValue);
+            //		}
 	}
 }
 
@@ -715,17 +717,17 @@ UINT8 __fastcall tengaiZ80In(UINT16 nAddress)
 {
 	switch (nAddress & 0xFF) {
 		case 0x08:
-//			bprintf(PRINT_NORMAL, _T("    read 0 %6i\n"), ZetTotalCycles());
+            //			bprintf(PRINT_NORMAL, _T("    read 0 %6i\n"), ZetTotalCycles());
 			return BurnYMF278BReadStatus();
 		case 0x10:									// Read sound command
-//			bprintf(PRINT_NORMAL, _T("  - Sound command received (0x%02X).\n"), nSoundlatch);
+            //			bprintf(PRINT_NORMAL, _T("  - Sound command received (0x%02X).\n"), nSoundlatch);
 			return nSoundlatch;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, _T("  - Z80 read port 0x%04X.\n"), nAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, _T("  - Z80 read port 0x%04X.\n"), nAddress);
+            //		}
 	}
-
+    
 	return 0;
 }
 
@@ -748,15 +750,15 @@ void __fastcall tengaiZ80Out(UINT16 nAddress, UINT8 nValue)
 			break;
 		}
 		case 0x18:									// Write reply to sound commands
-//			bprintf(PRINT_NORMAL, _T("  - Sound reply sent (0x%02X).\n"), nValue);
-
+            //			bprintf(PRINT_NORMAL, _T("  - Sound reply sent (0x%02X).\n"), nValue);
+            
 			nSoundlatchAck = 1;
-
+            
 			break;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, _T("  - Z80 port 0x%04X -> 0x%02X.\n"), nAddress, nValue);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, _T("  - Z80 port 0x%04X -> 0x%02X.\n"), nAddress, nValue);
+            //		}
 	}
 }
 
@@ -765,13 +767,13 @@ void __fastcall tengaiZ80Out(UINT16 nAddress, UINT8 nValue)
 
 static inline void SendSoundCommand(const INT8 nCommand)
 {
-//	bprintf(PRINT_NORMAL, _T("  - Sound command sent (0x%02X).\n"), nCommand);
-
+    //	bprintf(PRINT_NORMAL, _T("  - Sound command sent (0x%02X).\n"), nCommand);
+    
 	PsikyoSynchroniseZ80(0);
-
+    
 	nSoundlatch = nCommand;
 	nSoundlatchAck = 0;
-
+    
 	ZetNmi();
 }
 
@@ -795,7 +797,7 @@ UINT8 __fastcall samuraiaReadByte(UINT32 sekAddress)
 		case 0xC00008: {						// Inputs / Sound CPU status
 			return ~DrvInput[1] >> 8;
 		case 0xC80009:
-//			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
+            //			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
 			PsikyoSynchroniseZ80(0);
 			if (!nSoundlatchAck) {
 				return ~DrvInput[1] & 0xFF;
@@ -804,10 +806,10 @@ UINT8 __fastcall samuraiaReadByte(UINT32 sekAddress)
 		}
 		case 0xC0000B:							// VBlank
 			return ~bVBlank;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
+            //		}
 	}
 	return 0;
 }
@@ -822,7 +824,7 @@ UINT16 __fastcall samuraiaReadWord(UINT32 sekAddress)
 		case 0xC00006:							//
 			return ~DrvInput[3];
 		case 0xC00008: {						// Inputs / Sound CPU status
-//			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
+            //			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
 			PsikyoSynchroniseZ80(0);
 			if (!nSoundlatchAck) {
 				return ~DrvInput[1];
@@ -831,11 +833,11 @@ UINT16 __fastcall samuraiaReadWord(UINT32 sekAddress)
 		}
 		case 0xC0000A:							// VBlank
 			return ~bVBlank;
-
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
-//		}
+            
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
+            //		}
 	}
 	return 0;
 }
@@ -852,7 +854,7 @@ UINT8 __fastcall gunbirdReadByte(UINT32 sekAddress)
 		case 0xC00002:							// Inputs / Sound CPU status
 			return ~DrvInput[1] >> 8;
 		case 0xC00003:
-//			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
+            //			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
 			PsikyoSynchroniseZ80(0);
 			if (!nSoundlatchAck) {
 				return ~DrvInput[1] & 0xFF;
@@ -866,10 +868,10 @@ UINT8 __fastcall gunbirdReadByte(UINT32 sekAddress)
 			return ~DrvInput[3] >> 8;
 		case 0xC00007:
 			return ~(DrvInput[3] | (bVBlank << 7)) & 0xFF;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to read byte value of location %x\n", sekAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, "Attempt to read byte value of location %x\n", sekAddress);
+            //		}
 	}
 	return 0;
 }
@@ -891,10 +893,10 @@ UINT16 __fastcall gunbirdReadWord(UINT32 sekAddress)
 			return ~DrvInput[2];
 		case 0xC00006:							// Region / VBlank
 			return ~(DrvInput[3] | (bVBlank << 7));
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
+            //		}
 	}
 	return 0;
 }
@@ -905,9 +907,9 @@ void __fastcall gunbirdWriteByte(UINT32 sekAddress, UINT8 byteValue)
 		case 0xC00011:							// Sound latch
 			SendSoundCommand(byteValue);
 			break;
-
+            
 		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
+            //			bprintf(PRINT_NORMAL, "Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
 		}
 	}
 }
@@ -918,10 +920,10 @@ void __fastcall gunbirdWriteWord(UINT32 sekAddress, UINT16 wordValue)
 		case 0xC00012:							// Sound latch
 			SendSoundCommand(wordValue & 0xFF);
 			break;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to write word value %x to location %x\n", wordValue, sekAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, "Attempt to write word value %x to location %x\n", wordValue, sekAddress);
+            //		}
 	}
 }
 
@@ -954,7 +956,7 @@ static INT32 TengaiMCUScan(INT32 nAction, INT32 *pnMin)
 	if (pnMin) {						// Return minimum compatible version
 		*pnMin = 0x020998;
 	}
-
+    
 	SCAN_VAR(s1945_mcu_direction);
 	SCAN_VAR(s1945_mcu_latch1);
 	SCAN_VAR(s1945_mcu_latch2);
@@ -964,12 +966,12 @@ static INT32 TengaiMCUScan(INT32 nAction, INT32 *pnMin)
 	SCAN_VAR(s1945_mcu_mode);
 	SCAN_VAR(s1945_mcu_control);
 	SCAN_VAR(s1945_mcu_bctrl);
-
+    
 	if (nAction & ACB_WRITE) {
 		PsikyoSetTileBank(1, (s1945_mcu_bctrl >> 6) & 3);
 		PsikyoSetTileBank(0, (s1945_mcu_bctrl >> 4) & 3);
 	}
-
+    
 	return 0;
 }
 
@@ -1011,7 +1013,7 @@ void tengaiMCUWrite(UINT32 offset, UINT8 data)
 					s1945_mcu_index = s1945_mcu_inlatch;
 					break;
 				case 0x013:
-//					logerror("MCU: Table read index %02x\n", s1945_mcu_index);
+                    //					logerror("MCU: Table read index %02x\n", s1945_mcu_index);
 					s1945_mcu_latching = 1;
 					s1945_mcu_latch1 = s1945_mcu_table[s1945_mcu_index];
 					break;
@@ -1033,12 +1035,12 @@ void tengaiMCUWrite(UINT32 offset, UINT8 data)
 					s1945_mcu_latching |= 4;
 					break;
 				default:
-//					logerror("MCU: function %02x, direction %02x, latch1 %02x, latch2 %02x (%x)\n", data, s1945_mcu_direction, s1945_mcu_latch1, s1945_mcu_latch2, activecpu_get_pc());
+                    //					logerror("MCU: function %02x, direction %02x, latch1 %02x, latch2 %02x (%x)\n", data, s1945_mcu_direction, s1945_mcu_latch1, s1945_mcu_latch2, activecpu_get_pc());
 					break;
 			}
 			break;
-//		default:
-//			logerror("MCU.w %x, %02x (%x)\n", offset, data, activecpu_get_pc());
+            //		default:
+            //			logerror("MCU.w %x, %02x (%x)\n", offset, data, activecpu_get_pc());
 	}
 }
 
@@ -1060,7 +1062,7 @@ UINT16 tengaiMCURead(UINT32 offset)
 		case 1:
 			return (s1945_mcu_latching << 8) | 0x0800;
 	}
-
+    
 	return 0;
 }
 
@@ -1074,7 +1076,7 @@ UINT8 __fastcall tengaiReadByte(UINT32 sekAddress)
 		case 0xC00002:							// Inputs / Sound CPU status
 			return ~DrvInput[1] >> 8;
 		case 0xC00003:
-//			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
+            //			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
 			PsikyoSynchroniseZ80(0);
 			if (!nSoundlatchAck) {
 				return ~(DrvInput[1] | 0x04) & 0xFF;
@@ -1092,10 +1094,10 @@ UINT8 __fastcall tengaiReadByte(UINT32 sekAddress)
 			return tengaiMCURead(1) >> 8;
 		case 0xC00009:
 			return tengaiMCURead(1) & 0xFF;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to read byte value of location %x\n", sekAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, "Attempt to read byte value of location %x\n", sekAddress);
+            //		}
 	}
 	return 0;
 }
@@ -1106,7 +1108,7 @@ UINT16 __fastcall tengaiReadWord(UINT32 sekAddress)
 		case 0xC00000:							// Joysticks
 			return ~DrvInput[0];
 		case 0xC00002: {						// Inputs / Sound CPU status
-//			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
+            //			bprintf(PRINT_NORMAL, _T("  - Sound reply read.\n"));
 			PsikyoSynchroniseZ80(0);
 			if (!nSoundlatchAck) {
 				return ~(DrvInput[1] | 0x04);
@@ -1119,10 +1121,10 @@ UINT16 __fastcall tengaiReadWord(UINT32 sekAddress)
 			return (~DrvInput[3] & 0x0F) | tengaiMCURead(0);
 		case 0xC00008:							// MCU
 			return tengaiMCURead(1);
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
+            //		}
 	}
 	return 0;
 }
@@ -1140,13 +1142,13 @@ void __fastcall tengaiWriteByte(UINT32 sekAddress, UINT8 byteValue)
 		case 0xC0000B:
 			tengaiMCUWrite(sekAddress & 0x0F, byteValue);
 			break;
-
+            
 		case 0xC00011:							// Sound latch
 			SendSoundCommand(byteValue);
 			break;
-
+            
 		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
+            //			bprintf(PRINT_NORMAL, "Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
 		}
 	}
 }
@@ -1165,14 +1167,14 @@ void __fastcall tengaiWriteWord(UINT32 sekAddress, UINT16 wordValue)
 			tengaiMCUWrite((sekAddress & 0x0F), wordValue >> 8);
 			tengaiMCUWrite((sekAddress & 0x0F) + 1, wordValue & 0xFF);
 			break;
-
+            
 		case 0xC00010:							// Sound latch
 			SendSoundCommand(wordValue & 0xFF);
 			break;
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to write word value %x to location %x\n", wordValue, sekAddress);
-//		}
+            
+            //		default: {
+            //			bprintf(PRINT_NORMAL, "Attempt to write word value %x to location %x\n", wordValue, sekAddress);
+            //		}
 	}
 }
 
@@ -1204,16 +1206,16 @@ static INT32 DrvExit()
 			break;
 		}
 	}
-
+    
 	PsikyoSpriteExit();
 	PsikyoTileExit();
 	PsikyoPalExit();
-
+    
 	SekExit();
 	ZetExit();
-
+    
 	BurnFree(Mem);
-
+    
 	return 0;
 }
 
@@ -1224,10 +1226,10 @@ static INT32 DrvDoReset()
 		SekReset();
 		SekClose();
 	}
-
+    
 	{
 		ZetOpen(0);
-
+        
 		nPsikyoZ80Bank = -1;
 		switch (PsikyoHardwareVersion) {
 			case PSIKYO_HW_SAMURAIA: {
@@ -1241,12 +1243,12 @@ static INT32 DrvDoReset()
 				break;
 			}
 		}
-
+        
 		ZetReset();
-
+        
 		ZetClose();
 	}
-
+    
 	switch (PsikyoHardwareVersion) {
 		case PSIKYO_HW_SAMURAIA:
 		case PSIKYO_HW_GUNBIRD: {
@@ -1259,12 +1261,12 @@ static INT32 DrvDoReset()
 			break;
 		}
 	}
-
+    
 	nSoundlatch = 0;
 	nSoundlatchAck = 1;
-
+    
 	nCyclesDone[0] = nCyclesDone[1] = 0;
-
+    
 	return 0;
 }
 
@@ -1272,7 +1274,7 @@ static INT32 DrvDraw()
 {
 	PsikyoPalUpdate();
 	PsikyoTileRender();
-
+    
 	return 0;
 }
 
@@ -1303,63 +1305,132 @@ static INT32 s1945jnCheckSleep(INT32)
 
 static INT32 psikyoCheckSleep(INT32)
 {
-//	bprintf(PRINT_NORMAL, "0x%06X\n", SekGetPC(-1));
-
+    //	bprintf(PRINT_NORMAL, "0x%06X\n", SekGetPC(-1));
+    
 	return 0;
 }
 
-//HACK
-extern float glob_mov_x,glob_mov_y;
-extern float glob_pos_x,glob_pos_y;
-extern int glob_shootmode,glob_shooton,glob_autofirecpt,glob_ffingeron;
-extern int wait_control;
-extern void PatchMemory68KFFinger();
-//
 
 
 static INT32 DrvFrame()
 {
 	INT32 nCyclesVBlank;
 	INT32 nInterleave = 16;
-
+    
 	if (DrvReset) {														// Reset machine
         //HACK
         wait_control=60;
-        //		
+        glob_framecpt=0;
+        glob_replay_last_dx16=glob_replay_last_dy16=0;
+        glob_replay_last_fingerOn=0;
+        //
 		DrvDoReset();
 	}
-
-	// Compile digital inputs
-	DrvInput[0] = 0x0000;  												// Joysticks
-	DrvInput[1] = 0x0000;
-	for (INT32 i = 0; i < 8; i++) {
-		DrvInput[0] |= (DrvJoy1[i] & 1) << (i + 8);
-		DrvInput[0] |= (DrvJoy2[i] & 1) << (i + 0);
-
-		DrvInput[1] |= (DrvInp1[i] & 1) << (i + 0);
-		DrvInput[1] |= (DrvInp2[i] & 1) << (i + 8);
-	}
-    //HACK
-    if (glob_ffingeron) {
-        DrvInput[0]&=~((1<<11)); //clear fire 1
-        if (glob_mov_y>0) DrvInput[0]|=1<<15;
-        if (glob_mov_y<0) DrvInput[0]|=1<<14;
-        if (glob_mov_x<0) DrvInput[0]|=1<<12;
-        if (glob_mov_x>0) DrvInput[0]|=1<<13;
-        if (glob_shooton) {
-            switch (glob_shootmode) {
-                case 0: //shoot
-                    if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<11;
-                    glob_autofirecpt++;
-                    break;
-                case 1: //laser
-                    DrvInput[0]|=1<<11;
-                    break;
+    
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
+        unsigned int next_frame_event;
+        next_frame_event=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8)
+        |((unsigned int)(glob_replay_data_stream[glob_replay_data_index+2])<<16)|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+3])<<24);
+        
+        
+        if (glob_framecpt==next_frame_event) {
+            glob_replay_data_index+=4;
+            glob_replay_flag=glob_replay_data_stream[glob_replay_data_index++];
+            if (glob_replay_flag&REPLAY_FLAG_TOUCHONOFF) {
+                glob_replay_last_fingerOn^=1;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSX) {
+                glob_replay_last_dx16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) {
+                glob_replay_last_dy16=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) {
+                last_DrvInput[0]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) {
+                last_DrvInput[1]=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8);
+                glob_replay_data_index+=2;
             }
         }
+        DrvInput[0]=last_DrvInput[0];
+        DrvInput[1]=last_DrvInput[1];
+    } else {
+        
+        
+        // Compile digital inputs
+        DrvInput[0] = 0x0000;  												// Joysticks
+        DrvInput[1] = 0x0000;
+        for (INT32 i = 0; i < 8; i++) {
+            DrvInput[0] |= (DrvJoy1[i] & 1) << (i + 8);
+            DrvInput[0] |= (DrvJoy2[i] & 1) << (i + 0);
+            
+            DrvInput[1] |= (DrvInp1[i] & 1) << (i + 0);
+            DrvInput[1] |= (DrvInp2[i] & 1) << (i + 8);
+        }
+        //HACK
+        if (glob_ffingeron) {
+            if (glob_mov_y>0) DrvInput[0]|=1<<15;
+            if (glob_mov_y<0) DrvInput[0]|=1<<14;
+            if (glob_mov_x<0) DrvInput[0]|=1<<12;
+            if (glob_mov_x>0) DrvInput[0]|=1<<13;
+            if (cur_ifba_conf->vpad_followfinger_firemode==0) {
+                DrvInput[0]&=~((1<<11)); //clear fire 1
+                
+                if (glob_shooton) {
+                    switch (glob_shootmode) {
+                        case 0: //shoot
+                            if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<11;
+                            glob_autofirecpt++;
+                            break;
+                        case 1: //laser
+                            DrvInput[0]|=1<<11;
+                            break;
+                    }
+                }
+            }
+        }
+        //
+        //HACK
+        //replay data - drvinputs
+        
+        if ((glob_replay_mode==REPLAY_RECORD_MODE)&&(glob_replay_data_index<MAX_REPLAY_DATA_BYTES-MAX_REPLAY_FRAME_SIZE)) {//SAVE REPLAY
+            glob_replay_flag=0;
+            if (glob_framecpt==0) {//first frame
+                //STORE FRAME_INDEX (0)
+                glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+                //STORE FLAG (00001100b)
+                glob_replay_data_stream[glob_replay_data_index++]=REPLAY_FLAG_IN0|REPLAY_FLAG_IN1;
+                //STORE INPUTS
+                glob_replay_data_stream[glob_replay_data_index++]=DrvInput[0]&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(DrvInput[0]>>8)&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=DrvInput[1]&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(DrvInput[1]>>8)&0xFF;
+                
+                last_DrvInput[0]=DrvInput[0];
+                last_DrvInput[1]=DrvInput[1];
+            } else {
+                
+                if (last_DrvInput[0]!=DrvInput[0]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN0;
+                    last_DrvInput[0]=DrvInput[0];
+                }
+                if (last_DrvInput[1]!=DrvInput[1]) {
+                    glob_replay_flag|=REPLAY_FLAG_IN1;
+                    last_DrvInput[1]=DrvInput[1];
+                }
+            }
+            
+        }
+        
     }
-    //
-
+    
 	SekNewFrame();
 	ZetNewFrame();
 	
@@ -1373,32 +1444,69 @@ static INT32 DrvFrame()
         else wait_control--;
     }
     //
-
+    //8 bits => 0/1: touch off/on switch
+    //          1/2: posX
+    //          2/4: posY
+    //          3/8: input0
+    //          4/16: input1
+    //          5/32: ...
+    //          6/64:
+    //          7/128:
+    
+    if (glob_replay_mode==REPLAY_RECORD_MODE) {
+        if (glob_replay_flag) {
+            //STORE FRAME_INDEX
+            glob_replay_data_stream[glob_replay_data_index++]=glob_framecpt&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>8)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>16)&0xFF; //frame index
+            glob_replay_data_stream[glob_replay_data_index++]=(glob_framecpt>>24)&0xFF; //frame index
+            //STORE FLAG
+            glob_replay_data_stream[glob_replay_data_index++]=glob_replay_flag;
+            
+            if (glob_replay_flag&REPLAY_FLAG_POSX) { //MEMX HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dx16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dx16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_POSY) { //MEMY HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=glob_replay_last_dy16&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(glob_replay_last_dy16>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN0) { //INPUT0 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[0]&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(last_DrvInput[0]>>8)&0xFF;
+            }
+            if (glob_replay_flag&REPLAY_FLAG_IN1) { //INPUT1 HAS CHANGED
+                glob_replay_data_stream[glob_replay_data_index++]=last_DrvInput[1]&0xFF;
+                glob_replay_data_stream[glob_replay_data_index++]=(last_DrvInput[1]>>8)&0xFF;
+            }
+        }
+    }
+    
 	if (nPrevBurnCPUSpeedAdjust != nBurnCPUSpeedAdjust) {
 		// 68K CPU clock is 16MHz, modified by nBurnCPUSpeedAdjust
 		nCyclesTotal[0] = (INT32)((INT64)16000000 * nBurnCPUSpeedAdjust / (INT32)(256.0 * 15625.0 / 263.5));
 		// Z80 CPU clock is always 4MHz
 		nCyclesTotal[1] =  (INT32)(4000000.0 / (15625.0 / 263.5));
-
+        
 		// 68K cycles executed each scanline
 		SekSetCyclesScanline((INT32)((INT64)16000000 * nBurnCPUSpeedAdjust / (256 * 15625)));
-
+        
 		nPrevBurnCPUSpeedAdjust = nBurnCPUSpeedAdjust;
 	}
-
+    
 	nCyclesVBlank = nCyclesTotal[0] * (INT32)(224.0 * 2.0) / (INT32)(263.5 * 2.0);
 	bVBlank = 0x01;
-
+    
 	ZetOpen(0);
-
+    
 	SekIdle(nCyclesDone[0]);
 	ZetIdle(nCyclesDone[1]);
-
+    
 	for (INT32 i = 1; i <= nInterleave; i++) {
-
+        
 		// Run 68000
 		INT32 nNext = i * nCyclesTotal[0] / nInterleave;
-
+        
 		// See if we need to trigger the VBlank interrupt
 		if (bVBlank && nNext >= nCyclesVBlank) {
 			if (nCyclesDone[0] < nCyclesVBlank) {
@@ -1409,16 +1517,16 @@ static INT32 DrvFrame()
 					nCyclesDone[0] += SekIdle(nCyclesSegment);
 				}
 			}
-
+            
 			if (pBurnDraw != NULL) {
 				DrvDraw();												// Draw screen if needed
 			}
 			PsikyoSpriteBuffer();
-
+            
 			SekSetIRQLine(1, SEK_IRQSTATUS_AUTO);
 			bVBlank = 0x00;
 		}
-
+        
 		nCyclesSegment = nNext - nCyclesDone[0];
 		if (!CheckSleep(0)) {											// See if this CPU is busywaiting
 			nCyclesDone[0] += SekRun(nCyclesSegment);
@@ -1426,7 +1534,7 @@ static INT32 DrvFrame()
 			nCyclesDone[0] += SekIdle(nCyclesSegment);
 		}
 	}
-
+    
 	switch (PsikyoHardwareVersion) {
 		case PSIKYO_HW_SAMURAIA:
 		case PSIKYO_HW_GUNBIRD: {
@@ -1446,13 +1554,20 @@ static INT32 DrvFrame()
 			ZetIdle(nCyclesTotal[1] - ZetTotalCycles());
 		}
 	}
-
+    
 	nCyclesDone[0] = SekTotalCycles() - nCyclesTotal[0];
 	nCyclesDone[1] = ZetTotalCycles() - nCyclesTotal[1];
-
+    
 	ZetClose();
 	SekClose();
-
+    
+    glob_framecpt++;
+    if ((glob_replay_mode==REPLAY_PLAYBACK_MODE)&&(glob_replay_data_index>=glob_replay_data_index_max)) {
+        //should end replay here
+        nShouldExit=1;
+    }
+    
+    
 	return 0;
 }
 
@@ -1466,7 +1581,7 @@ static void Nibbleswap(UINT8* pData, INT32 nLen)
 		((UINT16*)pData)[i + 0] = BURN_ENDIAN_SWAP_INT16(((pData[i + 1] >> 4) | (pData[i + 1] << 8))) & 0x0F0F;
 		((UINT16*)pData)[i + 1] = BURN_ENDIAN_SWAP_INT16(c);
 	}
-
+    
 	return;
 }
 
@@ -1477,34 +1592,34 @@ static INT32 samuraiaLoadRoms()
 	if (pTemp == NULL) {
 		return 1;
 	}
-
+    
 	BurnLoadRom(pTemp + 0x000000, 0, 1);
 	BurnLoadRom(pTemp + 0x040000, 1, 1);
-
+    
 	for (INT32 i = 0; i < 0x020000; i++) {
 		((UINT16*)Psikyo68KROM)[2 * i + 0] = ((UINT16*)pTemp)[0x000000 + i];
 		((UINT16*)Psikyo68KROM)[2 * i + 1] = ((UINT16*)pTemp)[0x020000 + i];
 	}
-
+    
 	BurnFree(pTemp);
-
+    
 	BurnLoadRom(PsikyoSpriteROM + 0x000000, 2, 1);
 	Nibbleswap(PsikyoSpriteROM, 0x200000);
-
+    
 	BurnLoadRom(PsikyoSpriteLUT, 3, 1);
-
+    
 	BurnLoadRom(PsikyoTileROM + 0x000000, 4, 1);
 	BurnLoadRom(PsikyoTileROM + 0x100000, 5, 1);
 	Nibbleswap(PsikyoTileROM, 0x200000);
-
+    
 	BurnLoadRom(PsikyoZ80ROM, 6, 1);
-
+    
 	BurnLoadRom(PsikyoSampleROM02, 7, 1);
-
+    
 	for (INT32 i = 0; i < 0x100000; i++) {
 		PsikyoSampleROM02[i] = ((PsikyoSampleROM02[i] & 0x80) >> 1) | ((PsikyoSampleROM02[i] & 0x40) << 1) | (PsikyoSampleROM02[i] & 0x3F);
 	}
-
+    
 	return 0;
 }
 
@@ -1515,17 +1630,17 @@ static INT32 gunbirdLoadRoms()
 	if (pTemp == NULL) {
 		return 1;
 	}
-
+    
 	BurnLoadRom(pTemp + 0x000000, 0, 1);
 	BurnLoadRom(pTemp + 0x080000, 1, 1);
-
+    
 	for (INT32 i = 0; i < 0x040000; i++) {
 		((UINT16*)Psikyo68KROM)[2 * i + 0] = ((UINT16*)pTemp)[0x000000 + i];
 		((UINT16*)Psikyo68KROM)[2 * i + 1] = ((UINT16*)pTemp)[0x040000 + i];
 	}
-
+    
 	BurnFree(pTemp);
-
+    
 	BurnLoadRom(PsikyoSpriteROM + 0x000000, 2, 1);
 	BurnLoadRom(PsikyoSpriteROM + 0x200000, 3, 1);
 	BurnLoadRom(PsikyoSpriteROM + 0x400000, 4, 1);
@@ -1533,17 +1648,17 @@ static INT32 gunbirdLoadRoms()
 		BurnLoadRom(PsikyoSpriteROM + 0x600000, 5, 1);
 	}
 	Nibbleswap(PsikyoSpriteROM, PsikyoSpriteROMSize >> 1);
-
+    
 	BurnLoadRom(PsikyoSpriteLUT, 6, 1);
-
+    
 	BurnLoadRom(PsikyoTileROM, 7, 1);
 	Nibbleswap(PsikyoTileROM, 0x200000);
-
+    
 	BurnLoadRom(PsikyoZ80ROM, 8, 1);
-
+    
 	BurnLoadRom(PsikyoSampleROM01, 9, 1);
 	BurnLoadRom(PsikyoSampleROM02, 10, 1);
-
+    
 	return 0;
 }
 
@@ -1554,32 +1669,32 @@ static INT32 s1945LoadRoms()
 	if (pTemp == NULL) {
 		return 1;
 	}
-
+    
 	BurnLoadRom(pTemp + 0x000000, 0, 1);
 	BurnLoadRom(pTemp + 0x080000, 1, 1);
-
+    
 	for (INT32 i = 0; i < 0x040000; i++) {
 		((UINT16*)Psikyo68KROM)[2 * i + 0] = ((UINT16*)pTemp)[0x000000 + i];
 		((UINT16*)Psikyo68KROM)[2 * i + 1] = ((UINT16*)pTemp)[0x040000 + i];
 	}
-
+    
 	BurnFree(pTemp);
-
+    
 	BurnLoadRom(PsikyoSpriteROM + 0x000000, 2, 1);
 	BurnLoadRom(PsikyoSpriteROM + 0x200000, 3, 1);
 	BurnLoadRom(PsikyoSpriteROM + 0x400000, 4, 1);
 	BurnLoadRom(PsikyoSpriteROM + 0x600000, 5, 1);
 	Nibbleswap(PsikyoSpriteROM, 0x800000);
-
+    
 	BurnLoadRom(PsikyoSpriteLUT, 6, 1);
-
+    
 	BurnLoadRom(PsikyoTileROM, 7, 1);
 	Nibbleswap(PsikyoTileROM, 0x200000);
-
+    
 	BurnLoadRom(PsikyoZ80ROM, 8, 1);
-
+    
 	BurnLoadRom(PsikyoSampleROM02, 9, 1);
-
+    
 	return 0;
 }
 
@@ -1588,7 +1703,7 @@ static void tengaiNibbleswap(UINT8* pData, INT32 nLen)
 	for (INT32 i = nLen - 1; i >= 0; i--) {
 		((UINT16*)pData)[i] = BURN_ENDIAN_SWAP_INT16(((pData[i] >> 4) | (pData[i] << 8))) & 0x0F0F;
 	}
-
+    
 	return;
 }
 
@@ -1599,32 +1714,32 @@ static INT32 tengaiLoadRoms()
 	if (pTemp == NULL) {
 		return 1;
 	}
-
+    
 	BurnLoadRom(pTemp + 0x000000, 0, 1);
 	BurnLoadRom(pTemp + 0x080000, 1, 1);
-
+    
 	for (INT32 i = 0; i < 0x040000; i++) {
 		((UINT16*)Psikyo68KROM)[2 * i + 0] = ((UINT16*)pTemp)[0x000000 + i];
 		((UINT16*)Psikyo68KROM)[2 * i + 1] = ((UINT16*)pTemp)[0x040000 + i];
 	}
 	
 	BurnFree(pTemp);
-
+    
 	BurnLoadRom(PsikyoSpriteROM + 0x000000, 2, 1);
 	BurnLoadRom(PsikyoSpriteROM + 0x200000, 3, 1);
 	BurnLoadRom(PsikyoSpriteROM + 0x400000, 4, 1);
 	tengaiNibbleswap(PsikyoSpriteROM, 0x600000);
-
+    
 	BurnLoadRom(PsikyoSpriteLUT, 5, 1);
-
+    
 	BurnLoadRom(PsikyoTileROM, 6, 1);
 	tengaiNibbleswap(PsikyoTileROM, 0x400000);
-
+    
 	BurnLoadRom(PsikyoZ80ROM, 7, 1);
-
+    
 	BurnLoadRom(PsikyoSampleROM02 + 0x000000, 8, 1);
 	BurnLoadRom(PsikyoSampleROM02 + 0x200000, 9, 1);
-
+    
 	return 0;
 }
 
@@ -1636,7 +1751,7 @@ static INT32 tengaiLoadRoms()
 static INT32 MemIndex()
 {
 	UINT8* Next; Next = Mem;
-
+    
 	Psikyo68KROM		= Next; Next += 0x100000;		// 68K program
 	PsikyoZ80ROM		= Next; Next += 0x020000;		// Z80 program
 	PsikyoSpriteROM		= Next; Next += PsikyoSpriteROMSize;
@@ -1658,34 +1773,34 @@ static INT32 MemIndex()
 	PsikyoPalSrc		= Next; Next += 0x002000;		// palette
 	RamEnd				= Next;
 	MemEnd				= Next;
-
+    
 	return 0;
 }
 
 static INT32 DrvInit()
 {
 	INT32 nLen;
-
+    
 	BurnSetRefreshRate(15625.0 / 263.5);
-
+    
 	if (!strcmp(BurnDrvGetTextA(DRV_NAME), "samuraia") || !strcmp(BurnDrvGetTextA(DRV_NAME), "sngkace")) {
 		PsikyoHardwareVersion = PSIKYO_HW_SAMURAIA;
-
+        
 		CheckSleep = samuraiaCheckSleep;
-
+        
 		PsikyoTileROMSize = 0x0400000;
 		PsikyoSpriteROMSize = 0x0400000;
-
+        
 		PsikyoSampleROM01Size = 0;
 		PsikyoSampleROM02Size = 0x100000;
-
+        
 		bPsikyoClearBackground = false;
 	}
 	if (!strcmp(BurnDrvGetTextA(DRV_NAME), "gunbird") || !strcmp(BurnDrvGetTextA(DRV_NAME), "gunbirdj") || !strcmp(BurnDrvGetTextA(DRV_NAME), "gunbirdk") || !strcmp(BurnDrvGetTextA(DRV_NAME), "btlkroad") || !strcmp(BurnDrvGetTextA(DRV_NAME), "s1945jn")) {
 		PsikyoHardwareVersion = PSIKYO_HW_GUNBIRD;
-
+        
 		CheckSleep = psikyoCheckSleep;
-
+        
 		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "gunbird")) {
 			CheckSleep = gunbirdCheckSleep;
 		}
@@ -1698,17 +1813,17 @@ static INT32 DrvInit()
 		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "s1945jn")) {
 			CheckSleep = s1945jnCheckSleep;
 		}
-
+        
 		PsikyoTileROMSize = 0x0400000;
 		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "btlkroad")) {
 			PsikyoSpriteROMSize = 0x0C00000;
 		} else {
 			PsikyoSpriteROMSize = 0x1000000;
 		}
-
+        
 		PsikyoSampleROM01Size = 0x080000;
 		PsikyoSampleROM02Size = 0x100000;
-
+        
 		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "s1945jn")) {
 			bPsikyoClearBackground = false;
 		} else {
@@ -1717,37 +1832,37 @@ static INT32 DrvInit()
 	}
 	if (!strcmp(BurnDrvGetTextA(DRV_NAME), "s1945") || !strcmp(BurnDrvGetTextA(DRV_NAME), "s1945j") || !strcmp(BurnDrvGetTextA(DRV_NAME), "s1945k") || !strcmp(BurnDrvGetTextA(DRV_NAME), "s1945a")) {
 		PsikyoHardwareVersion = PSIKYO_HW_S1945;
-
+        
 		CheckSleep = psikyoCheckSleep;
-
+        
 		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "s1945j")) TengaiMCUInit(s1945j_table);
 		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "s1945") || !strcmp(BurnDrvGetTextA(DRV_NAME), "s1945k")) TengaiMCUInit(s1945_table);
 		if (!strcmp(BurnDrvGetTextA(DRV_NAME), "s1945a")) TengaiMCUInit(s1945a_table);
-
+        
 		PsikyoTileROMSize = 0x0400000;
 		PsikyoSpriteROMSize = 0x1000000;
-
+        
 		PsikyoSampleROM01Size = 0;
 		PsikyoSampleROM02Size = 0x200000;
-
+        
 		bPsikyoClearBackground = false;
 	}
 	if (!strcmp(BurnDrvGetTextA(DRV_NAME), "tengai") || !strcmp(BurnDrvGetTextA(DRV_NAME), "tengaij")) {
 		PsikyoHardwareVersion = PSIKYO_HW_TENGAI;
-
+        
 		CheckSleep = psikyoCheckSleep;
-
+        
 		TengaiMCUInit(s1945_table);
-
+        
 		PsikyoTileROMSize = 0x0800000;
 		PsikyoSpriteROMSize = 0x0C00000;
-
+        
 		PsikyoSampleROM01Size = 0;
 		PsikyoSampleROM02Size = 0x400000;
-
+        
 		bPsikyoClearBackground = false;
 	}
-
+    
 	// Find out how much memory is needed
 	Mem = NULL;
 	MemIndex();
@@ -1757,7 +1872,7 @@ static INT32 DrvInit()
 	}
 	memset(Mem, 0, nLen);										// blank all memory
 	MemIndex();													// Index the allocated memory
-
+    
 	// Load the roms into memory
 	switch (PsikyoHardwareVersion) {
 		case PSIKYO_HW_SAMURAIA: {
@@ -1785,12 +1900,12 @@ static INT32 DrvInit()
 			break;
 		}
 	}
-
+    
 	{
 		// 68EC020 setup
 		SekInit(0, 0x68EC020);												// Allocate 68000
 	    SekOpen(0);
-
+        
 		// Map 68000 memory:
 		SekMapMemory(Psikyo68KROM,			0x000000, 0x0FFFFF, SM_ROM);	// CPU 0 ROM
 		SekMapMemory(PsikyoSpriteRAM,		0x400000, 0x401FFF, SM_RAM);
@@ -1798,10 +1913,10 @@ static INT32 DrvInit()
 		SekMapMemory(PsikyoTileRAM[1],		0x802000, 0x803FFF, SM_RAM);
 		SekMapMemory(PsikyoTileRAM[2],		0x804000, 0x807FFF, SM_RAM);
 		SekMapMemory(Psikyo68KRAM,			0xFE0000, 0xFFFFFF, SM_RAM);
-
+        
 		SekMapMemory(PsikyoPalSrc,			0x600000, 0x601FFF, SM_ROM);	// Palette RAM (write goes through handler)
 		SekMapHandler(1,					0x600000, 0x601FFF, SM_WRITE);	//
-
+        
 		switch (PsikyoHardwareVersion) {
 			case PSIKYO_HW_SAMURAIA: {
 				SekSetReadWordHandler(0, samuraiaReadWord);
@@ -1826,18 +1941,18 @@ static INT32 DrvInit()
 				break;
 			}
 		}
-
+        
 		SekSetWriteWordHandler(1, PsikyoWriteWordPalette);
 		SekSetWriteByteHandler(1, PsikyoWriteBytePalette);
-
+        
 		SekClose();
 	}
-
+    
 	{
 		// Z80 setup
 		ZetInit(0);
 		ZetOpen(0);
-
+        
 		switch (PsikyoHardwareVersion) {
 			case PSIKYO_HW_SAMURAIA: {
 				// fixed ROM
@@ -1847,8 +1962,8 @@ static INT32 DrvInit()
 				ZetMapArea(0x7800, 0x7FFF, 0, PsikyoZ80RAM);
 				ZetMapArea(0x7800, 0x7FFF, 1, PsikyoZ80RAM);
 				ZetMapArea(0x7800, 0x7FFF, 2, PsikyoZ80RAM);
-
-
+                
+                
 				ZetSetInHandler(samuraiaZ80In);
 				ZetSetOutHandler(samuraiaZ80Out);
 				break;
@@ -1861,8 +1976,8 @@ static INT32 DrvInit()
 				ZetMapArea(0x8000, 0x81FF, 0, PsikyoZ80RAM);
 				ZetMapArea(0x8000, 0x81FF, 1, PsikyoZ80RAM);
 				ZetMapArea(0x8000, 0x81FF, 2, PsikyoZ80RAM);
-
-
+                
+                
 				ZetSetInHandler(gunbirdZ80In);
 				ZetSetOutHandler(gunbirdZ80Out);
 				break;
@@ -1876,21 +1991,21 @@ static INT32 DrvInit()
 				ZetMapArea(0x8000, 0x81FF, 0, PsikyoZ80RAM);
 				ZetMapArea(0x8000, 0x81FF, 1, PsikyoZ80RAM);
 				ZetMapArea(0x8000, 0x81FF, 2, PsikyoZ80RAM);
-
+                
 				ZetSetInHandler(tengaiZ80In);
 				ZetSetOutHandler(tengaiZ80Out);
 				break;
 			}
 		}
-
+        
 		ZetClose();
 	}
-
+    
 	PsikyoPalInit();
-
+    
 	PsikyoTileInit(PsikyoTileROMSize);
 	PsikyoSpriteInit(PsikyoSpriteROMSize);
-
+    
 	switch (PsikyoHardwareVersion) {
 		case PSIKYO_HW_SAMURAIA:
 		case PSIKYO_HW_GUNBIRD: {
@@ -1910,11 +2025,11 @@ static INT32 DrvInit()
 			break;
 		}
 	}
-
+    
 	nPrevBurnCPUSpeedAdjust = -1;
-
+    
 	DrvDoReset(); // Reset machine
-
+    
 	return 0;
 }
 
@@ -1924,32 +2039,32 @@ static INT32 DrvInit()
 static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 {
 	struct BurnArea ba;
-
+    
 	if (pnMin) {						// Return minimum compatible version
 		*pnMin =  0x029521;
 	}
-
+    
 	if (nAction & ACB_MEMORY_ROM) {								// Scan all memory, devices & variables
 		ba.Data		= Psikyo68KROM;
 		ba.nLen		= 0x00100000;
 		ba.nAddress = 0;
 		ba.szName	= "68K ROM";
 		BurnAcb(&ba);
-
+        
 		ba.Data		= PsikyoZ80ROM;
 		ba.nLen		= 0x00020000;
 		ba.nAddress = 0;
 		ba.szName	= "Z80 ROM";
 		BurnAcb(&ba);
 	}
-
+    
 	if (nAction & ACB_MEMORY_RAM) {								// Scan all memory, devices & variables
 		ba.Data		= Psikyo68KRAM;
 		ba.nLen		= 0x00020000;
 		ba.nAddress = 0;
 		ba.szName	= "68K RAM";
 		BurnAcb(&ba);
-
+        
 		ba.Data		= PsikyoZ80RAM;
 		if (PsikyoHardwareVersion == PSIKYO_HW_SAMURAIA) {
 			ba.nLen		= 0x0000800;
@@ -1959,60 +2074,60 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 		ba.nAddress = 0;
 		ba.szName	= "Z80 RAM";
 		BurnAcb(&ba);
-
+        
 		ba.Data		= PsikyoTileRAM[0];
 		ba.nLen		= 0x00002000;
 		ba.nAddress = 0;
 		ba.szName	= "Tilemap 0";
 		BurnAcb(&ba);
-
+        
 		ba.Data		= PsikyoTileRAM[1];
 		ba.nLen		= 0x00002000;
 		ba.nAddress = 0;
 		ba.szName	= "Tilemap 1";
 		BurnAcb(&ba);
-
+        
 		ba.Data		= PsikyoTileRAM[2];
 		ba.nLen		= 0x00004000;
 		ba.nAddress = 0;
 		ba.szName	= "Tilemap attributes";
 		BurnAcb(&ba);
-
+        
 		ba.Data		= PsikyoSpriteRAM;
 		ba.nLen		= 0x00002000;
 		ba.nAddress = 0;
 		ba.szName	= "Sprite tables";
 		BurnAcb(&ba);
-
+        
 		ba.Data		= PsikyoPalSrc;
 		ba.nLen		= 0x00002000;
 		ba.nAddress = 0;
 		ba.szName	= "Palette";
 		BurnAcb(&ba);
 	}
-
+    
 	if (nAction & ACB_DRIVER_DATA) {
-
+        
 		SekScan(nAction);										// Scan 68000 state
-
+        
 		ZetScan(nAction);										// Scan Z80 state
-
+        
 		SCAN_VAR(nCyclesDone);
-
+        
 		SCAN_VAR(bVBlank);
-
+        
 		BurnYM2610Scan(nAction, pnMin);
-
+        
 		SCAN_VAR(nSoundlatch); SCAN_VAR(nSoundlatchAck);
-
+        
 		SCAN_VAR(nPsikyoZ80Bank);
-
+        
 		TengaiMCUScan(nAction, pnMin);
-
+        
 		if (nAction & ACB_WRITE) {
 			int nBank = nPsikyoZ80Bank;
 			nPsikyoZ80Bank = -1;
-
+            
 			switch (PsikyoHardwareVersion) {
 				case PSIKYO_HW_SAMURAIA: {
 					ZetOpen(0);
@@ -2029,11 +2144,11 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 					break;
 				}
 			}
-
+            
 			PsikyoRecalcPalette = 1;
 		}
 	}
-
+    
 	return 0;
 }
 
@@ -2045,16 +2160,16 @@ static INT32 DrvScan(INT32 nAction, INT32 *pnMin)
 static struct BurnRomInfo samuraiaRomDesc[] = {
 	{ "4-u127.bin",   0x040000, 0x8C9911CA, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "5-u126.bin",   0x040000, 0xD20C3EF0, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u14.bin",      0x200000, 0x00A546CB, BRF_GRA },			 //  2 Sprite data
-
+    
 	{ "u11.bin",      0x040000, 0x11A04D91, BRF_GRA },			 //  3 Sprite LUT
-
+    
 	{ "u34.bin",      0x100000, 0xE6A75BD8, BRF_GRA },			 //  4 Tile data
 	{ "u35.bin",      0x100000, 0xC4CA0164, BRF_GRA },			 //  5
-
+    
 	{ "3-u58.bin",    0x020000, 0x310F5C76, BRF_ESS | BRF_PRG }, //  6 CPU #1 code
-
+    
 	{ "u68.bin",      0x100000, 0x9A7F6C34, BRF_SND },			 //  7 YM2610 (delta-t) ADPCM data
 };
 
@@ -2064,16 +2179,16 @@ STD_ROM_FN(samuraia)
 static struct BurnRomInfo sngkaceRomDesc[] = {
 	{ "1-u127.bin",   0x040000, 0x6C45B2F8, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "2-u126.bin",   0x040000, 0x845A6760, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u14.bin",      0x200000, 0x00A546CB, BRF_GRA },			 //  2 Sprite data
-
+    
 	{ "u11.bin",      0x040000, 0x11A04D91, BRF_GRA },			 //  3 Sprite LUT
-
+    
 	{ "u34.bin",      0x100000, 0xE6A75BD8, BRF_GRA },			 //  4 Tile data
 	{ "u35.bin",      0x100000, 0xC4CA0164, BRF_GRA },			 //  5
-
+    
 	{ "3-u58.bin",    0x020000, 0x310F5C76, BRF_ESS | BRF_PRG }, //  6 CPU #1 code
-
+    
 	{ "u68.bin",      0x100000, 0x9A7F6C34, BRF_SND },			 //  7 YM2610 (delta-t) ADPCM data
 };
 
@@ -2105,18 +2220,18 @@ struct BurnDriver BurnDrvSngkAce = {
 static struct BurnRomInfo gunbirdRomDesc[] = {
 	{ "4.u46",        0x040000, 0xB78EC99D, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "5.u39",        0x040000, 0x925F095D, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u14.bin",      0x200000, 0x7D7E8A00, BRF_GRA },			 //  2 Sprite data
 	{ "u24.bin",      0x200000, 0x5E3FFC9D, BRF_GRA },			 //  3
 	{ "u15.bin",      0x200000, 0xA827BFB5, BRF_GRA },			 //  4
 	{ "u25.bin",      0x100000, 0xEF652E0C, BRF_GRA },			 //  5
-
+    
 	{ "u3.bin",       0x040000, 0x0905AEB2, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u33.bin",      0x200000, 0x54494E6B, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "3.u71",        0x020000, 0x2168E4BA, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u64.bin",      0x080000, 0xE187ED4F, BRF_SND },			 //  9 YM2610 ADPCM (delta-t) data
 	{ "u56.bin",      0x100000, 0x9E07104D, BRF_SND },			 // 10 YM2610 ADPCM data
 	
@@ -2130,18 +2245,18 @@ STD_ROM_FN(gunbird)
 static struct BurnRomInfo gunbirdjRomDesc[] = {
 	{ "1.u46",        0x040000, 0x474ABD69, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "2.u39",        0x040000, 0x3E3E661F, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u14.bin",      0x200000, 0x7D7E8A00, BRF_GRA },			 //  2 Sprite data
 	{ "u24.bin",      0x200000, 0x5E3FFC9D, BRF_GRA },			 //  3
 	{ "u15.bin",      0x200000, 0xA827BFB5, BRF_GRA },			 //  4
 	{ "u25.bin",      0x100000, 0xEF652E0C, BRF_GRA },			 //  5
-
+    
 	{ "u3.bin",       0x040000, 0x0905AEB2, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u33.bin",      0x200000, 0x54494E6B, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "3.u71",        0x020000, 0x2168E4BA, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u64.bin",      0x080000, 0xE187ED4F, BRF_SND },			 //  9 YM2610 ADPCM (delta-t) data
 	{ "u56.bin",      0x100000, 0x9E07104D, BRF_SND },			 // 10 YM2610 ADPCM data
 };
@@ -2152,18 +2267,18 @@ STD_ROM_FN(gunbirdj)
 static struct BurnRomInfo gunbirdkRomDesc[] = {
 	{ "1k.u46",       0x080000, 0x745CEE52, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "2k.u39",       0x080000, 0x669632FB, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u14.bin",      0x200000, 0x7D7E8A00, BRF_GRA },			 //  2 Sprite data
 	{ "u24.bin",      0x200000, 0x5E3FFC9D, BRF_GRA },			 //  3
 	{ "u15.bin",      0x200000, 0xA827BFB5, BRF_GRA },			 //  4
 	{ "u25.bin",      0x100000, 0xEF652E0C, BRF_GRA },			 //  5
-
+    
 	{ "u3.bin",       0x040000, 0x0905AEB2, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u33.bin",      0x200000, 0x54494E6B, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "k3.u71",       0x020000, 0x11994055, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u64.bin",      0x080000, 0xE187ED4F, BRF_SND },			 //  9 YM2610 ADPCM (delta-t) data
 	{ "u56.bin",      0x100000, 0x9E07104D, BRF_SND },			 // 10 YM2610 ADPCM data
 };
@@ -2206,18 +2321,18 @@ struct BurnDriver BurnDrvGunbirdk = {
 static struct BurnRomInfo btlkroadRomDesc[] = {
 	{ "4-u46.bin",    0x040000, 0x8a7a28b4, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "5-u39.bin",    0x040000, 0x933561fa, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u14.bin",      0x200000, 0x282D89C3, BRF_GRA },			 //  2 Sprite data
 	{ "u24.bin",      0x200000, 0xBBE9D3D1, BRF_GRA },			 //  3
 	{ "u15.bin",      0x200000, 0xD4D1B07C, BRF_GRA },			 //  4
 	{ "",                    0,          0, 0 }, //  5
-
+    
 	{ "u3.bin",       0x040000, 0x30D541ED, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u33.bin",      0x200000, 0x4C8577F1, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "3-u71.bin",    0x020000, 0x22411FAB, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u64.bin",      0x080000, 0x0F33049F, BRF_SND },			 //  9 YM2610 ADPCM (delta-t) data
 	{ "u56.bin",      0x100000, 0x51D73682, BRF_SND },			 // 10 YM2610 ADPCM data
 	
@@ -2243,18 +2358,18 @@ struct BurnDriver BurnDrvBtlKRoad = {
 static struct BurnRomInfo s1945jnRomDesc[] = {
 	{ "1-u46.bin",    0x080000, 0x45FA8086, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "2-u39.bin",    0x080000, 0x0152AB8C, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u20.bin",      0x200000, 0x28A27FEE, BRF_GRA },			 //  2 Sprite data
 	{ "u22.bin",      0x200000, 0xCA152A32, BRF_GRA },			 //  3
 	{ "u21.bin",      0x200000, 0xC5d60EA9, BRF_GRA },			 //  4
 	{ "u23.bin",      0x200000, 0x48710332, BRF_GRA },			 //  5
-
+    
 	{ "u1.bin",       0x040000, 0xDEE22654, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u34.bin",      0x200000, 0xAAF83E23, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "3-u71.bin",    0x020000, 0xE3E366BD, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u64.bin",      0x080000, 0xA44A4A9b, BRF_SND },			 //  9 YM2610 ADPCM (delta-t) data
 	{ "u56.bin",      0x100000, 0xFE1312C2, BRF_SND },			 // 10 YM2610 ADPCM data
 };
@@ -2277,18 +2392,18 @@ struct BurnDriver BurnDrvS1945jn = {
 static struct BurnRomInfo s1945RomDesc[] = {
 	{ "2s.u40",       0x040000, 0x9B10062A, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "3s.u41",       0x040000, 0xF87E871A, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u20.bin",      0x200000, 0x28A27FEE, BRF_GRA },			 //  2 Sprite data
 	{ "u22.bin",      0x200000, 0xCA152A32, BRF_GRA },			 //  3
 	{ "u21.bin",      0x200000, 0xC5d60EA9, BRF_GRA },			 //  4
 	{ "u23.bin",      0x200000, 0x48710332, BRF_GRA },			 //  5
-
+    
 	{ "u1.bin",       0x040000, 0xDEE22654, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u34.bin",      0x200000, 0xAAF83E23, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "3-u63.bin",    0x020000, 0x42D40AE1, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u61.bin",      0x200000, 0xA839CF47, BRF_SND },			 //  9 PCM data
 	
 	{ "4-u59.bin",      256, 0x00000000, BRF_NODUMP },
@@ -2300,18 +2415,18 @@ STD_ROM_FN(s1945)
 static struct BurnRomInfo s1945jRomDesc[] = {
 	{ "1-u40.bin",    0x040000, 0xC00EB012, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "2-u41.bin",    0x040000, 0x3F5A134B, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u20.bin",      0x200000, 0x28A27FEE, BRF_GRA },			 //  2 Sprite data
 	{ "u22.bin",      0x200000, 0xCA152A32, BRF_GRA },			 //  3
 	{ "u21.bin",      0x200000, 0xC5d60EA9, BRF_GRA },			 //  4
 	{ "u23.bin",      0x200000, 0x48710332, BRF_GRA },			 //  5
-
+    
 	{ "u1.bin",       0x040000, 0xDEE22654, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u34.bin",      0x200000, 0xAAF83E23, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "3-u63.bin",    0x020000, 0x42D40AE1, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u61.bin",      0x200000, 0xA839CF47, BRF_SND },			 //  9 PCM data
 	
 	{ "4-u59.bin",      256, 0x00000000, BRF_NODUMP },
@@ -2323,18 +2438,18 @@ STD_ROM_FN(s1945j)
 static struct BurnRomInfo s1945kRomDesc[] = {
 	{ "10.u40",       0x040000, 0x5a32af36, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "9.u41",        0x040000, 0x29cc6d7d, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u20.bin",      0x200000, 0x28A27FEE, BRF_GRA },			 //  2 Sprite data
 	{ "u22.bin",      0x200000, 0xCA152A32, BRF_GRA },			 //  3
 	{ "u21.bin",      0x200000, 0xC5d60EA9, BRF_GRA },			 //  4
 	{ "u23.bin",      0x200000, 0x48710332, BRF_GRA },			 //  5
-
+    
 	{ "u1.bin",       0x040000, 0xDEE22654, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u34.bin",      0x200000, 0xAAF83E23, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "3-u63.bin",    0x020000, 0x42D40AE1, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u61.bin",      0x200000, 0xA839CF47, BRF_SND },			 //  9 PCM data
 	
 	{ "4-u59.bin",      256, 0x00000000, BRF_NODUMP },
@@ -2346,18 +2461,18 @@ STD_ROM_FN(s1945k)
 static struct BurnRomInfo s1945aRomDesc[] = {
 	{ "4-u40.bin",    0x040000, 0x29ffc217, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "5-u41.bin",    0x040000, 0xc3d3fb64, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u20.bin",      0x200000, 0x28A27FEE, BRF_GRA },			 //  2 Sprite data
 	{ "u22.bin",      0x200000, 0xCA152A32, BRF_GRA },			 //  3
 	{ "u21.bin",      0x200000, 0xC5d60EA9, BRF_GRA },			 //  4
 	{ "u23.bin",      0x200000, 0x48710332, BRF_GRA },			 //  5
-
+    
 	{ "u1.bin",       0x040000, 0xDEE22654, BRF_GRA },			 //  6 Sprite LUT
-
+    
 	{ "u34.bin",      0x200000, 0xAAF83E23, BRF_GRA },			 //  7 Tile data
-
+    
 	{ "3-u63.bin",    0x020000, 0x42D40AE1, BRF_ESS | BRF_PRG }, //  8 CPU #1 code
-
+    
 	{ "u61.bin",      0x200000, 0xA839CF47, BRF_SND },			 //  9 PCM data
 	
 	{ "4-u59.bin",      256, 0x00000000, BRF_NODUMP },
@@ -2411,17 +2526,17 @@ struct BurnDriver BurnDrvS1945a = {
 static struct BurnRomInfo tengaiRomDesc[] = {
 	{ "5-u40.bin",    0x080000, 0x90088195, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "4-u41.bin",    0x080000, 0x0d53196c, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u20.bin",      0x200000, 0xED42EF73, BRF_GRA },			 //  2 Sprite data
 	{ "u22.bin",      0x200000, 0x8D21CAEE, BRF_GRA },			 //  3
 	{ "u21.bin",      0x200000, 0xEFE34EED, BRF_GRA },			 //  4
-
+    
 	{ "u1.bin",       0x040000, 0x681D7D55, BRF_GRA },			 //  5 Sprite LUT
-
+    
 	{ "u34.bin",      0x400000, 0x2A2E2EEB, BRF_GRA },			 //  6 Tile data
-
+    
 	{ "1-u63.bin",    0x020000, 0x2025E387, BRF_ESS | BRF_PRG }, //  7 CPU #1 code
-
+    
 	{ "u61.bin",      0x200000, 0xA63633C5, BRF_SND },			 //  8 PCM data
 	{ "u62.bin",      0x200000, 0x3AD0C357, BRF_SND },			 //   9
 	
@@ -2444,17 +2559,17 @@ struct BurnDriver BurnDrvTengai = {
 static struct BurnRomInfo tengaijRomDesc[] = {
 	{ "2-u40.bin",    0x080000, 0xAB6FE58A, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
 	{ "3-u41.bin",    0x080000, 0x02E42E39, BRF_ESS | BRF_PRG }, //  1
-
+    
 	{ "u20.bin",      0x200000, 0xED42EF73, BRF_GRA },			 //  2 Sprite data
 	{ "u22.bin",      0x200000, 0x8D21CAEE, BRF_GRA },			 //  3
 	{ "u21.bin",      0x200000, 0xEFE34EED, BRF_GRA },			 //  4
-
+    
 	{ "u1.bin",       0x040000, 0x681D7D55, BRF_GRA },			 //  5 Sprite LUT
-
+    
 	{ "u34.bin",      0x400000, 0x2A2E2EEB, BRF_GRA },			 //  6 Tile data
-
+    
 	{ "1-u63.bin",    0x020000, 0x2025E387, BRF_ESS | BRF_PRG }, //  7 CPU #1 code
-
+    
 	{ "u61.bin",      0x200000, 0xA63633C5, BRF_SND },			 //  8 PCM data
 	{ "u62.bin",      0x200000, 0x3AD0C357, BRF_SND },			 //   9
 	

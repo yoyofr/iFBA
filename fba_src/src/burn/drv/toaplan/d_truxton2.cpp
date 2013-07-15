@@ -413,20 +413,22 @@ static INT32 DrvFrame()
         }
         //HACK
         if (glob_ffingeron) {
-            DrvInput[0]&=~((1<<4)); //clear fire 1
             if (glob_mov_y>0) DrvInput[0]|=1;
             if (glob_mov_y<0) DrvInput[0]|=2;
             if (glob_mov_x<0) DrvInput[0]|=4;
             if (glob_mov_x>0) DrvInput[0]|=8;
-            if (glob_shooton) {
-                switch (glob_shootmode) {
-                    case 0: //shoot
-                        if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
-                        glob_autofirecpt++;
-                        break;
-                    case 1: //laser
-                        DrvInput[0]|=1<<4;
-                        break;
+            if (cur_ifba_conf->vpad_followfinger_firemode==0) {
+                DrvInput[0]&=~((1<<4)); //clear fire 1
+                if (glob_shooton) {
+                    switch (glob_shootmode) {
+                        case 0: //shoot
+                            if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
+                            glob_autofirecpt++;
+                            break;
+                        case 1: //laser
+                            DrvInput[0]|=1<<4;
+                            break;
+                    }
                 }
             }
         }
@@ -487,9 +489,6 @@ static INT32 DrvFrame()
         if ( wait_control==0 ) PatchMemory68KFFinger();
         else wait_control--;
     }
-    //
-    //
-    //
     //
     //8 bits => 0/1: touch off/on switch
     //          1/2: posX

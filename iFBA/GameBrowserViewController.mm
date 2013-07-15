@@ -15,6 +15,8 @@
 #include "fbaconf.h"
 #include "DBHelper.h"
 
+#import "CMActionSheet.h"
+
 #include "Replay.h"
 
 #define MAX_FILTER 3
@@ -27,7 +29,7 @@
 //iCade & wiimote
 #import "iCadeReaderView.h"
 #include "wiimote.h"
-static int ui_currentIndex_s,ui_currentIndex_r;
+static int ui_currentIndex_s,ui_currentIndex_r,ui_currentIndex_AS,ui_maxIndex_AS;
 static int wiimoteBtnState;
 static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
@@ -36,6 +38,8 @@ static int bypass_reinit_view;
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
 extern char gameInfo[64*1024];
+
+static GameBrowserViewController *gamebrowservc;
 
 
 extern unsigned int glob_replay_mode;
@@ -55,6 +59,8 @@ extern int launchGame;
 static int cur_game_section,cur_game_row;
 
 UIActionSheet *gameMenu,*replaySlotMenu;
+CMActionSheet *launchMenuAS;
+int menuASactive;
 UIAlertView *alertYesNo;
 static int replay_index[10];
 
@@ -123,6 +129,10 @@ NSMutableArray *filterEntries;
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    launchMenuAS=nil;
+    menuASactive=0;
+    
+    gamebrowservc=self;
     
     selgenrevc=[[OptSelGenresViewController alloc] initWithNibName:@"OptSelGenresViewController" bundle:nil];
     
@@ -235,6 +245,8 @@ NSMutableArray *filterEntries;
         }
         
         
+        NSArray *ffinger_coverage=[FFINGER_COVERAGE componentsSeparatedByString:@","];
+        int ffinger_supported,flag;
         
         for (int i=0;i<total_roms_nb;i++) {
             nBurnDrvActive=i;
@@ -265,19 +277,31 @@ NSMutableArray *filterEntries;
                 
                 //check if file is existing
                 NSUInteger ind=[filelist indexOfObject:[burn_supportedRoms objectAtIndex:i]];
+                flag=0;
                 if (ind!=NSNotFound) {
                     [rompath addObject:[filepath objectAtIndex:ind]];
-                    [romavail addObject:[NSNumber numberWithBool:TRUE]];
+                    flag|=1<<0; //rom available
                 } else {
                     [rompath addObject:@""];
-                    [romavail addObject:[NSNumber numberWithBool:NO]];
                 }
+                
+                //check if ffinger supported
+                ffinger_supported=0;
+                ind=NSNotFound;
+                ind=[ffinger_coverage indexOfObject:[burn_supportedRoms objectAtIndex:i]];
+                if (ind!=NSNotFound) {
+                    flag|=1<<1;
+                }
+                
+                [romavail addObject:[NSNumber numberWithInt:flag]];
             }
         }
         
         [filelist release];
         [filepath release];
     } else {
+        NSArray *ffinger_coverage=[FFINGER_COVERAGE componentsSeparatedByString:@","];
+        int ffinger_supported,flag;
         
         
         for (int i=0;i<=DIRS_MAX;i++) {
@@ -306,6 +330,16 @@ NSMutableArray *filterEntries;
                                 [romlist_mst addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_PARENT)] ];
                                 [romlistSystem addObject:[NSString stringWithFormat:@"%s",BurnDrvGetTextA(DRV_SYSTEM)] ];
                                 [romlistGenre addObject:[NSNumber numberWithInt:genre] ];
+                                
+                                //check if ffinger supported
+                                ffinger_supported=0;
+                                flag=0;
+                                NSUInteger ind2;
+                                ind2=[ffinger_coverage indexOfObject:[[[file lastPathComponent] stringByDeletingPathExtension] lowercaseString]];
+                                if (ind2!=NSNotFound) {
+                                    flag|=1<<1;
+                                }
+                                [romavail addObject:[NSNumber numberWithInt:flag]];
                                 
                                 switch (ifba_conf.filter_type) {
                                     case 2://genre
@@ -597,9 +631,20 @@ NSMutableArray *filterEntries;
     
     int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
     
+    int flag=[[romavail objectAtIndex:index] intValue];
+    
+    if (flag&(1<<1)) {
+        cell.backgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gradcell.png"]] autorelease];
+        cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gradcellsel.png"]] autorelease];
+    }
+    else {
+        cell.backgroundView=nil;
+        cell.selectedBackgroundView=nil;
+    }
+    
     if (ifba_conf.filter_missing) {
         NSNumber *nb=[romavail objectAtIndex:index];
-        if ([nb boolValue]==NO) {
+        if (([nb intValue]&(1<<0))==0) {
             topLabel.textColor = [UIColor colorWithRed:.4 green:.4 blue:.4 alpha:1.0];
             bottomLabel.textColor = [UIColor colorWithRed:.4 green:.4 blue:.5 alpha:1.0];
         } else {
@@ -683,7 +728,7 @@ static int replay_slot[10];
 
 -(int) SendReplay:(int) slot {
     NSArray *nameArray = [[NSHost currentHost] names];
-//    NSString *user = [nameArray objectAtIndex:0];
+    //    NSString *user = [nameArray objectAtIndex:0];
     
     NSString *author=[nameArray objectAtIndex:0];//@"yoyofr";
     NSString *description=@"not implemented yet";
@@ -700,7 +745,7 @@ static int replay_slot[10];
     NSError *error=nil;
     //send it synchronous
     NSData *responseData = [NSURLConnection sendSynchronousRequest:requestUpload returningResponse:&response error:&error];
-//    NSLog(@"data length: %d",[responseData length]);
+    //    NSLog(@"data length: %d",[responseData length]);
     urlString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
     // check for an error. If there is a network error, you should handle it here.
     if(error) {
@@ -722,7 +767,7 @@ static int replay_slot[10];
     free(replay_data);
     
     NSLog(@"url used: %@",urlString);
-
+    
     NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
     [request setURL:[NSURL URLWithString:urlString]];
     [request setHTTPMethod:@"POST"];
@@ -785,7 +830,7 @@ static int replay_slot[10];
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSString *returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
     
-    NSLog(@"%@", returnString);        
+    NSLog(@"%@", returnString);
     return 0;
 }
 
@@ -823,7 +868,7 @@ static int replay_slot[10];
                 replaySlotMenu.cancelButtonIndex=cancelIndex;
                 [replaySlotMenu showInView:self.view];
                 [replaySlotMenu autorelease];
-
+                
                 break;
             case 2://LAUNCH & PLAYBACK REPLAY
                 if (!replay_supported) break;
@@ -911,14 +956,16 @@ static int replay_slot[10];
     
 }
 
-
-
+// used to avoid issue with nested block not allowing ref to "self" (gamebrowsercontroller)
++ (void) launchGame {
+    [[gamebrowservc navigationController] popViewControllerAnimated:NO];
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     int index=listSortedList[listSectionIndexes[indexPath.section]+indexPath.row];
     if (ifba_conf.filter_missing) {
         NSNumber *nb=[romavail objectAtIndex:index];
-        if (![nb boolValue]) return;
+        if (([nb intValue]&(1<<0))==0) return;
     }
     
     sprintf(gameName,"%s",[[(NSString *)[romlist objectAtIndex:index] stringByDeletingPathExtension] UTF8String]);
@@ -935,14 +982,187 @@ static int replay_slot[10];
     }
     
     if (replay_supported) {
-        gameMenu=[[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
-                                    otherButtonTitles:@"Launch game",@"Launch & Record replay",@"Playback replay",@"Share replay online",@"Get replay online",nil];
+        //REPLAY SUPPORTED
+        launchMenuAS = [[[CMActionSheet alloc] init] autorelease];
+        menuASactive=1;
+        ui_currentIndex_AS=0;
+        ui_maxIndex_AS=-1;
+        //actionSheet.title = @"Test Action sheet";
+        
+        // Customize
+        ui_maxIndex_AS++;
+        [launchMenuAS addButtonWithTitle:@"Launch Game" type:CMActionSheetButtonTypeWhite block:^{
+            //LAUNCH
+            launchGame=1;
+            glob_replay_mode=0;
+            menuASactive=0;
+            [[self navigationController] popViewControllerAnimated:NO];
+        }];
+        ui_maxIndex_AS++;
+        [launchMenuAS addButtonWithTitle:@"Launch & Record replay" type:CMActionSheetButtonTypeWhite block:^{
+            menuASactive=1;
+            glob_replay_mode=REPLAY_RECORD_MODE;
+            launchMenuAS=[[[CMActionSheet alloc] init] autorelease];
+            ui_maxIndex_AS=-1;
+            //check current replay slots
+            char szTmp[64];
+            for (int i=0;i<10;i++) {
+                ui_maxIndex_AS++;
+                if (GetReplayInfo(i,szTmp)==0) {
+                    replay_slot[i]=1;
+                    [launchMenuAS addButtonWithTitle:[NSString stringWithFormat:@"#%d. %s",i,szTmp] type:CMActionSheetButtonTypeWhite block:^{
+                        glob_replay_currentslot=i;
+                        //select occupied block, ask confirm
+                        launchMenuAS=[[[CMActionSheet alloc] init] autorelease];
+                        [launchMenuAS setTitle:@"Existing replay will be lost"];
+                        [launchMenuAS addButtonWithTitle:@"Yes" type:CMActionSheetButtonTypeWhite block:^{
+                            menuASactive=0;
+                            launchGame=1;
+                            [GameBrowserViewController launchGame];
+                        }];
+                        [launchMenuAS addButtonWithTitle:@"No" type:CMActionSheetButtonTypeWhite block:^{
+                            menuASactive=0;
+                        }];
+                        // Present
+                        ui_maxIndex_AS=1;
+                        ui_currentIndex_AS=0;
+                        [launchMenuAS selectButton:0];
+                        [launchMenuAS present];
+                    }];
+                } else {
+                    replay_slot[i]=0;
+                    [launchMenuAS addButtonWithTitle:[NSString stringWithFormat:@"#%d. Free",i] type:CMActionSheetButtonTypeWhite block:^{
+                        //select unoccupied block
+                        menuASactive=0;
+                        launchGame=1;
+                        glob_replay_currentslot=i;
+                        [[self navigationController] popViewControllerAnimated:NO];
+                    }];
+                }
+            }
+            ui_maxIndex_AS++;
+            [launchMenuAS addButtonWithTitle:@"Cancel" type:CMActionSheetButtonTypeWhite block:^{
+                menuASactive=0;
+            }];
+            
+            // Present
+            ui_currentIndex_AS=0;
+            [launchMenuAS selectButton:0];
+            [launchMenuAS present];
+        }];
+        
+        ui_maxIndex_AS++;
+        [launchMenuAS addButtonWithTitle:@"Playback replay" type:CMActionSheetButtonTypeWhite block:^{
+            glob_replay_mode=REPLAY_PLAYBACK_MODE;
+            
+            menuASactive=1;
+            launchMenuAS=[[[CMActionSheet alloc] init] autorelease];
+            ui_maxIndex_AS=-1;
+            //check current replay slots
+            char szTmp[64];
+            for (int i=0;i<10;i++) {
+                if (GetReplayInfo(i,szTmp)==0) {
+                    replay_slot[i]=1;
+                    ui_maxIndex_AS++;
+                    [launchMenuAS addButtonWithTitle:[NSString stringWithFormat:@"#%d. %s",i,szTmp] type:CMActionSheetButtonTypeWhite block:^{
+                        glob_replay_currentslot=i;
+                        menuASactive=0;
+                        launchGame=1;
+                        [[self navigationController] popViewControllerAnimated:NO];
+                    }];
+                }
+            }
+            ui_maxIndex_AS++;
+            [launchMenuAS addButtonWithTitle:@"Cancel" type:CMActionSheetButtonTypeWhite block:^{
+                menuASactive=0;
+            }];
+            
+            // Present
+            ui_currentIndex_AS=0;
+            [launchMenuAS selectButton:0];
+            [launchMenuAS present];
+        }];
+        
+        ui_maxIndex_AS++;
+        [launchMenuAS addButtonWithTitle:@"Share replay online" type:CMActionSheetButtonTypeWhite block:^{
+            glob_replay_mode=REPLAY_SHARE_ONLINE;
+            replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+            
+            int cancelIndex=0;
+            char szTmp[64];
+            //check current replay slots
+            for (int i=0;i<10;i++) {
+                if (GetReplayInfo(i,szTmp)==0) {
+                    [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"#%d. %s",i,szTmp]];
+                    replay_index[cancelIndex]=i;
+                    cancelIndex++;
+                }
+            }
+            [replaySlotMenu addButtonWithTitle:@"Cancel"];
+            replaySlotMenu.cancelButtonIndex=cancelIndex;
+            [replaySlotMenu showInView:self.view];
+            [replaySlotMenu autorelease];
+            
+            menuASactive=0;
+            [[self navigationController] popViewControllerAnimated:NO];
+        }];
+        
+        
+        ui_maxIndex_AS++;
+        [launchMenuAS addButtonWithTitle:@"Get replay online" type:CMActionSheetButtonTypeWhite block:^{
+            glob_replay_mode=REPLAY_BROWSE_ONLINE;
+            
+            ReplayWebController *replayWeb;
+            replayWeb = [[ReplayWebController alloc] initWithNibName:@"ReplayWebController" bundle:nil];
+            //bypass_reinit_view=1;
+            [self.navigationController pushViewController:replayWeb animated:YES];
+            [replayWeb release];
+            
+            
+            menuASactive=0;
+            [[self navigationController] popViewControllerAnimated:NO];
+        }];
+        
+        
+        
+        ui_maxIndex_AS++;
+        [launchMenuAS addButtonWithTitle:@"Cancel" type:CMActionSheetButtonTypeWhite block:^{
+            menuASactive=0;
+        }];
+        
+        // Present
+        [launchMenuAS selectButton:ui_currentIndex_AS];
+        [launchMenuAS present];
     } else {
-        gameMenu=[[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
-                                    otherButtonTitles:@"Launch game",nil];
+//                gameMenu=[[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Launch game",nil];
+        
+        launchMenuAS = [[[CMActionSheet alloc] init] autorelease];
+        menuASactive=1;
+        ui_currentIndex_AS=0;
+        ui_maxIndex_AS=-1;
+        //actionSheet.title = @"Test Action sheet";
+        
+        // Customize
+        ui_maxIndex_AS++;
+        [launchMenuAS addButtonWithTitle:@"Launch Game" type:CMActionSheetButtonTypeWhite block:^{
+            //LAUNCH
+            launchGame=1;
+            glob_replay_mode=0;
+            menuASactive=0;
+            [[self navigationController] popViewControllerAnimated:NO];
+        }];
+        
+        ui_maxIndex_AS++;
+        [launchMenuAS addButtonWithTitle:@"Cancel" type:CMActionSheetButtonTypeWhite block:^{
+            menuASactive=0;
+        }];
+        
+        // Present
+        [launchMenuAS selectButton:ui_currentIndex_AS];
+        [launchMenuAS present];
     }
-    [gameMenu showInView:self.view];
-    [gameMenu autorelease];
+//    [gameMenu showInView:self.view];
+//    [gameMenu autorelease];
 }
 
 /*- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1061,75 +1281,98 @@ static int replay_slot[10];
 - (void)buttonDown:(iCadeState)button {
 }
 - (void)buttonUp:(iCadeState)button {
-    if (ui_currentIndex_s==-1) {
-        if (cur_game_section>=0) {
-            ui_currentIndex_s=cur_game_section;
-            ui_currentIndex_r=cur_game_row;
-        } else {
-            ui_currentIndex_s=ui_currentIndex_r=0;
-        }
-    }
-    else {
+    if (menuASactive) {
+        
         if (button&iCadeJoystickDown) {
-            if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
-            else { //next section
+            ui_currentIndex_AS++;
+            if (ui_currentIndex_AS>ui_maxIndex_AS) ui_currentIndex_AS=0;
+            [launchMenuAS selectButton:ui_currentIndex_AS];
+        } else if (button&iCadeJoystickUp) {
+            ui_currentIndex_AS--;
+            if (ui_currentIndex_AS<0) ui_currentIndex_AS=ui_maxIndex_AS;
+            [launchMenuAS selectButton:ui_currentIndex_AS];
+        } else if (button&iCadeJoystickRight) {
+            ui_currentIndex_AS=ui_maxIndex_AS;
+            [launchMenuAS selectButton:ui_currentIndex_AS];
+        } else if (button&iCadeJoystickLeft) {
+            ui_currentIndex_AS=0;
+            [launchMenuAS selectButton:ui_currentIndex_AS];
+        } else if (button&iCadeButtonA) { //validate
+            [launchMenuAS dismissWithClickedButtonIndex:ui_currentIndex_AS animated:TRUE];
+        } else if (button&iCadeButtonB) { //back
+            [launchMenuAS dismissWithClickedButtonIndex:ui_maxIndex_AS animated:TRUE];
+        }            
+    } else {
+        if (ui_currentIndex_s==-1) {
+            if (cur_game_section>=0) {
+                ui_currentIndex_s=cur_game_section;
+                ui_currentIndex_r=cur_game_row;
+            } else {
+                ui_currentIndex_s=ui_currentIndex_r=0;
+            }
+        }
+        else {
+            if (button&iCadeJoystickDown) {
+                if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
+                else { //next section
+                    if (ui_currentIndex_s<[tabView numberOfSections]-1) {
+                        ui_currentIndex_s++;ui_currentIndex_r=0; //next section
+                    } else {
+                        ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
+                    }
+                }
+            } else if (button&iCadeJoystickUp) {
+                if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row
+                else { //prev section
+                    if (ui_currentIndex_s>0) {
+                        ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
+                    } else {
+                        ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
+                    }
+                }
+            } else if (button&iCadeJoystickRight) {
                 if (ui_currentIndex_s<[tabView numberOfSections]-1) {
                     ui_currentIndex_s++;ui_currentIndex_r=0; //next section
                 } else {
                     ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
                 }
-            }
-        } else if (button&iCadeJoystickUp) {
-            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row
-            else { //prev section
+            } else if (button&iCadeJoystickLeft) {
                 if (ui_currentIndex_s>0) {
-                    ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
+                    ui_currentIndex_s--;ui_currentIndex_r=0; //next section
                 } else {
-                    ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
+                    ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=0;
+                }
+            } else if (button&iCadeButtonA) { //validate
+                [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
+            } else if (button&iCadeButtonB) { //back
+                [[self navigationController] popViewControllerAnimated:YES];
+            } else if (button&iCadeButtonC) { //history
+                [self tableView:tabView accessoryButtonTappedForRowWithIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
+            } else if (button&iCadeButtonD) { //filters
+                cur_game_row=ui_currentIndex_r;
+                cur_game_section=ui_currentIndex_s;
+                
+                [self changeFilter:nil];
+                if (cur_game_section>=0) {
+                    ui_currentIndex_s=cur_game_section;
+                    ui_currentIndex_r=cur_game_row;
+                } else {
+                    ui_currentIndex_s=ui_currentIndex_r=0;
+                }
+            } else if (button&iCadeButtonE) { //missing
+                cur_game_row=ui_currentIndex_r;
+                cur_game_section=ui_currentIndex_s;
+                
+                [self showMissing:btn_missing];
+                if (cur_game_section>=0) {
+                    ui_currentIndex_s=cur_game_section;
+                    ui_currentIndex_r=cur_game_row;
+                } else {
+                    ui_currentIndex_s=ui_currentIndex_r=0;
                 }
             }
-        } else if (button&iCadeJoystickRight) {
-            if (ui_currentIndex_s<[tabView numberOfSections]-1) {
-                ui_currentIndex_s++;ui_currentIndex_r=0; //next section
-            } else {
-                ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
-            }
-        } else if (button&iCadeJoystickLeft) {
-            if (ui_currentIndex_s>0) {
-                ui_currentIndex_s--;ui_currentIndex_r=0; //next section
-            } else {
-                ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=0;
-            }
-        } else if (button&iCadeButtonA) { //validate
-            [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
-        } else if (button&iCadeButtonB) { //back
-            [[self navigationController] popViewControllerAnimated:YES];
-        } else if (button&iCadeButtonC) { //history
-            [self tableView:tabView accessoryButtonTappedForRowWithIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
-        } else if (button&iCadeButtonD) { //filters
-            cur_game_row=ui_currentIndex_r;
-            cur_game_section=ui_currentIndex_s;
-            
-            [self changeFilter:nil];
-            if (cur_game_section>=0) {
-                ui_currentIndex_s=cur_game_section;
-                ui_currentIndex_r=cur_game_row;
-            } else {
-                ui_currentIndex_s=ui_currentIndex_r=0;
-            }
-        } else if (button&iCadeButtonE) { //missing
-            cur_game_row=ui_currentIndex_r;
-            cur_game_section=ui_currentIndex_s;
-            
-            [self showMissing:btn_missing];
-            if (cur_game_section>=0) {
-                ui_currentIndex_s=cur_game_section;
-                ui_currentIndex_r=cur_game_row;
-            } else {
-                ui_currentIndex_s=ui_currentIndex_r=0;
-            }
         }
+        [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
     }
-    [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
 }
 @end

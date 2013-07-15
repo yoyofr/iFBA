@@ -364,11 +364,13 @@ static INT32 DrvFrame()
         
         //HACK
         if (glob_ffingeron) {
-            DrvInput[0]&=~((1<<4)); //clear fire 1
             if (glob_mov_y>0) DrvInput[0]|=1;
             if (glob_mov_y<0) DrvInput[0]|=2;
             if (glob_mov_x<0) DrvInput[0]|=4;
             if (glob_mov_x>0) DrvInput[0]|=8;
+            
+            if (cur_ifba_conf->vpad_followfinger_firemode==0) {
+            DrvInput[0]&=~((1<<4)); //clear fire 1
             if (glob_shooton) {
                 switch (glob_shootmode) {
                     case 0: //shoot
@@ -379,6 +381,7 @@ static INT32 DrvFrame()
                         DrvInput[0]|=1<<4;
                         break;
                 }
+            }
             }
         }
         //

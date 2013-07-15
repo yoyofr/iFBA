@@ -187,6 +187,7 @@ static CADisplayLink* m_displayLink;
     } else if (indexPath.section==1) {
         //reset to default value: delete specific settings
         game_has_options=0;
+        cur_ifba_conf=(ifba_conf_t*)&ifba_conf;
         [[[UIApplication sharedApplication] delegate] removeSettings:[NSString stringWithFormat:@"%s",gameName]];
         [self.navigationController popToRootViewControllerAnimated:YES];
     }

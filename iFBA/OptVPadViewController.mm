@@ -29,6 +29,7 @@ static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
 extern EmuViewController *emuvc;
+extern int vpad_button_nb;
 
 extern int optionScope;
 #define OPTION(a) (optionScope?ifba_game_conf.a:ifba_conf.a)
@@ -87,12 +88,12 @@ extern char gameName[64];
     /* Wiimote check => rely on cadisplaylink*/
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
     m_displayLink.frameInterval = 3; //20fps
-	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
-
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
-    }    
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -122,7 +123,7 @@ extern char gameName[64];
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return 4;
+	return 6;
 }
 
 
@@ -133,6 +134,7 @@ extern char gameName[64];
         case 1:return 2;
         case 2:return 2;
         case 3:return 1;
+        case 4:return 2;
     }
     return 0;
 }
@@ -147,6 +149,8 @@ extern char gameName[64];
         case 2:title=NSLocalizedString(@"Position",@"");
             break;
         case 3:title=@"";
+            break;
+        case 4:title=NSLocalizedString(@"Follow-finger",@"");
             break;
     }
     return title;
@@ -182,6 +186,22 @@ extern char gameName[64];
     OPTION(vpad_style)=[sender selectedSegmentIndex];
     if (refresh) [tabView reloadData];
 }
+- (void)segActionFFingerMode:(id)sender {
+    int refresh=0;
+    if (OPTION(vpad_followfinger_firemode)!=[sender selectedSegmentIndex]) refresh=1;
+    OPTION(vpad_followfinger_firemode)=[sender selectedSegmentIndex];
+    if (refresh) {
+        //force recompute of nb_buttons
+        vpad_button_nb=VPAD_SPECIALS_BUTTON_NB;
+        [tabView reloadData];
+    }
+}
+-(void)sliderFFingerSensibility:(id)sender {
+    OPTION(vpad_followfinger_sensibility)=((MNEValueTrackingSlider*)sender).value;
+    //    if ([cur_screen respondsToSelector:@selector(setBrightness:)]) [cur_screen setBrightness:OPTION(brightness)];
+    //    [tabView reloadData];
+}
+
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
@@ -195,6 +215,9 @@ extern char gameName[64];
         case 2://Position
             footer=NSLocalizedString(@"Change position",@"");
             break;
+        case 4://Follow-finger mode
+            footer=NSLocalizedString(@"Change follow-finger settings",@"");
+            break;
     }
     return footer;
 }
@@ -207,20 +230,20 @@ extern char gameName[64];
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];                
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
     switch (indexPath.section) {
         case 0://Display
             if (indexPath.row==0) {//Opacity
-            cell.textLabel.text=NSLocalizedString(@"Opacity",@"");
+                cell.textLabel.text=NSLocalizedString(@"Opacity",@"");
                 cell.textLabel.textAlignment=UITextAlignmentLeft;
-            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",@" 3 ",nil]];
-            segconview.segmentedControlStyle = UISegmentedControlStylePlain;
-            [segconview addTarget:self action:@selector(segActionOpacity:) forControlEvents:UIControlEventValueChanged];            
-            cell.accessoryView = segconview;
-            [segconview release];
-            segconview.selectedSegmentIndex=OPTION(vpad_alpha);
+                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",@" 3 ",nil]];
+                segconview.segmentedControlStyle = UISegmentedControlStylePlain;
+                [segconview addTarget:self action:@selector(segActionOpacity:) forControlEvents:UIControlEventValueChanged];
+                cell.accessoryView = segconview;
+                [segconview release];
+                segconview.selectedSegmentIndex=OPTION(vpad_alpha);
             } else if (indexPath.row==1) {//Display specials
                 cell.textLabel.text=NSLocalizedString(@"Display specials",@"");
                 cell.textLabel.textAlignment=UITextAlignmentLeft;
@@ -229,7 +252,7 @@ extern char gameName[64];
                 cell.accessoryView = switchview;
                 [switchview release];
                 switchview.on=OPTION(vpad_showSpecial);
-
+                
             }
             break;
         case 1://Size
@@ -238,7 +261,7 @@ extern char gameName[64];
                 cell.textLabel.textAlignment=UITextAlignmentLeft;
                 segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
-                [segconview addTarget:self action:@selector(segActionBtnSize:) forControlEvents:UIControlEventValueChanged];            
+                [segconview addTarget:self action:@selector(segActionBtnSize:) forControlEvents:UIControlEventValueChanged];
                 cell.accessoryView = segconview;
                 [segconview release];
                 segconview.selectedSegmentIndex=OPTION(vpad_btnsize);
@@ -247,10 +270,10 @@ extern char gameName[64];
                 cell.textLabel.textAlignment=UITextAlignmentLeft;
                 segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
-                [segconview addTarget:self action:@selector(segActionPadSize:) forControlEvents:UIControlEventValueChanged];            
+                [segconview addTarget:self action:@selector(segActionPadSize:) forControlEvents:UIControlEventValueChanged];
                 cell.accessoryView = segconview;
                 [segconview release];
-                segconview.selectedSegmentIndex=OPTION(vpad_padsize);                
+                segconview.selectedSegmentIndex=OPTION(vpad_padsize);
             }
             break;
         case 2://position
@@ -265,17 +288,40 @@ extern char gameName[64];
                     cell.textLabel.textAlignment=UITextAlignmentCenter;
                     cell.accessoryView=nil;
                     break;
-            }            
+            }
             break;
         case 3://skin
-                cell.textLabel.text=NSLocalizedString(@"Skin",@"");
+            cell.textLabel.text=NSLocalizedString(@"Skin",@"");
             cell.textLabel.textAlignment=UITextAlignmentLeft;
-                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
+            segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@" 0 ", @" 1 ",@" 2 ",nil]];
+            segconview.segmentedControlStyle = UISegmentedControlStylePlain;
+            [segconview addTarget:self action:@selector(segActionSkin:) forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = segconview;
+            [segconview release];
+            segconview.selectedSegmentIndex=OPTION(vpad_style);
+            break;
+        case 4://follow_finger
+            if (indexPath.row==0) { //mode (autofire/normal)
+                cell.textLabel.text=NSLocalizedString(@"Buttons mode",@"");
+                cell.textLabel.textAlignment=UITextAlignmentLeft;
+                segconview = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Autofire", @" Normal",nil]];
                 segconview.segmentedControlStyle = UISegmentedControlStylePlain;
-                [segconview addTarget:self action:@selector(segActionSkin:) forControlEvents:UIControlEventValueChanged];            
+                [segconview addTarget:self action:@selector(segActionFFingerMode:) forControlEvents:UIControlEventValueChanged];
                 cell.accessoryView = segconview;
                 [segconview release];
-                segconview.selectedSegmentIndex=OPTION(vpad_style);
+                segconview.selectedSegmentIndex=OPTION(vpad_followfinger_firemode);
+            } else { //sensibility
+                cell.textLabel.text=NSLocalizedString(@"Sensibility",@"");
+                sliderview = [[MNEValueTrackingSlider alloc] initWithFrame:CGRectMake(0,0,140,30)];
+                sliderview.integerMode=0;
+                [sliderview setMaximumValue:2.0f];
+                [sliderview setMinimumValue:1.0f];
+                [sliderview setContinuous:true];
+                sliderview.value=OPTION(vpad_followfinger_sensibility);
+                [sliderview addTarget:self action:@selector(sliderFFingerSensibility:) forControlEvents:UIControlEventValueChanged];
+                cell.accessoryView = sliderview;
+                [sliderview release];
+            }
             break;
     }
     
@@ -292,7 +338,7 @@ extern void resetPadLayouts();
             renderVPADonly=1;
             //EmuViewController *vc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];
             [self.navigationController pushViewController:emuvc animated:NO];
-//            [vc release];
+            //            [vc release];
         } else if (indexPath.row==1) {//Reset x,y ofs to default
             //TODO
             resetPadLayouts();
@@ -303,13 +349,13 @@ extern void resetPadLayouts();
 
 
 -(IBAction) backToEmu {
-//    launchGame=2;
-//    [self.navigationController popToRootViewControllerAnimated:NO];
+    //    launchGame=2;
+    //    [self.navigationController popToRootViewControllerAnimated:NO];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
     
     [self.navigationController pushViewController:emuvc animated:NO];
-
+    
 }
 
 #pragma Wiimote/iCP support
@@ -362,7 +408,7 @@ extern void resetPadLayouts();
         ui_currentIndex_s=ui_currentIndex_r=0;
     }
     else {
-        if (button&iCadeJoystickDown) {            
+        if (button&iCadeJoystickDown) {
             if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
             else { //next section
                 if (ui_currentIndex_s<[tabView numberOfSections]-1) {
@@ -370,9 +416,9 @@ extern void resetPadLayouts();
                 } else {
                     ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
                 }
-            }             
+            }
         } else if (button&iCadeJoystickUp) {
-            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row            
+            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row
             else { //prev section
                 if (ui_currentIndex_s>0) {
                     ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
@@ -380,7 +426,7 @@ extern void resetPadLayouts();
                     ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
                 }
             }
-        } else if (button&iCadeButtonA) { //validate            
+        } else if (button&iCadeButtonA) { //validate
             [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
             
         } else if (button&iCadeButtonB) { //back

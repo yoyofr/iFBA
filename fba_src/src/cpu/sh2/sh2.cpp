@@ -35,6 +35,7 @@
 
 #include "burnint.h"
 #include "sh2_intf.h"
+#include "fbaconf.h"
 
 //#include "tchar.h"
 //extern int (__cdecl *bprintf) (int nStatus, TCHAR* szFormat, ...);
@@ -45,13 +46,13 @@
 int has_sh2;
 
 /*typedef signed char INT8;
-typedef unsigned char UINT8;
-typedef signed short INT16;
-typedef unsigned short UINT16;
-typedef signed int INT32;
-typedef unsigned int UINT32;
-typedef signed long long INT64;
-typedef unsigned long long UINT64;*/
+ typedef unsigned char UINT8;
+ typedef signed short INT16;
+ typedef unsigned short UINT16;
+ typedef signed int INT32;
+ typedef unsigned int UINT32;
+ typedef signed long long INT64;
+ typedef unsigned long long UINT64;*/
 
 #define BUSY_LOOP_HACKS 	1
 #define FAST_OP_FETCH		1
@@ -65,14 +66,14 @@ typedef unsigned long long UINT64;*/
 
 #if FAST_OP_FETCH
 
-	#define change_pc(newpc)															\
-		sh2->pc = (newpc);																\
-		pSh2Ext->opbase = pSh2Ext->MemMap[ (sh2->pc >> SH2_SHIFT) + SH2_WADD * 2 ];		\
-		pSh2Ext->opbase -= (sh2->pc & ~SH2_PAGEM);
+#define change_pc(newpc)															\
+sh2->pc = (newpc);																\
+pSh2Ext->opbase = pSh2Ext->MemMap[ (sh2->pc >> SH2_SHIFT) + SH2_WADD * 2 ];		\
+pSh2Ext->opbase -= (sh2->pc & ~SH2_PAGEM);
 
 #else
 
-	#define change_pc(newpc)	sh2->pc = (newpc);
+#define change_pc(newpc)	sh2->pc = (newpc);
 
 #endif
 
@@ -102,30 +103,30 @@ typedef struct
 	UINT32	pending_irq;
 	UINT32    test_irq;
 	irq_entry     irq_queue[16];
-
+    
 	INT8	irq_line_state[17];
 	UINT32	m[0x200];
 	INT8  nmi_line_state;
-
+    
 	UINT16 	frc;
 	UINT16 	ocra, ocrb, icr;
 	UINT32 	frc_base;
-
+    
 	int		frt_input;
 	int 	internal_irq_level;
 	int 	internal_irq_vector;
-
-//	emu_timer *timer;
+    
+    //	emu_timer *timer;
 	UINT32 	timer_cycles;
 	UINT32 	timer_base;
 	int     timer_active;
 	
-//	emu_timer *dma_timer[2];
+    //	emu_timer *dma_timer[2];
 	UINT32 	dma_timer_cycles[2];
 	UINT32 	dma_timer_base[2];
 	int     dma_timer_active[2];
-
-//	int     is_slave, cpu_number;
+    
+    //	int     is_slave, cpu_number;
 	
 	UINT32	cycle_counts;
 	UINT32	sh2_cycles_to_run;
@@ -133,7 +134,7 @@ typedef struct
 	int     sh2_total_cycles;
 	
 	int 	(*irq_callback)(int irqline);
-
+    
 } SH2;
 
 static SH2 * sh2;
@@ -183,7 +184,7 @@ static void sh2_internal_w(UINT32 offset, UINT32 data, UINT32 mem_mask);
 #define	SH2_MAXHANDLER	(8)
 
 
-typedef struct 
+typedef struct
 {
 	SH2	sh2;
 	unsigned char * MemMap[SH2_PAGE_COUNT * 3];
@@ -214,17 +215,17 @@ static SH2EXT * Sh2Ext = NULL;
  * 0xc0000000 ~ 0xdfffffff : extend user
  * 0xe0000000 ~ 0xffffffff : internal mem
  */
- 
+
 int Sh2MapMemory(unsigned char* pMemory, unsigned int nStart, unsigned int nEnd, int nType)
 {
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2MapMemory called without init\n"));
 #endif
-
+    
 	unsigned char* Ptr = pMemory - nStart;
 	unsigned char** pMemMap = pSh2Ext->MemMap + (nStart >> SH2_SHIFT);
 	int need_mirror = (nStart < 0x08000000) ? 1 : 0;
-		
+    
 	for (unsigned long long i = (nStart & ~SH2_PAGEM); i <= nEnd; i += SH2_PAGE_SIZE, pMemMap++) {
 		if (nType & 0x01 /*SM_READ*/)  pMemMap[0] 			= Ptr + i;
 		if (nType & 0x02 /*SM_WRITE*/) pMemMap[SH2_WADD] 	= Ptr + i;
@@ -268,7 +269,7 @@ int Sh2MapHandler(uintptr_t nHandler, unsigned int nStart, unsigned int nEnd, in
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2MapHandler called without init\n"));
 #endif
-
+    
 	unsigned char** pMemMap = pSh2Ext->MemMap + (nStart >> SH2_SHIFT);
 	int need_mirror = (nStart < 0x08000000) ? 1 : 0;
 	
@@ -317,7 +318,7 @@ int Sh2SetReadByteHandler(int i, pSh2ReadByteHandler pHandler)
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2SetReadByteHandler called without init\n"));
 	if (i >= SH2_MAXHANDLER) bprintf(PRINT_ERROR, _T("Sh2SetReadByteHandler called with invalid index %x\n"), i);
 #endif
-
+    
 	if (i >= SH2_MAXHANDLER) return 1;
 	pSh2Ext->ReadByte[i] = pHandler;
 	return 0;
@@ -329,7 +330,7 @@ int Sh2SetWriteByteHandler(int i, pSh2WriteByteHandler pHandler)
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2SetWriteByteHandler called without init\n"));
 	if (i >= SH2_MAXHANDLER) bprintf(PRINT_ERROR, _T("Sh2SetWriteByteHandler called with invalid index %x\n"), i);
 #endif
-
+    
 	if (i >= SH2_MAXHANDLER) return 1;
 	pSh2Ext->WriteByte[i] = pHandler;
 	return 0;
@@ -341,7 +342,7 @@ int Sh2SetReadWordHandler(int i, pSh2ReadWordHandler pHandler)
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2SetReadWordHandler called without init\n"));
 	if (i >= SH2_MAXHANDLER) bprintf(PRINT_ERROR, _T("Sh2SetReadWordHandler called with invalid index %x\n"), i);
 #endif
-
+    
 	if (i >= SH2_MAXHANDLER) return 1;
 	pSh2Ext->ReadWord[i] = pHandler;
 	return 0;
@@ -353,7 +354,7 @@ int Sh2SetWriteWordHandler(int i, pSh2WriteWordHandler pHandler)
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2SetWriteWordHandler called without init\n"));
 	if (i >= SH2_MAXHANDLER) bprintf(PRINT_ERROR, _T("Sh2SetWriteWordHandler called with invalid index %x\n"), i);
 #endif
-
+    
 	if (i >= SH2_MAXHANDLER) return 1;
 	pSh2Ext->WriteWord[i] = pHandler;
 	return 0;
@@ -365,7 +366,7 @@ int Sh2SetReadLongHandler(int i, pSh2ReadLongHandler pHandler)
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2SetReadLongHandler called without init\n"));
 	if (i >= SH2_MAXHANDLER) bprintf(PRINT_ERROR, _T("Sh2SetReadLongHandler called with invalid index %x\n"), i);
 #endif
-
+    
 	if (i >= SH2_MAXHANDLER) return 1;
 	pSh2Ext->ReadLong[i] = pHandler;
 	return 0;
@@ -377,64 +378,64 @@ int Sh2SetWriteLongHandler(int i, pSh2WriteLongHandler pHandler)
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2SetWriteLongHandler called without init\n"));
 	if (i >= SH2_MAXHANDLER) bprintf(PRINT_ERROR, _T("Sh2SetWriteLongHandler called with invalid index %x\n"), i);
 #endif
-
+    
 	if (i >= SH2_MAXHANDLER) return 1;
 	pSh2Ext->WriteLong[i] = pHandler;
 	return 0;
 }
 
-unsigned char  __fastcall Sh2InnerReadByte(unsigned int a) 
-{ 
+unsigned char  __fastcall Sh2InnerReadByte(unsigned int a)
+{
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2InnerReadByte called without init\n"));
 #endif
-
-	return sh2_internal_r((a & 0x1fc)>>2, ~(0xff << (((~a) & 3)*8))) >> (((~a) & 3)*8); 
+    
+	return sh2_internal_r((a & 0x1fc)>>2, ~(0xff << (((~a) & 3)*8))) >> (((~a) & 3)*8);
 }
 
-unsigned short __fastcall Sh2InnerReadWord(unsigned int a) 
-{ 
+unsigned short __fastcall Sh2InnerReadWord(unsigned int a)
+{
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2InnerReadWord called without init\n"));
 #endif
-
-	return sh2_internal_r((a & 0x1fc)>>2, ~(0xffff << (((~a) & 2)*8))) >> (((~a) & 2)*8); 
+    
+	return sh2_internal_r((a & 0x1fc)>>2, ~(0xffff << (((~a) & 2)*8))) >> (((~a) & 2)*8);
 }
 
-unsigned int   __fastcall Sh2InnerReadLong(unsigned int a) 
-{ 
+unsigned int   __fastcall Sh2InnerReadLong(unsigned int a)
+{
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2InnerReadLong called without init\n"));
 #endif
-
-	return sh2_internal_r((a & 0x1fc)>>2, 0); 
+    
+	return sh2_internal_r((a & 0x1fc)>>2, 0);
 }
 
-void __fastcall Sh2InnerWriteByte(unsigned int a, unsigned char d) 
-{ 
+void __fastcall Sh2InnerWriteByte(unsigned int a, unsigned char d)
+{
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2InnerWriteByte called without init\n"));
 #endif
-
+    
 	//bprintf(0, _T("Attempt to write byte value   %02x to location %8x   offset: %04x\n"), d, a, (a & 0x1fc)>>2);
 	sh2_internal_w((a & 0x1fc)>>2, d << (((~a) & 3)*8), ~(0xff << (((~a) & 3)*8)));
 }
 
-void __fastcall Sh2InnerWriteWord(unsigned int a, unsigned short d) 
-{ 
+void __fastcall Sh2InnerWriteWord(unsigned int a, unsigned short d)
+{
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2InnerWriteWord called without init\n"));
 #endif
-
+    
 	sh2_internal_w((a & 0x1fc)>>2, d << (((~a) & 2)*8), ~(0xffff << (((~a) & 2)*8)));
 }
 
-void __fastcall Sh2InnerWriteLong(unsigned int a, unsigned int d) 
-{ 
+void __fastcall Sh2InnerWriteLong(unsigned int a, unsigned int d)
+{
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2InnerWriteLong called without init\n"));
 #endif
-
+    
     
 	sh2_internal_w((a & 0x1fc)>>2, d, 0);
 }
@@ -451,9 +452,9 @@ int Sh2Exit()
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2Exit called without init\n"));
 #endif
-
+    
 	has_sh2 = 0;
-
+    
 	if (Sh2Ext) {
 		free(Sh2Ext);
 		Sh2Ext = NULL;
@@ -461,7 +462,7 @@ int Sh2Exit()
 	pSh2Ext = NULL;
 	
 	DebugCPU_SH2Initted = 0;
-
+    
 	return 0;
 }
 
@@ -494,42 +495,42 @@ static cpu_core_config Sh2CheatCpuConfig =
 int Sh2Init(int nCount)
 {
 	DebugCPU_SH2Initted = 1;
-
+    
 	has_sh2 = 1;
-
+    
 	Sh2Ext = (SH2EXT *)malloc(sizeof(SH2EXT) * nCount);
 	if (Sh2Ext == NULL) {
 		Sh2Exit();
 		return 1;
 	}
 	memset(Sh2Ext, 0, sizeof(SH2EXT) * nCount);
-
+    
 	// init default memory handler
 	for (int i=0; i<nCount; i++) {
 		pSh2Ext = Sh2Ext + i;
 		//sh2 = & pSh2Ext->sh2;
-
+        
 		Sh2MapHandler(SH2_MAXHANDLER - 1, 0xE0000000, 0xFFFFFFFF, 0x07);
 		Sh2MapHandler(SH2_MAXHANDLER - 2, 0x40000000, 0xBFFFFFFF, 0x07);
-//		Sh2MapHandler(SH2_MAXHANDLER - 3, 0xC0000000, 0xDFFFFFFF, 0x07);
-
+        //		Sh2MapHandler(SH2_MAXHANDLER - 3, 0xC0000000, 0xDFFFFFFF, 0x07);
+        
 		Sh2SetReadByteHandler (SH2_MAXHANDLER - 1, Sh2InnerReadByte);
 		Sh2SetReadWordHandler (SH2_MAXHANDLER - 1, Sh2InnerReadWord);
 		Sh2SetReadLongHandler (SH2_MAXHANDLER - 1, Sh2InnerReadLong);
-		Sh2SetWriteByteHandler(SH2_MAXHANDLER - 1, Sh2InnerWriteByte);		
+		Sh2SetWriteByteHandler(SH2_MAXHANDLER - 1, Sh2InnerWriteByte);
 		Sh2SetWriteWordHandler(SH2_MAXHANDLER - 1, Sh2InnerWriteWord);
 		Sh2SetWriteLongHandler(SH2_MAXHANDLER - 1, Sh2InnerWriteLong);
 		
 		Sh2SetReadByteHandler (SH2_MAXHANDLER - 2, Sh2EmptyReadByte);
 		Sh2SetReadWordHandler (SH2_MAXHANDLER - 2, Sh2EmptyReadWord);
 		Sh2SetReadLongHandler (SH2_MAXHANDLER - 2, Sh2EmptyReadLong);
-		Sh2SetWriteByteHandler(SH2_MAXHANDLER - 2, Sh2EmptyWriteByte);		
+		Sh2SetWriteByteHandler(SH2_MAXHANDLER - 2, Sh2EmptyWriteByte);
 		Sh2SetWriteWordHandler(SH2_MAXHANDLER - 2, Sh2EmptyWriteWord);
 		Sh2SetWriteLongHandler(SH2_MAXHANDLER - 2, Sh2EmptyWriteLong);
-
+        
 		CpuCheatRegister(i, &Sh2CheatCpuConfig);
 	}
-
+    
 	return 0;
 }
 
@@ -538,7 +539,7 @@ void Sh2Open(const int i)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2Open called without init\n"));
 #endif
-
+    
 	pSh2Ext = Sh2Ext + i;
 	sh2 = & (pSh2Ext->sh2);
 }
@@ -555,7 +556,7 @@ int Sh2GetActive()
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2GetActive called without init\n"));
 #endif
-
+    
 	return 0;
 }
 
@@ -564,15 +565,15 @@ void Sh2Reset(unsigned int pc, unsigned r15)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2Reset called without init\n"));
 #endif
-
+    
 	memset(sh2, 0, sizeof(SH2) - 4);
-
+    
 	sh2->pc = pc;
 	sh2->r[15] = r15;
 	sh2->sr = I;
 	
 	change_pc(sh2->pc & AM);
-
+    
 	sh2->internal_irq_level = -1;
 }
 
@@ -580,7 +581,7 @@ void Sh2Reset(unsigned int pc, unsigned r15)
 
 unsigned char program_read_byte_32be(unsigned int /*A*/)
 {
-	return 0;	
+	return 0;
 }
 
 unsigned short program_read_word_32be(unsigned int /*A*/)
@@ -636,10 +637,10 @@ SH2_INLINE unsigned short cpu_readop16(unsigned int A)
 
 SH2_INLINE UINT8 RB(UINT32 A)
 {
-/*	if (A >= 0xe0000000) return sh2_internal_r((A & 0x1fc)>>2, ~(0xff << (((~A) & 3)*8))) >> (((~A) & 3)*8);
-	if (A >= 0xc0000000) return program_read_byte_32be(A);
-	if (A >= 0x40000000) return 0xa5;
-	return program_read_byte_32be(A & AM); */
+    /*	if (A >= 0xe0000000) return sh2_internal_r((A & 0x1fc)>>2, ~(0xff << (((~A) & 3)*8))) >> (((~A) & 3)*8);
+     if (A >= 0xc0000000) return program_read_byte_32be(A);
+     if (A >= 0x40000000) return 0xa5;
+     return program_read_byte_32be(A & AM); */
 	
 	unsigned char * pr;
 	pr = pSh2Ext->MemMap[ A >> SH2_SHIFT ];
@@ -654,10 +655,10 @@ SH2_INLINE UINT8 RB(UINT32 A)
 
 SH2_INLINE UINT16 RW(UINT32 A)
 {
-/*	if (A >= 0xe0000000) return sh2_internal_r((A & 0x1fc)>>2, ~(0xffff << (((~A) & 2)*8))) >> (((~A) & 2)*8);
-	if (A >= 0xc0000000) return program_read_word_32be(A);
-	if (A >= 0x40000000) return 0xa5a5;
-	return program_read_word_32be(A & AM); */
+    /*	if (A >= 0xe0000000) return sh2_internal_r((A & 0x1fc)>>2, ~(0xffff << (((~A) & 2)*8))) >> (((~A) & 2)*8);
+     if (A >= 0xc0000000) return program_read_word_32be(A);
+     if (A >= 0x40000000) return 0xa5a5;
+     return program_read_word_32be(A & AM); */
 	
 	unsigned char * pr;
 	pr = pSh2Ext->MemMap[ A >> SH2_SHIFT ];
@@ -673,7 +674,7 @@ SH2_INLINE UINT16 RW(UINT32 A)
 
 SH2_INLINE UINT16 OPRW(UINT32 A)
 {
-
+    
 	unsigned char * pr;
 	pr = pSh2Ext->MemMap[ (A >> SH2_SHIFT) + SH2_WADD * 2 ];
 	if ( (uintptr_t)pr >= SH2_MAXHANDLER ) {
@@ -688,10 +689,10 @@ SH2_INLINE UINT16 OPRW(UINT32 A)
 
 SH2_INLINE UINT32 RL(UINT32 A)
 {
-/*	if (A >= 0xe0000000) return sh2_internal_r((A & 0x1fc)>>2, 0);
-	if (A >= 0xc0000000) return program_read_dword_32be(A);
-	if (A >= 0x40000000) return 0xa5a5a5a5;
-	return program_read_dword_32be(A & AM);		*/
+    /*	if (A >= 0xe0000000) return sh2_internal_r((A & 0x1fc)>>2, 0);
+     if (A >= 0xc0000000) return program_read_dword_32be(A);
+     if (A >= 0x40000000) return 0xa5a5a5a5;
+     return program_read_dword_32be(A & AM);		*/
 	
 	unsigned char * pr;
 	pr = pSh2Ext->MemMap[ A >> SH2_SHIFT ];
@@ -704,14 +705,6 @@ SH2_INLINE UINT32 RL(UINT32 A)
 
 
 
-// HACK for touchpad 'follow finger' mode
-extern float glob_mov_x,glob_mov_y;
-extern float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
-extern int glob_mov_init,glob_touchpad_cnt,glob_touchpad_fingerid,glob_ffingeron;
-extern int visible_area_w,visible_area_h;
-extern int glob_touchpad_hack;
-extern float glob_scr_ratioX,glob_scr_ratioY;
-extern int wait_control;
 
 static int pos_ofsx,pos_ofsy;
 
@@ -720,31 +713,71 @@ void PatchMemorySH2(unsigned int adrX,unsigned int adrY,int minX,int maxX,int mi
     unsigned char * pr;
     long long dtmp;
     int newd,shift;
-    UINT32 d;
+    UINT32 d,dx,dy;
     pr = pSh2Ext->MemMap[(adrX >> SH2_SHIFT) + SH2_WADD];
-	
-    if ( glob_mov_init ) {
-        pos_ofsy=*((unsigned short *)(pr + ((adrY^2) & SH2_PAGEM)));
-        pos_ofsx=*((unsigned short *)(pr + ((adrX^2) & SH2_PAGEM)));
-        glob_mov_init=0;
+    
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) {//REPLAY playback
+        if (glob_replay_last_fingerOn) {
+            dx=glob_replay_last_dx16;
+            dy=glob_replay_last_dy16;
+            *((unsigned short *)(pr + ((adrY^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(dy);
+            *((unsigned short *)(pr + ((adrX^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(dx);
+            
+        }
+    } else {
+        
+        
+        if ( glob_mov_init ) {
+            pos_ofsy=*((unsigned short *)(pr + ((adrY^2) & SH2_PAGEM)));
+            pos_ofsx=*((unsigned short *)(pr + ((adrX^2) & SH2_PAGEM)));
+            glob_mov_init=0;
+        }
+        
+        shift=1;
+        dtmp=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
+        if (dtmp<minY) dtmp=minY;
+        if (dtmp>maxY) dtmp=maxY;
+        newd=dtmp;
+        dy=newd;
+        glob_mov_y=0;
+        
+        dtmp=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
+        if (dtmp<minX) dtmp=minX;
+        if (dtmp>maxX) dtmp=maxX;
+        newd=dtmp;
+        dx=newd;
+        glob_mov_x=0;
+        
+        if (glob_touchpad_fingerid) { //TOUCH ACTIVE, need to patch mem
+            *((unsigned short *)(pr + ((adrY^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(dy);
+            *((unsigned short *)(pr + ((adrX^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(dx);
+            
+            if (glob_replay_mode==REPLAY_RECORD_MODE) {  //Recording replay
+                
+                if (glob_replay_last_fingerOn==0) {
+                    glob_replay_flag|=REPLAY_FLAG_TOUCHONOFF; //change touch status
+                    glob_replay_last_fingerOn=1;
+                }
+                if (glob_replay_last_dx16!=dx) {
+                    glob_replay_flag|=REPLAY_FLAG_POSX; //change patch memX
+                    glob_replay_last_dx16=dx;
+                }
+                if (glob_replay_last_dy16!=dy) {
+                    glob_replay_flag|=REPLAY_FLAG_POSY; //change patch memY
+                    glob_replay_last_dy16=dy;
+                }
+                
+                
+            }
+        } else {  //TOUCH NOT ACTIVE
+            if (glob_replay_mode==REPLAY_RECORD_MODE) {
+                if (glob_replay_last_fingerOn) {
+                    glob_replay_flag|=REPLAY_FLAG_TOUCHONOFF; //change touch status
+                    glob_replay_last_fingerOn=0;
+                }
+            }
+        }
     }
-    
-    shift=1;
-    dtmp=pos_ofsy+((glob_pos_yi-glob_pos_y)*shift*glob_scr_ratioY);
-    if (dtmp<minY) dtmp=minY;
-    if (dtmp>maxY) dtmp=maxY;
-    newd=dtmp;
-    d=newd;
-    if (glob_touchpad_fingerid) *((unsigned short *)(pr + ((adrY^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
-    glob_mov_y=0;
-    
-    dtmp=pos_ofsx+((glob_pos_x-glob_pos_xi)*shift*glob_scr_ratioX);
-    if (dtmp<minX) dtmp=minX;
-    if (dtmp>maxX) dtmp=maxX;
-    newd=dtmp;
-    d=newd;
-    if (glob_touchpad_fingerid) *((unsigned short *)(pr + ((adrX^2) & SH2_PAGEM))) = (UINT16)BURN_ENDIAN_SWAP_INT16(d);
-    glob_mov_x=0;
 }
 
 
@@ -758,6 +791,14 @@ void PatchMemorySH2FFinger() {
             //Dragon Blaze
             PatchMemorySH2(0x06070EF8,0x06070EFC,0x4,0xDB,0x18,0x106);
             return;
+        case 30:
+            //Strikers 1945 II
+            PatchMemorySH2(0x060103A4,0x060103A8,0xA,0xD5,0x18,0x116);
+            return;
+        case 31:
+            //Strikers 1945 III
+            PatchMemorySH2(0x06072690,0x06072694,0x4,0xDB,0x18,0x116);
+            return;
         default:break;
             
     }
@@ -769,10 +810,10 @@ void PatchMemorySH2FFinger() {
 
 SH2_INLINE void WB(UINT32 A, UINT8 V)
 {
-/*	if (A >= 0xe0000000) { sh2_internal_w((A & 0x1fc)>>2, V << (((~A) & 3)*8), ~(0xff << (((~A) & 3)*8))); return; }
-	if (A >= 0xc0000000) { program_write_byte_32be(A,V); return; }
-	if (A >= 0x40000000) return;
-	program_write_byte_32be(A & AM,V); */
+    /*	if (A >= 0xe0000000) { sh2_internal_w((A & 0x1fc)>>2, V << (((~A) & 3)*8), ~(0xff << (((~A) & 3)*8))); return; }
+     if (A >= 0xc0000000) { program_write_byte_32be(A,V); return; }
+     if (A >= 0x40000000) return;
+     program_write_byte_32be(A & AM,V); */
 	
 	unsigned char* pr;
 	pr = pSh2Ext->MemMap[(A >> SH2_SHIFT) + SH2_WADD];
@@ -788,17 +829,24 @@ SH2_INLINE void WB(UINT32 A, UINT8 V)
 
 SH2_INLINE void WW(UINT32 A, UINT16 V)
 {
-/*	if (A >= 0xe0000000) { sh2_internal_w((A & 0x1fc)>>2, V << (((~A) & 2)*8), ~(0xffff << (((~A) & 2)*8))); return; }
-	if (A >= 0xc0000000) { program_write_word_32be(A,V); return; }
-	if (A >= 0x40000000) return;
-	program_write_word_32be(A & AM,V); */
+    /*	if (A >= 0xe0000000) { sh2_internal_w((A & 0x1fc)>>2, V << (((~A) & 2)*8), ~(0xffff << (((~A) & 2)*8))); return; }
+     if (A >= 0xc0000000) { program_write_word_32be(A,V); return; }
+     if (A >= 0x40000000) return;
+     program_write_word_32be(A & AM,V); */
+    
+    int touch_active=0;
+    
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) {//REPLAY
+        touch_active=glob_replay_last_fingerOn;
+    } else touch_active=glob_touchpad_fingerid;
+    
     
 	unsigned char * pr;
 	pr = pSh2Ext->MemMap[(A >> SH2_SHIFT) + SH2_WADD];
 	if ((uintptr_t)pr >= SH2_MAXHANDLER) {
         
         //hack
-        if (glob_ffingeron&&glob_touchpad_fingerid&&(wait_control==0))
+        if (glob_ffingeron&&touch_active&&(wait_control==0))
             switch (glob_touchpad_hack) {
                 case 11: //gunbird 2
                     if ( ((A==0x6055010)||(A==0x6055014)) ) return;
@@ -806,8 +854,14 @@ SH2_INLINE void WW(UINT32 A, UINT16 V)
                 case 12: //dragon blaze
                     if ( ((A==0x6070EF8)||(A==0x6070EFC)) ) return;
                     break;
+                case 30: //strikers 1945 II
+                    if ( ((A==0x60103A4)||(A==0x60103A8)) ) return;
+                    break;
+                case 31: //strikers 1945 III
+                    if ( ((A==0x6072690)||(A==0x6072694)) ) return;
+                    break;
             }
-    
+        
 #ifdef LSB_FIRST
 		A ^= 2;
 #endif
@@ -819,14 +873,39 @@ SH2_INLINE void WW(UINT32 A, UINT16 V)
 
 SH2_INLINE void WL(UINT32 A, UINT32 V)
 {
-/*	if (A >= 0xe0000000) { sh2_internal_w((A & 0x1fc)>>2, V, 0); return; }
-	if (A >= 0xc0000000) { program_write_dword_32be(A,V); return; }
-	if (A >= 0x40000000) return;
-	program_write_dword_32be(A & AM,V); */
+    /*	if (A >= 0xe0000000) { sh2_internal_w((A & 0x1fc)>>2, V, 0); return; }
+     if (A >= 0xc0000000) { program_write_dword_32be(A,V); return; }
+     if (A >= 0x40000000) return;
+     program_write_dword_32be(A & AM,V); */
+    
+    int touch_active=0;
+    
+    if (glob_replay_mode==REPLAY_PLAYBACK_MODE) {//REPLAY
+        touch_active=glob_replay_last_fingerOn;
+    } else touch_active=glob_touchpad_fingerid;
+    
     
 	unsigned char * pr;
 	pr = pSh2Ext->MemMap[(A >> SH2_SHIFT) + SH2_WADD];
 	if ((uintptr_t)pr >= SH2_MAXHANDLER) {
+        
+        //hack
+        if (glob_ffingeron&&touch_active&&(wait_control==0))
+            switch (glob_touchpad_hack) {
+                case 11: //gunbird 2
+                    if ( ((A==0x6055010)||(A==0x6055014)) ) return;
+                    break;
+                case 12: //dragon blaze
+                    if ( ((A==0x6070EF8)||(A==0x6070EFC)) ) return;
+                    break;
+                case 30: //strikers 1945 II
+                    if ( ((A==0x60103A4)||(A==0x60103A8)) ) return;
+                    break;
+                case 31: //strikers 1945 III
+                    if ( ((A==0x6072690)||(A==0x6072694)) ) return;
+                    break;
+            }
+        
 		*((unsigned int *)(pr + (A & SH2_PAGEM))) = (unsigned int)V;
 		return;
 	}
@@ -836,12 +915,12 @@ SH2_INLINE void WL(UINT32 A, UINT32 V)
 SH2_INLINE void sh2_exception(/*const char *message,*/ int irqline)
 {
 	int vector;
-
+    
 	if (irqline != 16)
 	{
 		if (irqline <= (signed int)((sh2->sr >> 4) & 15)) /* If the cpu forbids this interrupt */
 			return;
-
+        
 		// if this is an sh2 internal irq, use its vector
 		if (sh2->internal_irq_level == irqline)
 		{
@@ -871,18 +950,18 @@ SH2_INLINE void sh2_exception(/*const char *message,*/ int irqline)
 		vector = 11;
 		//LOG(("SH-2 #%d nmi exception (autovector: $%x) after [%s]\n", cpu_getactivecpu(), vector, message));
 	}
-
+    
 	sh2->r[15] -= 4;
 	WL( sh2->r[15], sh2->sr );		/* push SR onto stack */
 	sh2->r[15] -= 4;
 	WL( sh2->r[15], sh2->pc );		/* push PC onto stack */
-
+    
 	/* set I flags in SR */
 	if (irqline > SH2_INT_15)
 		sh2->sr = sh2->sr | I;
 	else
 		sh2->sr = (sh2->sr & ~I) | (irqline << 4);
-
+    
 	/* fetch PC */
 	sh2->pc = RL( sh2->vbr + vector * 4 );
 	change_pc(sh2->pc & AM);
@@ -890,33 +969,33 @@ SH2_INLINE void sh2_exception(/*const char *message,*/ int irqline)
 
 #define CHECK_PENDING_IRQ(/*message*/)			\
 do {											\
-	int irq = -1;								\
-	if (sh2->pending_irq & (1 <<  0)) irq =	0;	\
-	if (sh2->pending_irq & (1 <<  1)) irq =	1;	\
-	if (sh2->pending_irq & (1 <<  2)) irq =	2;	\
-	if (sh2->pending_irq & (1 <<  3)) irq =	3;	\
-	if (sh2->pending_irq & (1 <<  4)) irq =	4;	\
-	if (sh2->pending_irq & (1 <<  5)) irq =	5;	\
-	if (sh2->pending_irq & (1 <<  6)) irq =	6;	\
-	if (sh2->pending_irq & (1 <<  7)) irq =	7;	\
-	if (sh2->pending_irq & (1 <<  8)) irq =	8;	\
-	if (sh2->pending_irq & (1 <<  9)) irq =	9;	\
-	if (sh2->pending_irq & (1 << 10)) irq = 10;	\
-	if (sh2->pending_irq & (1 << 11)) irq = 11;	\
-	if (sh2->pending_irq & (1 << 12)) irq = 12;	\
-	if (sh2->pending_irq & (1 << 13)) irq = 13;	\
-	if (sh2->pending_irq & (1 << 14)) irq = 14;	\
-	if (sh2->pending_irq & (1 << 15)) irq = 15;	\
-	if ((sh2->internal_irq_level != -1) && (sh2->internal_irq_level > irq)) irq = sh2->internal_irq_level; \
-	if (irq >= 0)								\
-		sh2_exception(/*message,*/irq); 			\
+int irq = -1;								\
+if (sh2->pending_irq & (1 <<  0)) irq =	0;	\
+if (sh2->pending_irq & (1 <<  1)) irq =	1;	\
+if (sh2->pending_irq & (1 <<  2)) irq =	2;	\
+if (sh2->pending_irq & (1 <<  3)) irq =	3;	\
+if (sh2->pending_irq & (1 <<  4)) irq =	4;	\
+if (sh2->pending_irq & (1 <<  5)) irq =	5;	\
+if (sh2->pending_irq & (1 <<  6)) irq =	6;	\
+if (sh2->pending_irq & (1 <<  7)) irq =	7;	\
+if (sh2->pending_irq & (1 <<  8)) irq =	8;	\
+if (sh2->pending_irq & (1 <<  9)) irq =	9;	\
+if (sh2->pending_irq & (1 << 10)) irq = 10;	\
+if (sh2->pending_irq & (1 << 11)) irq = 11;	\
+if (sh2->pending_irq & (1 << 12)) irq = 12;	\
+if (sh2->pending_irq & (1 << 13)) irq = 13;	\
+if (sh2->pending_irq & (1 << 14)) irq = 14;	\
+if (sh2->pending_irq & (1 << 15)) irq = 15;	\
+if ((sh2->internal_irq_level != -1) && (sh2->internal_irq_level > irq)) irq = sh2->internal_irq_level; \
+if (irq >= 0)								\
+sh2_exception(/*message,*/irq); 			\
 } while(0)
 
 
 #if USE_JUMPTABLE
 
-	#include "sh2op.c"
-	
+#include "sh2op.c"
+
 #else
 
 /*  code                 cycles  t-bit
@@ -944,7 +1023,7 @@ SH2_INLINE void ADDI(UINT32 i, UINT32 n)
 SH2_INLINE void ADDC(UINT32 m, UINT32 n)
 {
 	UINT32 tmp0, tmp1;
-
+    
 	tmp1 = sh2->r[n] + sh2->r[m];
 	tmp0 = sh2->r[n];
 	sh2->r[n] = tmp1 + (sh2->sr & T);
@@ -963,7 +1042,7 @@ SH2_INLINE void ADDC(UINT32 m, UINT32 n)
 SH2_INLINE void ADDV(UINT32 m, UINT32 n)
 {
 	INT32 dest, src, ans;
-
+    
 	if ((INT32) sh2->r[n] >= 0)
 		dest = 0;
 	else
@@ -1016,7 +1095,7 @@ SH2_INLINE void ANDI(UINT32 i)
 SH2_INLINE void ANDM(UINT32 i)
 {
 	UINT32 temp;
-
+    
 	sh2->ea = sh2->gbr + sh2->r[0];
 	temp = i & RB( sh2->ea );
 	WB( sh2->ea, temp );
@@ -1060,7 +1139,7 @@ SH2_INLINE void BFS(UINT32 d)
 SH2_INLINE void BRA(UINT32 d)
 {
 	INT32 disp = ((INT32)d << 20) >> 20;
-
+    
 #if BUSY_LOOP_HACKS
 	if (disp == -2)
 	{
@@ -1101,7 +1180,7 @@ SH2_INLINE void BRAF(UINT32 m)
 SH2_INLINE void BSR(UINT32 d)
 {
 	INT32 disp = ((INT32)d << 20) >> 20;
-
+    
 	sh2->pr = sh2->pc + 2;
 	sh2->delay = sh2->pc;
 	sh2->pc = sh2->ea = sh2->pc + disp * 2 + 2;
@@ -1259,19 +1338,19 @@ SH2_INLINE void CMPPZ(UINT32 n)
  * CMP_STR  Rm,Rn
  */
 SH2_INLINE void CMPSTR(UINT32 m, UINT32 n)
- {
-  UINT32 temp;
-  INT32 HH, HL, LH, LL;
-  temp = sh2->r[n] ^ sh2->r[m];
-  HH = (temp >> 24) & 0xff;
-  HL = (temp >> 16) & 0xff;
-  LH = (temp >> 8) & 0xff;
-  LL = temp & 0xff;
-  if (HH && HL && LH && LL)
-   sh2->sr &= ~T;
-  else
-   sh2->sr |= T;
- }
+{
+    UINT32 temp;
+    INT32 HH, HL, LH, LL;
+    temp = sh2->r[n] ^ sh2->r[m];
+    HH = (temp >> 24) & 0xff;
+    HL = (temp >> 16) & 0xff;
+    LH = (temp >> 8) & 0xff;
+    LL = temp & 0xff;
+    if (HH && HL && LH && LL)
+        sh2->sr &= ~T;
+    else
+        sh2->sr |= T;
+}
 
 
 /*  code                 cycles  t-bit
@@ -1281,7 +1360,7 @@ SH2_INLINE void CMPSTR(UINT32 m, UINT32 n)
 SH2_INLINE void CMPIM(UINT32 i)
 {
 	UINT32 imm = (UINT32)(INT32)(INT16)(INT8)i;
-
+    
 	if (sh2->r[0] == imm)
 		sh2->sr |= T;
 	else
@@ -1325,15 +1404,15 @@ SH2_INLINE void DIV1(UINT32 m, UINT32 n)
 {
 	UINT32 tmp0;
 	UINT32 old_q;
-
+    
 	old_q = sh2->sr & Q;
 	if (0x80000000 & sh2->r[n])
 		sh2->sr |= Q;
 	else
 		sh2->sr &= ~Q;
-
+    
 	sh2->r[n] = (sh2->r[n] << 1) | (sh2->sr & T);
-
+    
 	if (!old_q)
 	{
 		if (!(sh2->sr & M))
@@ -1345,11 +1424,11 @@ SH2_INLINE void DIV1(UINT32 m, UINT32 n)
 					sh2->sr |= Q;
 				else
 					sh2->sr &= ~Q;
-			else
-				if(sh2->r[n] > tmp0)
-					sh2->sr &= ~Q;
-				else
-					sh2->sr |= Q;
+                else
+                    if(sh2->r[n] > tmp0)
+                        sh2->sr &= ~Q;
+                    else
+                        sh2->sr |= Q;
 		}
 		else
 		{
@@ -1382,11 +1461,11 @@ SH2_INLINE void DIV1(UINT32 m, UINT32 n)
 					sh2->sr |= Q;
 				else
 					sh2->sr &= ~Q;
-			else
-				if(sh2->r[n] < tmp0)
-					sh2->sr &= ~Q;
-				else
-					sh2->sr |= Q;
+                else
+                    if(sh2->r[n] < tmp0)
+                        sh2->sr &= ~Q;
+                    else
+                        sh2->sr |= Q;
 		}
 		else
 		{
@@ -1397,14 +1476,14 @@ SH2_INLINE void DIV1(UINT32 m, UINT32 n)
 					sh2->sr &= ~Q;
 				else
 					sh2->sr |= Q;
-			else
-				if(sh2->r[n] > tmp0)
-					sh2->sr |= Q;
-				else
-					sh2->sr &= ~Q;
+                else
+                    if(sh2->r[n] > tmp0)
+                        sh2->sr |= Q;
+                    else
+                        sh2->sr &= ~Q;
 		}
 	}
-
+    
 	tmp0 = (sh2->sr & (Q | M));
 	if((!tmp0) || (tmp0 == 0x300)) /* if Q == M set T else clear T */
 		sh2->sr |= T;
@@ -1418,7 +1497,7 @@ SH2_INLINE void DMULS(UINT32 m, UINT32 n)
 	UINT32 RnL, RnH, RmL, RmH, Res0, Res1, Res2;
 	UINT32 temp0, temp1, temp2, temp3;
 	INT32 tempm, tempn, fnLmL;
-
+    
 	tempn = (INT32) sh2->r[n];
 	tempm = (INT32) sh2->r[m];
 	if (tempn < 0)
@@ -1466,7 +1545,7 @@ SH2_INLINE void DMULU(UINT32 m, UINT32 n)
 {
 	UINT32 RnL, RnH, RmL, RmH, Res0, Res1, Res2;
 	UINT32 temp0, temp1, temp2, temp3;
-
+    
 	RnL = sh2->r[n] & 0x0000ffff;
 	RnH = (sh2->r[n] >> 16) & 0x0000ffff;
 	RmL = sh2->r[m] & 0x0000ffff;
@@ -1654,7 +1733,7 @@ SH2_INLINE void MAC_L(UINT32 m, UINT32 n)
 	UINT32 RnL, RnH, RmL, RmH, Res0, Res1, Res2;
 	UINT32 temp0, temp1, temp2, temp3;
 	INT32 tempm, tempn, fnLmL;
-
+    
 	tempn = (INT32) RL( sh2->r[n] );
 	sh2->r[n] += 4;
 	tempm = (INT32) RL( sh2->r[m] );
@@ -1730,7 +1809,7 @@ SH2_INLINE void MAC_W(UINT32 m, UINT32 n)
 {{
 	INT32 tempm, tempn, dest, src, ans;
 	UINT32 templ;
-
+    
 	tempn = (INT32) RW( sh2->r[n] );
 	sh2->r[n] += 2;
 	tempm = (INT32) RW( sh2->r[m] );
@@ -1761,19 +1840,19 @@ SH2_INLINE void MAC_W(UINT32 m, UINT32 n)
 	if (sh2->sr & S)
 	{
 		if (ans == 1)
-			{
-				if (src == 0)
-					sh2->macl = 0x7fffffff;
-				if (src == 2)
-					sh2->macl = 0x80000000;
-			}
+        {
+            if (src == 0)
+                sh2->macl = 0x7fffffff;
+            if (src == 2)
+                sh2->macl = 0x80000000;
+        }
 	}
 	else
 	{
 		sh2->mach += tempn;
 		if (templ > sh2->macl)
 			sh2->mach += 1;
-		}
+    }
 	sh2->sh2_icount -= 2;
 }}
 
@@ -1830,7 +1909,7 @@ SH2_INLINE void MOVBM(UINT32 m, UINT32 n)
 {
 	/* SMG : bug fix, was reading sh2->r[n] */
 	UINT32 data = sh2->r[m] & 0x000000ff;
-
+    
 	sh2->r[n] -= 1;
 	WB( sh2->r[n], data );
 }
@@ -1839,7 +1918,7 @@ SH2_INLINE void MOVBM(UINT32 m, UINT32 n)
 SH2_INLINE void MOVWM(UINT32 m, UINT32 n)
 {
 	UINT32 data = sh2->r[m] & 0x0000ffff;
-
+    
 	sh2->r[n] -= 2;
 	WW( sh2->r[n], data );
 }
@@ -1848,7 +1927,7 @@ SH2_INLINE void MOVWM(UINT32 m, UINT32 n)
 SH2_INLINE void MOVLM(UINT32 m, UINT32 n)
 {
 	UINT32 data = sh2->r[m];
-
+    
 	sh2->r[n] -= 4;
 	WL( sh2->r[n], data );
 }
@@ -2080,7 +2159,7 @@ SH2_INLINE void NEG(UINT32 m, UINT32 n)
 SH2_INLINE void NEGC(UINT32 m, UINT32 n)
 {
 	UINT32 temp;
-
+    
 	temp = sh2->r[m];
 	sh2->r[n] = -temp - (sh2->sr & T);
 	if (temp || (sh2->sr & T))
@@ -2117,7 +2196,7 @@ SH2_INLINE void ORI(UINT32 i)
 SH2_INLINE void ORM(UINT32 i)
 {
 	UINT32 temp;
-
+    
 	sh2->ea = sh2->gbr + sh2->r[0];
 	temp = RB( sh2->ea );
 	temp |= i;
@@ -2128,7 +2207,7 @@ SH2_INLINE void ORM(UINT32 i)
 SH2_INLINE void ROTCL(UINT32 n)
 {
 	UINT32 temp;
-
+    
 	temp = (sh2->r[n] >> 31) & T;
 	sh2->r[n] = (sh2->r[n] << 1) | (sh2->sr & T);
 	sh2->sr = (sh2->sr & ~T) | temp;
@@ -2357,7 +2436,7 @@ SH2_INLINE void SUB(UINT32 m, UINT32 n)
 SH2_INLINE void SUBC(UINT32 m, UINT32 n)
 {
 	UINT32 tmp0, tmp1;
-
+    
 	tmp1 = sh2->r[n] - sh2->r[m];
 	tmp0 = sh2->r[n];
 	sh2->r[n] = tmp1 - (sh2->sr & T);
@@ -2373,7 +2452,7 @@ SH2_INLINE void SUBC(UINT32 m, UINT32 n)
 SH2_INLINE void SUBV(UINT32 m, UINT32 n)
 {
 	INT32 dest, src, ans;
-
+    
 	if ((INT32) sh2->r[n] >= 0)
 		dest = 0;
 	else
@@ -2404,7 +2483,7 @@ SH2_INLINE void SUBV(UINT32 m, UINT32 n)
 SH2_INLINE void SWAPB(UINT32 m, UINT32 n)
 {
 	UINT32 temp0, temp1;
-
+    
 	temp0 = sh2->r[m] & 0xffff0000;
 	temp1 = (sh2->r[m] & 0x000000ff) << 8;
 	sh2->r[n] = (sh2->r[m] >> 8) & 0x000000ff;
@@ -2415,7 +2494,7 @@ SH2_INLINE void SWAPB(UINT32 m, UINT32 n)
 SH2_INLINE void SWAPW(UINT32 m, UINT32 n)
 {
 	UINT32 temp;
-
+    
 	temp = (sh2->r[m] >> 16) & 0x0000ffff;
 	sh2->r[n] = (sh2->r[m] << 16) | temp;
 }
@@ -2441,17 +2520,17 @@ SH2_INLINE void TAS(UINT32 n)
 SH2_INLINE void TRAPA(UINT32 i)
 {
 	UINT32 imm = i & 0xff;
-
+    
 	sh2->ea = sh2->vbr + imm * 4;
-
+    
 	sh2->r[15] -= 4;
 	WL( sh2->r[15], sh2->sr );
 	sh2->r[15] -= 4;
 	WL( sh2->r[15], sh2->pc );
-
+    
 	sh2->pc = RL( sh2->ea );
 	change_pc(sh2->pc & AM);
-
+    
 	sh2->sh2_icount -= 7;
 }
 
@@ -2468,7 +2547,7 @@ SH2_INLINE void TST(UINT32 m, UINT32 n)
 SH2_INLINE void TSTI(UINT32 i)
 {
 	UINT32 imm = i & 0xff;
-
+    
 	if ((imm & sh2->r[0]) == 0)
 		sh2->sr |= T;
 	else
@@ -2479,7 +2558,7 @@ SH2_INLINE void TSTI(UINT32 i)
 SH2_INLINE void TSTM(UINT32 i)
 {
 	UINT32 imm = i & 0xff;
-
+    
 	sh2->ea = sh2->gbr + sh2->r[0];
 	if ((imm & RB( sh2->ea )) == 0)
 		sh2->sr |= T;
@@ -2506,7 +2585,7 @@ SH2_INLINE void XORM(UINT32 i)
 {
 	UINT32 imm = i & 0xff;
 	UINT32 temp;
-
+    
 	sh2->ea = sh2->gbr + sh2->r[0];
 	temp = RB( sh2->ea );
 	temp ^= imm;
@@ -2518,7 +2597,7 @@ SH2_INLINE void XORM(UINT32 i)
 SH2_INLINE void XTRCT(UINT32 m, UINT32 n)
 {
 	UINT32 temp;
-
+    
 	temp = (sh2->r[m] << 16) & 0xffff0000;
 	sh2->r[n] = (sh2->r[n] >> 16) & 0x0000ffff;
 	sh2->r[n] |= temp;
@@ -2532,76 +2611,76 @@ SH2_INLINE void op0000(UINT16 opcode)
 {
 	switch (opcode & 0x3F)
 	{
-	case 0x00: NOP();						break;
-	case 0x01: NOP();						break;
-	case 0x02: STCSR(Rn);					break;
-	case 0x03: BSRF(Rn);					break;
-	case 0x04: MOVBS0(Rm, Rn);				break;
-	case 0x05: MOVWS0(Rm, Rn);				break;
-	case 0x06: MOVLS0(Rm, Rn);				break;
-	case 0x07: MULL(Rm, Rn);				break;
-	case 0x08: CLRT();						break;
-	case 0x09: NOP();						break;
-	case 0x0a: STSMACH(Rn); 				break;
-	case 0x0b: RTS();						break;
-	case 0x0c: MOVBL0(Rm, Rn);				break;
-	case 0x0d: MOVWL0(Rm, Rn);				break;
-	case 0x0e: MOVLL0(Rm, Rn);				break;
-	case 0x0f: MAC_L(Rm, Rn);				break;
-
-	case 0x10: NOP();						break;
-	case 0x11: NOP();						break;
-	case 0x12: STCGBR(Rn);					break;
-	case 0x13: NOP();						break;
-	case 0x14: MOVBS0(Rm, Rn);				break;
-	case 0x15: MOVWS0(Rm, Rn);				break;
-	case 0x16: MOVLS0(Rm, Rn);				break;
-	case 0x17: MULL(Rm, Rn);				break;
-	case 0x18: SETT();						break;
-	case 0x19: DIV0U(); 					break;
-	case 0x1a: STSMACL(Rn); 				break;
-	case 0x1b: SLEEP(); 					break;
-	case 0x1c: MOVBL0(Rm, Rn);				break;
-	case 0x1d: MOVWL0(Rm, Rn);				break;
-	case 0x1e: MOVLL0(Rm, Rn);				break;
-	case 0x1f: MAC_L(Rm, Rn);				break;
-
-	case 0x20: NOP();						break;
-	case 0x21: NOP();						break;
-	case 0x22: STCVBR(Rn);					break;
-	case 0x23: BRAF(Rn);					break;
-	case 0x24: MOVBS0(Rm, Rn);				break;
-	case 0x25: MOVWS0(Rm, Rn);				break;
-	case 0x26: MOVLS0(Rm, Rn);				break;
-	case 0x27: MULL(Rm, Rn);				break;
-	case 0x28: CLRMAC();					break;
-	case 0x29: MOVT(Rn);					break;
-	case 0x2a: STSPR(Rn);					break;
-	case 0x2b: RTE();						break;
-	case 0x2c: MOVBL0(Rm, Rn);				break;
-	case 0x2d: MOVWL0(Rm, Rn);				break;
-	case 0x2e: MOVLL0(Rm, Rn);				break;
-	case 0x2f: MAC_L(Rm, Rn);				break;
-
-	case 0x30: NOP();						break;
-	case 0x31: NOP();						break;
-	case 0x32: NOP();						break;
-	case 0x33: NOP();						break;
-	case 0x34: MOVBS0(Rm, Rn);				break;
-	case 0x35: MOVWS0(Rm, Rn);				break;
-	case 0x36: MOVLS0(Rm, Rn);				break;
-	case 0x37: MULL(Rm, Rn);				break;
-	case 0x38: NOP();						break;
-	case 0x39: NOP();						break;
-	case 0x3a: NOP();						break;
-	case 0x3b: NOP();						break;
-	case 0x3c: MOVBL0(Rm, Rn);				break;
-	case 0x3d: MOVWL0(Rm, Rn);				break;
-	case 0x3e: MOVLL0(Rm, Rn);				break;
-	case 0x3f: MAC_L(Rm, Rn);				break;
-
-
-
+        case 0x00: NOP();						break;
+        case 0x01: NOP();						break;
+        case 0x02: STCSR(Rn);					break;
+        case 0x03: BSRF(Rn);					break;
+        case 0x04: MOVBS0(Rm, Rn);				break;
+        case 0x05: MOVWS0(Rm, Rn);				break;
+        case 0x06: MOVLS0(Rm, Rn);				break;
+        case 0x07: MULL(Rm, Rn);				break;
+        case 0x08: CLRT();						break;
+        case 0x09: NOP();						break;
+        case 0x0a: STSMACH(Rn); 				break;
+        case 0x0b: RTS();						break;
+        case 0x0c: MOVBL0(Rm, Rn);				break;
+        case 0x0d: MOVWL0(Rm, Rn);				break;
+        case 0x0e: MOVLL0(Rm, Rn);				break;
+        case 0x0f: MAC_L(Rm, Rn);				break;
+            
+        case 0x10: NOP();						break;
+        case 0x11: NOP();						break;
+        case 0x12: STCGBR(Rn);					break;
+        case 0x13: NOP();						break;
+        case 0x14: MOVBS0(Rm, Rn);				break;
+        case 0x15: MOVWS0(Rm, Rn);				break;
+        case 0x16: MOVLS0(Rm, Rn);				break;
+        case 0x17: MULL(Rm, Rn);				break;
+        case 0x18: SETT();						break;
+        case 0x19: DIV0U(); 					break;
+        case 0x1a: STSMACL(Rn); 				break;
+        case 0x1b: SLEEP(); 					break;
+        case 0x1c: MOVBL0(Rm, Rn);				break;
+        case 0x1d: MOVWL0(Rm, Rn);				break;
+        case 0x1e: MOVLL0(Rm, Rn);				break;
+        case 0x1f: MAC_L(Rm, Rn);				break;
+            
+        case 0x20: NOP();						break;
+        case 0x21: NOP();						break;
+        case 0x22: STCVBR(Rn);					break;
+        case 0x23: BRAF(Rn);					break;
+        case 0x24: MOVBS0(Rm, Rn);				break;
+        case 0x25: MOVWS0(Rm, Rn);				break;
+        case 0x26: MOVLS0(Rm, Rn);				break;
+        case 0x27: MULL(Rm, Rn);				break;
+        case 0x28: CLRMAC();					break;
+        case 0x29: MOVT(Rn);					break;
+        case 0x2a: STSPR(Rn);					break;
+        case 0x2b: RTE();						break;
+        case 0x2c: MOVBL0(Rm, Rn);				break;
+        case 0x2d: MOVWL0(Rm, Rn);				break;
+        case 0x2e: MOVLL0(Rm, Rn);				break;
+        case 0x2f: MAC_L(Rm, Rn);				break;
+            
+        case 0x30: NOP();						break;
+        case 0x31: NOP();						break;
+        case 0x32: NOP();						break;
+        case 0x33: NOP();						break;
+        case 0x34: MOVBS0(Rm, Rn);				break;
+        case 0x35: MOVWS0(Rm, Rn);				break;
+        case 0x36: MOVLS0(Rm, Rn);				break;
+        case 0x37: MULL(Rm, Rn);				break;
+        case 0x38: NOP();						break;
+        case 0x39: NOP();						break;
+        case 0x3a: NOP();						break;
+        case 0x3b: NOP();						break;
+        case 0x3c: MOVBL0(Rm, Rn);				break;
+        case 0x3d: MOVWL0(Rm, Rn);				break;
+        case 0x3e: MOVLL0(Rm, Rn);				break;
+        case 0x3f: MAC_L(Rm, Rn);				break;
+            
+            
+            
 	}
 }
 
@@ -2614,22 +2693,22 @@ SH2_INLINE void op0010(UINT16 opcode)
 {
 	switch (opcode & 15)
 	{
-	case  0: MOVBS(Rm, Rn); 				break;
-	case  1: MOVWS(Rm, Rn); 				break;
-	case  2: MOVLS(Rm, Rn); 				break;
-	case  3: NOP(); 						break;
-	case  4: MOVBM(Rm, Rn); 				break;
-	case  5: MOVWM(Rm, Rn); 				break;
-	case  6: MOVLM(Rm, Rn); 				break;
-	case  7: DIV0S(Rm, Rn); 				break;
-	case  8: TST(Rm, Rn);					break;
-	case  9: AND(Rm, Rn);					break;
-	case 10: XOR(Rm, Rn);					break;
-	case 11: OR(Rm, Rn);					break;
-	case 12: CMPSTR(Rm, Rn);				break;
-	case 13: XTRCT(Rm, Rn); 				break;
-	case 14: MULU(Rm, Rn);					break;
-	case 15: MULS(Rm, Rn);					break;
+        case  0: MOVBS(Rm, Rn); 				break;
+        case  1: MOVWS(Rm, Rn); 				break;
+        case  2: MOVLS(Rm, Rn); 				break;
+        case  3: NOP(); 						break;
+        case  4: MOVBM(Rm, Rn); 				break;
+        case  5: MOVWM(Rm, Rn); 				break;
+        case  6: MOVLM(Rm, Rn); 				break;
+        case  7: DIV0S(Rm, Rn); 				break;
+        case  8: TST(Rm, Rn);					break;
+        case  9: AND(Rm, Rn);					break;
+        case 10: XOR(Rm, Rn);					break;
+        case 11: OR(Rm, Rn);					break;
+        case 12: CMPSTR(Rm, Rn);				break;
+        case 13: XTRCT(Rm, Rn); 				break;
+        case 14: MULU(Rm, Rn);					break;
+        case 15: MULS(Rm, Rn);					break;
 	}
 }
 
@@ -2637,22 +2716,22 @@ SH2_INLINE void op0011(UINT16 opcode)
 {
 	switch (opcode & 15)
 	{
-	case  0: CMPEQ(Rm, Rn); 				break;
-	case  1: NOP(); 						break;
-	case  2: CMPHS(Rm, Rn); 				break;
-	case  3: CMPGE(Rm, Rn); 				break;
-	case  4: DIV1(Rm, Rn);					break;
-	case  5: DMULU(Rm, Rn); 				break;
-	case  6: CMPHI(Rm, Rn); 				break;
-	case  7: CMPGT(Rm, Rn); 				break;
-	case  8: SUB(Rm, Rn);					break;
-	case  9: NOP(); 						break;
-	case 10: SUBC(Rm, Rn);					break;
-	case 11: SUBV(Rm, Rn);					break;
-	case 12: ADD(Rm, Rn);					break;
-	case 13: DMULS(Rm, Rn); 				break;
-	case 14: ADDC(Rm, Rn);					break;
-	case 15: ADDV(Rm, Rn);					break;
+        case  0: CMPEQ(Rm, Rn); 				break;
+        case  1: NOP(); 						break;
+        case  2: CMPHS(Rm, Rn); 				break;
+        case  3: CMPGE(Rm, Rn); 				break;
+        case  4: DIV1(Rm, Rn);					break;
+        case  5: DMULU(Rm, Rn); 				break;
+        case  6: CMPHI(Rm, Rn); 				break;
+        case  7: CMPGT(Rm, Rn); 				break;
+        case  8: SUB(Rm, Rn);					break;
+        case  9: NOP(); 						break;
+        case 10: SUBC(Rm, Rn);					break;
+        case 11: SUBV(Rm, Rn);					break;
+        case 12: ADD(Rm, Rn);					break;
+        case 13: DMULS(Rm, Rn); 				break;
+        case 14: ADDC(Rm, Rn);					break;
+        case 15: ADDV(Rm, Rn);					break;
 	}
 }
 
@@ -2660,74 +2739,74 @@ SH2_INLINE void op0100(UINT16 opcode)
 {
 	switch (opcode & 0x3F)
 	{
-	case 0x00: SHLL(Rn);					break;
-	case 0x01: SHLR(Rn);					break;
-	case 0x02: STSMMACH(Rn);				break;
-	case 0x03: STCMSR(Rn);					break;
-	case 0x04: ROTL(Rn);					break;
-	case 0x05: ROTR(Rn);					break;
-	case 0x06: LDSMMACH(Rn);				break;
-	case 0x07: LDCMSR(Rn);					break;
-	case 0x08: SHLL2(Rn);					break;
-	case 0x09: SHLR2(Rn);					break;
-	case 0x0a: LDSMACH(Rn); 				break;
-	case 0x0b: JSR(Rn); 					break;
-	case 0x0c: NOP();						break;
-	case 0x0d: NOP();						break;
-	case 0x0e: LDCSR(Rn);					break;
-	case 0x0f: MAC_W(Rm, Rn);				break;
-
-	case 0x10: DT(Rn);						break;
-	case 0x11: CMPPZ(Rn);					break;
-	case 0x12: STSMMACL(Rn);				break;
-	case 0x13: STCMGBR(Rn); 				break;
-	case 0x14: NOP();						break;
-	case 0x15: CMPPL(Rn);					break;
-	case 0x16: LDSMMACL(Rn);				break;
-	case 0x17: LDCMGBR(Rn); 				break;
-	case 0x18: SHLL8(Rn);					break;
-	case 0x19: SHLR8(Rn);					break;
-	case 0x1a: LDSMACL(Rn); 				break;
-	case 0x1b: TAS(Rn); 					break;
-	case 0x1c: NOP();						break;
-	case 0x1d: NOP();						break;
-	case 0x1e: LDCGBR(Rn);					break;
-	case 0x1f: MAC_W(Rm, Rn);				break;
-
-	case 0x20: SHAL(Rn);					break;
-	case 0x21: SHAR(Rn);					break;
-	case 0x22: STSMPR(Rn);					break;
-	case 0x23: STCMVBR(Rn); 				break;
-	case 0x24: ROTCL(Rn);					break;
-	case 0x25: ROTCR(Rn);					break;
-	case 0x26: LDSMPR(Rn);					break;
-	case 0x27: LDCMVBR(Rn); 				break;
-	case 0x28: SHLL16(Rn);					break;
-	case 0x29: SHLR16(Rn);					break;
-	case 0x2a: LDSPR(Rn);					break;
-	case 0x2b: JMP(Rn); 					break;
-	case 0x2c: NOP();						break;
-	case 0x2d: NOP();						break;
-	case 0x2e: LDCVBR(Rn);					break;
-	case 0x2f: MAC_W(Rm, Rn);				break;
-
-	case 0x30: NOP();						break;
-	case 0x31: NOP();						break;
-	case 0x32: NOP();						break;
-	case 0x33: NOP();						break;
-	case 0x34: NOP();						break;
-	case 0x35: NOP();						break;
-	case 0x36: NOP();						break;
-	case 0x37: NOP();						break;
-	case 0x38: NOP();						break;
-	case 0x39: NOP();						break;
-	case 0x3a: NOP();						break;
-	case 0x3b: NOP();						break;
-	case 0x3c: NOP();						break;
-	case 0x3d: NOP();						break;
-	case 0x3e: NOP();						break;
-	case 0x3f: MAC_W(Rm, Rn);				break;
-
+        case 0x00: SHLL(Rn);					break;
+        case 0x01: SHLR(Rn);					break;
+        case 0x02: STSMMACH(Rn);				break;
+        case 0x03: STCMSR(Rn);					break;
+        case 0x04: ROTL(Rn);					break;
+        case 0x05: ROTR(Rn);					break;
+        case 0x06: LDSMMACH(Rn);				break;
+        case 0x07: LDCMSR(Rn);					break;
+        case 0x08: SHLL2(Rn);					break;
+        case 0x09: SHLR2(Rn);					break;
+        case 0x0a: LDSMACH(Rn); 				break;
+        case 0x0b: JSR(Rn); 					break;
+        case 0x0c: NOP();						break;
+        case 0x0d: NOP();						break;
+        case 0x0e: LDCSR(Rn);					break;
+        case 0x0f: MAC_W(Rm, Rn);				break;
+            
+        case 0x10: DT(Rn);						break;
+        case 0x11: CMPPZ(Rn);					break;
+        case 0x12: STSMMACL(Rn);				break;
+        case 0x13: STCMGBR(Rn); 				break;
+        case 0x14: NOP();						break;
+        case 0x15: CMPPL(Rn);					break;
+        case 0x16: LDSMMACL(Rn);				break;
+        case 0x17: LDCMGBR(Rn); 				break;
+        case 0x18: SHLL8(Rn);					break;
+        case 0x19: SHLR8(Rn);					break;
+        case 0x1a: LDSMACL(Rn); 				break;
+        case 0x1b: TAS(Rn); 					break;
+        case 0x1c: NOP();						break;
+        case 0x1d: NOP();						break;
+        case 0x1e: LDCGBR(Rn);					break;
+        case 0x1f: MAC_W(Rm, Rn);				break;
+            
+        case 0x20: SHAL(Rn);					break;
+        case 0x21: SHAR(Rn);					break;
+        case 0x22: STSMPR(Rn);					break;
+        case 0x23: STCMVBR(Rn); 				break;
+        case 0x24: ROTCL(Rn);					break;
+        case 0x25: ROTCR(Rn);					break;
+        case 0x26: LDSMPR(Rn);					break;
+        case 0x27: LDCMVBR(Rn); 				break;
+        case 0x28: SHLL16(Rn);					break;
+        case 0x29: SHLR16(Rn);					break;
+        case 0x2a: LDSPR(Rn);					break;
+        case 0x2b: JMP(Rn); 					break;
+        case 0x2c: NOP();						break;
+        case 0x2d: NOP();						break;
+        case 0x2e: LDCVBR(Rn);					break;
+        case 0x2f: MAC_W(Rm, Rn);				break;
+            
+        case 0x30: NOP();						break;
+        case 0x31: NOP();						break;
+        case 0x32: NOP();						break;
+        case 0x33: NOP();						break;
+        case 0x34: NOP();						break;
+        case 0x35: NOP();						break;
+        case 0x36: NOP();						break;
+        case 0x37: NOP();						break;
+        case 0x38: NOP();						break;
+        case 0x39: NOP();						break;
+        case 0x3a: NOP();						break;
+        case 0x3b: NOP();						break;
+        case 0x3c: NOP();						break;
+        case 0x3d: NOP();						break;
+        case 0x3e: NOP();						break;
+        case 0x3f: MAC_W(Rm, Rn);				break;
+            
 	}
 }
 
@@ -2740,22 +2819,22 @@ SH2_INLINE void op0110(UINT16 opcode)
 {
 	switch (opcode & 15)
 	{
-	case  0: MOVBL(Rm, Rn); 				break;
-	case  1: MOVWL(Rm, Rn); 				break;
-	case  2: MOVLL(Rm, Rn); 				break;
-	case  3: MOV(Rm, Rn);					break;
-	case  4: MOVBP(Rm, Rn); 				break;
-	case  5: MOVWP(Rm, Rn); 				break;
-	case  6: MOVLP(Rm, Rn); 				break;
-	case  7: NOT(Rm, Rn);					break;
-	case  8: SWAPB(Rm, Rn); 				break;
-	case  9: SWAPW(Rm, Rn); 				break;
-	case 10: NEGC(Rm, Rn);					break;
-	case 11: NEG(Rm, Rn);					break;
-	case 12: EXTUB(Rm, Rn); 				break;
-	case 13: EXTUW(Rm, Rn); 				break;
-	case 14: EXTSB(Rm, Rn); 				break;
-	case 15: EXTSW(Rm, Rn); 				break;
+        case  0: MOVBL(Rm, Rn); 				break;
+        case  1: MOVWL(Rm, Rn); 				break;
+        case  2: MOVLL(Rm, Rn); 				break;
+        case  3: MOV(Rm, Rn);					break;
+        case  4: MOVBP(Rm, Rn); 				break;
+        case  5: MOVWP(Rm, Rn); 				break;
+        case  6: MOVLP(Rm, Rn); 				break;
+        case  7: NOT(Rm, Rn);					break;
+        case  8: SWAPB(Rm, Rn); 				break;
+        case  9: SWAPW(Rm, Rn); 				break;
+        case 10: NEGC(Rm, Rn);					break;
+        case 11: NEG(Rm, Rn);					break;
+        case 12: EXTUB(Rm, Rn); 				break;
+        case 13: EXTUW(Rm, Rn); 				break;
+        case 14: EXTSB(Rm, Rn); 				break;
+        case 15: EXTSW(Rm, Rn); 				break;
 	}
 }
 
@@ -2768,22 +2847,22 @@ SH2_INLINE void op1000(UINT16 opcode)
 {
 	switch ( opcode  & (15<<8) )
 	{
-	case  0 << 8: MOVBS4(opcode & 0x0f, Rm); 	break;
-	case  1 << 8: MOVWS4(opcode & 0x0f, Rm); 	break;
-	case  2<< 8: NOP(); 				break;
-	case  3<< 8: NOP(); 				break;
-	case  4<< 8: MOVBL4(Rm, opcode & 0x0f); 	break;
-	case  5<< 8: MOVWL4(Rm, opcode & 0x0f); 	break;
-	case  6<< 8: NOP(); 				break;
-	case  7<< 8: NOP(); 				break;
-	case  8<< 8: CMPIM(opcode & 0xff);		break;
-	case  9<< 8: BT(opcode & 0xff); 		break;
-	case 10<< 8: NOP(); 				break;
-	case 11<< 8: BF(opcode & 0xff); 		break;
-	case 12<< 8: NOP(); 				break;
-	case 13<< 8: BTS(opcode & 0xff);		break;
-	case 14<< 8: NOP(); 				break;
-	case 15<< 8: BFS(opcode & 0xff);		break;
+        case  0 << 8: MOVBS4(opcode & 0x0f, Rm); 	break;
+        case  1 << 8: MOVWS4(opcode & 0x0f, Rm); 	break;
+        case  2<< 8: NOP(); 				break;
+        case  3<< 8: NOP(); 				break;
+        case  4<< 8: MOVBL4(Rm, opcode & 0x0f); 	break;
+        case  5<< 8: MOVWL4(Rm, opcode & 0x0f); 	break;
+        case  6<< 8: NOP(); 				break;
+        case  7<< 8: NOP(); 				break;
+        case  8<< 8: CMPIM(opcode & 0xff);		break;
+        case  9<< 8: BT(opcode & 0xff); 		break;
+        case 10<< 8: NOP(); 				break;
+        case 11<< 8: BF(opcode & 0xff); 		break;
+        case 12<< 8: NOP(); 				break;
+        case 13<< 8: BTS(opcode & 0xff);		break;
+        case 14<< 8: NOP(); 				break;
+        case 15<< 8: BFS(opcode & 0xff);		break;
 	}
 }
 
@@ -2807,22 +2886,22 @@ SH2_INLINE void op1100(UINT16 opcode)
 {
 	switch (opcode & (15<<8))
 	{
-	case  0<<8: MOVBSG(opcode & 0xff); 		break;
-	case  1<<8: MOVWSG(opcode & 0xff); 		break;
-	case  2<<8: MOVLSG(opcode & 0xff); 		break;
-	case  3<<8: TRAPA(opcode & 0xff);		break;
-	case  4<<8: MOVBLG(opcode & 0xff); 		break;
-	case  5<<8: MOVWLG(opcode & 0xff); 		break;
-	case  6<<8: MOVLLG(opcode & 0xff); 		break;
-	case  7<<8: MOVA(opcode & 0xff);		break;
-	case  8<<8: TSTI(opcode & 0xff);		break;
-	case  9<<8: ANDI(opcode & 0xff);		break;
-	case 10<<8: XORI(opcode & 0xff);		break;
-	case 11<<8: ORI(opcode & 0xff);			break;
-	case 12<<8: TSTM(opcode & 0xff);		break;
-	case 13<<8: ANDM(opcode & 0xff);		break;
-	case 14<<8: XORM(opcode & 0xff);		break;
-	case 15<<8: ORM(opcode & 0xff);			break;
+        case  0<<8: MOVBSG(opcode & 0xff); 		break;
+        case  1<<8: MOVWSG(opcode & 0xff); 		break;
+        case  2<<8: MOVLSG(opcode & 0xff); 		break;
+        case  3<<8: TRAPA(opcode & 0xff);		break;
+        case  4<<8: MOVBLG(opcode & 0xff); 		break;
+        case  5<<8: MOVWLG(opcode & 0xff); 		break;
+        case  6<<8: MOVLLG(opcode & 0xff); 		break;
+        case  7<<8: MOVA(opcode & 0xff);		break;
+        case  8<<8: TSTI(opcode & 0xff);		break;
+        case  9<<8: ANDI(opcode & 0xff);		break;
+        case 10<<8: XORI(opcode & 0xff);		break;
+        case 11<<8: ORI(opcode & 0xff);			break;
+        case 12<<8: TSTM(opcode & 0xff);		break;
+        case 13<<8: ANDM(opcode & 0xff);		break;
+        case 14<<8: XORM(opcode & 0xff);		break;
+        case 15<<8: ORM(opcode & 0xff);			break;
 	}
 }
 
@@ -2851,7 +2930,7 @@ static void sh2_timer_resync(void)
 {
 	int divider = div_tab[(sh2->m[5] >> 8) & 3];
 	UINT32 cur_time = sh2_GetTotalCycles();
-
+    
 	if(divider)
 		sh2->frc += (cur_time - sh2->frc_base) >> divider;
 	sh2->frc_base = cur_time;
@@ -2861,30 +2940,30 @@ static void sh2_timer_activate(void)
 {
 	int max_delta = 0xfffff;
 	UINT16 frc;
-
+    
 	//timer_adjust(sh2->timer, attotime_never, 0, attotime_zero);
 	sh2->timer_active = 0;
-//	sh2->timer_cycles = 0;
-
+    //	sh2->timer_cycles = 0;
+    
 	frc = sh2->frc;
 	if(!(sh2->m[4] & OCFA)) {
 		UINT16 delta = sh2->ocra - frc;
 		if(delta < max_delta)
 			max_delta = delta;
 	}
-
+    
 	if(!(sh2->m[4] & OCFB) && (sh2->ocra <= sh2->ocrb || !(sh2->m[4] & 0x010000))) {
 		UINT16 delta = sh2->ocrb - frc;
 		if(delta < max_delta)
 			max_delta = delta;
 	}
-
+    
 	if(!(sh2->m[4] & OVF) && !(sh2->m[4] & 0x010000)) {
 		int delta = 0x10000 - frc;
 		if(delta < max_delta)
 			max_delta = delta;
 	}
-
+    
 	if(max_delta != 0xfffff) {
 		int divider = div_tab[(sh2->m[5] >> 8) & 3];
 		if(divider) {
@@ -2899,7 +2978,7 @@ static void sh2_timer_activate(void)
 			sh2->timer_base = sh2->frc_base;
 			
 		} else {
-//			logerror("SH2.%d: Timer event in %d cycles of external clock", sh2->cpu_number, max_delta);
+            //			logerror("SH2.%d: Timer event in %d cycles of external clock", sh2->cpu_number, max_delta);
 			//bprintf(0, _T("SH2.0: Timer event in %d cycles of external clock\n"), max_delta);
 		}
 	}
@@ -2909,7 +2988,7 @@ static void sh2_recalc_irq(void)
 {
 	int irq = 0, vector = -1;
 	int  level;
-
+    
 	// Timer irqs
 	if((sh2->m[4]>>8) & sh2->m[4] & (ICF|OCFA|OCFB|OVF))
 	{
@@ -2926,7 +3005,7 @@ static void sh2_recalc_irq(void)
 				vector = (sh2->m[0x1a] >> 24) & 0x7f;
 		}
 	}
-
+    
 	// DMA irqs
 	if((sh2->m[0x63] & 6) == 6) {
 		level = (sh2->m[0x38] >> 8) & 15;
@@ -2935,7 +3014,7 @@ static void sh2_recalc_irq(void)
 			vector = (sh2->m[0x68] >> 24) & 0x7f;
 		}
 	}
-
+    
 	if((sh2->m[0x67] & 6) == 6) {
 		level = (sh2->m[0x38] >> 8) & 15;
 		if(level > irq) {
@@ -2943,8 +3022,8 @@ static void sh2_recalc_irq(void)
 			vector = (sh2->m[0x6a] >> 24) & 0x7f;
 		}
 	}
-
-
+    
+    
 	sh2->internal_irq_level = irq;
 	sh2->internal_irq_vector = vector;
 	sh2->test_irq = 1;
@@ -2953,44 +3032,44 @@ static void sh2_recalc_irq(void)
 static void sh2_timer_callback()
 {
 	UINT16 frc;
-//	int cpunum = param;
-//	cpuintrf_push_context(cpunum);
+    //	int cpunum = param;
+    //	cpuintrf_push_context(cpunum);
 	sh2_timer_resync();
-
+    
 	frc = sh2->frc;
-
+    
 	if(frc == sh2->ocrb)
 		sh2->m[4] |= OCFB;
-
+    
 	if(frc == 0x0000)
 		sh2->m[4] |= OVF;
-
+    
 	if(frc == sh2->ocra)
 	{
 		sh2->m[4] |= OCFA;
-
+        
 		if(sh2->m[4] & 0x010000)
 			sh2->frc = 0;
 	}
-
+    
 	sh2_recalc_irq();
 	sh2_timer_activate();
-
-//	cpuintrf_pop_context();
+    
+    //	cpuintrf_pop_context();
 }
 
 static void sh2_dmac_callback(int dma)
 {
-//	cpuintrf_push_context(cpunum);
-
-//	LOG(("SH2.%d: DMA %d complete\n", cpunum, dma));
-//	bprintf(0, _T("SH2: DMA %d complete at %d\n"), dma, sh2_GetTotalCycles());
-
+    //	cpuintrf_push_context(cpunum);
+    
+    //	LOG(("SH2.%d: DMA %d complete\n", cpunum, dma));
+    //	bprintf(0, _T("SH2: DMA %d complete at %d\n"), dma, sh2_GetTotalCycles());
+    
 	sh2->m[0x63+4*dma] |= 2;
 	sh2->dma_timer_active[dma] = 0;
 	sh2_recalc_irq();
 	
-//	cpuintrf_pop_context();
+    //	cpuintrf_pop_context();
 }
 
 static void sh2_dmac_check(int dma)
@@ -3006,7 +3085,7 @@ static void sh2_dmac_check(int dma)
 			size = (sh2->m[0x63+4*dma] >> 10) & 3;
 			if(incd == 3 || incs == 3)
 			{
-//				logerror("SH2: DMA: bad increment values (%d, %d, %d, %04x)\n", incd, incs, size, sh2->m[0x63+4*dma]);
+                //				logerror("SH2: DMA: bad increment values (%d, %d, %d, %04x)\n", incd, incs, size, sh2->m[0x63+4*dma]);
 				//bprintf(0, _T("SH2: DMA: bad increment values (%d, %d, %d, %04x)\n"), incd, incs, size, sh2->m[0x63+4*dma]);
 				return;
 			}
@@ -3015,10 +3094,10 @@ static void sh2_dmac_check(int dma)
 			count = sh2->m[0x62+4*dma];
 			if(!count)
 				count = 0x1000000;
-
-//			LOG(("SH2: DMA %d start %x, %x, %x, %04x, %d, %d, %d\n", dma, src, dst, count, sh2->m[0x63+4*dma], incs, incd, size));
+            
+            //			LOG(("SH2: DMA %d start %x, %x, %x, %04x, %d, %d, %d\n", dma, src, dst, count, sh2->m[0x63+4*dma], incs, incd, size));
 			//bprintf(1, _T("DMA %d start %08x, %08x, %x, %04x, %d, %d, %d : %d cys from %d\n"), dma, src, dst, count, sh2->m[0x63+4*dma], incs, incd, size, 2*count+1, Sh2GetTotalCycles());
-
+            
 			sh2->dma_timer_active[dma] = 1;
 			//timer_adjust(sh2->dma_timer[dma], ATTOTIME_IN_CYCLES(2*count+1, sh2->cpu_number), (sh2->cpu_number<<1)|dma, attotime_zero);
 			sh2->dma_timer_cycles[dma] = 2 * count + 1;
@@ -3026,76 +3105,76 @@ static void sh2_dmac_check(int dma)
 			
 			src &= AM;
 			dst &= AM;
-
+            
 			switch(size)
 			{
-			case 0:
-				for(;count > 0; count --)
-				{
-					if(incs == 2)
-						src --;
-					if(incd == 2)
-						dst --;
-					program_write_byte_32be(dst, program_read_byte_32be(src));
-					if(incs == 1)
-						src ++;
-					if(incd == 1)
-						dst ++;
-				}
-				break;
-			case 1:
-				src &= ~1;
-				dst &= ~1;
-				for(;count > 0; count --)
-				{
-					if(incs == 2)
-						src -= 2;
-					if(incd == 2)
-						dst -= 2;
-					program_write_word_32be(dst, program_read_word_32be(src));
-					if(incs == 1)
-						src += 2;
-					if(incd == 1)
-						dst += 2;
-				}
-				break;
-			case 2:
-				src &= ~3;
-				dst &= ~3;
-				for(;count > 0; count --)
-				{
-					if(incs == 2)
-						src -= 4;
-					if(incd == 2)
-						dst -= 4;
+                case 0:
+                    for(;count > 0; count --)
+                    {
+                        if(incs == 2)
+                            src --;
+                        if(incd == 2)
+                            dst --;
+                        program_write_byte_32be(dst, program_read_byte_32be(src));
+                        if(incs == 1)
+                            src ++;
+                        if(incd == 1)
+                            dst ++;
+                    }
+                    break;
+                case 1:
+                    src &= ~1;
+                    dst &= ~1;
+                    for(;count > 0; count --)
+                    {
+                        if(incs == 2)
+                            src -= 2;
+                        if(incd == 2)
+                            dst -= 2;
+                        program_write_word_32be(dst, program_read_word_32be(src));
+                        if(incs == 1)
+                            src += 2;
+                        if(incd == 1)
+                            dst += 2;
+                    }
+                    break;
+                case 2:
+                    src &= ~3;
+                    dst &= ~3;
+                    for(;count > 0; count --)
+                    {
+                        if(incs == 2)
+                            src -= 4;
+                        if(incd == 2)
+                            dst -= 4;
 						
-					//program_write_dword_32be(dst, program_read_dword_32be(src));
-					WL(dst, RL(src));
-					
-					if(incs == 1)
-						src += 4;
-					if(incd == 1)
-						dst += 4;
-
-				}
-				break;
-			case 3:
-				src &= ~3;
-				dst &= ~3;
-				count &= ~3;
-				for(;count > 0; count -= 4)
-				{
-					if(incd == 2)
-						dst -= 16;
-					program_write_dword_32be(dst, program_read_dword_32be(src));
-					program_write_dword_32be(dst+4, program_read_dword_32be(src+4));
-					program_write_dword_32be(dst+8, program_read_dword_32be(src+8));
-					program_write_dword_32be(dst+12, program_read_dword_32be(src+12));
-					src += 16;
-					if(incd == 1)
-						dst += 16;
-				}
-				break;
+                        //program_write_dword_32be(dst, program_read_dword_32be(src));
+                        WL(dst, RL(src));
+                        
+                        if(incs == 1)
+                            src += 4;
+                        if(incd == 1)
+                            dst += 4;
+                        
+                    }
+                    break;
+                case 3:
+                    src &= ~3;
+                    dst &= ~3;
+                    count &= ~3;
+                    for(;count > 0; count -= 4)
+                    {
+                        if(incd == 2)
+                            dst -= 16;
+                        program_write_dword_32be(dst, program_read_dword_32be(src));
+                        program_write_dword_32be(dst+4, program_read_dword_32be(src+4));
+                        program_write_dword_32be(dst+8, program_read_dword_32be(src+8));
+                        program_write_dword_32be(dst+12, program_read_dword_32be(src+12));
+                        src += 16;
+                        if(incd == 1)
+                            dst += 16;
+                    }
+                    break;
 			}
 		}
 	}
@@ -3103,11 +3182,11 @@ static void sh2_dmac_check(int dma)
 	{
 		if(sh2->dma_timer_active[dma])
 		{
-//			logerror("SH2: DMA %d cancelled in-flight", dma);
+            //			logerror("SH2: DMA %d cancelled in-flight", dma);
 			//bprintf(0, _T("SH2: DMA %d cancelled in-flight"), dma);
 			//timer_adjust(sh2->dma_timer[dma], attotime_never, 0, attotime_zero);
 			sh2->dma_timer_active[dma] = 0;
-
+            
 		}
 	}
 }
@@ -3117,69 +3196,69 @@ static void sh2_internal_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
 {
 	UINT32 old = sh2->m[offset];
 	COMBINE_DATA(sh2->m+offset);
-
+    
 	//  if(offset != 0x20)
 	//      logerror("sh2_internal_w:  Write %08x (%x), %08x @ %08x\n", 0xfffffe00+offset*4, offset, data, mem_mask);
-
+    
 	switch( offset )
 	{
-		// Timers
-	case 0x04: // TIER, FTCSR, FRC
-		if((mem_mask & 0x00ffffff) != 0xffffff)
-			sh2_timer_resync();
-		//logerror("SH2.%d: TIER write %04x @ %04x\n", sh2->cpu_number, data >> 16, mem_mask>>16);
-		sh2->m[4] = (sh2->m[4] & ~(ICF|OCFA|OCFB|OVF)) | (old & sh2->m[4] & (ICF|OCFA|OCFB|OVF));
-		COMBINE_DATA(&sh2->frc);
-		if((mem_mask & 0x00ffffff) != 0xffffff)
-			sh2_timer_activate();
-		sh2_recalc_irq();
-		break;
-	case 0x05: // OCRx, TCR, TOCR
-		//logerror("SH2.%d: TCR write %08x @ %08x\n", sh2->cpu_number, data, mem_mask);
-		sh2_timer_resync();
-		if(sh2->m[5] & 0x10)
-			sh2->ocrb = (sh2->ocrb & (mem_mask >> 16)) | ((data & ~mem_mask) >> 16);
-		else
-			sh2->ocra = (sh2->ocra & (mem_mask >> 16)) | ((data & ~mem_mask) >> 16);
-		sh2_timer_activate();
-		break;
-
-	case 0x06: // ICR
-		break;
-
-		// Interrupt vectors
-	case 0x18: // IPRB, VCRA
-	case 0x19: // VCRB, VCRC
-	case 0x1a: // VCRD
-		sh2_recalc_irq();
-		break;
-
-		// DMA
-	case 0x1c: // DRCR0, DRCR1
-		break;
-
-		// Watchdog
-	case 0x20: // WTCNT, RSTCSR
-		break;
-
-		// Standby and cache
-	case 0x24: // SBYCR, CCR
-		break;
-
-		// Interrupt vectors cont.
-	case 0x38: // ICR, IRPA
-		break;
-	case 0x39: // VCRWDT
-		break;
-
-		// Division box
-	case 0x40: // DVSR
-		break;
-	case 0x41: // DVDNT
+            // Timers
+        case 0x04: // TIER, FTCSR, FRC
+            if((mem_mask & 0x00ffffff) != 0xffffff)
+                sh2_timer_resync();
+            //logerror("SH2.%d: TIER write %04x @ %04x\n", sh2->cpu_number, data >> 16, mem_mask>>16);
+            sh2->m[4] = (sh2->m[4] & ~(ICF|OCFA|OCFB|OVF)) | (old & sh2->m[4] & (ICF|OCFA|OCFB|OVF));
+            COMBINE_DATA(&sh2->frc);
+            if((mem_mask & 0x00ffffff) != 0xffffff)
+                sh2_timer_activate();
+            sh2_recalc_irq();
+            break;
+        case 0x05: // OCRx, TCR, TOCR
+            //logerror("SH2.%d: TCR write %08x @ %08x\n", sh2->cpu_number, data, mem_mask);
+            sh2_timer_resync();
+            if(sh2->m[5] & 0x10)
+                sh2->ocrb = (sh2->ocrb & (mem_mask >> 16)) | ((data & ~mem_mask) >> 16);
+            else
+                sh2->ocra = (sh2->ocra & (mem_mask >> 16)) | ((data & ~mem_mask) >> 16);
+            sh2_timer_activate();
+            break;
+            
+        case 0x06: // ICR
+            break;
+            
+            // Interrupt vectors
+        case 0x18: // IPRB, VCRA
+        case 0x19: // VCRB, VCRC
+        case 0x1a: // VCRD
+            sh2_recalc_irq();
+            break;
+            
+            // DMA
+        case 0x1c: // DRCR0, DRCR1
+            break;
+            
+            // Watchdog
+        case 0x20: // WTCNT, RSTCSR
+            break;
+            
+            // Standby and cache
+        case 0x24: // SBYCR, CCR
+            break;
+            
+            // Interrupt vectors cont.
+        case 0x38: // ICR, IRPA
+            break;
+        case 0x39: // VCRWDT
+            break;
+            
+            // Division box
+        case 0x40: // DVSR
+            break;
+        case 0x41: // DVDNT
 		{
 			INT32 a = sh2->m[0x41];
 			INT32 b = sh2->m[0x40];
-//			LOG(("SH2 #%d div+mod %d/%d\n", cpu_getactivecpu(), a, b));
+            //			LOG(("SH2 #%d div+mod %d/%d\n", cpu_getactivecpu(), a, b));
 			if (b)
 			{
 				sh2->m[0x45] = a / b;
@@ -3194,20 +3273,20 @@ static void sh2_internal_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
 			}
 			break;
 		}
-	case 0x42: // DVCR
-		sh2->m[0x42] = (sh2->m[0x42] & ~0x00001000) | (old & sh2->m[0x42] & 0x00010000);
-		sh2_recalc_irq();
-		break;
-	case 0x43: // VCRDIV
-		sh2_recalc_irq();
-		break;
-	case 0x44: // DVDNTH
-		break;
-	case 0x45: // DVDNTL
+        case 0x42: // DVCR
+            sh2->m[0x42] = (sh2->m[0x42] & ~0x00001000) | (old & sh2->m[0x42] & 0x00010000);
+            sh2_recalc_irq();
+            break;
+        case 0x43: // VCRDIV
+            sh2_recalc_irq();
+            break;
+        case 0x44: // DVDNTH
+            break;
+        case 0x45: // DVDNTL
 		{
 			INT64 a = sh2->m[0x45] | ((UINT64)(sh2->m[0x44]) << 32);
 			INT64 b = (INT32)sh2->m[0x40];
-//			LOG(("SH2 #%d div+mod %lld/%lld\n", cpu_getactivecpu(), a, b));
+            //			LOG(("SH2 #%d div+mod %lld/%lld\n", cpu_getactivecpu(), a, b));
 			if (b)
 			{
 				INT64 q = a / b;
@@ -3233,51 +3312,51 @@ static void sh2_internal_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
 			}
 			break;
 		}
-
-		// DMA controller
-	case 0x60: // SAR0
-	case 0x61: // DAR0
-		break;
-	case 0x62: // DTCR0
-		sh2->m[0x62] &= 0xffffff;
-		break;
-	case 0x63: // CHCR0
-		sh2->m[0x63] = (sh2->m[0x63] & ~2) | (old & sh2->m[0x63] & 2);
-		sh2_dmac_check(0);
-		break;
-	case 0x64: // SAR1
-	case 0x65: // DAR1
-		break;
-	case 0x66: // DTCR1
-		sh2->m[0x66] &= 0xffffff;
-		break;
-	case 0x67: // CHCR1
-		sh2->m[0x67] = (sh2->m[0x67] & ~2) | (old & sh2->m[0x67] & 2);
-		sh2_dmac_check(1);
-		break;
-	case 0x68: // VCRDMA0
-	case 0x6a: // VCRDMA1
-		sh2_recalc_irq();
-		break;
-	case 0x6c: // DMAOR
-		sh2->m[0x6c] = (sh2->m[0x6c] & ~6) | (old & sh2->m[0x6c] & 6);
-		sh2_dmac_check(0);
-		sh2_dmac_check(1);
-		break;
-
-		// Bus controller
-	case 0x78: // BCR1
-	case 0x79: // BCR2
-	case 0x7a: // WCR
-	case 0x7b: // MCR
-	case 0x7c: // RTCSR
-	case 0x7d: // RTCNT
-	case 0x7e: // RTCOR
-		break;
-
-	default:
-		//logerror("sh2_internal_w:  Unmapped write %08x, %08x @ %08x\n", 0xfffffe00+offset*4, data, mem_mask);
-		break;
+            
+            // DMA controller
+        case 0x60: // SAR0
+        case 0x61: // DAR0
+            break;
+        case 0x62: // DTCR0
+            sh2->m[0x62] &= 0xffffff;
+            break;
+        case 0x63: // CHCR0
+            sh2->m[0x63] = (sh2->m[0x63] & ~2) | (old & sh2->m[0x63] & 2);
+            sh2_dmac_check(0);
+            break;
+        case 0x64: // SAR1
+        case 0x65: // DAR1
+            break;
+        case 0x66: // DTCR1
+            sh2->m[0x66] &= 0xffffff;
+            break;
+        case 0x67: // CHCR1
+            sh2->m[0x67] = (sh2->m[0x67] & ~2) | (old & sh2->m[0x67] & 2);
+            sh2_dmac_check(1);
+            break;
+        case 0x68: // VCRDMA0
+        case 0x6a: // VCRDMA1
+            sh2_recalc_irq();
+            break;
+        case 0x6c: // DMAOR
+            sh2->m[0x6c] = (sh2->m[0x6c] & ~6) | (old & sh2->m[0x6c] & 6);
+            sh2_dmac_check(0);
+            sh2_dmac_check(1);
+            break;
+            
+            // Bus controller
+        case 0x78: // BCR1
+        case 0x79: // BCR2
+        case 0x7a: // WCR
+        case 0x7b: // MCR
+        case 0x7c: // RTCSR
+        case 0x7d: // RTCNT
+        case 0x7e: // RTCOR
+            break;
+            
+        default:
+            //logerror("sh2_internal_w:  Unmapped write %08x, %08x @ %08x\n", 0xfffffe00+offset*4, data, mem_mask);
+            break;
 	}
 }
 
@@ -3288,31 +3367,31 @@ static UINT32 sh2_internal_r(UINT32 offset, UINT32 /*mem_mask*/)
 	
 	switch( offset )
 	{
-	case 0x04: // TIER, FTCSR, FRC
-		sh2_timer_resync();
-		return (sh2->m[4] & 0xffff0000) | sh2->frc;
-	case 0x05: // OCRx, TCR, TOCR
-		if(sh2->m[5] & 0x10)
-			return (sh2->ocrb << 16) | (sh2->m[5] & 0xffff);
-		else
-			return (sh2->ocra << 16) | (sh2->m[5] & 0xffff);
-	case 0x06: // ICR
-		return sh2->icr << 16;
-
-	case 0x38: // ICR, IPRA
-//		return (sh2->m[0x38] & 0x7fffffff) | (sh2->nmi_line_state == ASSERT_LINE ? 0 : 0x80000000);
-		return (sh2->m[0x38] & 0x7fffffff) | 0x80000000;
-
-	case 0x78: // BCR1
-//		return sh2->is_slave ? 0x00008000 : 0;
-		return 0;
-
-	case 0x41: // dvdntl mirrors
-	case 0x47:
-		return sh2->m[0x45];
-
-	case 0x46: // dvdnth mirror
-		return sh2->m[0x44];
+        case 0x04: // TIER, FTCSR, FRC
+            sh2_timer_resync();
+            return (sh2->m[4] & 0xffff0000) | sh2->frc;
+        case 0x05: // OCRx, TCR, TOCR
+            if(sh2->m[5] & 0x10)
+                return (sh2->ocrb << 16) | (sh2->m[5] & 0xffff);
+            else
+                return (sh2->ocra << 16) | (sh2->m[5] & 0xffff);
+        case 0x06: // ICR
+            return sh2->icr << 16;
+            
+        case 0x38: // ICR, IPRA
+            //		return (sh2->m[0x38] & 0x7fffffff) | (sh2->nmi_line_state == ASSERT_LINE ? 0 : 0x80000000);
+            return (sh2->m[0x38] & 0x7fffffff) | 0x80000000;
+            
+        case 0x78: // BCR1
+            //		return sh2->is_slave ? 0x00008000 : 0;
+            return 0;
+            
+        case 0x41: // dvdntl mirrors
+        case 0x47:
+            return sh2->m[0x45];
+            
+        case 0x46: // dvdnth mirror
+            return sh2->m[0x44];
 	}
 	return sh2->m[offset];
 }
@@ -3326,10 +3405,10 @@ int Sh2Run(int cycles)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2Run called without init\n"));
 #endif
-
+    
 	sh2->sh2_icount = cycles;
 	sh2->sh2_cycles_to_run = cycles;
-
+    
 	do
 	{
 		if ( pSh2Ext->suspend ) {
@@ -3337,9 +3416,9 @@ int Sh2Run(int cycles)
 			sh2->sh2_icount = 0;
 			break;
 		}
-
+        
 		UINT16 opcode;
-
+        
 		if (sh2->delay) {
 			//opcode = cpu_readop16(WORD_XOR_BE((UINT32)(sh2->delay & AM)));
 			opcode = cpu_readop16(sh2->delay & AM);
@@ -3350,32 +3429,32 @@ int Sh2Run(int cycles)
 			opcode = cpu_readop16(sh2->pc & AM);
 			sh2->pc += 2;
 		}
-
+        
 		sh2->ppc = sh2->pc;
-
+        
 		opcode_jumptable[opcode](opcode);
-
+        
 		if(sh2->test_irq && !sh2->delay)
 		{
 			CHECK_PENDING_IRQ(/*"mame_sh2_execute"*/);
 			sh2->test_irq = 0;
 		}
-
+        
 		sh2->sh2_icount--;
 		
-		// timer check 
+		// timer check
 		
 		{
 			unsigned int cy = sh2_GetTotalCycles();
-
+            
 			if (sh2->dma_timer_active[0])
 				if ((cy - sh2->dma_timer_base[0]) >= sh2->dma_timer_cycles[0])
 					sh2_dmac_callback(0);
-
+            
 			if (sh2->dma_timer_active[1])
 				if ((cy - sh2->dma_timer_base[1]) >= sh2->dma_timer_cycles[1])
 					sh2_dmac_callback(1);
-	
+            
 			if ( sh2->timer_active )
 				if ((cy - sh2->timer_base) >= sh2->timer_cycles)
 					sh2_timer_callback();
@@ -3385,7 +3464,7 @@ int Sh2Run(int cycles)
 	} while( sh2->sh2_icount > 0 );
 	
 	sh2->cycle_counts += cycles - (UINT32)sh2->sh2_icount;
-
+    
 	return cycles - sh2->sh2_icount;
 }
 
@@ -3396,21 +3475,21 @@ int Sh2Run(int cycles)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2Run called without init\n"));
 #endif
-
+    
 	sh2->sh2_icount = cycles;
 	sh2->sh2_cycles_to_run = cycles;
 	
 	do
 	{
-
+        
 		if ( pSh2Ext->suspend ) {
 			sh2->sh2_total_cycles += cycles;
 			sh2->sh2_icount = 0;
 			break;
 		}			
-
+        
 		UINT16 opcode;
-
+        
 		if (sh2->delay) {
 			//opcode = cpu_readop16(WORD_XOR_BE((UINT32)(sh2->delay & AM)));
 			opcode = cpu_readop16(sh2->delay & AM);
@@ -3421,37 +3500,37 @@ int Sh2Run(int cycles)
 			opcode = cpu_readop16(sh2->pc & AM);
 			sh2->pc += 2;
 		}
-
+        
 		sh2->ppc = sh2->pc;
-
+        
 		switch (opcode & ( 15 << 12))
 		{
-		case  0<<12: op0000(opcode); break;
-		case  1<<12: op0001(opcode); break;
-		case  2<<12: op0010(opcode); break;
-		case  3<<12: op0011(opcode); break;
-		case  4<<12: op0100(opcode); break;
-		case  5<<12: op0101(opcode); break;
-		case  6<<12: op0110(opcode); break;
-		case  7<<12: op0111(opcode); break;
-		case  8<<12: op1000(opcode); break;
-		case  9<<12: op1001(opcode); break;
-		case 10<<12: op1010(opcode); break;
-		case 11<<12: op1011(opcode); break;
-		case 12<<12: op1100(opcode); break;
-		case 13<<12: op1101(opcode); break;
-		case 14<<12: op1110(opcode); break;
-		default: op1111(opcode); break;
+            case  0<<12: op0000(opcode); break;
+            case  1<<12: op0001(opcode); break;
+            case  2<<12: op0010(opcode); break;
+            case  3<<12: op0011(opcode); break;
+            case  4<<12: op0100(opcode); break;
+            case  5<<12: op0101(opcode); break;
+            case  6<<12: op0110(opcode); break;
+            case  7<<12: op0111(opcode); break;
+            case  8<<12: op1000(opcode); break;
+            case  9<<12: op1001(opcode); break;
+            case 10<<12: op1010(opcode); break;
+            case 11<<12: op1011(opcode); break;
+            case 12<<12: op1100(opcode); break;
+            case 13<<12: op1101(opcode); break;
+            case 14<<12: op1110(opcode); break;
+            default: op1111(opcode); break;
 		}
-
+        
 #endif
-
+        
 		if(sh2->test_irq && !sh2->delay)
 		{
 			CHECK_PENDING_IRQ(/*"mame_sh2_execute"*/);
 			sh2->test_irq = 0;
 		}
-
+        
 		sh2->sh2_total_cycles++;
 		sh2->sh2_icount--;
 		
@@ -3459,16 +3538,16 @@ int Sh2Run(int cycles)
 		
 		{
 			unsigned int cy = sh2_GetTotalCycles();
-
-
+            
+            
 			if (sh2->dma_timer_active[0])
 				if ((cy - sh2->dma_timer_base[0]) >= sh2->dma_timer_cycles[0])
 					sh2_dmac_callback(0);
-
+            
 			if (sh2->dma_timer_active[1])
 				if ((cy - sh2->dma_timer_base[1]) >= sh2->dma_timer_cycles[1])
 					sh2_dmac_callback(1);
-	
+            
 			if ( sh2->timer_active )
 				if ((cy - sh2->timer_base) >= sh2->timer_cycles)
 					sh2_timer_callback();
@@ -3480,7 +3559,7 @@ int Sh2Run(int cycles)
 	sh2->cycle_counts += cycles - (UINT32)sh2->sh2_icount;
 	
 	sh2->sh2_cycles_to_run = sh2->sh2_icount;
-
+    
 	return cycles - sh2->sh2_icount;
 }
 
@@ -3489,10 +3568,10 @@ void Sh2SetIRQLine(const int line, const int state)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2SetIRQLine called without init\n"));
 #endif
-
+    
 	if (sh2->irq_line_state[line] == state) return;
 	sh2->irq_line_state[line] = state;
-
+    
 	if( state == SH2_IRQSTATUS_NONE ) {
 		// LOG(("SH-2 #%d cleared irq #%d\n", cpu_getactivecpu(), line));
 		sh2->pending_irq &= ~(1 << line);
@@ -3503,10 +3582,10 @@ void Sh2SetIRQLine(const int line, const int state)
 			sh2->test_irq = 1;
 		else
 			CHECK_PENDING_IRQ(/*"sh2_set_irq_line"*/);
-
+        
 		pSh2Ext->suspend = 0;
 	}
-
+    
 }
 
 unsigned int Sh2GetPC(int)
@@ -3514,7 +3593,7 @@ unsigned int Sh2GetPC(int)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2GetPC called without init\n"));
 #endif
-
+    
 	return (sh2->delay) ? (sh2->delay & AM) : (sh2->pc & AM);
 }
 
@@ -3523,7 +3602,7 @@ void Sh2SetVBR(unsigned int i)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2SetVBR called without init\n"));
 #endif
-
+    
 	sh2->vbr = i;
 }
 
@@ -3532,7 +3611,7 @@ void Sh2BurnUntilInt(int)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2BurnUntilInt called without init\n"));
 #endif
-
+    
 	pSh2Ext->suspend = 1;
 }
 
@@ -3541,7 +3620,7 @@ void Sh2StopRun()
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2StopRun called without init\n"));
 #endif
-
+    
 	sh2->sh2_total_cycles += sh2->sh2_icount;
 	sh2->sh2_icount = 0;
 	sh2->sh2_cycles_to_run = 0;
@@ -3552,7 +3631,7 @@ int Sh2TotalCycles()
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2TotalCycles called without init\n"));
 #endif
-
+    
 	return sh2->sh2_total_cycles;
 }
 
@@ -3561,7 +3640,7 @@ void Sh2NewFrame()
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2NewFrame called without init\n"));
 #endif
-
+    
 	sh2->sh2_total_cycles = 0;
 }
 
@@ -3570,7 +3649,7 @@ void Sh2BurnCycles(int cycles)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2BurnCycles called without init\n"));
 #endif
-
+    
 	sh2->sh2_icount -= cycles;
 	sh2->sh2_total_cycles += cycles;
 }
@@ -3580,7 +3659,7 @@ void __fastcall Sh2WriteByte(unsigned int a, unsigned char d)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2WriteByte called without init\n"));
 #endif
-
+    
 	WB(a, d);
 }
 
@@ -3590,7 +3669,7 @@ unsigned char __fastcall Sh2ReadByte(unsigned int a)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2ReadByte called without init\n"));
 #endif
-
+    
 	return RB(a);
 }
 
@@ -3606,11 +3685,11 @@ int Sh2Scan(int nAction)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2Scan called without init\n"));
 #endif
-
+    
 	if (nAction & ACB_DRIVER_DATA) {
-	
+        
 		char szText[] = "SH2 #0";
-
+        
 		for (int i = 0; i < 1 /*nCPUCount*/; i++) {
 			szText[5] = '1' + i;
 			ScanVar(& ( Sh2Ext[i].sh2 ), sizeof(SH2) - 4, szText);
@@ -3625,7 +3704,7 @@ int Sh2Scan(int nAction)
 			}
 #endif
 		}
-
+        
 	}
 	
 	return 0;

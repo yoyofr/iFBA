@@ -170,6 +170,12 @@ valNb=[prefs objectForKey:a];
     GET_VALNB(@"vpad_followfinger")
 	if ((valNb == nil)||reset_settings) ifba_conf.vpad_followfinger=0;
 	else ifba_conf.vpad_followfinger = [valNb intValue];
+    GET_VALNB(@"vpad_followfinger_firemode")
+	if ((valNb == nil)||reset_settings) ifba_conf.vpad_followfinger_firemode=0;
+	else ifba_conf.vpad_followfinger_firemode = [valNb intValue];
+    GET_VALNB(@"vpad_followfinger_sensibility")
+    if ((valNb == nil)||reset_settings) ifba_conf.vpad_followfinger_sensibility=1.0f;
+	else ifba_conf.vpad_followfinger_sensibility = [valNb floatValue];
     
     
     //Emulation settings
@@ -367,6 +373,12 @@ valNb=[prefs objectForKey:keyStr];
     GET_VALNB(@"vpad_followfinger")
 	if ((valNb == nil)) ifba_game_conf.vpad_followfinger=0;
 	else ifba_game_conf.vpad_followfinger = [valNb intValue];
+    GET_VALNB(@"vpad_followfinger_firemode")
+	if ((valNb == nil)) ifba_game_conf.vpad_followfinger_firemode=0;
+	else ifba_game_conf.vpad_followfinger_firemode = [valNb intValue];
+    GET_VALNB(@"vpad_followfinger_sensibility")
+    if ((valNb == nil)) ifba_game_conf.vpad_followfinger_sensibility=1.0f;
+	else ifba_game_conf.vpad_followfinger_sensibility = [valNb floatValue];
     
     //Emulation settings
     GET_VALNB(@"asm_68k")
@@ -544,6 +556,10 @@ valNb=[prefs objectForKey:keyStr];
     SET_VALNB(@"vpad_style")
     valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_followfinger ];
     SET_VALNB(@"vpad_followfinger")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.vpad_followfinger_firemode ];
+    SET_VALNB(@"vpad_followfinger_firemode")
+    valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_followfinger_sensibility ];
+    SET_VALNB(@"vpad_followfinger_sensibility")
     
     
     //emulation settings
@@ -670,6 +686,10 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     SET_VALNB(@"vpad_style")
     valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_followfinger ];
     SET_VALNB(@"vpad_followfinger")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.vpad_followfinger_firemode ];
+    SET_VALNB(@"vpad_followfinger_firemode")
+    valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_followfinger_sensibility ];
+    SET_VALNB(@"vpad_followfinger_sensibility")
     
     
     //emulation settings
@@ -782,6 +802,8 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     REMOVE_KEY(@"btstack_on")
     REMOVE_KEY(@"vpad_style")
     REMOVE_KEY(@"vpad_followfinger")
+    REMOVE_KEY(@"vpad_followfinger_firemode")
+    REMOVE_KEY(@"vpad_followfinger_sensibility")
 	REMOVE_KEY(@"icade_lang")
     
     //emulation settings
@@ -855,7 +877,7 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     
     
     //TODO: to review
-    if([[UIScreen screens]count]*0 > 1) { //if there are more than 1 screens connected to the device    
+    if([[UIScreen screens]count]*0 > 1) { //if there are more than 1 screens connected to the device
         CGSize max;
         UIScreenMode *maxScreenMode;
         max.width=0;

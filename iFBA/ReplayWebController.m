@@ -28,6 +28,7 @@ static CADisplayLink* m_displayLink;
 static int download_ok;
 
 static NSString *replayURL;
+static ASIHTTPRequest *request=nil;
 
 @implementation ReplayWebController
 @synthesize webview;
@@ -98,6 +99,10 @@ static NSString *replayURL;
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    if (request) {
+        [request cancel];
+        request=nil;
+    }
 }
 - (void)viewDidUnload
 {
@@ -193,7 +198,11 @@ int GetReplayInfo(int slot,char *info) {
     sprintf(szName, "/var/mobile/Documents/iFBA/%s.%02d.replay", gameName,glob_replay_currentslot);
 #endif
 //    NSLog(@"yo %@",replayURL);
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:replayURL]];
+    if (request) {
+        [request cancel];
+        request=nil;
+    }
+    request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:replayURL]];
     [request setDownloadDestinationPath:[NSString stringWithFormat:@"%s",szName]];
     
     download_ok=0;

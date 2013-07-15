@@ -817,23 +817,26 @@ INT32 pgmFrame()
         
         //HACK
         if (glob_ffingeron) {
-            PgmInput[0]&=~((1<<5)); //clear fire 1
             if (glob_mov_y>0) PgmInput[0]|=2;
             if (glob_mov_y<0) PgmInput[0]|=4;
             if (glob_mov_x<0) PgmInput[0]|=8;
             if (glob_mov_x>0) PgmInput[0]|=16;
-            if (glob_shooton) {
-                switch (glob_shootmode) {
-                    case 0: //shoot
-                        if ((glob_autofirecpt%10)==0) PgmInput[0]|=1<<5;
-                        glob_autofirecpt++;
-                        break;
-                    case 1: //laser
-                        PgmInput[0]|=1<<5;
-                        break;
+            if (cur_ifba_conf->vpad_followfinger_firemode==0) {
+                PgmInput[0]&=~((1<<5)); //clear fire 1
+                
+                if (glob_shooton) {
+                    switch (glob_shootmode) {
+                        case 0: //shoot
+                            if ((glob_autofirecpt%10)==0) PgmInput[0]|=1<<5;
+                            glob_autofirecpt++;
+                            break;
+                        case 1: //laser
+                            PgmInput[0]|=1<<5;
+                            break;
+                    }
                 }
             }
-        }        
+        }
         //
         
 		// clear opposites

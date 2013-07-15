@@ -17,14 +17,14 @@ static bool bVBlank;
 // Rom information
 static struct BurnRomInfo mahoudaiRomDesc[] = {
 	{ "ra_ma_01_01.u65",  0x080000, 0x970CCC5C, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
-
+    
 	{ "ra-ma01-rom2.u2",  0x100000, 0x54E2BD95, BRF_GRA },			 //  1 GP9001 Tile data
 	{ "ra-ma01-rom3.u1",  0x100000, 0x21CD378F, BRF_GRA },			 //  2
-
+    
 	{ "ra_ma_01_05.u81",  0x008000, 0xC00D1E80, BRF_GRA },			 //  3 Extra text layer tile data
-
+    
 	{ "ra-ma-01_02.u66",  0x010000, 0xEABFA46D, BRF_ESS | BRF_PRG }, //  4 Z80 program
-
+    
 	{ "ra-ma01-rom1.u57", 0x040000, 0x6EDB2AB8, BRF_SND },			 //  5 MSM6295 ADPCM data
 };
 
@@ -34,14 +34,14 @@ STD_ROM_FN(mahoudai)
 
 static struct BurnRomInfo sstrikerRomDesc[] = {
 	{ "ra-ma_01_01.u65",  0x080000, 0x708FD51D, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
-
+    
 	{ "ra-ma01-rom2.u2",  0x100000, 0x54E2BD95, BRF_GRA },			 //  1 GP9001 Tile data
 	{ "ra-ma01-rom3.u1",  0x100000, 0x21CD378F, BRF_GRA },			 //  2
-
+    
 	{ "ra-ma-01_05.u81",  0x008000, 0x88B58841, BRF_GRA },			 //  3 Extra text layer tile data
-
+    
 	{ "ra-ma-01_02.u66",  0x010000, 0xEABFA46D, BRF_ESS | BRF_PRG }, //  4 Z80 program
-
+    
 	{ "ra-ma01-rom1.u57", 0x040000, 0x6EDB2AB8, BRF_SND },			 //  5 MSM6295 ADPCM data
 };
 
@@ -51,14 +51,14 @@ STD_ROM_FN(sstriker)
 
 static struct BurnRomInfo sstrikraRomDesc[] = {
 	{ "ra-ma-01_01.u65",  0x080000, 0x92259F84, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
-
+    
 	{ "ra-ma01-rom2.u2",  0x100000, 0x54E2BD95, BRF_GRA },			 //  1 GP9001 Tile data
 	{ "ra-ma01-rom3.u1",  0x100000, 0x21CD378F, BRF_GRA },			 //  2
-
+    
 	{ "ra-ma-01_05.u81",  0x008000, 0x88B58841, BRF_GRA },			 //  3 Extra text layer tile data
-
+    
 	{ "ra-ma-01_02.u66",  0x010000, 0xEABFA46D, BRF_ESS | BRF_PRG }, //  4 Z80 program
-
+    
 	{ "ra-ma01-rom1.u57", 0x040000, 0x6EDB2AB8, BRF_SND },			 //  5 MSM6295 ADPCM data
 };
 
@@ -69,7 +69,7 @@ STD_ROM_FN(sstrikra)
 static struct BurnInputInfo mahoudaiInputList[] = {
 	{"P1 Coin",		BIT_DIGITAL,	DrvButton + 3,	"p1 coin"},
 	{"P1 Start",	BIT_DIGITAL,	DrvButton + 5,	"p1 start"},
-
+    
 	{"P1 Up",		BIT_DIGITAL,	DrvJoy1 + 0,	"p1 up"},
 	{"P1 Down",		BIT_DIGITAL,	DrvJoy1 + 1,	"p1 down"},
 	{"P1 Left",		BIT_DIGITAL,	DrvJoy1 + 2,	"p1 left"},
@@ -77,10 +77,10 @@ static struct BurnInputInfo mahoudaiInputList[] = {
 	{"P1 Button 1",	BIT_DIGITAL,	DrvJoy1 + 4,	"p1 fire 1"},
 	{"P1 Button 2",	BIT_DIGITAL,	DrvJoy1 + 5,	"p1 fire 2"},
 	{"P1 Button 3",	BIT_DIGITAL,	DrvJoy1 + 6,	"p1 fire 3"},
-
+    
 	{"P2 Coin",		BIT_DIGITAL,	DrvButton + 4,	"p2 coin"},
 	{"P2 Start",	BIT_DIGITAL,	DrvButton + 6,	"p2 start"},
-
+    
 	{"P2 Up",		BIT_DIGITAL,	DrvJoy2 + 0,	"p2 up"},
 	{"P2 Down",		BIT_DIGITAL,	DrvJoy2 + 1,	"p2 down"},
 	{"P2 Left",		BIT_DIGITAL,	DrvJoy2 + 2,	"p2 left"},
@@ -88,7 +88,7 @@ static struct BurnInputInfo mahoudaiInputList[] = {
 	{"P2 Button 1",	BIT_DIGITAL,	DrvJoy2 + 4,	"p2 fire 1"},
 	{"P2 Button 2",	BIT_DIGITAL,	DrvJoy2 + 5,	"p2 fire 2"},
 	{"P2 Button 3",	BIT_DIGITAL,	DrvJoy2 + 6,	"p2 fire 3"},
-
+    
 	{"Reset",		BIT_DIGITAL,	&DrvReset,		"reset"},
 	{"Diagnostics",	BIT_DIGITAL,	DrvButton + 0,	"diag"},
 	{"Dip A",		BIT_DIPSWITCH,	DrvInput + 3,	"dip"},
@@ -102,7 +102,7 @@ static struct BurnDIPInfo mahoudaiDIPList[] = {
 	// Defaults
 	{0x14,	0xFF, 0xFF,	0x00, NULL},
 	{0x15,	0xFF, 0xFF,	0x00, NULL},
-
+    
 	// DIP 1
 	{0,		0xFE, 0,	2,	  NULL},
 	{0x14,	0x01, 0x01,	0x00, "Coin play"},
@@ -153,7 +153,7 @@ static struct BurnDIPInfo mahoudaiDIPList[] = {
 static struct BurnDIPInfo mahoudaiRegionDIPList[] = {
 	// Defaults
 	{0x16,	0xFF, 0x0E,	0x00, NULL},
-
+    
 	// Region
 	{0,		0xFE, 0,	1,	  "Region"},
     {0x16,	0x01, 0x0E,	0x00, "Japan"},
@@ -169,7 +169,7 @@ static struct BurnDIPInfo mahoudaiRegionDIPList[] = {
 static struct BurnDIPInfo sstrikerRegionDIPList[] = {
 	// Defaults
 	{0x16,	0xFF, 0x0E,	0x04, NULL},
-
+    
 	// Region
 	{0,		0xFE, 0,	7,	  "Region"},
     {0x16,	0x01, 0x0E,	0x02, "U.S.A."},
@@ -216,7 +216,7 @@ static INT32 MemIndex()
 	RamEnd		= Next;
 	ToaPalette	= (UINT32 *)Next; Next += nColCount * sizeof(UINT32);
 	MemEnd		= Next;
-
+    
 	return 0;
 }
 
@@ -224,7 +224,7 @@ static INT32 MemIndex()
 static INT32 DrvScan(INT32 nAction, INT32* pnMin)
 {
 	struct BurnArea ba;
-
+    
 	if (pnMin) {						// Return minimum compatible version
 		*pnMin = 0x029497;
 	}
@@ -234,18 +234,18 @@ static INT32 DrvScan(INT32 nAction, INT32* pnMin)
 		ba.nLen		= RamEnd-RamStart;
 		ba.szName	= "All Ram";
 		BurnAcb(&ba);
-
+        
 		SekScan(nAction);				// scan 68000 states
 		ZetScan(nAction);				// Scan Z80
-
+        
 		MSM6295Scan(0, nAction);
 		BurnYM2151Scan(nAction);
-
+        
 		ToaScanGP9001(nAction, pnMin);
-
+        
 		SCAN_VAR(DrvInput);
 	}
-
+    
 	return 0;
 }
 
@@ -253,25 +253,25 @@ static INT32 LoadRoms()
 {
 	// Load 68000 ROM
 	BurnLoadRom(Rom01, 0, 1);
-
+    
 	// Load GP9001 tile data
 	ToaLoadGP9001Tiles(GP9001ROM[0], 1, 2, nGP9001ROMSize[0]);
-
+    
 	// Load Extra text layer tile data
 	BurnLoadRom(ExtraTROM, 3, 1);
-
+    
 	// Load the Z80 ROM
 	BurnLoadRom(RomZ80, 4, 1);
-
+    
 	// Load MSM6295 ADPCM data
 	BurnLoadRom(MSM6295ROM, 5, 1);
-
+    
 	return 0;
 }
 
 UINT8 __fastcall mahoudaiZ80Read(UINT16 nAddress)
 {
-//	bprintf(PRINT_NORMAL, "z80 read %4X\n", nAddress);
+    //	bprintf(PRINT_NORMAL, "z80 read %4X\n", nAddress);
 	if (nAddress == 0xE001) {
 		return BurnYM2151ReadStatus();
 	}
@@ -283,8 +283,8 @@ UINT8 __fastcall mahoudaiZ80Read(UINT16 nAddress)
 
 void __fastcall mahoudaiZ80Write(UINT16 nAddress, UINT8 nValue)
 {
-//	bprintf(PRINT_NORMAL, "Z80 attempted to write address %04X with value %02X.\n", nAddress, nValue);
-
+    //	bprintf(PRINT_NORMAL, "Z80 attempted to write address %04X with value %02X.\n", nAddress, nValue);
+    
 	switch (nAddress) {
 		case 0xE000:
 			BurnYM2151SelectRegister(nValue);
@@ -294,7 +294,7 @@ void __fastcall mahoudaiZ80Write(UINT16 nAddress, UINT8 nValue)
 			break;
 		case 0xE004:
 			MSM6295Command(0, nValue);
-//			bprintf(PRINT_NORMAL, "OKI M6295 command %02X sent\n", nValue);
+            //			bprintf(PRINT_NORMAL, "OKI M6295 command %02X sent\n", nValue);
 			break;
 	}
 }
@@ -304,10 +304,10 @@ static INT32 DrvZ80Init()
 	// Init the Z80
 	ZetInit(0);
 	ZetOpen(0);
-
+    
 	ZetSetReadHandler(mahoudaiZ80Read);
 	ZetSetWriteHandler(mahoudaiZ80Write);
-
+    
 	// ROM
 	ZetMapArea    (0x0000, 0xBFFF, 0, RomZ80);	// Direct Read from ROM
 	ZetMapArea    (0x0000, 0xBFFF, 2, RomZ80);	// Direct Fetch from ROM
@@ -318,9 +318,9 @@ static INT32 DrvZ80Init()
 	// Callbacks
 	ZetMemCallback(0xE000, 0xE0FF, 0);			// Read
 	ZetMemCallback(0xE000, 0xE0FF, 1);			// Write
-
+    
 	ZetClose();
-
+    
 	return 0;
 }
 
@@ -339,16 +339,16 @@ UINT8 __fastcall mahoudaiReadByte(UINT32 sekAddress)
 			return DrvInput[4];
 		case 0x21C035:								// Dipswitch C - Territory
 			return DrvInput[5];
-
+            
 		case 0x30000D:
 			return ToaVBlankRegister();
-
+            
 		default: {
 			if ((sekAddress & 0x00FFC000) == 0x00218000) {
 				return RamZ80[(sekAddress & 0x3FFF) >> 1];
 			}
-
-//			bprintf(PRINT_NORMAL, "Attempt to read byte value of location %x\n", sekAddress);
+            
+            //			bprintf(PRINT_NORMAL, "Attempt to read byte value of location %x\n", sekAddress);
 		}
 	}
 	return 0;
@@ -357,7 +357,7 @@ UINT8 __fastcall mahoudaiReadByte(UINT32 sekAddress)
 UINT16 __fastcall mahoudaiReadWord(UINT32 sekAddress)
 {
 	switch (sekAddress) {
-
+            
 		case 0x21C020:								// Player 1 inputs
 			return DrvInput[0];
 		case 0x21C024:								// Player 2 inputs
@@ -370,24 +370,24 @@ UINT16 __fastcall mahoudaiReadWord(UINT32 sekAddress)
 			return DrvInput[4];
 		case 0x21C034:								// Dipswitch C - Territory
 			return DrvInput[5];
-
+            
 		case 0x21C03C:
 			return ToaScanlineRegister();
-
+            
 		case 0x300004:
 			return ToaGP9001ReadRAM_Hi(0);
 		case 0x300006:
 			return ToaGP9001ReadRAM_Lo(0);
-
+            
 		case 0x30000C:
 			return ToaVBlankRegister();
-
+            
 		default: {
 			if ((sekAddress & 0x00FFC000) == 0x00218000) {
 				return RamZ80[(sekAddress & 0x3FFF) >> 1];
 			}
-
-//			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
+            
+            //			bprintf(PRINT_NORMAL, "Attempt to read word value of location %x\n", sekAddress);
 		}
 	}
 	return 0;
@@ -395,44 +395,44 @@ UINT16 __fastcall mahoudaiReadWord(UINT32 sekAddress)
 
 void __fastcall mahoudaiWriteByte(UINT32 sekAddress, UINT8 byteValue)
 {
-//	switch (sekAddress) {
-
-//		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
-
-			if ((sekAddress & 0x00FFC000) == 0x00218000) {
-				RamZ80[(sekAddress & 0x3FFF) >> 1] = byteValue;
-			}
-//		}
-//	}
+    //	switch (sekAddress) {
+    
+    //		default: {
+    //			bprintf(PRINT_NORMAL, "Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
+    
+    if ((sekAddress & 0x00FFC000) == 0x00218000) {
+        RamZ80[(sekAddress & 0x3FFF) >> 1] = byteValue;
+    }
+    //		}
+    //	}
 }
 
 void __fastcall mahoudaiWriteWord(UINT32 sekAddress, UINT16 wordValue)
 {
 	switch (sekAddress) {
-
+            
 		case 0x300000:								// Set GP9001 VRAM address-pointer
 			ToaGP9001SetRAMPointer(wordValue);
 			break;
-
+            
 		case 0x300004:
 			ToaGP9001WriteRAM(wordValue, 0);
 			break;
 		case 0x300006:
 			ToaGP9001WriteRAM(wordValue, 0);
 			break;
-
+            
 		case 0x300008:
 			ToaGP9001SelectRegister(wordValue);
 			break;
-
+            
 		case 0x30000C:
 			ToaGP9001WriteRegister(wordValue);
 			break;
-
+            
 		default: {
-//			bprintf(PRINT_NORMAL, "Attempt to write word value %x to location %x\n", wordValue, sekAddress);
-
+            //			bprintf(PRINT_NORMAL, "Attempt to write word value %x to location %x\n", wordValue, sekAddress);
+            
 			if ((sekAddress & 0x00FFC000) == 0x00218000) {
 				RamZ80[(sekAddress & 0x3FFF) >> 1] = wordValue;
 			}
@@ -445,27 +445,27 @@ static INT32 DrvDoReset()
 	SekOpen(0);
 	SekReset();
 	SekClose();
-
+    
 	ZetOpen(0);
 	ZetReset();
 	ZetClose();
-
+    
 	MSM6295Reset(0);
 	BurnYM2151Reset();
-
+    
 	return 0;
 }
 
 static INT32 DrvInit()
 {
 	INT32 nLen;
-
+    
 #ifdef DRIVER_ROTATION
 	bToaRotateScreen = true;
 #endif
-
+    
 	nGP9001ROMSize[0] = 0x200000;
-
+    
 	// Find out how much memory is needed
 	Mem = NULL;
 	MemIndex();
@@ -475,16 +475,16 @@ static INT32 DrvInit()
 	}
 	memset(Mem, 0, nLen);										// blank all memory
 	MemIndex();													// Index the allocated memory
-
+    
 	// Load the roms into memory
 	if (LoadRoms()) {
 		return 1;
 	}
-
+    
 	{
 		SekInit(0, 0x68000);										// Allocate 68000
 	    SekOpen(0);
-
+        
 		// Map 68000 memory:
 		SekMapMemory(Rom01,			0x000000, 0x07FFFF, SM_ROM);	// CPU 0 ROM
 		SekMapMemory(Ram01,			0x100000, 0x10FFFF, SM_RAM);
@@ -493,33 +493,33 @@ static INT32 DrvInit()
 		SekMapMemory(ExtraTRAM,		0x500000, 0x502FFF, SM_RAM);
 		SekMapMemory(ExtraTSelect,	0x502000, 0x502FFF, SM_RAM);	// 0x502000 - Scroll; 0x502200 - RAM
 		SekMapMemory(ExtraTScroll,	0x503000, 0x503FFF, SM_RAM);	// 0x203000 - Offset; 0x503200 - RAM
-
+        
 		SekSetReadWordHandler(0, mahoudaiReadWord);
 		SekSetReadByteHandler(0, mahoudaiReadByte);
 		SekSetWriteWordHandler(0, mahoudaiWriteWord);
 		SekSetWriteByteHandler(0, mahoudaiWriteByte);
-
+        
 		SekClose();
 	}
-
+    
 	nSpritePriority = 1;
 	ToaInitGP9001();
-
+    
 	ToaExtraTextInit();
-
+    
 	DrvZ80Init();												// Initialize Z80
-
+    
 	nToaPalLen = nColCount;
 	ToaPalSrc = RamPal;
 	ToaPalInit();
-
+    
 	BurnYM2151Init(27000000 / 8);
 	BurnYM2151SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
 	MSM6295Init(0, 32000000 / 32 / 132, 1);
 	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
-
+    
 	bDrawScreen = true;
-
+    
 	DrvDoReset();												// Reset machine
 	return 0;
 }
@@ -528,31 +528,31 @@ static INT32 DrvExit()
 {
 	MSM6295Exit(0);
 	BurnYM2151Exit();
-
+    
 	ToaPalExit();
-
+    
 	ToaExitGP9001();
 	ToaExtraTextExit();
 	ToaZExit();				// Z80 exit
 	SekExit();				// Deallocate 68000s
-
+    
 	BurnFree(Mem);
-
+    
 	return 0;
 }
 
 static INT32 DrvDraw()
 {
 	ToaClearScreen(0);
-
+    
 	if (bDrawScreen) {
 		ToaGetBitmap();
 		ToaRenderGP9001();					// Render GP9001 graphics
 		ToaExtraTextLayer();				// Render extra text layer
 	}
-
+    
 	ToaPalUpdate();							// Update the palette
-
+    
 	return 0;
 }
 
@@ -564,7 +564,7 @@ inline static INT32 CheckSleep(INT32)
 static INT32 DrvFrame()
 {
 	INT32 nInterleave = 4;
-
+    
 	if (DrvReset) {														// Reset machine
 		//HACK
         wait_control=60;
@@ -614,41 +614,43 @@ static INT32 DrvFrame()
         
     } else {
         
-
-	// Compile digital inputs
-	DrvInput[0] = 0x00;													// Buttons
-	DrvInput[1] = 0x00;													// Player 1
-	DrvInput[2] = 0x00;													// Player 2
-	for (INT32 i = 0; i < 8; i++) {
-		DrvInput[0] |= (DrvJoy1[i] & 1) << i;
-		DrvInput[1] |= (DrvJoy2[i] & 1) << i;
-		DrvInput[2] |= (DrvButton[i] & 1) << i;
-	}
+        
+        // Compile digital inputs
+        DrvInput[0] = 0x00;													// Buttons
+        DrvInput[1] = 0x00;													// Player 1
+        DrvInput[2] = 0x00;													// Player 2
+        for (INT32 i = 0; i < 8; i++) {
+            DrvInput[0] |= (DrvJoy1[i] & 1) << i;
+            DrvInput[1] |= (DrvJoy2[i] & 1) << i;
+            DrvInput[2] |= (DrvButton[i] & 1) << i;
+        }
         
         //HACK
         if (glob_ffingeron) {
-            DrvInput[0]&=~((1<<4)); //clear fire 1
             if (glob_mov_y>0) DrvInput[0]|=1;
             if (glob_mov_y<0) DrvInput[0]|=2;
             if (glob_mov_x<0) DrvInput[0]|=4;
             if (glob_mov_x>0) DrvInput[0]|=8;
-            if (glob_shooton) {
-                switch (glob_shootmode) {
-                    case 0: //shoot
-                        if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
-                        glob_autofirecpt++;
-                        break;
-                    case 1: //laser
-                        DrvInput[0]|=1<<4;
-                        break;
+            if (cur_ifba_conf->vpad_followfinger_firemode==0) {
+                DrvInput[0]&=~((1<<4)); //clear fire 1
+                if (glob_shooton) {
+                    switch (glob_shootmode) {
+                        case 0: //shoot
+                            if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
+                            glob_autofirecpt++;
+                            break;
+                        case 1: //laser
+                            DrvInput[0]|=1<<4;
+                            break;
+                    }
                 }
             }
         }
         //
         
         
-	ToaClearOpposites(&DrvInput[0]);
-	ToaClearOpposites(&DrvInput[1]);
+        ToaClearOpposites(&DrvInput[0]);
+        ToaClearOpposites(&DrvInput[1]);
         //HACK
         //replay data - drvinputs
         
@@ -691,11 +693,11 @@ static INT32 DrvFrame()
     }
     
 	SekNewFrame();
-
+    
 	nCyclesTotal[0] = (INT32)((INT64)16000000 * nBurnCPUSpeedAdjust / (0x0100 * 60));
 	nCyclesTotal[1] = TOA_Z80_SPEED / 60;
 	nCyclesDone[0] = nCyclesDone[1] = 0;
-
+    
 	SekOpen(0);
     //HACK for 'follow finger' touchpad mode
     if (glob_ffingeron) {
@@ -750,45 +752,45 @@ static INT32 DrvFrame()
 	nToaCyclesDisplayStart = nCyclesTotal[0] - ((nCyclesTotal[0] * (TOA_VBLANK_LINES + 240)) / 262);
 	nToaCyclesVBlankStart = nCyclesTotal[0] - ((nCyclesTotal[0] * TOA_VBLANK_LINES) / 262);
 	bVBlank = false;
-
+    
 	INT32 nSoundBufferPos = 0;
-
+    
 	ZetOpen(0);
 	for (INT32 i = 0; i < nInterleave; i++) {
     	INT32 nCurrentCPU;
 		INT32 nNext;
-
+        
 		// Run 68000
-
+        
 		nCurrentCPU = 0;
 		nNext = (i + 1) * nCyclesTotal[nCurrentCPU] / nInterleave;
-
+        
 		// Trigger VBlank interrupt
 		if (nNext > nToaCyclesVBlankStart) {
 			if (nCyclesDone[nCurrentCPU] < nToaCyclesVBlankStart) {
 				nCyclesSegment = nToaCyclesVBlankStart - nCyclesDone[nCurrentCPU];
 				nCyclesDone[nCurrentCPU] += SekRun(nCyclesSegment);
 			}
-
+            
 			ToaBufferGP9001Sprites();
-
+            
 			bVBlank = true;
 			SekSetIRQLine(4, SEK_IRQSTATUS_AUTO);
 		}
-
+        
 		nCyclesSegment = nNext - nCyclesDone[nCurrentCPU];
 		if (bVBlank || (!CheckSleep(nCurrentCPU))) {					// See if this CPU is busywaiting
 			nCyclesDone[nCurrentCPU] += SekRun(nCyclesSegment);
 		} else {
 			nCyclesDone[nCurrentCPU] += SekIdle(nCyclesSegment);
 		}
-
+        
 		// Run Z80
 		nCurrentCPU = 1;
 		nNext = (i + 1) * nCyclesTotal[nCurrentCPU] / nInterleave;
 		nCyclesSegment = nNext - nCyclesDone[nCurrentCPU];
 		nCyclesDone[nCurrentCPU] += ZetRun(nCyclesSegment);
-
+        
 		{
 			// Render sound segment
 			if (pBurnSoundOut) {
@@ -800,7 +802,7 @@ static INT32 DrvFrame()
 			}
 		}
 	}
-
+    
 	{
 		// Make sure the buffer is entirely filled.
 		if (pBurnSoundOut) {
@@ -815,7 +817,7 @@ static INT32 DrvFrame()
 	
 	SekClose();
 	ZetClose();
-
+    
 	if (pBurnDraw) {
 		DrvDraw();														// Draw screen if needed
 	}
@@ -826,7 +828,7 @@ static INT32 DrvFrame()
         nShouldExit=1;
     }
     
-
+    
 	return 0;
 }
 

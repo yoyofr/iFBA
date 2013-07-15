@@ -21,7 +21,7 @@ static INT32 v25_reset = 0;
 // Rom information
 static struct BurnRomInfo vfiveRomDesc[] = {
 	{ "tp027_01.bin", 0x080000, 0x731D50F4, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
-
+    
 	{ "tp027_02.bin", 0x100000, 0x877B45E8, BRF_GRA },			 //  1 GP9001 Tile data
 	{ "tp027_03.bin", 0x100000, 0xB1FC6362, BRF_GRA },			 //  2
 };
@@ -32,7 +32,7 @@ STD_ROM_FN(vfive)
 
 static struct BurnRomInfo grindstmRomDesc[] = {
 	{ "01.bin",       0x080000, 0x4923F790, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
-
+    
 	{ "tp027_02.bin", 0x100000, 0x877B45E8, BRF_GRA },			 //  1 GP9001 Tile data
 	{ "tp027_03.bin", 0x100000, 0xB1FC6362, BRF_GRA },			 //  2
 };
@@ -43,7 +43,7 @@ STD_ROM_FN(grindstm)
 
 static struct BurnRomInfo grindstaRomDesc[] = {
 	{ "tp027-01.rom", 0x080000, 0x8D8C0392, BRF_ESS | BRF_PRG }, //  0 CPU #0 code
-
+    
 	{ "tp027_02.bin", 0x100000, 0x877B45E8, BRF_GRA },			 //  1 GP9001 Tile data
 	{ "tp027_03.bin", 0x100000, 0xB1FC6362, BRF_GRA },			 //  2
 };
@@ -55,7 +55,7 @@ STD_ROM_FN(grindsta)
 static struct BurnInputInfo vfiveInputList[] = {
 	{"P1 Coin",		BIT_DIGITAL,	DrvButton + 3,	"p1 coin"},
 	{"P1 Start",	BIT_DIGITAL,	DrvButton + 5,	"p1 start"},
-
+    
 	{"P1 Up",		BIT_DIGITAL,	DrvJoy1 + 0,	"p1 up"},
 	{"P1 Down",		BIT_DIGITAL,	DrvJoy1 + 1,	"p1 down"},
 	{"P1 Left",		BIT_DIGITAL,	DrvJoy1 + 2,	"p1 left"},
@@ -63,10 +63,10 @@ static struct BurnInputInfo vfiveInputList[] = {
 	{"P1 Button 1",	BIT_DIGITAL,	DrvJoy1 + 4,	"p1 fire 1"},
 	{"P1 Button 2",	BIT_DIGITAL,	DrvJoy1 + 5,	"p1 fire 2"},
 	{"P1 Button 3",	BIT_DIGITAL,	DrvJoy1 + 6,	"p1 fire 3"},
-
+    
 	{"P2 Coin",		BIT_DIGITAL,	DrvButton + 4,	"p2 coin"},
 	{"P2 Start",	BIT_DIGITAL,	DrvButton + 6,	"p2 start"},
-
+    
 	{"P2 Up",		BIT_DIGITAL,	DrvJoy2 + 0,	"p2 up"},
 	{"P2 Down",		BIT_DIGITAL,	DrvJoy2 + 1,	"p2 down"},
 	{"P2 Left",		BIT_DIGITAL,	DrvJoy2 + 2,	"p2 left"},
@@ -74,7 +74,7 @@ static struct BurnInputInfo vfiveInputList[] = {
 	{"P2 Button 1",	BIT_DIGITAL,	DrvJoy2 + 4,	"p2 fire 1"},
 	{"P2 Button 2",	BIT_DIGITAL,	DrvJoy2 + 5,	"p2 fire 2"},
 	{"P2 Button 3",	BIT_DIGITAL,	DrvJoy2 + 6,	"p2 fire 3"},
-
+    
 	{"Reset",		BIT_DIGITAL,	&DrvReset,		"reset"},
 	{"Diagnostics",	BIT_DIGITAL,	DrvButton + 0,	"diag"},
 	{"Dip A",		BIT_DIPSWITCH,	DrvInput + 3,	"dip"},
@@ -88,7 +88,7 @@ static struct BurnDIPInfo vfiveDIPList[] = {
 	// Defaults
 	{0x14,	0xFF, 0xFF,	0x00, NULL},
 	{0x15,	0xFF, 0xFF,	0x00, NULL},
-
+    
 	// DIP 1
 	{0,		0xFE, 0,	2,	  NULL},
 	{0x14,	0x01, 0x01,	0x00, "Upright"},
@@ -102,7 +102,7 @@ static struct BurnDIPInfo vfiveDIPList[] = {
 	{0,		0xFE, 0,	2,	  "Advertise sound"},
 	{0x14,	0x01, 0x08,	0x00, "On"},
 	{0x14,	0x01, 0x08,	0x08, "Off"},
-
+    
 	// Normal coin settings
 	{0,		0xFE, 0,	4,	  "Coin A"},
 	{0x14,	0x82, 0x30,	0x00, "1 coin 1 play"},
@@ -122,7 +122,7 @@ static struct BurnDIPInfo vfiveDIPList[] = {
 	{0x16,	0x00, 0x0E, 0x08, NULL},
 	{0x14,	0x82, 0xC0,	0xC0, "2 coins 3 plays"},
 	{0x16,	0x00, 0x0E, 0x08, NULL},
-
+    
 	// European coin settings
 	{0,		0xFE, 0,	4,	  "Coin A"},
 	{0x14,	0x02, 0x30,	0x00, "1 coin 1 play"},
@@ -142,7 +142,7 @@ static struct BurnDIPInfo vfiveDIPList[] = {
 	{0x16,	0x00, 0x0E, 0x08, NULL},
 	{0x14,	0x02, 0xC0,	0xC0, "1 coin 6 plays"},
 	{0x16,	0x00, 0x0E, 0x08, NULL},
-
+    
 	// DIP 2
 	{0,		0xFE, 0,	4,	  "Game difficulty"},
 	{0x15,	0x01, 0x03,	0x00, "B (normal)"},
@@ -168,7 +168,7 @@ static struct BurnDIPInfo vfiveDIPList[] = {
 };
 
 static struct BurnDIPInfo grindstmRegionDIPList[] = {
-
+    
 	{0x16,	0xFF, 0x0F,	0x00, NULL},
 	{0,		0xFE, 0,	11,	  "Region"},
 	{0x16,	0x01, 0x0F, 0x00, "Korea (Unite Trading)"},
@@ -187,7 +187,7 @@ static struct BurnDIPInfo grindstmRegionDIPList[] = {
 	{0x16,	0x01, 0x0F, 0x0D, "U.S.A"},
 	{0x16,	0x01, 0x0F, 0x0E, "Korea"},
 	{0x16,	0x01, 0x0F, 0x0F, "Korea"},
-
+    
 };
 
 STDDIPINFO(vfive)
@@ -217,7 +217,7 @@ static INT32 MemIndex()
 	RamEnd		= Next;
 	ToaPalette	= (UINT32 *)Next; Next += nColCount * sizeof(UINT32);
 	MemEnd		= Next;
-
+    
 	return 0;
 }
 
@@ -225,24 +225,24 @@ static INT32 MemIndex()
 static INT32 DrvScan(INT32 nAction,INT32 *pnMin)
 {
 	struct BurnArea ba;
-
+    
 	if (pnMin) {						// Return minimum compatible version
 		*pnMin = 0x020997;
 	}
 	if (nAction & ACB_VOLATILE) {		// Scan volatile ram
 		memset(&ba, 0, sizeof(ba));
-    		ba.Data		= RamStart;
+        ba.Data		= RamStart;
 		ba.nLen		= RamEnd-RamStart;
 		ba.szName	= "All Ram";
 		BurnAcb(&ba);
-
+        
 		SekScan(nAction);				// scan 68000 states
 		VezScan(nAction);
 		BurnYM2151Scan(nAction);
-
+        
 		ToaScanGP9001(nAction, pnMin);
 	}
-
+    
 	return 0;
 }
 
@@ -250,10 +250,10 @@ static INT32 LoadRoms()
 {
 	// Load 68000 ROM
 	BurnLoadRom(Rom01, 0, 1);
-
+    
 	// Load GP9001 tile data
 	ToaLoadGP9001Tiles(GP9001ROM[0], 1, 2, nGP9001ROMSize[0]);
-
+    
 	return 0;
 }
 
@@ -262,7 +262,7 @@ UINT8 __fastcall vfiveReadByte(UINT32 sekAddress)
 	if ((sekAddress & 0xff0000) == 0x210000) {
 		return ShareRAM[(sekAddress / 2) & 0x7fff];
 	}
-
+    
 	switch (sekAddress)
 	{
 		case 0x200011:								// Player 1 inputs
@@ -271,14 +271,14 @@ UINT8 __fastcall vfiveReadByte(UINT32 sekAddress)
 			return DrvInput[1];
 		case 0x200019:								// Other inputs
 			return DrvInput[2];
-
+            
 		case 0x30000D:								// VBlank
 			return ToaVBlankRegister();
-
-//		default:
-//			printf("Attempt to read byte value of location %x\n", sekAddress);
+            
+            //		default:
+            //			printf("Attempt to read byte value of location %x\n", sekAddress);
 	}
-
+    
 	return 0;
 }
 
@@ -287,7 +287,7 @@ UINT16 __fastcall vfiveReadWord(UINT32 sekAddress)
 	if ((sekAddress & 0xff0000) == 0x210000) {
 		return ShareRAM[(sekAddress / 2) & 0x7fff];
 	}
-
+    
 	switch (sekAddress)
 	{
 		case 0x200010:								// Player 1 inputs
@@ -296,34 +296,34 @@ UINT16 __fastcall vfiveReadWord(UINT32 sekAddress)
 			return DrvInput[1];
 		case 0x200018:								// Other inputs
 			return DrvInput[2];
-
+            
 		case 0x300004:
 			return ToaGP9001ReadRAM_Hi(0);
 		case 0x300006:
 			return ToaGP9001ReadRAM_Lo(0);
-
+            
 		case 0x30000C:
 			return ToaVBlankRegister();
-
+            
 		case 0x700000:
 			return ToaScanlineRegister();
-
-//		default:
-//			printf("Attempt to read word value of location %x\n", sekAddress);
+            
+            //		default:
+            //			printf("Attempt to read word value of location %x\n", sekAddress);
 	}
-
+    
 	return 0;
 }
 
 void __fastcall vfiveWriteByte(UINT32 sekAddress, UINT8 byteValue)
 {
-//printf("Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
-
+    //printf("Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
+    
 	if ((sekAddress & 0xff0000) == 0x210000) {
 		ShareRAM[(sekAddress / 2) & 0x7fff] = byteValue;
 		return;
 	}
-
+    
 	switch (sekAddress)
 	{
 		case 0x20001c:
@@ -331,9 +331,9 @@ void __fastcall vfiveWriteByte(UINT32 sekAddress, UINT8 byteValue)
 			if (!v25_reset && (~byteValue & 0x10)) VezReset();
 			v25_reset = (~byteValue & 0x10);
 			break;
-
-//		default:
-//			printf("Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
+            
+            //		default:
+            //			printf("Attempt to write byte value %x to location %x\n", byteValue, sekAddress);
 	}
 }
 
@@ -343,30 +343,30 @@ void __fastcall vfiveWriteWord(UINT32 sekAddress, UINT16 wordValue)
 		ShareRAM[(sekAddress / 2) & 0x7fff] = wordValue;
 		return;
 	}
-
+    
 	switch (sekAddress)
 	{
 		case 0x300000:								// Set GP9001 VRAM address-pointer
 			ToaGP9001SetRAMPointer(wordValue);
 			break;
-
+            
 		case 0x300004:
 			ToaGP9001WriteRAM(wordValue, 0);
 			break;
 		case 0x300006:
 			ToaGP9001WriteRAM(wordValue, 0);
 			break;
-
+            
 		case 0x300008:
 			ToaGP9001SelectRegister(wordValue);
 			break;
-
+            
 		case 0x30000C:
 			ToaGP9001WriteRegister(wordValue);
 			break;
-
-//		default:
-//			printf("Attempt to write word value %x to location %x\n", wordValue, sekAddress);
+            
+            //		default:
+            //			printf("Attempt to write word value %x to location %x\n", wordValue, sekAddress);
 	}
 }
 
@@ -376,11 +376,11 @@ void __fastcall vfive_v25_write(UINT32 address, UINT8 data)
 	{
 		case 0x00000:
 			BurnYM2151SelectRegister(data);
-		return;
-
+            return;
+            
 		case 0x00001:
 			BurnYM2151WriteRegister(data);
-		return;
+            return;
 	}
 }
 
@@ -391,7 +391,7 @@ UINT8 __fastcall vfive_v25_read(UINT32 address)
 		case 0x00001:
 			return BurnYM2151ReadStatus();
 	}
-
+    
 	return 0;
 }
 
@@ -401,14 +401,14 @@ UINT8 __fastcall vfive_v25_read_port(UINT32 port)
 	{
 		case V25_PORT_PT:
 			return DrvInput[3]^0xff;
-
+            
 		case V25_PORT_P0:
 			return DrvInput[4]^0xff;
-
+            
 		case V25_PORT_P1:
 			return DrvInput[5]^0xff;
 	}
-
+    
 	return 0;
 }
 
@@ -417,15 +417,15 @@ static INT32 DrvDoReset()
 	SekOpen(0);
 	SekReset();
 	SekClose();
-
+    
 	VezOpen(0);
 	VezReset();
 	VezClose();
-
+    
 	BurnYM2151Reset();
-
+    
 	v25_reset = 1;
-
+    
 	return 0;
 }
 
@@ -451,13 +451,13 @@ static UINT8 nitro_decryption_table[256] = {
 static INT32 DrvInit()
 {
 	INT32 nLen;
-
+    
 #ifdef DRIVER_ROTATION
 	bToaRotateScreen = true;
 #endif
-
+    
 	nGP9001ROMSize[0] = 0x200000;
-
+    
 	// Find out how much memory is needed
 	Mem = NULL;
 	MemIndex();
@@ -467,25 +467,25 @@ static INT32 DrvInit()
 	}
 	memset(Mem, 0, nLen);										// blank all memory
 	MemIndex();													// Index the allocated memory
-
+    
 	// Load the roms into memory
 	if (LoadRoms()) {
 		return 1;
 	}
-
+    
 	{
 		SekInit(0, 0x68000);									// Allocate 68000
 		SekOpen(0);
 		SekMapMemory(Rom01,		0x000000, 0x07FFFF, SM_ROM);	// CPU 0 ROM
 		SekMapMemory(Ram01,		0x100000, 0x103FFF, SM_RAM);
-	//	SekMapMemory(ShareRAM,		0x210000, 0x21ffff, SM_RAM);
+        //	SekMapMemory(ShareRAM,		0x210000, 0x21ffff, SM_RAM);
 		SekMapMemory(RamPal,		0x400000, 0x400FFF, SM_RAM);	// Palette RAM
 		SekSetReadWordHandler(0, vfiveReadWord);
 		SekSetReadByteHandler(0, vfiveReadByte);
 		SekSetWriteWordHandler(0, vfiveWriteWord);
 		SekSetWriteByteHandler(0, vfiveWriteByte);
 		SekClose();
-
+        
 		VezInit(0, V25_TYPE, 10000000 /*before divider*/);
 		VezOpen(0);
 		for (INT32 i = 0x80000; i < 0x100000; i += 0x8000) {
@@ -499,24 +499,24 @@ static INT32 DrvInit()
 		VezSetDecode(nitro_decryption_table);
 		VezClose();
 	}
-
+    
 	BurnYM2151Init(3375000);
 	BurnYM2151SetAllRoutes(1.00, BURN_SND_ROUTE_BOTH);
-
+    
 	nSpriteYOffset = 0x0001;
-
+    
 	nLayer0XOffset = -0x01D6;
 	nLayer1XOffset = -0x01D8;
 	nLayer2XOffset = -0x01DA;
-
+    
 	ToaInitGP9001();
-
+    
 	nToaPalLen = nColCount;
 	ToaPalSrc = RamPal;
 	ToaPalInit();
-
+    
 	bDrawScreen = true;
-
+    
 	DrvDoReset();							// Reset machine
 	return 0;
 }
@@ -524,28 +524,28 @@ static INT32 DrvInit()
 static INT32 DrvExit()
 {
 	ToaPalExit();
-
+    
 	ToaExitGP9001();
 	BurnYM2151Exit();
 	SekExit();								// Deallocate 68000s
 	VezExit();
-
+    
 	BurnFree(Mem);
-
+    
 	return 0;
 }
 
 static INT32 DrvDraw()
 {
 	ToaClearScreen(0x120);
-
+    
 	if (bDrawScreen) {
 		ToaGetBitmap();
 		ToaRenderGP9001();					// Render GP9001 graphics
 	}
-
+    
 	ToaPalUpdate();							// Update the palette
-
+    
 	return 0;
 }
 
@@ -558,17 +558,17 @@ inline static INT32 CheckSleep(INT32)
 static INT32 DrvFrame()
 {
 	INT32 nInterleave = 10;
-
+    
 	if (DrvReset) {														// Reset machine
 		//HACK
         wait_control=60;
         glob_framecpt=0;
         glob_replay_last_dx16=glob_replay_last_dy16=0;
-        glob_replay_last_fingerOn=0;        
+        glob_replay_last_fingerOn=0;
         //
 		DrvDoReset();
 	}
-
+    
     if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY
         unsigned int next_frame_event;
         next_frame_event=(unsigned int)(glob_replay_data_stream[glob_replay_data_index])|((unsigned int)(glob_replay_data_stream[glob_replay_data_index+1])<<8)
@@ -607,39 +607,41 @@ static INT32 DrvFrame()
         DrvInput[2]=last_DrvInput[2];
         
     } else {
-
-	// Compile digital inputs
-	DrvInput[0] = 0x00;													// Buttons
-	DrvInput[1] = 0x00;													// Player 1
-	DrvInput[2] = 0x00;													// Player 2
-	for (INT32 i = 0; i < 8; i++) {
-		DrvInput[0] |= (DrvJoy1[i] & 1) << i;
-		DrvInput[1] |= (DrvJoy2[i] & 1) << i;
-		DrvInput[2] |= (DrvButton[i] & 1) << i;
-	}
-    //HACK
-    if (glob_ffingeron) {
-        DrvInput[0]&=~((1<<4)); //clear fire 1
-        if (glob_mov_y>0) DrvInput[0]|=1;
-        if (glob_mov_y<0) DrvInput[0]|=2;
-        if (glob_mov_x<0) DrvInput[0]|=4;
-        if (glob_mov_x>0) DrvInput[0]|=8;
-        if (glob_shooton) {
-            switch (glob_shootmode) {
-                case 0: //shoot
-                    if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
-                    glob_autofirecpt++;
-                    break;
-                case 1: //laser
-                    DrvInput[0]|=1<<4;
-                    break;
+        
+        // Compile digital inputs
+        DrvInput[0] = 0x00;													// Buttons
+        DrvInput[1] = 0x00;													// Player 1
+        DrvInput[2] = 0x00;													// Player 2
+        for (INT32 i = 0; i < 8; i++) {
+            DrvInput[0] |= (DrvJoy1[i] & 1) << i;
+            DrvInput[1] |= (DrvJoy2[i] & 1) << i;
+            DrvInput[2] |= (DrvButton[i] & 1) << i;
+        }
+        //HACK
+        if (glob_ffingeron) {
+            if (glob_mov_y>0) DrvInput[0]|=1;
+            if (glob_mov_y<0) DrvInput[0]|=2;
+            if (glob_mov_x<0) DrvInput[0]|=4;
+            if (glob_mov_x>0) DrvInput[0]|=8;
+            if (cur_ifba_conf->vpad_followfinger_firemode==0) {
+                DrvInput[0]&=~((1<<4)); //clear fire 1
+                if (glob_shooton) {
+                    switch (glob_shootmode) {
+                        case 0: //shoot
+                            if ((glob_autofirecpt%10)==0) DrvInput[0]|=1<<4;
+                            glob_autofirecpt++;
+                            break;
+                        case 1: //laser
+                            DrvInput[0]|=1<<4;
+                            break;
+                    }
+                }
             }
         }
-    }
-    //
-
-	ToaClearOpposites(&DrvInput[0]);
-	ToaClearOpposites(&DrvInput[1]);
+        //
+        
+        ToaClearOpposites(&DrvInput[0]);
+        ToaClearOpposites(&DrvInput[1]);
         
         //HACK
         //replay data - drvinputs
@@ -681,12 +683,12 @@ static INT32 DrvFrame()
         }
         
     }
-
+    
 	SekNewFrame();
 	VezNewFrame();
-
+    
 	INT32 nSoundBufferPos = 0;
-
+    
 	nCyclesTotal[0] = (INT32)((INT64)16000000 * nBurnCPUSpeedAdjust / (0x0100 * 60));
 	nCyclesTotal[1] = (INT32)((INT64)5000000 * nBurnCPUSpeedAdjust / (0x0100 * 60));
 	nCyclesDone[0] = 0;
@@ -741,45 +743,45 @@ static INT32 DrvFrame()
             
         }
     }
-
+    
 	SekSetCyclesScanline(nCyclesTotal[0] / 262);
 	nToaCyclesDisplayStart = nCyclesTotal[0] - ((nCyclesTotal[0] * (TOA_VBLANK_LINES + 240)) / 262);
 	nToaCyclesVBlankStart = nCyclesTotal[0] - ((nCyclesTotal[0] * TOA_VBLANK_LINES) / 262);
 	bVBlank = false;
-
+    
 	VezOpen(0);
-
+    
 	for (INT32 i = 0; i < nInterleave; i++) {
     	INT32 nCurrentCPU;
 		INT32 nNext;
-
+        
 		// Run 68000
 		nCurrentCPU = 0;
 		nNext = (i + 1) * nCyclesTotal[nCurrentCPU] / nInterleave;
-
-
+        
+        
 		// Trigger VBlank interrupt
 		if (!bVBlank && nNext > nToaCyclesVBlankStart) {
 			if (nCyclesDone[nCurrentCPU] < nToaCyclesVBlankStart) {
 				nCyclesSegment = nToaCyclesVBlankStart - nCyclesDone[nCurrentCPU];
 				nCyclesDone[nCurrentCPU] += SekRun(nCyclesSegment);
 			}
-
+            
 			bVBlank = true;
-
+            
 			ToaBufferGP9001Sprites();
-
+            
 			// Trigger VBlank interrupt
 			SekSetIRQLine(2, SEK_IRQSTATUS_AUTO);
 		}
-
+        
 		nCyclesSegment = nNext - nCyclesDone[nCurrentCPU];
 		if (bVBlank || (!CheckSleep(nCurrentCPU))) {					// See if this CPU is busywaiting
 			nCyclesDone[nCurrentCPU] += SekRun(nCyclesSegment);
 		} else {
 			nCyclesDone[nCurrentCPU] += SekIdle(nCyclesSegment);
 		}
-
+        
 		// sound! (increase interleave?)
 		if (v25_reset) {
 			nCyclesDone[1] += nCyclesTotal[1] / nInterleave;
@@ -794,7 +796,7 @@ static INT32 DrvFrame()
 			nSoundBufferPos += nSegmentLength;
 		}
 	}
-
+    
 	if (pBurnSoundOut) {
 		INT32 nSegmentLength = nBurnSoundLen - nSoundBufferPos;
 		if (nSegmentLength) {
@@ -802,14 +804,14 @@ static INT32 DrvFrame()
 			BurnYM2151Render(pSoundBuf, nSegmentLength);
 		}
 	}
-
+    
 	VezClose();
 	SekClose();
-
+    
 	if (pBurnDraw) {
 		DrvDraw();												// Draw screen if needed
 	}
-
+    
     glob_framecpt++;
     if ((glob_replay_mode==REPLAY_PLAYBACK_MODE)&&(glob_replay_data_index>=glob_replay_data_index_max)) {
         //should end replay here
