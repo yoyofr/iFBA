@@ -38,6 +38,21 @@
  H  ON,OFF  = l,v
 */
 
+
+/*
+ iMPULSE Controller player 2
+ UP ON,OFF  = ,
+ RT ON,OFF  = ,
+ DN ON,OFF  = ,
+ LT ON,OFF  = ,
+ A  ON,OFF  = ,
+ B  ON,OFF  = ,
+ C  ON,OFF  = ,
+ D  ON,OFF  = ,
+ E  ON,OFF  = ,
+ F  ON,OFF  = ,
+ */
+
 @protocol iCadeEventDelegate <NSObject>
 
 @optional
@@ -57,12 +72,17 @@
         bool buttonDown:1;
         bool buttonUp:1;
     } _delegateFlags;
+    
+    int type,lang;
 }
 
 @property (nonatomic, assign) iCadeState iCadeState;
 @property (nonatomic, assign) id<iCadeEventDelegate> delegate;
 @property (nonatomic, assign) BOOL active;
+@property (nonatomic, assign) int type;
+@property (nonatomic, assign) int lang;
 
 -(void) changeLang:(int)lang;
+- (void)changeControllerType:(int)type;
 
 @end

@@ -185,6 +185,7 @@ INT32 Cps1ObjDraw(INT32 nLevelFrom,INT32 nLevelTo)
 	INT32 i; UINT16 *ps; INT32 nPsAdd;
 	struct ObjFrame *pof;
 	(void)nLevelFrom; (void)nLevelTo;
+    
 	
 	if (Cps1ObjDrawCallbackFunction) {
 		return Cps1ObjDrawCallbackFunction(nLevelFrom, nLevelTo);
@@ -203,26 +204,36 @@ INT32 Cps1ObjDraw(INT32 nLevelFrom,INT32 nLevelTo)
 	}
 
 	// Go through all the Objs
+    
+    
 	for (i=0; i<pof->nCount; i++,ps+=nPsAdd) {
 		INT32 x,y,n,a,bx,by,dx,dy; INT32 nFlip;
+        
 
-		x = BURN_ENDIAN_SWAP_INT16(ps[0]); y = BURN_ENDIAN_SWAP_INT16(ps[1]); n = BURN_ENDIAN_SWAP_INT16(ps[2]); a = BURN_ENDIAN_SWAP_INT16(ps[3]);
-			
+		x = BURN_ENDIAN_SWAP_INT16(ps[0]); y = BURN_ENDIAN_SWAP_INT16(ps[1]); n = BURN_ENDIAN_SWAP_INT16(ps[2]); a = BURN_ENDIAN_SWAP_INT16(ps[3]);                
+        
 		// Find out sprite size
 		bx=((a>> 8)&15)+1;
 		by=((a>>12)&15)+1;
+        
+//        printf("n1:%04X\n",i,n);
 		
 		n = GfxRomBankMapper(GFXTYPE_SPRITES, n);
+        
+        
+//        printf("n2:%04X\n",i,n);
+        
 		if (n == -1) continue;
 		
 		n |= (y & 0x6000) << 3; // high bits of address
-		
+        
 		// CPS1 coords are 9 bit signed?
 		x&=0x01ff; if (x>=0x1c0) x-=0x200;
 		y&=0x01ff; y^=0x100; y-=0x100;
 
 		x+=pof->nShiftX;
 		y+=pof->nShiftY;
+        
 
 		// Find the palette for the tiles on this sprite
 		CpstPal = CpsPal + ((a & 0x1F) << 4);
@@ -268,7 +279,7 @@ INT32 Cps2ObjDraw(INT32 nLevelFrom, INT32 nLevelTo)
 	INT32 nCount;
 
 	bool bMask = 0;
-
+    
 	// Draw the earliest frame we have in history
 	pof = of + nGetNext;
 

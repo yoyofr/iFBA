@@ -133,8 +133,12 @@ EmuViewController *emuvc;
     iCaderv.delegate = self;
     [iCaderv becomeFirstResponder];
     
+//    strcpy(gameName,"varth");
+//    launchGame=1;
+    
+    
 #if BENCH_MODE
-    strcpy(gameName,"sfiii3");
+    strcpy(gameName,"varth");
     launchGame=1;
     //change dir
     [[NSFileManager defaultManager] changeCurrentDirectoryPath:@"/var/mobile/Documents/ROMS/"];    

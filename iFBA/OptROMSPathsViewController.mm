@@ -135,7 +135,8 @@ static CADisplayLink* m_displayLink;
     }
     cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;    
     if (szAppRomPaths[indexPath.row][0]) {
-        cell.textLabel.text=[NSString stringWithFormat:@"%d: %s",indexPath.row,szAppRomPaths[indexPath.row]];
+        cell.textLabel.text=[NSString stringWithFormat:@"%d:%s",indexPath.row,szAppRomPaths[indexPath.row]];
+        cell.textLabel.lineBreakMode=NSLineBreakByTruncatingMiddle;
         
     } else {
         cell.textLabel.text=[NSString stringWithFormat:@"%d:",indexPath.row];

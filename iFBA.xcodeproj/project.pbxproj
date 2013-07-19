@@ -1822,6 +1822,8 @@
 		3354E93C14F91697001DAF9D /* GameBrowserViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */; };
 		3354E97314F9573D001DAF9D /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 3354E97114F9573D001DAF9D /* button.png */; };
 		3354E97414F9573D001DAF9D /* dpad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3354E97214F9573D001DAF9D /* dpad.png */; };
+		33554A2917971DAD00D2E0D4 /* OptiCadeMapViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33554A2717971DAC00D2E0D4 /* OptiCadeMapViewController.mm */; };
+		33554A2A17971DAD00D2E0D4 /* OptiCadeMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33554A2817971DAD00D2E0D4 /* OptiCadeMapViewController.xib */; };
 		3366751F178D2B3100C88902 /* gradcell_greenD.png in Resources */ = {isa = PBXBuildFile; fileRef = 3366751D178D2B3100C88902 /* gradcell_greenD.png */; };
 		33667520178D2B3100C88902 /* gradcell_greenL.png in Resources */ = {isa = PBXBuildFile; fileRef = 3366751E178D2B3100C88902 /* gradcell_greenL.png */; };
 		33667564178EAC2500C88902 /* CMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366754C178EAC2500C88902 /* CMActionSheet.m */; };
@@ -4328,6 +4330,9 @@
 		3354E93B14F9152B001DAF9D /* GameBrowserViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameBrowserViewController.mm; sourceTree = "<group>"; };
 		3354E97114F9573D001DAF9D /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
 		3354E97214F9573D001DAF9D /* dpad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dpad.png; sourceTree = "<group>"; };
+		33554A2617971DAC00D2E0D4 /* OptiCadeMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptiCadeMapViewController.h; sourceTree = "<group>"; };
+		33554A2717971DAC00D2E0D4 /* OptiCadeMapViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptiCadeMapViewController.mm; sourceTree = "<group>"; };
+		33554A2817971DAD00D2E0D4 /* OptiCadeMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptiCadeMapViewController.xib; sourceTree = "<group>"; };
 		3366751D178D2B3100C88902 /* gradcell_greenD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradcell_greenD.png; sourceTree = "<group>"; };
 		3366751E178D2B3100C88902 /* gradcell_greenL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradcell_greenL.png; sourceTree = "<group>"; };
 		3366754B178EAC2500C88902 /* CMActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMActionSheet.h; sourceTree = "<group>"; };
@@ -6738,6 +6743,9 @@
 				339F697115002F5300C1B5EF /* OptWiimoteViewController.h */,
 				339F697215002F5300C1B5EF /* OptWiimoteViewController.mm */,
 				339F697315002F5400C1B5EF /* OptWiimoteViewController.xib */,
+				33554A2617971DAC00D2E0D4 /* OptiCadeMapViewController.h */,
+				33554A2717971DAC00D2E0D4 /* OptiCadeMapViewController.mm */,
+				33554A2817971DAD00D2E0D4 /* OptiCadeMapViewController.xib */,
 				336D5BC1151E0B7D006D8984 /* OptGameInfoViewController.h */,
 				336D5BC2151E0B7D006D8984 /* OptGameInfoViewController.m */,
 				336D5BC3151E0B7E006D8984 /* OptGameInfoViewController.xib */,
@@ -10584,6 +10592,7 @@
 				33667577178EAC2500C88902 /* action-white-button-selected@2x.png in Resources */,
 				33667578178EAC2500C88902 /* action-white-button.png in Resources */,
 				33667579178EAC2500C88902 /* action-white-button@2x.png in Resources */,
+				33554A2A17971DAD00D2E0D4 /* OptiCadeMapViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11180,6 +11189,7 @@
 				33E47D051783678100A1F2AD /* UIColor+BButton.m in Sources */,
 				33667564178EAC2500C88902 /* CMActionSheet.m in Sources */,
 				33667565178EAC2500C88902 /* CMRotatableModalViewController.m in Sources */,
+				33554A2917971DAD00D2E0D4 /* OptiCadeMapViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

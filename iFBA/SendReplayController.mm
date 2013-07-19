@@ -57,8 +57,15 @@ extern int glob_replay_currentslot;
 	[[descrTextView layer] setBorderWidth:3.0];
 	[[descrTextView layer] setBorderColor:[[UIColor colorWithRed: 0.95f green: 0.95f blue: 0.95f alpha: 1.0f] CGColor]];   //Adding Border color.
     
+    //GEt hostname and remove ".local"
     NSArray *nameArray = [[NSHost currentHost] names];
-    authorTextField.text=[nameArray objectAtIndex:0];
+    NSString *tmpStr=[nameArray objectAtIndex:0];
+    NSRange r=[tmpStr rangeOfString:@".local"];
+    if (r.location!=NSNotFound) {
+        tmpStr=[tmpStr substringToIndex:r.location];
+    }
+    authorTextField.text=tmpStr;
+    
     
     [cancelBtn setType:BButtonTypeDanger];
     [uploadBtn setType:BButtonTypePrimary];

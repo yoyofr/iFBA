@@ -14,6 +14,7 @@
 int iCadePress;
 static int iCadeAllPress;
 extern int mOptICadeButtonSelected;
+extern int mOptICadeCurrentJoystick;
 
 @implementation OptConGetiCadeViewController
 @synthesize iCaderv;
@@ -129,10 +130,10 @@ static int viewWA_patch=0;
     iCadeAllPress^=button;
     [self setICadeState:NO forButton:button];    
     if (iCadePress&& (iCadeAllPress==0)) {
-        cur_ifba_conf->joymap_iCade[mOptICadeButtonSelected].dev_btn=iCadePress;
+        cur_ifba_conf->joymap_iCade[mOptICadeCurrentJoystick][mOptICadeButtonSelected].dev_btn=iCadePress;
         //remove older assignment (if exist)
         for (int i=0;i<VSTICK_NB_BUTTON;i++) {
-            if ((i!=mOptICadeButtonSelected)&&(cur_ifba_conf->joymap_iCade[i].dev_btn==iCadePress)) cur_ifba_conf->joymap_iCade[i].dev_btn=0;
+            if ((i!=mOptICadeButtonSelected)&&(cur_ifba_conf->joymap_iCade[mOptICadeCurrentJoystick][i].dev_btn==iCadePress)) cur_ifba_conf->joymap_iCade[mOptICadeCurrentJoystick][i].dev_btn=0;
         }
         iCadePress=0;
         [self dismissSemiModalViewController:self];
@@ -146,7 +147,7 @@ static int viewWA_patch=0;
     [self dismissSemiModalViewController:self];
 }
 -(IBAction) clearInput {
-    cur_ifba_conf->joymap_iCade[mOptICadeButtonSelected].dev_btn=0;
+    cur_ifba_conf->joymap_iCade[mOptICadeCurrentJoystick][mOptICadeButtonSelected].dev_btn=0;
     iCadePress=0;
     [self dismissSemiModalViewController:self];
 }

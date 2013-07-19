@@ -2464,11 +2464,11 @@ void YM2151UpdateOne(int num, INT16 **buffers, int length)
 
 void YM2151SetIrqHandler(int n, void(*handler)(int irq))
 {
-	YMPSG[n].irqhandler = handler;
+    if (YMPSG) YMPSG[n].irqhandler = handler;
 }
 
 void YM2151SetPortWriteHandler(int n, write8_handler handler)
 {
-	YMPSG[n].porthandler = handler;
+	if (YMPSG) YMPSG[n].porthandler = handler;
 }
 

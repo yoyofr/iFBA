@@ -128,7 +128,7 @@ static CADisplayLink* m_displayLink;
     switch (indexPath.row) {
         case 0:cell.textLabel.text=NSLocalizedString(@"Wiimote",@"");
             break;
-        case 1:cell.textLabel.text=NSLocalizedString(@"iCade",@"");
+        case 1:cell.textLabel.text=NSLocalizedString(@"iCade/iMpulse",@"");
             break;
         case 2:cell.textLabel.text=NSLocalizedString(@"Virtual pad",@"");
             break;
@@ -149,7 +149,7 @@ static CADisplayLink* m_displayLink;
             [self.navigationController pushViewController:optWiimote animated:YES];
             [optWiimote release];
             break;
-        case 1://iCade
+        case 1://iCade/iMpulse
             optiCade =[[OptiCadeViewController alloc] initWithNibName:@"OptiCadeViewController" bundle:nil];
             ((OptiCadeViewController*)optiCade)->emuvc=emuvc;
             [self.navigationController pushViewController:optiCade animated:YES];

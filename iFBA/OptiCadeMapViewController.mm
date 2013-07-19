@@ -1,24 +1,20 @@
 //
-//  OptiCadeViewController.m
+//  OptiCadeMapViewController.m
 //  iFBA
 //
 //  Created by Yohann Magnien on 28/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "OptiCadeViewController.h"
+#import "OptiCadeMapViewController.h"
 #import "BTstack/BTstackManager.h"
 #import "BTstack/BTDiscoveryViewController.h"
 #import "BTstackManager.h"
-#import "OptiCadeMapViewController.h"
+#import "OptConGetiCadeViewController.h"
 #import "fbaconf.h"
 
-char iCade_langStr[MAX_LANG][32]={
-    "English",
-    "Français"
-};
-int mOptICadeButtonSelected;
-int mOptICadeCurrentJoystick;
+extern int mOptICadeButtonSelected;
+extern int mOptICadeCurrentJoystick;
 extern volatile int emuThread_running;
 extern int launchGame;
 extern char gameName[64];
@@ -35,15 +31,16 @@ static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 
 
-@implementation OptiCadeViewController
+@implementation OptiCadeMapViewController
 @synthesize tabView,btn_backToEmu,emuvc;
+@synthesize optgetButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title=NSLocalizedString(@"iCade/iMpulse",@"");
+        self.title=NSLocalizedString(@"iCade",@"");
     }
     return self;
 }
@@ -57,6 +54,7 @@ static CADisplayLink* m_displayLink;
     // in interface builder instead).
     //
     //self.tabView.style=UITableViewStyleGrouped;
+    optgetButton=[[OptConGetiCadeViewController alloc] initWithNibName:@"OptConGetiCadeViewController" bundle:nil];
     tabView.backgroundView=nil;
     tabView.backgroundView=[[[UIView alloc] init] autorelease];
     //ICADE & Wiimote
@@ -73,6 +71,7 @@ static CADisplayLink* m_displayLink;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [optgetButton release];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -80,9 +79,9 @@ static CADisplayLink* m_displayLink;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-        iCaderv.active = YES;
-        iCaderv.delegate = self;
-        [iCaderv becomeFirstResponder];
+    iCaderv.active = YES;
+    iCaderv.delegate = self;
+    [iCaderv becomeFirstResponder];
     
     BTstackManager *bt = [BTstackManager sharedInstance];
     if (ifba_conf.btstack_on&&bt) {
@@ -99,29 +98,29 @@ static CADisplayLink* m_displayLink;
 //static int viewWA_patch=0;
 
 - (void)viewWillAppear:(BOOL)animated {
-//    if (viewWA_patch) return;
-//    viewWA_patch++;
+    //    if (viewWA_patch) return;
+    //    viewWA_patch++;
     [super viewWillAppear:animated];
     
     /* Wiimote check => rely on cadisplaylink*/
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
     m_displayLink.frameInterval = 3; //20fps
-	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];    
+	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv becomeFirstResponder];
-
-
+    
+    
     if (emuThread_running) {
         btn_backToEmu.title=[NSString stringWithFormat:@"%s",gameName];
         self.navigationItem.rightBarButtonItem = btn_backToEmu;
-    }    
+    }
     [tabView reloadData];
 }
 -(void)viewWillDisappear:(BOOL)animated {
-//    if (!viewWA_patch) return;
-//    viewWA_patch--;
+    //    if (!viewWA_patch) return;
+    //    viewWA_patch--;
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
@@ -136,20 +135,14 @@ static CADisplayLink* m_displayLink;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    if (optionScope==0)	return 4;
-    else return 3;
+    return 2;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    if (optionScope==0) {
-        if (section==2) return 2;//MAX_JOYSTICKS;
+    if (section==0) return VSTICK_NB_BUTTON;
     return 1;
-    } else {
-        if (section==1) return 2;//MAX_JOYSTICKS;
-        return 1;
-    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -160,33 +153,13 @@ static CADisplayLink* m_displayLink;
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     NSString *footer=nil;
-    if (optionScope==0) {
     switch (section) {
-        case 0://Language
-            footer=NSLocalizedString(@"iCade Language",@"");
-            break;
-        case 1://iCade/iMpulse mode
-            footer=NSLocalizedString(@"iCade/iMpulse switch (iMpulse mode required for 2 players)",@"");
-            break;
-        case 2://Mapping
+        case 0://Mapping
             footer=NSLocalizedString(@"Mapping info",@"");
             break;
-        case 3://Reset to Default
+        case 1://Reset to Default
             footer=@"";
             break;
-    }
-    } else {
-        switch (section) {
-            case 0://iCade/iMpulse mode
-                footer=NSLocalizedString(@"iCade/iMpulse switch (iMpulse mode required for 2 players)",@"");
-                break;                
-            case 1://Mapping
-                footer=NSLocalizedString(@"Mapping info",@"");
-                break;
-            case 2://Reset to Default
-                footer=@"";
-                break;
-        }
     }
     return footer;
 }
@@ -197,53 +170,27 @@ static CADisplayLink* m_displayLink;
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];                
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     cell.accessoryType=UITableViewCellAccessoryNone;
-    if (optionScope==0) {
     switch (indexPath.section) {
-        case 0://Reset to default
-            cell.textLabel.text=[NSString stringWithFormat:@"%@%@",NSLocalizedString(@"System keyboard: ",@""),[NSString stringWithCString:iCade_langStr[ifba_conf.icade_lang] encoding:NSUTF8StringEncoding]];
+        case 0://Mapping
+            cell.textLabel.text=[NSString stringWithFormat:@"%s",cur_ifba_conf->joymap_iCade[mOptICadeCurrentJoystick][indexPath.row].btn_name];
+            lblview=[[UILabel alloc] initWithFrame:CGRectMake(0,0,100,30)];
+            if (cur_ifba_conf->joymap_iCade[mOptICadeCurrentJoystick][indexPath.row].dev_btn) lblview.text=[NSString stringWithFormat:@"Button %c",'A'-1+cur_ifba_conf->joymap_iCade[mOptICadeCurrentJoystick][indexPath.row].dev_btn];
+            else lblview.text=@"/";
+            lblview.backgroundColor=[UIColor clearColor];
+            cell.accessoryView=lblview;
+            [lblview release];
             cell.textLabel.textAlignment=UITextAlignmentLeft;
-            cell.accessoryView=nil;
             break;
-        case 1://iCade/iMpulse switch
-            cell.textLabel.text=[NSString stringWithFormat:@"Current mode: %s",(cur_ifba_conf->joy_iCadeIMpulse?"Impulse":"iCade")];
-            cell.textLabel.textAlignment=UITextAlignmentLeft;
-            cell.accessoryView=nil;
-            break;
-        case 2://Mapping
-            cell.textLabel.text=[NSString stringWithFormat:@"%@%d",NSLocalizedString(@"Controller ",@""),indexPath.row+1];
-            cell.textLabel.textAlignment=UITextAlignmentLeft;
-            cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
-            break;
-        case 3://Reset to default
+        case 1://Reset to default
             cell.textLabel.text=NSLocalizedString(@"Reset to default",@"");
             cell.textLabel.textAlignment=UITextAlignmentCenter;
             cell.accessoryView=nil;
             break;
     }
-    } else {
-        switch (indexPath.section) {
-            case 0://iCade/iMpulse switch
-                cell.textLabel.text=[NSString stringWithFormat:@"%s mode",(cur_ifba_conf->joy_iCadeIMpulse?"Impulse"
-                                                                           :"iCade")];
-                cell.textLabel.textAlignment=UITextAlignmentLeft;
-                cell.accessoryView=nil;
-                break;
-            case 1://Mapping
-                cell.textLabel.text=[NSString stringWithFormat:@"%@%d",NSLocalizedString(@"Controller ",@""),indexPath.row];
-                cell.textLabel.textAlignment=UITextAlignmentLeft;
-                cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
-                break;
-            case 2://Reset to default
-                cell.textLabel.text=NSLocalizedString(@"Reset to default",@"");
-                cell.textLabel.textAlignment=UITextAlignmentCenter;
-                cell.accessoryView=nil;
-                break;
-        }
-
-    }
+    
 	
     
     return cell;
@@ -251,66 +198,28 @@ static CADisplayLink* m_displayLink;
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (optionScope==0) {
     switch (indexPath.section) {
         case 0:
-            ifba_conf.icade_lang++;
-            if (ifba_conf.icade_lang==MAX_LANG) ifba_conf.icade_lang=0;
-            [tableView reloadData];
+            mOptICadeButtonSelected=indexPath.row;
+            [self presentSemiModalViewController:optgetButton];
+            [tabView reloadData];
             break;
         case 1:
-            cur_ifba_conf->joy_iCadeIMpulse^=1;
-            [iCaderv changeControllerType:cur_ifba_conf->joy_iCadeIMpulse];
-            [tableView reloadData];
-            break;
-        case 2: {
-                mOptICadeCurrentJoystick=indexPath.row;
-                OptiCadeMapViewController *vc=[[OptiCadeMapViewController alloc] initWithNibName:@"OptiCadeMapViewController" bundle:nil];
-                ((OptiCadeMapViewController*)vc)->emuvc=emuvc;
-                [self.navigationController pushViewController:vc animated:YES];
-                [vc release];
+            for (int i=0;i<VSTICK_NB_BUTTON;i++) {
+                memcpy(&(cur_ifba_conf->joymap_iCade[mOptICadeCurrentJoystick][i]),&(default_joymap_iCade[mOptICadeCurrentJoystick][i]),sizeof(t_button_map));
             }
             [tabView reloadData];
             break;
-        case 3:
-            memcpy(cur_ifba_conf->joymap_iCade,default_joymap_iCade,sizeof(default_joymap_iCade));
-            [tabView reloadData];            
-            break;
-    }
-    } else {
-        switch (indexPath.section) {
-            case 0:
-                cur_ifba_conf->joy_iCadeIMpulse^=1;
-                [iCaderv changeControllerType:cur_ifba_conf->joy_iCadeIMpulse];
-                [tableView reloadData];
-                break;
-            case 1:
-            {
-                mOptICadeCurrentJoystick=indexPath.row;
-                OptiCadeMapViewController *vc=[[OptiCadeMapViewController alloc] initWithNibName:@"OptiCadeMapViewController" bundle:nil];
-                ((OptiCadeMapViewController*)vc)->emuvc=emuvc;
-                [self.navigationController pushViewController:vc animated:YES];
-                [vc release];
-            }
-                [tabView reloadData];
-                break;
-            case 2:
-                memcpy(cur_ifba_conf->joymap_iCade,default_joymap_iCade,sizeof(default_joymap_iCade));
-                break;
-        }
-        
     }
 }
 
 
 -(IBAction) backToEmu {
-//    launchGame=2;
-//    [self.navigationController popToRootViewControllerAnimated:NO];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
     
     [self.navigationController pushViewController:emuvc animated:NO];
-
+    
 }
 
 #pragma Wiimote/iCP support
@@ -363,7 +272,7 @@ static CADisplayLink* m_displayLink;
         ui_currentIndex_s=ui_currentIndex_r=0;
     }
     else {
-        if (button&iCadeJoystickDown) {            
+        if (button&iCadeJoystickDown) {
             if (ui_currentIndex_r<[tabView numberOfRowsInSection:ui_currentIndex_s]-1) ui_currentIndex_r++; //next row
             else { //next section
                 if (ui_currentIndex_s<[tabView numberOfSections]-1) {
@@ -371,9 +280,9 @@ static CADisplayLink* m_displayLink;
                 } else {
                     ui_currentIndex_s=ui_currentIndex_r=0; //loop to 1st section
                 }
-            }             
+            }
         } else if (button&iCadeJoystickUp) {
-            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row            
+            if (ui_currentIndex_r>0) ui_currentIndex_r--; //prev row
             else { //prev section
                 if (ui_currentIndex_s>0) {
                     ui_currentIndex_s--;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //next section
@@ -381,7 +290,7 @@ static CADisplayLink* m_displayLink;
                     ui_currentIndex_s=[tabView numberOfSections]-1;ui_currentIndex_r=[tabView numberOfRowsInSection:ui_currentIndex_s]-1; //loop to 1st section
                 }
             }
-        } else if (button&iCadeButtonA) { //validate            
+        } else if (button&iCadeButtonA) { //validate
             [self tableView:tabView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s]];
             
         } else if (button&iCadeButtonB) { //back

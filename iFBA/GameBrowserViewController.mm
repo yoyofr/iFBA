@@ -1086,25 +1086,38 @@ static int replay_slot[10];
         ui_maxIndex_AS++;
         [launchMenuAS addButtonWithTitle:@"Share replay online" type:CMActionSheetButtonTypeWhite block:^{
             glob_replay_mode=REPLAY_SHARE_ONLINE;
-            replaySlotMenu=[[UIActionSheet alloc] initWithTitle:@"Select slot" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
             
-            int cancelIndex=0;
-            char szTmp[64];
+            menuASactive=1;
+            launchMenuAS=[[[CMActionSheet alloc] init] autorelease];
+            ui_maxIndex_AS=-1;
             //check current replay slots
+            char szTmp[64];
             for (int i=0;i<10;i++) {
                 if (GetReplayInfo(i,szTmp)==0) {
-                    [replaySlotMenu addButtonWithTitle:[NSString stringWithFormat:@"#%d. %s",i,szTmp]];
-                    replay_index[cancelIndex]=i;
-                    cancelIndex++;
+                    replay_slot[i]=1;
+                    ui_maxIndex_AS++;
+                    [launchMenuAS addButtonWithTitle:[NSString stringWithFormat:@"#%d. %s",i,szTmp] type:CMActionSheetButtonTypeWhite block:^{
+                        glob_replay_currentslot=i;
+                        menuASactive=0;
+                        
+                        SendReplayController *replaySend;
+                        replaySend = [[SendReplayController alloc] initWithNibName:@"SendReplayController" bundle:nil];
+                        //bypass_reinit_view=1;
+                        [self.navigationController pushViewController:replaySend animated:YES];
+                        [replaySend release];
+                        
+                    }];
                 }
             }
-            [replaySlotMenu addButtonWithTitle:@"Cancel"];
-            replaySlotMenu.cancelButtonIndex=cancelIndex;
-            [replaySlotMenu showInView:self.view];
-            [replaySlotMenu autorelease];
+            ui_maxIndex_AS++;
+            [launchMenuAS addButtonWithTitle:@"Cancel" type:CMActionSheetButtonTypeWhite block:^{
+                menuASactive=0;
+            }];
             
-            menuASactive=0;
-            [[self navigationController] popViewControllerAnimated:NO];
+            // Present
+            ui_currentIndex_AS=0;
+            [launchMenuAS selectButton:0];
+            [launchMenuAS present];                
         }];
         
         

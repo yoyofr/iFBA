@@ -241,7 +241,7 @@
         actionSheet.autoresizingMask = UIViewAutoresizingFlexibleWidth;// | UIViewAutoresizingFlexibleHeight;
         
         scrollView = [[[CMUIScrollView alloc] initWithFrame:CGRectMake(0, 0, viewController.view.frame.size.width, viewController.view.frame.size.height*3/4)] autorelease];
-        scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+        scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         scrollView.pagingEnabled = YES;
         scrollView.canCancelContentTouches = YES;
         
@@ -302,7 +302,16 @@
         
         
         scrollView.contentSize = CGSizeMake(viewController.view.frame.size.width, offset);
-        scrollView.frame = CGRectMake(0, viewController.view.frame.size.height, viewController.view.frame.size.width, viewController.view.frame.size.height*3/4);
+        int frameH=offset;
+        int maxH;
+        if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) {
+            maxH=viewController.view.frame.size.height*3/4;
+        } else {
+            maxH=viewController.view.frame.size.width*3/4;
+        }
+        
+        if (offset>maxH) frameH=maxH;
+        scrollView.frame = CGRectMake(0, viewController.view.frame.size.height, viewController.view.frame.size.width, frameH);
         
         // Present window and action sheet
         self.overlayWindow.rootViewController = viewController;

@@ -176,6 +176,10 @@ valNb=[prefs objectForKey:a];
     GET_VALNB(@"vpad_followfinger_sensibility")
     if ((valNb == nil)||reset_settings) ifba_conf.vpad_followfinger_sensibility=1.0f;
 	else ifba_conf.vpad_followfinger_sensibility = [valNb floatValue];
+    GET_VALNB(@"joy_iCadeIMpulse")
+	if ((valNb == nil)||reset_settings) ifba_conf.joy_iCadeIMpulse=0;
+	else ifba_conf.joy_iCadeIMpulse = [valNb intValue];
+    
     
     
     //Emulation settings
@@ -195,6 +199,7 @@ valNb=[prefs objectForKey:a];
     //Controls mapping
     for (int i=0;i<MAX_JOYSTICKS;i++) 
         for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+            //wiimote
             keyStr=[NSString stringWithFormat:@"wiimap%02X%02X",i,j];
             valNb=[prefs objectForKey:keyStr];
             if (valNb != nil) ifba_conf.joymap_wiimote[i][j].dev_btn=[valNb intValue];
@@ -204,18 +209,18 @@ valNb=[prefs objectForKey:a];
             valStr=[prefs objectForKey:keyStr];            
             if (valStr != nil) strncpy(ifba_conf.joymap_wiimote[i][j].btn_name,[valStr UTF8String],sizeof(ifba_conf.joymap_wiimote[i][j].btn_name)-1);
             else strcpy(ifba_conf.joymap_wiimote[i][j].btn_name,default_joymap_wiimote[i][j].btn_name);
+            
+            //iCade
+            keyStr=[NSString stringWithFormat:@"icademap%02X%02X",i,j];
+            valNb=[prefs objectForKey:keyStr];
+            if (valNb != nil) ifba_conf.joymap_iCade[i][j].dev_btn=[valNb intValue];
+            else ifba_conf.joymap_iCade[i][j].dev_btn=default_joymap_iCade[i][j].dev_btn;
+            
+            keyStr=[NSString stringWithFormat:@"icademap_str%02X%02X",i,j];
+            valStr=[prefs objectForKey:keyStr];
+            if (valStr != nil) strncpy(ifba_conf.joymap_iCade[i][j].btn_name,[valStr UTF8String],sizeof(ifba_conf.joymap_iCade[i][j].btn_name)-1);
+            else strcpy(ifba_conf.joymap_iCade[i][j].btn_name,default_joymap_iCade[i][j].btn_name);
         }
-    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-        keyStr=[NSString stringWithFormat:@"icademap%02X",j];
-        valNb=[prefs objectForKey:keyStr];
-        if (valNb != nil) ifba_conf.joymap_iCade[j].dev_btn=[valNb intValue];
-        else ifba_conf.joymap_iCade[j].dev_btn=default_joymap_iCade[j].dev_btn;
-        
-        keyStr=[NSString stringWithFormat:@"icademap_str%02X",j];
-        valStr=[prefs objectForKey:keyStr];        
-        if (valStr != nil) strncpy(ifba_conf.joymap_iCade[j].btn_name,[valStr UTF8String],sizeof(ifba_conf.joymap_iCade[j].btn_name)-1);
-        else strcpy(ifba_conf.joymap_iCade[j].btn_name,default_joymap_iCade[j].btn_name);
-    }
     
     //TOUCHPAD
     for (int j=0;j<VSTICK_NB_BUTTON;j++) {
@@ -312,91 +317,95 @@ valNb=[prefs objectForKey:keyStr];
     
     //Video settings
     GET_VALNB(@"video_fskip")
-	if ((valNb == nil)) ifba_game_conf.video_fskip=10; //AUTO
+	if (valNb == nil) ifba_game_conf.video_fskip=10; //AUTO
 	else ifba_game_conf.video_fskip = [valNb intValue];
     GET_VALNB(@"video_60hz")
-	if ((valNb == nil)) ifba_game_conf.video_60hz=0;
+	if (valNb == nil) ifba_game_conf.video_60hz=0;
 	else ifba_game_conf.video_60hz = [valNb intValue];    
     GET_VALNB(@"aspect_ratio")
-	if ((valNb == nil)) ifba_game_conf.aspect_ratio=1;
+	if (valNb == nil) ifba_game_conf.aspect_ratio=1;
 	else ifba_game_conf.aspect_ratio = [valNb intValue];
     GET_VALNB(@"screen_mode")
-	if ((valNb == nil)) ifba_game_conf.screen_mode=2;
+	if (valNb == nil) ifba_game_conf.screen_mode=2;
 	else ifba_game_conf.screen_mode = [valNb intValue];
     GET_VALNB(@"filtering")
-	if ((valNb == nil)) ifba_game_conf.filtering=1;
+	if (valNb == nil) ifba_game_conf.filtering=1;
 	else ifba_game_conf.filtering = [valNb intValue];
     GET_VALNB(@"brightness")
-	if ((valNb == nil)) {
+	if (valNb == nil) {
         if ([cur_screen respondsToSelector:@selector(setBrightness:)]) ifba_game_conf.brightness=cur_screen.brightness;
         else ifba_game_conf.brightness=0.5f;
     }
 	else ifba_game_conf.brightness = [valNb floatValue];        
     GET_VALNB(@"show_fps")
-	if ((valNb == nil)) ifba_game_conf.show_fps=0;
+	if (valNb == nil) ifba_game_conf.show_fps=0;
 	else ifba_game_conf.show_fps = [valNb intValue];
     GET_VALNB(@"video_filter")
-	if ((valNb == nil)) ifba_game_conf.video_filter=0;
+	if (valNb == nil) ifba_game_conf.video_filter=0;
 	else ifba_game_conf.video_filter = [valNb intValue];
     GET_VALNB(@"video_filter_strength")
-	if ((valNb == nil)) ifba_game_conf.video_filter_strength=32;
+	if (valNb == nil) ifba_game_conf.video_filter_strength=32;
 	else ifba_game_conf.video_filter_strength = [valNb intValue];
     
     
     //Sound settings
     GET_VALNB(@"sound_on")
-	if ((valNb == nil)) ifba_game_conf.sound_on=1;
+	if (valNb == nil) ifba_game_conf.sound_on=1;
 	else ifba_game_conf.sound_on = [valNb intValue];
     GET_VALNB(@"sound_freq")
-	if ((valNb == nil)) ifba_game_conf.sound_freq=0;
+	if (valNb == nil) ifba_game_conf.sound_freq=0;
 	else ifba_game_conf.sound_freq = [valNb intValue];
     GET_VALNB(@"sound_latency")
-	if ((valNb == nil)) ifba_game_conf.sound_latency=1;
+	if (valNb == nil) ifba_game_conf.sound_latency=1;
 	else ifba_game_conf.sound_latency = [valNb intValue];
     
     //Controls settings
     GET_VALNB(@"vpad_alpha")
-	if ((valNb == nil)) ifba_game_conf.vpad_alpha=2;
+	if (valNb == nil) ifba_game_conf.vpad_alpha=2;
 	else ifba_game_conf.vpad_alpha = [valNb intValue];
     GET_VALNB(@"vpad_showSpecial")
-	if ((valNb == nil)) ifba_game_conf.vpad_showSpecial=1;
+	if (valNb == nil) ifba_game_conf.vpad_showSpecial=1;
 	else ifba_game_conf.vpad_showSpecial = [valNb intValue];
     GET_VALNB(@"vpad_btnsize")
-	if ((valNb == nil)) ifba_game_conf.vpad_btnsize=1;
+	if (valNb == nil) ifba_game_conf.vpad_btnsize=1;
 	else ifba_game_conf.vpad_btnsize = [valNb intValue];
     GET_VALNB(@"vpad_padsize")
-	if ((valNb == nil)) ifba_game_conf.vpad_padsize=1;
+	if (valNb == nil) ifba_game_conf.vpad_padsize=1;
 	else ifba_game_conf.vpad_padsize = [valNb intValue];
     GET_VALNB(@"vpad_style")
-	if ((valNb == nil)) ifba_game_conf.vpad_style=0;
+	if (valNb == nil) ifba_game_conf.vpad_style=0;
 	else ifba_game_conf.vpad_style = [valNb intValue];
     GET_VALNB(@"vpad_followfinger")
-	if ((valNb == nil)) ifba_game_conf.vpad_followfinger=0;
+	if (valNb == nil) ifba_game_conf.vpad_followfinger=0;
 	else ifba_game_conf.vpad_followfinger = [valNb intValue];
     GET_VALNB(@"vpad_followfinger_firemode")
-	if ((valNb == nil)) ifba_game_conf.vpad_followfinger_firemode=0;
+	if (valNb == nil) ifba_game_conf.vpad_followfinger_firemode=0;
 	else ifba_game_conf.vpad_followfinger_firemode = [valNb intValue];
     GET_VALNB(@"vpad_followfinger_sensibility")
-    if ((valNb == nil)) ifba_game_conf.vpad_followfinger_sensibility=1.0f;
+    if (valNb == nil) ifba_game_conf.vpad_followfinger_sensibility=1.0f;
 	else ifba_game_conf.vpad_followfinger_sensibility = [valNb floatValue];
+    GET_VALNB(@"joy_iCadeIMpulse")
+	if (valNb == nil) ifba_game_conf.joy_iCadeIMpulse=0;
+	else ifba_game_conf.joy_iCadeIMpulse = [valNb intValue];
     
     //Emulation settings
     GET_VALNB(@"asm_68k")
-	if ((valNb == nil)) ifba_game_conf.asm_68k=1;
+	if (valNb == nil) ifba_game_conf.asm_68k=1;
 	else ifba_game_conf.asm_68k = [valNb intValue];
     GET_VALNB(@"asm_z80")
-	if ((valNb == nil)) ifba_game_conf.asm_z80=0;
+	if (valNb == nil) ifba_game_conf.asm_z80=0;
 	else ifba_game_conf.asm_z80 = [valNb intValue];
     GET_VALNB(@"asm_nec")
-	if ((valNb == nil)) ifba_game_conf.asm_nec=0;
+	if (valNb == nil) ifba_game_conf.asm_nec=0;
 	else ifba_game_conf.asm_nec = [valNb intValue];
     GET_VALNB(@"asm_sh2")
-	if ((valNb == nil)) ifba_game_conf.asm_sh2=0;
+	if (valNb == nil) ifba_game_conf.asm_sh2=0;
 	else ifba_game_conf.asm_sh2 = [valNb intValue];
     
     //Controls mapping
     for (int i=0;i<MAX_JOYSTICKS;i++) 
         for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+            //wiimote
             keyStr=[NSString stringWithFormat:@"%@_wiimap%02X%02X",gameStr,i,j];
             valNb=[prefs objectForKey:keyStr];            
             if (valNb != nil) ifba_game_conf.joymap_wiimote[i][j].dev_btn=[valNb intValue];
@@ -406,19 +415,18 @@ valNb=[prefs objectForKey:keyStr];
             valStr=[prefs objectForKey:keyStr];            
             if (valStr != nil) strncpy(ifba_game_conf.joymap_wiimote[i][j].btn_name,[valStr UTF8String],sizeof(ifba_game_conf.joymap_wiimote[i][j].btn_name)-1);
             else strcpy(ifba_game_conf.joymap_wiimote[i][j].btn_name,default_joymap_wiimote[i][j].btn_name);
+            
+            //iCade
+            keyStr=[NSString stringWithFormat:@"icademap%02X%02X",i,j];
+            valNb=[prefs objectForKey:keyStr];
+            if (valNb != nil) ifba_game_conf.joymap_iCade[i][j].dev_btn=[valNb intValue];
+            else ifba_game_conf.joymap_iCade[i][j].dev_btn=default_joymap_iCade[i][j].dev_btn;
+            
+            keyStr=[NSString stringWithFormat:@"icademap_str%02X%02X",i,j];
+            valStr=[prefs objectForKey:keyStr];
+            if (valStr != nil) strncpy(ifba_game_conf.joymap_iCade[i][j].btn_name,[valStr UTF8String],sizeof(ifba_game_conf.joymap_iCade[i][j].btn_name)-1);
+            else strcpy(ifba_game_conf.joymap_iCade[i][j].btn_name,default_joymap_iCade[i][j].btn_name);
         }
-    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-        keyStr=[NSString stringWithFormat:@"%@_icademap%02X",gameStr,j];
-        valNb=[prefs objectForKey:keyStr];        
-        if (valNb != nil) ifba_game_conf.joymap_iCade[j].dev_btn=[valNb intValue];
-        else ifba_game_conf.joymap_iCade[j].dev_btn=default_joymap_iCade[j].dev_btn;
-        
-        keyStr=[NSString stringWithFormat:@"%@_icademap_str%02X",gameStr,j];
-        valStr=[prefs objectForKey:keyStr];        
-        if (valStr != nil) strncpy(ifba_game_conf.joymap_iCade[j].btn_name,[valStr UTF8String],sizeof(ifba_game_conf.joymap_iCade[j].btn_name)-1);
-        else strcpy(ifba_game_conf.joymap_iCade[j].btn_name,default_joymap_iCade[j].btn_name);
-    }
-    
     
     //TOUCHPAD
     for (int j=0;j<VSTICK_NB_BUTTON;j++) {
@@ -560,6 +568,8 @@ valNb=[prefs objectForKey:keyStr];
     SET_VALNB(@"vpad_followfinger_firemode")
     valNb=[[NSNumber alloc] initWithFloat:ifba_conf.vpad_followfinger_sensibility ];
     SET_VALNB(@"vpad_followfinger_sensibility")
+    valNb=[[NSNumber alloc] initWithInt:ifba_conf.joy_iCadeIMpulse ];
+    SET_VALNB(@"joy_iCadeIMpulse")
     
     
     //emulation settings
@@ -575,15 +585,15 @@ valNb=[prefs objectForKey:keyStr];
     //controls mapping
     for (int i=0;i<MAX_JOYSTICKS;i++) 
         for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+            //wiimote
             valNb=[[NSNumber alloc] initWithInt:ifba_conf.joymap_wiimote[i][j].dev_btn];
             [prefs setObject:valNb forKey:[NSString stringWithFormat:@"wiimap%02X%02X",i,j]];
             [valNb release];
+            //iCade
+            valNb=[[NSNumber alloc] initWithInt:ifba_conf.joymap_iCade[i][j].dev_btn];
+            [prefs setObject:valNb forKey:[NSString stringWithFormat:@"icademap%02X%02X",i,j]];
+            [valNb release];
         }
-    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-        valNb=[[NSNumber alloc] initWithInt:ifba_conf.joymap_iCade[j].dev_btn];
-        [prefs setObject:valNb forKey:[NSString stringWithFormat:@"icademap%02X",j]];
-        [valNb release];        
-    }
     
     //TOUCHPAD
     for (int j=0;j<VSTICK_NB_BUTTON;j++) {
@@ -690,6 +700,8 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     SET_VALNB(@"vpad_followfinger_firemode")
     valNb=[[NSNumber alloc] initWithFloat:ifba_game_conf.vpad_followfinger_sensibility ];
     SET_VALNB(@"vpad_followfinger_sensibility")
+    valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.joy_iCadeIMpulse ];
+    SET_VALNB(@"joy_iCadeIMpulse")
     
     
     //emulation settings
@@ -709,14 +721,12 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
             keyStr=[NSString stringWithFormat:@"%@_wiimap%02X%02X",gameStr,i,j];
             [prefs setObject:valNb forKey:keyStr];
             [valNb release];
+            
+            valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.joymap_iCade[i][j].dev_btn];
+            keyStr=[NSString stringWithFormat:@"%@_icademap%02X%02X",gameStr,i,j];
+            [prefs setObject:valNb forKey:keyStr];
+            [valNb release];
         }
-    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-        valNb=[[NSNumber alloc] initWithInt:ifba_game_conf.joymap_iCade[j].dev_btn];
-        keyStr=[NSString stringWithFormat:@"%@_icademap%02X",gameStr,j];
-        
-        [prefs setObject:valNb forKey:keyStr];
-        [valNb release];
-    }
     
     //TOUCHPAD
     for (int j=0;j<VSTICK_NB_BUTTON;j++) {
@@ -804,6 +814,7 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     REMOVE_KEY(@"vpad_followfinger")
     REMOVE_KEY(@"vpad_followfinger_firemode")
     REMOVE_KEY(@"vpad_followfinger_sensibility")
+    REMOVE_KEY(@"joy_iCadeIMpulse")
 	REMOVE_KEY(@"icade_lang")
     
     //emulation settings
@@ -817,12 +828,13 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
         for (int j=0;j<VSTICK_NB_BUTTON;j++) {
             keyStr=[NSString stringWithFormat:@"%@_wiimap%02X%02X",gameStr,i,j];
             [prefs removeObjectForKey:keyStr];
+            for (int j=0;j<VSTICK_NB_BUTTON;j++) {
+                keyStr=[NSString stringWithFormat:@"%@_icademap%02X%02X",gameStr,i,j];
+                [prefs removeObjectForKey:keyStr];
+            }
+
         }
-    for (int j=0;j<VSTICK_NB_BUTTON;j++) {
-        keyStr=[NSString stringWithFormat:@"%@_icademap%02X",gameStr,j];
-        [prefs removeObjectForKey:keyStr];
-    }
-#undef REMOVE_KEY	
+#undef REMOVE_KEY
     [prefs synchronize];
 }
 

@@ -1,3 +1,6 @@
+/* Modified by YM to handle 2 impulse controllers
+ */
+
 /*
  Copyright (C) 2011 by Stuart Carnie
  
@@ -23,11 +26,26 @@
 #import "iCadeReaderView.h"
 
 //english
+//                                  Player 1----
+//                                  UDLR12345678
 static const char *ON_STATES_EN  = "wdxayhujikol";
 static const char *OFF_STATES_EN = "eczqtrfnmpgv";
+
+//                                     Player 1----Player 2--
+//                                     UDLR12345678udlr123456
+static const char *ON_STATES_IC_EN  = "wdxayklojh..[isu3157-9";
+static const char *OFF_STATES_IC_EN = "eczqtpvgnr..]mbf4268=0";
+
 //french
 static const char *ON_STATES_FR  = "zdxqyhujikol";
 static const char *OFF_STATES_FR = "ecwatrfn,pgv";
+
+//                                     Player 1----Player 2--
+//                                     UDLR12345678udlr123456
+// char to translate: [ ] 0 1 2 3 4 5 6 7 8 9 - =
+static const char *ON_STATES_IC_FR  = "zdxqyklojh..[isu3157-9";
+static const char *OFF_STATES_IC_FR = "ecwatpvgnr..],bf4268=0";
+
 
 static char *ON_STATES;
 static char *OFF_STATES;
@@ -42,33 +60,46 @@ static char *OFF_STATES;
 
 @implementation iCadeReaderView
 
-@synthesize iCadeState=_iCadeState, delegate=_delegate, active;
+@synthesize iCadeState=_iCadeState, delegate=_delegate, active, type, lang;
 
-- (void)changeLang:(int)lang {
+- (void)updateSetup {
     switch (lang) {
         default:
         case 0:
-            ON_STATES=ON_STATES_EN;
-            OFF_STATES=OFF_STATES_EN;
+            ON_STATES=(self.type?ON_STATES_IC_EN:ON_STATES_EN);
+            OFF_STATES=(self.type?OFF_STATES_IC_EN:OFF_STATES_EN);
             break;
         case 1:
-            ON_STATES=ON_STATES_FR;
-            OFF_STATES=OFF_STATES_FR;
+            ON_STATES=(self.type?ON_STATES_IC_FR:ON_STATES_FR);
+            OFF_STATES=(self.type?OFF_STATES_IC_FR:OFF_STATES_FR);
             break;
     }
+}
+
+- (void)changeLang:(int)lang {
+    self.lang=lang;
+    [self updateSetup];
+}
+
+- (void)changeControllerType:(int)type {
+    //0 is iCade
+    //1 is iMPULSE Controller
+    self.type=type;
+    [self updateSetup];
 }
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     
-    ON_STATES=ON_STATES_EN;
-    OFF_STATES=OFF_STATES_EN;
+    lang=0; //ENGLISH
+    type=0; //iCADE
+    [self updateSetup];
     inputView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
-
+    
     
     return self;
 }
@@ -89,8 +120,8 @@ static char *OFF_STATES;
         [self becomeFirstResponder];
 }
 
-- (BOOL)canBecomeFirstResponder { 
-    return YES; 
+- (BOOL)canBecomeFirstResponder {
+    return YES;
 }
 
 - (void)setActive:(BOOL)value {
@@ -125,9 +156,14 @@ static char *OFF_STATES;
 }
 
 - (void)insertText:(NSString *)text {
-    
+    //TODO: is it possible to have 2 char at same time ?
+    if ([text length]>1) {
+        NSLog(@"WARNING: text: %@",text);
+    }
     char ch = [text characterAtIndex:0];
-    char *p = strchr(ON_STATES, ch);
+    char *p;
+    
+    p= strchr(ON_STATES, ch);
     bool stateChanged = false;
     if (p) {
         int index = p-ON_STATES;
@@ -137,7 +173,7 @@ static char *OFF_STATES;
             [_delegate buttonDown:(1 << index)];
         }
     } else {
-        p = strchr(OFF_STATES, ch);
+        p= strchr(OFF_STATES, ch);
         if (p) {
             int index = p-OFF_STATES;
             _iCadeState &= ~(1 << index);
@@ -147,7 +183,8 @@ static char *OFF_STATES;
             }
         }
     }
-
+    
+    
     if (stateChanged && _delegateFlags.stateChanged) {
         [_delegate stateChanged:_iCadeState];
     }

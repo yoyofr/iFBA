@@ -80,13 +80,15 @@ typedef struct {
     unsigned char vpad_style;
     unsigned char vpad_followfinger;
     unsigned char vpad_followfinger_firemode;
+    unsigned char joy_iCadeIMpulse;
     float vpad_followfinger_sensibility;
     float vpad_pad_x[2],vpad_pad_y[2];
     int vpad_pad_manual_layout[2];
     float vpad_button_x[VSTICK_NB_BUTTON][2],vpad_button_y[VSTICK_NB_BUTTON][2];
     int vpad_button_manual_layout[VSTICK_NB_BUTTON][2];
-    t_button_map joymap_iCade[VSTICK_NB_BUTTON];
+    t_button_map joymap_iCade[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
     t_button_map joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
+
     
     
     //Emulation
@@ -110,7 +112,7 @@ extern ifba_conf_t ifba_conf;
 extern ifba_conf_t ifba_game_conf;
 extern int game_has_options;
 
-extern t_button_map default_joymap_iCade[VSTICK_NB_BUTTON];
+extern t_button_map default_joymap_iCade[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
 extern t_button_map default_joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
 
 #ifndef EMUVIEWCONTROLLER

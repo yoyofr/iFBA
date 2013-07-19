@@ -82,21 +82,54 @@ float joy_analog_r[MAX_JOYSTICKS];
 int wm_joy_pl[MAX_JOYSTICKS];
 int wm_prev_joy_pl[MAX_JOYSTICKS];
 
-t_button_map default_joymap_iCade[]={
-    {"Start",4},
-    {"Select/Coin",8},
-    {"Menu",0},
-    {"Turbo",0},
-    {"Service",0},
-    {"Fire 1",1},
-    {"Fire 2",2},
-    {"Fire 3",3},
-    {"Fire 4",5},
-    {"Fire 5",6},
-    {"Fire 6",7},
+t_button_map default_joymap_iCade[MAX_JOYSTICKS][VSTICK_NB_BUTTON]={
+    {{"Start",4},
+     {"Select/Coin",8},
+     {"Menu",0},
+     {"Turbo",0},
+     {"Service",0},
+     {"Fire 1",1},
+     {"Fire 2",2},
+     {"Fire 3",3},
+     {"Fire 4",5},
+     {"Fire 5",6},
+     {"Fire 6",7}},
+    {{"Start",4},
+        {"Select/Coin",8},
+        {"Menu",0},
+        {"Turbo",0},
+        {"Service",0},
+        {"Fire 1",1},
+        {"Fire 2",2},
+        {"Fire 3",3},
+        {"Fire 4",5},
+        {"Fire 5",6},
+        {"Fire 6",7}},
+    {{"Start",4},
+        {"Select/Coin",8},
+        {"Menu",0},
+        {"Turbo",0},
+        {"Service",0},
+        {"Fire 1",1},
+        {"Fire 2",2},
+        {"Fire 3",3},
+        {"Fire 4",5},
+        {"Fire 5",6},
+        {"Fire 6",7}},
+    {{"Start",4},
+        {"Select/Coin",8},
+        {"Menu",0},
+        {"Turbo",0},
+        {"Service",0},
+        {"Fire 1",1},
+        {"Fire 2",2},
+        {"Fire 3",3},
+        {"Fire 4",5},
+        {"Fire 5",6},
+        {"Fire 6",7}},
 };
 
-int joymap_dir_iCade[8];
+int joymap_dir_iCade[MAX_JOYSTICKS][8];
 
 // Wiimote: 1,2,+,-,A,B and home => 6+1 buttons
 // Wiimote classic: A,B,X,Y,LT,RT,L,R,+,- and home => 8+1 buttons
@@ -791,21 +824,22 @@ static int statusLoadMsgUpdated=0;
     
     //icade map
     memset(joymap_dir_iCade,0,sizeof(joymap_dir_iCade));
+    for (int joy=0;joy<MAX_JOYSTICKS;joy++)
     for (int i=0;i<VSTICK_NB_BUTTON;i++) {
-        int j=cur_ifba_conf->joymap_iCade[i].dev_btn;
+        int j=cur_ifba_conf->joymap_iCade[joy][i].dev_btn;
         if (j) {
             switch (i) {
-                case 0:joymap_dir_iCade[j-1]=GN_START;break;
-                case 1:joymap_dir_iCade[j-1]=GN_SELECT_COIN;break;
-                case 2:joymap_dir_iCade[j-1]=GN_MENU_KEY;break;
-                case 3:joymap_dir_iCade[j-1]=GN_TURBO;break;
-                case 4:joymap_dir_iCade[j-1]=GN_SERVICE;break;
-                case 5:joymap_dir_iCade[j-1]=GN_A;break;
-                case 6:joymap_dir_iCade[j-1]=GN_B;break;
-                case 7:joymap_dir_iCade[j-1]=GN_C;break;
-                case 8:joymap_dir_iCade[j-1]=GN_D;break;
-                case 9:joymap_dir_iCade[j-1]=GN_E;break;
-                case 10:joymap_dir_iCade[j-1]=GN_F;break;
+                case 0:joymap_dir_iCade[joy][j-1]=GN_START;break;
+                case 1:joymap_dir_iCade[joy][j-1]=GN_SELECT_COIN;break;
+                case 2:joymap_dir_iCade[joy][j-1]=GN_MENU_KEY;break;
+                case 3:joymap_dir_iCade[joy][j-1]=GN_TURBO;break;
+                case 4:joymap_dir_iCade[joy][j-1]=GN_SERVICE;break;
+                case 5:joymap_dir_iCade[joy][j-1]=GN_A;break;
+                case 6:joymap_dir_iCade[joy][j-1]=GN_B;break;
+                case 7:joymap_dir_iCade[joy][j-1]=GN_C;break;
+                case 8:joymap_dir_iCade[joy][j-1]=GN_D;break;
+                case 9:joymap_dir_iCade[joy][j-1]=GN_E;break;
+                case 10:joymap_dir_iCade[joy][j-1]=GN_F;break;
             }
         }
     }
@@ -871,7 +905,7 @@ static int statusLoadMsgUpdated=0;
     m_displayLink.frameInterval = 2; //30fps
 	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 }
-
+    
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (renderVPADonly) {
@@ -1225,28 +1259,28 @@ static int statusLoadMsgUpdated=0;
     virtual_stick_on=0;
     switch (button) {
         case iCadeButtonA:
-            joy_state[0][joymap_dir_iCade[0]]=state;
+            joy_state[0][joymap_dir_iCade[0][0]]=state;
             break;
         case iCadeButtonB:
-            joy_state[0][joymap_dir_iCade[1]]=state;
+            joy_state[0][joymap_dir_iCade[0][1]]=state;
             break;
         case iCadeButtonC:
-            joy_state[0][joymap_dir_iCade[2]]=state;
+            joy_state[0][joymap_dir_iCade[0][2]]=state;
             break;
         case iCadeButtonD:
-            joy_state[0][joymap_dir_iCade[3]]=state;
+            joy_state[0][joymap_dir_iCade[0][3]]=state;
             break;
         case iCadeButtonE:
-            joy_state[0][joymap_dir_iCade[4]]=state;
+            joy_state[0][joymap_dir_iCade[0][4]]=state;
             break;
         case iCadeButtonF:
-            joy_state[0][joymap_dir_iCade[5]]=state;
+            joy_state[0][joymap_dir_iCade[0][5]]=state;
             break;
         case iCadeButtonG:
-            joy_state[0][joymap_dir_iCade[6]]=state;
+            joy_state[0][joymap_dir_iCade[0][6]]=state;
             break;
         case iCadeButtonH:
-            joy_state[0][joymap_dir_iCade[7]]=state;
+            joy_state[0][joymap_dir_iCade[0][7]]=state;
             break;
         case iCadeJoystickUp:
             joy_state[0][GN_UP]=state;
@@ -1259,6 +1293,36 @@ static int statusLoadMsgUpdated=0;
             break;
         case iCadeJoystickLeft:
             joy_state[0][GN_LEFT]=state;
+            break;
+        case iCadeButtonA2:
+            joy_state[1][joymap_dir_iCade[1][0]]=state;
+            break;
+        case iCadeButtonB2:
+            joy_state[1][joymap_dir_iCade[1][1]]=state;
+            break;
+        case iCadeButtonC2:
+            joy_state[1][joymap_dir_iCade[1][2]]=state;
+            break;
+        case iCadeButtonD2:
+            joy_state[1][joymap_dir_iCade[1][3]]=state;
+            break;
+        case iCadeButtonE2:
+            joy_state[1][joymap_dir_iCade[1][4]]=state;
+            break;
+        case iCadeButtonF2:
+            joy_state[1][joymap_dir_iCade[1][5]]=state;
+            break;
+        case iCadeJoystick2Up:
+            joy_state[1][GN_UP]=state;
+            break;
+        case iCadeJoystick2Right:
+            joy_state[1][GN_RIGHT]=state;
+            break;
+        case iCadeJoystick2Down:
+            joy_state[1][GN_DOWN]=state;
+            break;
+        case iCadeJoystick2Left:
+            joy_state[1][GN_LEFT]=state;
             break;
         default:
             break;
