@@ -22,7 +22,7 @@
 
 #define __cdecl
 #define __fastcall
-#define USE_SPEEDHACKS 1
+#define USE_SPEEDHACKS
 #define LSB_FIRST 1
 #define BUILD_SDL 1
 #define INCLUDE_LIB_PNGH 1

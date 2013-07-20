@@ -913,6 +913,7 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     
     
     int settings_reseted=[self loadSettings];
+    cur_ifba_conf=(ifba_conf_t*)&ifba_conf;
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     

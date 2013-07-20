@@ -9,8 +9,8 @@
 #ifndef iFBA_fbaconf_h
 #define iFBA_fbaconf_h
 
-#define IFBAONLINE "http://localhost:10081/"
-//#define IFBAONLINE "http://ifba-online.appspot.com/"
+//#define IFBAONLINE "http://localhost:10081/"
+#define IFBAONLINE "http://ifba-online.appspot.com/"
 
 #define iFBA_VERSION_MAJOR 0
 #define iFBA_VERSION_MINOR 6

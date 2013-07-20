@@ -67,6 +67,7 @@ static ASIHTTPRequest *request=nil;
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:iCaderv];
     [iCaderv changeLang:ifba_conf.icade_lang];
+    [iCaderv changeControllerType:cur_ifba_conf->joy_iCadeIMpulse];
     iCaderv.active = YES;
     iCaderv.delegate = self;
     [iCaderv release];

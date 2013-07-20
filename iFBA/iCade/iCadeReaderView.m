@@ -43,8 +43,8 @@ static const char *OFF_STATES_FR = "ecwatrfn,pgv";
 //                                     Player 1----Player 2--
 //                                     UDLR12345678udlr123456
 // char to translate: [ ] 0 1 2 3 4 5 6 7 8 9 - =
-static const char *ON_STATES_IC_FR  = "zdxqyklojh..[isu3157-9";
-static const char *OFF_STATES_IC_FR = "ecwatpvgnr..],bf4268=0";
+static const char *ON_STATES_IC_FR  = "zdxqyklojh..^isu""&(è)ç";
+static const char *OFF_STATES_IC_FR = "ecwatpvgnr..$,bf'é§!-à";
 
 
 static char *ON_STATES;
@@ -160,6 +160,7 @@ static char *OFF_STATES;
     if ([text length]>1) {
         NSLog(@"WARNING: text: %@",text);
     }
+ //   NSLog(@"Text: %@",text);
     char ch = [text characterAtIndex:0];
     char *p;
     

@@ -871,6 +871,7 @@ static int statusLoadMsgUpdated=0;
     control.active = YES;
     control.delegate = self;
     [control changeLang:ifba_conf.icade_lang];
+    [control changeControllerType:cur_ifba_conf->joy_iCadeIMpulse];
     [control release];
     
     
