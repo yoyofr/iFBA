@@ -1073,10 +1073,10 @@ static int statusLoadMsgUpdated=0;
                 
                 UIAlertView* alert =
                 [[UIAlertView alloc] initWithTitle:@"Follow finger mode"
-                                           message:[NSString stringWithFormat:@"%s is compatible with follow finger mode.\nTap on 'service' button to switch between controls mode.\n\nFor classic 'service' button (if supported by game), hold one finger somewhere on the screen and press 'service' with a second finger.",gameName]
+                                           message:[NSString stringWithFormat:@"Follow finger mode activated.\nTap on 'service' button to switch between controls mode.\n\nFor classic 'service' button (if supported by game), hold one finger somewhere on the screen and press 'service' with a second finger.",gameName]
                                           delegate:nil cancelButtonTitle:@"Close or wait" otherButtonTitles: nil];
                 
-                [NSTimer scheduledTimerWithTimeInterval:5
+                [NSTimer scheduledTimerWithTimeInterval:3
                                                  target:alert
                                                selector:@selector(dismissWithClickedButtonIndex:animated:)
                                                userInfo:nil
