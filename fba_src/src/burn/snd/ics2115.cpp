@@ -88,7 +88,6 @@ static void timer_cb_1()
 
 static void recalc_timer(INT32 timer)
 {
-#if 1
 	float period = 0;
 
 	if(chip->timer[timer].scale) {
@@ -104,19 +103,6 @@ static void recalc_timer(INT32 timer)
 		if(period) chip->timer[timer].active = true;
 		else  chip->timer[timer].active = false;
 	}
-#else
-    UINT64 period  = ((chip->timer[timer].scale & 0x1f) + 1) * (chip->timer[timer].preset + 1);
-    period = (period << (4 + (chip->timer[timer].scale >> 5)))*78125/2646;
-    
-    if(chip->timer[timer].period != period) {
-        chip->timer[timer].period = period;
-        // Adjust the timer lengths
-        if(period) // Reset the length
-            chip->timer[timer].active = true;
-        else // Kill the timer if length == 0
-            chip->timer[timer].active = false;
-    }
-#endif
 }
 
 UINT16 ics2115read_reg(UINT8 reg)

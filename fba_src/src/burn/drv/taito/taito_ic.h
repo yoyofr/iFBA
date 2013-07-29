@@ -117,6 +117,9 @@ extern UINT8 *TC0100SCNRam[TC0100SCN_MAX_CHIPS];
 extern UINT16 TC0100SCNCtrl[TC0100SCN_MAX_CHIPS][8];
 extern UINT8 TC0100SCNBgLayerUpdate[TC0100SCN_MAX_CHIPS];
 extern UINT8 TC0100SCNFgLayerUpdate[TC0100SCN_MAX_CHIPS];
+extern UINT8 TC0100SCNCharLayerUpdate[TC0100SCN_MAX_CHIPS];
+extern UINT8 TC0100SCNCharRamUpdate[TC0100SCN_MAX_CHIPS];
+extern INT32 TC0100SCNDblWidth[TC0100SCN_MAX_CHIPS];
 
 void TC0100SCNCtrlWordWrite(INT32 Chip, UINT32 Offset, UINT16 Data);
 INT32 TC0100SCNBottomLayer(INT32 Chip);
@@ -198,7 +201,7 @@ extern UINT8 TC0220IOCInputPort0[8];
 extern UINT8 TC0220IOCInputPort1[8];
 extern UINT8 TC0220IOCInputPort2[8];
 extern UINT8 TC0220IOCDip[2];
-extern UINT8 TC0220IOCInput[3];
+extern UINT8 TC0220IOCInput[6];
 
 UINT8 TC0220IOCPortRead();
 UINT8 TC0220IOCHalfWordPortRead();
@@ -311,12 +314,91 @@ void TC0640FIOScan(INT32 nAction);
 		return;							\
 	}
 
+#define TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(chip_num)				\
+	if (TC0100SCNDblWidth[chip_num]) {									\
+		if (Offset >= 0x0000 && Offset < 0x8000) {						\
+			TC0100SCNBgLayerUpdate[chip_num] = 1;						\
+		}																\
+	} else {															\
+		if (Offset >= 0x0000 && Offset < 0x4000) {						\
+			TC0100SCNBgLayerUpdate[chip_num] = 1;						\
+		}																\
+	}
+	
+#define TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(chip_num)				\
+	if (TC0100SCNDblWidth[chip_num]) {									\
+		if (Offset >= 0x0000/2 && Offset < 0x8000/2) {					\
+			TC0100SCNBgLayerUpdate[chip_num] = 1;						\
+		}																\
+	} else {															\
+		if (Offset >= 0x0000/2 && Offset < 0x4000/2) {					\
+			TC0100SCNBgLayerUpdate[chip_num] = 1;						\
+		}																\
+	}
+	
+#define TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(chip_num)				\
+	if (TC0100SCNDblWidth[chip_num]) {									\
+		if (Offset >= 0x8000 && Offset < 0x10000) {						\
+			TC0100SCNFgLayerUpdate[chip_num] = 1;						\
+		}																\
+	} else {															\
+		if (Offset >= 0x0000 && Offset < 0x8000) {						\
+			TC0100SCNFgLayerUpdate[chip_num] = 1;						\
+		}																\
+	}
+	
+#define TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(chip_num)				\
+	if (TC0100SCNDblWidth[chip_num]) {									\
+		if (Offset >= 0x8000/2 && Offset < 0x10000/2) {					\
+			TC0100SCNFgLayerUpdate[chip_num] = 1;						\
+		}																\
+	} else {															\
+		if (Offset >= 0x8000/2 && Offset < 0xc000/2) {					\
+			TC0100SCNFgLayerUpdate[chip_num] = 1;						\
+		}																\
+	}
+	
+#define TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(chip_num)			\
+	if (TC0100SCNDblWidth[chip_num]) {									\
+		if (Offset >= 0x12000 && Offset < 0x14000) {					\
+			TC0100SCNCharLayerUpdate[chip_num] = 1;						\
+		}																\
+		if (Offset >= 0x11000 && Offset < 0x12000) {					\
+			TC0100SCNCharRamUpdate[chip_num] = 1;						\
+		}																\
+	} else {															\
+		if (Offset >= 0x4000 && Offset < 0x6000) {						\
+			TC0100SCNCharLayerUpdate[chip_num] = 1;						\
+		}																\
+		if (Offset >= 0x6000 && Offset < 0x7000) {						\
+			TC0100SCNCharRamUpdate[chip_num] = 1;						\
+		}																\
+	}
+	
+#define TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(chip_num)			\
+	if (TC0100SCNDblWidth[chip_num]) {									\
+		if (Offset >= 0x12000/2 && Offset < 0x14000/2) {				\
+			TC0100SCNCharLayerUpdate[chip_num] = 1;						\
+		}																\
+		if (Offset >= 0x11000/2 && Offset < 0x12000/2) {				\
+			TC0100SCNCharRamUpdate[chip_num] = 1;						\
+		}																\
+	} else {															\
+		if (Offset >= 0x4000/2 && Offset < 0x6000/2) {					\
+			TC0100SCNCharLayerUpdate[chip_num] = 1;						\
+		}																\
+		if (Offset >= 0x6000/2 && Offset < 0x7000/2) {					\
+			TC0100SCNCharRamUpdate[chip_num] = 1;						\
+		}																\
+	}
+
 #define TC0100SCN0ByteWrite_Map(start, end)				\
 	if (a >= start && a <= end) {					\
 		INT32 Offset = (a - start) ^ 1;				\
 		if (TC0100SCNRam[0][Offset] != d) {			\
-			TC0100SCNBgLayerUpdate[0] = 1;			\
-			TC0100SCNFgLayerUpdate[0] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(0)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(0)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(0)				\
 		}							\
 		TC0100SCNRam[0][Offset] = d;				\
 		return;							\
@@ -327,8 +409,9 @@ void TC0640FIOScan(INT32 nAction);
 		UINT16 *Ram = (UINT16*)TC0100SCNRam[0];			\
 		INT32 Offset = (a - start) >> 1;				\
 		if (Ram[Offset] != BURN_ENDIAN_SWAP_INT16(d)) {					\
-			TC0100SCNBgLayerUpdate[0] = 1;			\
-			TC0100SCNFgLayerUpdate[0] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(0)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(0)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(0)				\
 		}							\
 		Ram[Offset] = BURN_ENDIAN_SWAP_INT16(d);					\
 		return;							\
@@ -338,8 +421,9 @@ void TC0640FIOScan(INT32 nAction);
 	if (a >= start && a <= end) {					\
 		INT32 Offset = (a - start) ^ 1;				\
 		if (TC0100SCNRam[1][Offset] != d) {			\
-			TC0100SCNBgLayerUpdate[1] = 1;			\
-			TC0100SCNFgLayerUpdate[1] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(1)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(1)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(1)				\
 		}							\
 		TC0100SCNRam[1][Offset] = d;				\
 		return;							\
@@ -350,8 +434,9 @@ void TC0640FIOScan(INT32 nAction);
 		UINT16 *Ram = (UINT16*)TC0100SCNRam[1];			\
 		INT32 Offset = (a - start) >> 1;				\
 		if (Ram[Offset] != BURN_ENDIAN_SWAP_INT16(d)) {					\
-			TC0100SCNBgLayerUpdate[1] = 1;			\
-			TC0100SCNFgLayerUpdate[1] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(1)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(1)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(1)				\
 		}							\
 		Ram[Offset] = BURN_ENDIAN_SWAP_INT16(d);					\
 		return;							\
@@ -361,8 +446,9 @@ void TC0640FIOScan(INT32 nAction);
 	if (a >= start && a <= end) {					\
 		INT32 Offset = (a - start) ^ 1;				\
 		if (TC0100SCNRam[2][Offset] != d) {			\
-			TC0100SCNBgLayerUpdate[2] = 1;			\
-			TC0100SCNFgLayerUpdate[2] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(2)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(2)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(2)				\
 		}							\
 		TC0100SCNRam[2][Offset] = d;				\
 		return;							\
@@ -373,8 +459,9 @@ void TC0640FIOScan(INT32 nAction);
 		UINT16 *Ram = (UINT16*)TC0100SCNRam[2];			\
 		INT32 Offset = (a - start) >> 1;				\
 		if (Ram[Offset] != BURN_ENDIAN_SWAP_INT16(d)) {					\
-			TC0100SCNBgLayerUpdate[2] = 1;			\
-			TC0100SCNFgLayerUpdate[2] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(2)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(2)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(2)				\
 		}							\
 		Ram[Offset] = BURN_ENDIAN_SWAP_INT16(d);					\
 		return;							\
@@ -384,12 +471,14 @@ void TC0640FIOScan(INT32 nAction);
 	if (a >= start && a <= end) {					\
 		INT32 Offset = (a - start) ^ 1;				\
 		if (TC0100SCNRam[0][Offset] != d) {			\
-			TC0100SCNBgLayerUpdate[0] = 1;			\
-			TC0100SCNFgLayerUpdate[0] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(0)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(0)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(0)				\
 		}							\
 		if (TC0100SCNRam[1][Offset] != d) {			\
-			TC0100SCNBgLayerUpdate[1] = 1;			\
-			TC0100SCNFgLayerUpdate[1] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(1)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(1)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(1)				\
 		}							\
 		TC0100SCNRam[0][Offset] = BURN_ENDIAN_SWAP_INT16(d);				\
 		TC0100SCNRam[1][Offset] = BURN_ENDIAN_SWAP_INT16(d);				\
@@ -402,12 +491,14 @@ void TC0640FIOScan(INT32 nAction);
 		UINT16 *Ram1 = (UINT16*)TC0100SCNRam[1];		\
 		INT32 Offset = (a - start) >> 1;				\
 		if (Ram0[Offset] != BURN_ENDIAN_SWAP_INT16(d)) {				\
-			TC0100SCNBgLayerUpdate[0] = 1;			\
-			TC0100SCNFgLayerUpdate[0] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(0)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(0)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(0)				\
 		}							\
 		if (Ram1[Offset] != BURN_ENDIAN_SWAP_INT16(d)) {				\
-			TC0100SCNBgLayerUpdate[1] = 1;			\
-			TC0100SCNFgLayerUpdate[1] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(1)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(1)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(1)				\
 		}							\
 		Ram0[Offset] = BURN_ENDIAN_SWAP_INT16(d);					\
 		Ram1[Offset] = BURN_ENDIAN_SWAP_INT16(d);					\
@@ -418,16 +509,19 @@ void TC0640FIOScan(INT32 nAction);
 	if (a >= start && a <= end) {					\
 		INT32 Offset = (a - start) ^ 1;				\
 		if (TC0100SCNRam[0][Offset] != d) {			\
-			TC0100SCNBgLayerUpdate[0] = 1;			\
-			TC0100SCNFgLayerUpdate[0] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(0)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(0)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(0)				\
 		}							\
 		if (TC0100SCNRam[1][Offset] != d) {			\
-			TC0100SCNBgLayerUpdate[1] = 1;			\
-			TC0100SCNFgLayerUpdate[1] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(1)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(1)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(1)				\
 		}							\
 		if (TC0100SCNRam[2][Offset] != d) {			\
-			TC0100SCNBgLayerUpdate[2] = 1;			\
-			TC0100SCNFgLayerUpdate[2] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_BYTE(2)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_BYTE(2)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_BYTE(2)				\
 		}							\
 		TC0100SCNRam[0][Offset] = d;				\
 		TC0100SCNRam[1][Offset] = d;				\
@@ -442,16 +536,19 @@ void TC0640FIOScan(INT32 nAction);
 		UINT16 *Ram2 = (UINT16*)TC0100SCNRam[2];		\
 		INT32 Offset = (a - start) >> 1;				\
 		if (Ram0[Offset] != BURN_ENDIAN_SWAP_INT16(d)) {				\
-			TC0100SCNBgLayerUpdate[0] = 1;			\
-			TC0100SCNFgLayerUpdate[0] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(0)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(0)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(0)				\
 		}							\
 		if (Ram1[Offset] != BURN_ENDIAN_SWAP_INT16(d)) {				\
-			TC0100SCNBgLayerUpdate[1] = 1;			\
-			TC0100SCNFgLayerUpdate[1] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(1)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(1)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(1)				\
 		}							\
 		if (Ram2[Offset] != BURN_ENDIAN_SWAP_INT16(d)) {				\
-			TC0100SCNBgLayerUpdate[2] = 1;			\
-			TC0100SCNFgLayerUpdate[2] = 1;			\
+			TC0100SCN_CHECK_BG_LAYER_NEED_UPDATE_WORD(2)				\
+			TC0100SCN_CHECK_FG_LAYER_NEED_UPDATE_WORD(2)				\
+			TC0100SCN_CHECK_CHAR_LAYER_NEED_UPDATE_WORD(2)				\
 		}							\
 		Ram0[Offset] = BURN_ENDIAN_SWAP_INT16(d);					\
 		Ram1[Offset] = BURN_ENDIAN_SWAP_INT16(d);					\

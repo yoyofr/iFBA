@@ -56,6 +56,8 @@ extern int iOS_waysStick;
 #define STICK4WAY (iOS_waysStick == 4 && iOS_inGame)
 #define STICK2WAY (iOS_waysStick == 2 && iOS_inGame)
 
+static int is_wiiupro=0;
+
 int wiimote_send(struct wiimote_t* wm, byte report_type, byte* msg, int len);
 int wiimote_read_data(struct wiimote_t* wm, unsigned int addr, unsigned short len);
 int wiimote_write_data(struct wiimote_t* wm, unsigned int addr, byte* data, byte len);
@@ -337,14 +339,13 @@ int wiimote_handshake(struct wiimote_t* wm,  byte event, byte* data, unsigned sh
                 
 				if(WIIMOTE_DBG)printf("Expansion id=0x%04x\n",id);
                 
-				if(id!=/*EXP_ID_CODE_CLASSIC_CONTROLLER*/0xa4200101)
-				{
+				if ((id!=EXP_ID_CODE_CLASSIC_CONTROLLER)&&(id!=EXP_ID_CODE_WIIUPRO_CONTROLLER)) {
 					wm->handshake_state = 2;
 					//WIIMOTE_DISABLE_STATE(wm, WIIMOTE_STATE_EXP);
 					continue;
-				}
-				else
-				{
+				} else {
+                    if (id==EXP_ID_CODE_WIIUPRO_CONTROLLER) is_wiiupro=1;
+                    else is_wiiupro=0;
 					usleep(100000);
 					wiimote_read_data(wm, WM_EXP_MEM_CALIBR, 16);//pedimos datos de calibracion del JOY!
 					wm->handshake_state = 5;
@@ -607,10 +608,10 @@ void classic_ctrl_event(struct classic_ctrl_t* cc, byte* msg) {
 	cc->l_shoulder = ((float)l / 0x1F);
     
 	/* calculate joystick orientation */
-	lx = (msg[0] & 0x3F);
-	ly = (msg[1] & 0x3F);
-	rx = ((msg[0] & 0xC0) >> 3) | ((msg[1] & 0xC0) >> 5) | ((msg[2] & 0x80) >> 7);
-	ry = (msg[2] & 0x1F);
+        lx = (msg[0] & 0x3F);
+        ly = (msg[1] & 0x3F);
+        rx = ((msg[0] & 0xC0) >> 3) | ((msg[1] & 0xC0) >> 5) | ((msg[2] & 0x80) >> 7);
+        ry = (msg[2] & 0x1F);
     
 	if(WIIMOTE_DBG)
 		printf("%d %d %d %d\n",lx,ly,rx,ry);

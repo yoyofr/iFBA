@@ -1310,8 +1310,6 @@ static INT32 psikyoCheckSleep(INT32)
 	return 0;
 }
 
-
-
 static INT32 DrvFrame()
 {
 	INT32 nCyclesVBlank;

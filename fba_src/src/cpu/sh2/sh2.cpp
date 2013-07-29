@@ -40,9 +40,6 @@
 //#include "tchar.h"
 //extern int (__cdecl *bprintf) (int nStatus, TCHAR* szFormat, ...);
 
-
-
-
 int has_sh2;
 
 /*typedef signed char INT8;
@@ -435,7 +432,6 @@ void __fastcall Sh2InnerWriteLong(unsigned int a, unsigned int d)
 #if defined FBA_DEBUG
 	if (!DebugCPU_SH2Initted) bprintf(PRINT_ERROR, _T("Sh2InnerWriteLong called without init\n"));
 #endif
-    
     
 	sh2_internal_w((a & 0x1fc)>>2, d, 0);
 }

@@ -25,7 +25,7 @@ volatile int glob_mov_init,glob_touchpad_cnt=0,glob_ffingeron=0;
 volatile int glob_touchpad_fingerid=0;
 volatile int glob_shootmode=0,glob_shooton=0,glob_autofirecpt;
 volatile int glob_touchpad_hack;
-volatile int cps2_buttons_limit;
+volatile int glob_buttons_limit;
 volatile float glob_scr_ratioX=1,glob_scr_ratioY=1;
 int wait_control;
 
@@ -950,7 +950,7 @@ static int statusLoadMsgUpdated=0;
             //////////////
             glob_shooton=0;
             glob_shootmode=0;
-            cps2_buttons_limit=6;
+            glob_buttons_limit=6;
             cur_ifba_conf->vpad_followfinger=0;
             if ((strcmp(gameName,"donpachi")==0)||(strcmp(gameName,"donpachij")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=1;
@@ -974,7 +974,7 @@ static int statusLoadMsgUpdated=0;
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=7;
             }
             if (strcmp(gameName,"progear")==0) {
-                cur_ifba_conf->vpad_followfinger=1; cps2_buttons_limit=2;glob_touchpad_hack=8;
+                cur_ifba_conf->vpad_followfinger=1; glob_buttons_limit=2;glob_touchpad_hack=8;
             }
             if (strcmp(gameName,"s1945")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=9;
@@ -996,7 +996,7 @@ static int statusLoadMsgUpdated=0;
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=14;
             }
             if (strcmp(gameName,"dimahoo")==0) {
-                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=15;cps2_buttons_limit=2;
+                cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=15;glob_buttons_limit=2;
             }
             if ((strcmp(gameName,"grindstm")==0)||(strcmp(gameName,"grindstma")==0)||(strcmp(gameName,"vfive")==0)) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=16;
@@ -1017,10 +1017,10 @@ static int statusLoadMsgUpdated=0;
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=21;
             }
             if (strcmp(gameName,"gigawing")==0) {
-                cur_ifba_conf->vpad_followfinger=1; cps2_buttons_limit=2;glob_touchpad_hack=22;
+                cur_ifba_conf->vpad_followfinger=1; glob_buttons_limit=2;glob_touchpad_hack=22;
             }
             if (strcmp(gameName,"mmatrix")==0) {
-                cur_ifba_conf->vpad_followfinger=1; cps2_buttons_limit=1;glob_touchpad_hack=23;
+                cur_ifba_conf->vpad_followfinger=1; glob_buttons_limit=1;glob_touchpad_hack=23;
             }
             if (strcmp(gameName,"ddpdoj")==0) {
                 cur_ifba_conf->vpad_followfinger=1;glob_touchpad_hack=24;

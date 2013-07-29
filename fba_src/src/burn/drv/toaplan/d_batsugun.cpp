@@ -584,7 +584,6 @@ inline static INT32 CheckSleep(INT32)
 	return 0;
 }
 
-
 static INT32 DrvFrame()
 {
 	INT32 nInterleave = 10;
@@ -855,7 +854,7 @@ static INT32 DrvFrame()
 
 struct BurnDriver BurnDrvBatsugun = {
 	"batsugun", NULL, NULL, NULL, "1993",
-	"Batsugun (set 1)\0", NULL, "Dual Toaplan", "Dual Toaplan GP9001 based",
+	"Batsugun (set 1)\0", NULL, "Toaplan", "Dual Toaplan GP9001 based",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | TOA_ROTATE_GRAPHICS_CCW, 2, HARDWARE_TOAPLAN_68K_Zx80, GBF_VERSHOOT, 0,
 	NULL, batsugunRomInfo, batsugunRomName, NULL, NULL, batsugunInputInfo, batsugunDIPInfo,
@@ -865,7 +864,7 @@ struct BurnDriver BurnDrvBatsugun = {
 
 struct BurnDriver BurnDrvBatsugunSP = {
 	"batsugunsp", "batsugun", NULL, NULL, "1993",
-	"Batsugun (Special Ver.)\0", NULL, "Dual Toaplan", "Dual Toaplan GP9001 based",
+	"Batsugun (Special Ver.)\0", NULL, "Dual Toaplan", "Toaplan GP9001 based",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | TOA_ROTATE_GRAPHICS_CCW, 2, HARDWARE_TOAPLAN_68K_Zx80, GBF_VERSHOOT, 0,
 	NULL, batugnspRomInfo, batugnspRomName, NULL, NULL, batsugunInputInfo, batsugunDIPInfo,

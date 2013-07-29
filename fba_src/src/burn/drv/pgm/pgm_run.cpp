@@ -106,7 +106,6 @@ static INT32 pgmMemIndex()
 	return 0;
 }
 
-
 static INT32 pgmGetRoms(bool bLoad)
 {
 	INT32 kov2 = (strncmp(BurnDrvGetTextA(DRV_NAME), "kov2", 4) == 0) ? 1 : 0;

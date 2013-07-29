@@ -5,8 +5,6 @@
 #include "burn_ym2151.h"
 #include "burn_ym3812.h"
 
-#define TOAPLAN_SOUND_SAMPLES_HACK
-
 // Uncomment to have the driver perform the screen rotation (faster unless 3D hardware is used for blitting).
 // #undef DRIVER_ROTATION
 // #define DRIVER_ROTATION

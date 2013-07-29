@@ -2364,6 +2364,12 @@
 		336D5BC4151E0B7E006D8984 /* OptGameInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 336D5BC2151E0B7D006D8984 /* OptGameInfoViewController.m */; };
 		336D5BC5151E0B7E006D8984 /* OptGameInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 336D5BC3151E0B7E006D8984 /* OptGameInfoViewController.xib */; };
 		338A9447151F1E1A00F3BC90 /* hiscore.dat in Resources */ = {isa = PBXBuildFile; fileRef = 338A9446151F1E1A00F3BC90 /* hiscore.dat */; };
+		3397DCCD179F2D1000607236 /* d_drgnmst.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3397DCCB179F2D1000607236 /* d_drgnmst.cpp */; };
+		3397DCCE179F2D1000607236 /* d_playmark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3397DCCC179F2D1000607236 /* d_playmark.cpp */; };
+		3397DCD2179F2D2000607236 /* d_sms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3397DCCF179F2D2000607236 /* d_sms.cpp */; };
+		3397DCD3179F2D2000607236 /* sms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3397DCD0179F2D2000607236 /* sms.cpp */; };
+		3397DCDA179F2EED00607236 /* pic16c5x_intf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3397DCD8179F2DA700607236 /* pic16c5x_intf.cpp */; };
+		3397DCDB179F2EFB00607236 /* pic16c5x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3397DCD6179F2DA700607236 /* pic16c5x.cpp */; };
 		339A94DA14F238E600225183 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94D914F238E600225183 /* Icon.png */; };
 		339A94DC14F238E900225183 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94DB14F238E900225183 /* Icon@2x.png */; };
 		339A94DE14F238EF00225183 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 339A94DD14F238EF00225183 /* Default.png */; };
@@ -5071,6 +5077,15 @@
 		336D5BC2151E0B7D006D8984 /* OptGameInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptGameInfoViewController.m; sourceTree = "<group>"; };
 		336D5BC3151E0B7E006D8984 /* OptGameInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptGameInfoViewController.xib; sourceTree = "<group>"; };
 		338A9446151F1E1A00F3BC90 /* hiscore.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hiscore.dat; sourceTree = "<group>"; };
+		3397DCCB179F2D1000607236 /* d_drgnmst.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_drgnmst.cpp; sourceTree = "<group>"; };
+		3397DCCC179F2D1000607236 /* d_playmark.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = d_playmark.cpp; sourceTree = "<group>"; };
+		3397DCCF179F2D2000607236 /* d_sms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = d_sms.cpp; path = sms/d_sms.cpp; sourceTree = "<group>"; };
+		3397DCD0179F2D2000607236 /* sms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sms.cpp; path = sms/sms.cpp; sourceTree = "<group>"; };
+		3397DCD1179F2D2000607236 /* sms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sms.h; path = sms/sms.h; sourceTree = "<group>"; };
+		3397DCD6179F2DA700607236 /* pic16c5x.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pic16c5x.cpp; sourceTree = "<group>"; };
+		3397DCD7179F2DA700607236 /* pic16c5x.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pic16c5x.h; sourceTree = "<group>"; };
+		3397DCD8179F2DA700607236 /* pic16c5x_intf.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pic16c5x_intf.cpp; sourceTree = "<group>"; };
+		3397DCD9179F2DA700607236 /* pic16c5x_intf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pic16c5x_intf.h; sourceTree = "<group>"; };
 		339A94D914F238E600225183 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		339A94DB14F238E900225183 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		339A94DD14F238EF00225183 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -5522,6 +5537,7 @@
 				336B50B314F4439A00CE9A63 /* psikyo */,
 				336B50BF14F4439A00CE9A63 /* pst90s */,
 				336B50FD14F4439A00CE9A63 /* sega */,
+				3397DCD4179F2D2700607236 /* sms */,
 				336B511514F4439A00CE9A63 /* snes */,
 				336B511E14F4439A00CE9A63 /* taito */,
 				336B514814F4439A00CE9A63 /* toaplan */,
@@ -5859,6 +5875,8 @@
 		336B50BF14F4439A00CE9A63 /* pst90s */ = {
 			isa = PBXGroup;
 			children = (
+				3397DCCB179F2D1000607236 /* d_drgnmst.cpp */,
+				3397DCCC179F2D1000607236 /* d_playmark.cpp */,
 				336B50C014F4439A00CE9A63 /* d_1945kiii.cpp */,
 				336B50C114F4439A00CE9A63 /* d_aerofgt.cpp */,
 				336B50C214F4439A00CE9A63 /* d_airbustr.cpp */,
@@ -6232,6 +6250,9 @@
 				336B528914F4439B00CE9A63 /* nec */,
 				33D62BEE169D565B00B00388 /* nec_intf.cpp */,
 				33D62BEF169D565B00B00388 /* nec_intf.h */,
+				3397DCD5179F2DA700607236 /* pic16c5x */,
+				3397DCD8179F2DA700607236 /* pic16c5x_intf.cpp */,
+				3397DCD9179F2DA700607236 /* pic16c5x_intf.h */,
 				336B529714F4439B00CE9A63 /* s2650 */,
 				336B529A14F4439B00CE9A63 /* s2650_intf.cpp */,
 				336B529B14F4439B00CE9A63 /* s2650_intf.h */,
@@ -6607,6 +6628,25 @@
 			);
 			name = Dat;
 			path = Resources/Dat;
+			sourceTree = "<group>";
+		};
+		3397DCD4179F2D2700607236 /* sms */ = {
+			isa = PBXGroup;
+			children = (
+				3397DCCF179F2D2000607236 /* d_sms.cpp */,
+				3397DCD0179F2D2000607236 /* sms.cpp */,
+				3397DCD1179F2D2000607236 /* sms.h */,
+			);
+			name = sms;
+			sourceTree = "<group>";
+		};
+		3397DCD5179F2DA700607236 /* pic16c5x */ = {
+			isa = PBXGroup;
+			children = (
+				3397DCD6179F2DA700607236 /* pic16c5x.cpp */,
+				3397DCD7179F2DA700607236 /* pic16c5x.h */,
+			);
+			path = pic16c5x;
 			sourceTree = "<group>";
 		};
 		339E5FA314F1851D006FB970 = {
@@ -11190,6 +11230,12 @@
 				33667564178EAC2500C88902 /* CMActionSheet.m in Sources */,
 				33667565178EAC2500C88902 /* CMRotatableModalViewController.m in Sources */,
 				33554A2917971DAD00D2E0D4 /* OptiCadeMapViewController.mm in Sources */,
+				3397DCCD179F2D1000607236 /* d_drgnmst.cpp in Sources */,
+				3397DCCE179F2D1000607236 /* d_playmark.cpp in Sources */,
+				3397DCD2179F2D2000607236 /* d_sms.cpp in Sources */,
+				3397DCD3179F2D2000607236 /* sms.cpp in Sources */,
+				3397DCDA179F2EED00607236 /* pic16c5x_intf.cpp in Sources */,
+				3397DCDB179F2EFB00607236 /* pic16c5x.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

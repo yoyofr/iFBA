@@ -3658,7 +3658,7 @@ static struct BurnRomInfo SjryukoRomDesc[] = {
 	{ "epr-12247.a10",    0x08000, 0xef8a64c6, SYS16_ROM_UPD7759DATA | BRF_SND },
 	{ "epr-12248.a11",    0x08000, 0xd1eabdab, SYS16_ROM_UPD7759DATA | BRF_SND },
 	
-	{ "317-5021.key",     0x02000, 0x4a3422e4, SYS16_ROM_KEY | BRF_ESS | BRF_PRG },
+	{ "317-5021.key",     0x02000, 0xc3e32937, SYS16_ROM_KEY | BRF_ESS | BRF_PRG },
 };
 
 
@@ -8005,7 +8005,7 @@ struct BurnDriver BurnDrvBullet = {
 
 struct BurnDriver BurnDrvCotton = {
 	"cotton", NULL, NULL, NULL, "1991",
-	"Cotton (set 3, World, FD1094 317-0181a)\0", NULL, "Sega / Success", "System 16B",
+	"Cotton (set 3, World, FD1094 317-0181a)\0", NULL, "Success / Sega", "System 16B",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_SEGA_SYSTEM16B | HARDWARE_SEGA_5521 | HARDWARE_SEGA_FD1094_ENC, GBF_HORSHOOT, 0,
 	NULL, CottonRomInfo, CottonRomName, NULL, NULL, System16bInputInfo, CottonDIPInfo,
@@ -8015,7 +8015,7 @@ struct BurnDriver BurnDrvCotton = {
 
 struct BurnDriver BurnDrvCottonu = {
 	"cottonu", "cotton", NULL, NULL, "1991",
-	"Cotton (set 2, US, FD1094 317-0180)\0", NULL, "Sega / Success", "System 16B",
+	"Cotton (set 2, US, FD1094 317-0180)\0", NULL, "Success / Sega", "System 16B",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_SEGA_SYSTEM16B | HARDWARE_SEGA_5521 | HARDWARE_SEGA_FD1094_ENC, GBF_HORSHOOT, 0,
 	NULL, CottonuRomInfo, CottonuRomName, NULL, NULL, System16bInputInfo, CottonDIPInfo,
@@ -8025,7 +8025,7 @@ struct BurnDriver BurnDrvCottonu = {
 
 struct BurnDriver BurnDrvCottonj = {
 	"cottonj", "cotton", NULL, NULL, "1991",
-	"Cotton (set 1, Japan, FD1094 317-0179a))\0", NULL, "Sega / Success", "System 16B",
+	"Cotton (set 1, Japan, FD1094 317-0179a))\0", NULL, "Success / Sega", "System 16B",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE, 2, HARDWARE_SEGA_SYSTEM16B | HARDWARE_SEGA_5521 | HARDWARE_SEGA_FD1094_ENC, GBF_HORSHOOT, 0,
 	NULL, CottonjRomInfo, CottonjRomName, NULL, NULL, System16bInputInfo, CottonDIPInfo,
@@ -8545,7 +8545,7 @@ struct BurnDriver BurnDrvTturfu = {
 
 struct BurnDriver BurnDrvWb3 = {
 	"wb3", NULL, NULL, NULL, "1988",
-	"Wonder Boy III - Monster Lair (set 5, World, System 16B, 8751 317-0098)\0", NULL, "Sega / Westone", "System 16B",
+	"Wonder Boy III - Monster Lair (set 6, World, System 16B, 8751 317-0098)\0", NULL, "Sega / Westone", "System 16B",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_SEGA_SYSTEM16B | HARDWARE_SEGA_5521, GBF_PLATFORM, 0,
 	NULL, Wb3RomInfo, Wb3RomName, NULL, NULL, System16bInputInfo, Wb3DIPInfo,

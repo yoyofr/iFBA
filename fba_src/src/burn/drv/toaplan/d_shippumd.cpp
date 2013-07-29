@@ -589,7 +589,6 @@ static INT32 DrvFrame()
         glob_replay_last_fingerOn=0;
         //
         DrvDoReset();
-        
 	}
     
     if (glob_replay_mode==REPLAY_PLAYBACK_MODE) { //REPLAY

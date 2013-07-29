@@ -4309,7 +4309,6 @@ static void NeoStandardInputs(INT32 nBank)
 			NeoInput[10] |= (NeoButton3[i] & 1) << i;
 			NeoInput[11] |= (NeoButton4[i] & 1) << i;
 		}
-        
 		NeoClearOpposites(&NeoInput[ 8]);
 		NeoClearOpposites(&NeoInput[ 9]);
         

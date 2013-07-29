@@ -136,7 +136,11 @@ extern "C" {
 	/* controller status stuff */
 #define WM_MAX_BATTERY_CODE			0xC8
     
-#define EXP_ID_CODE_CLASSIC_CONTROLLER		0x9A1EFDFD
+//#define EXP_ID_CODE_CLASSIC_CONTROLLER		0x9A1EFDFD
+    
+#define EXP_ID_CODE_CLASSIC_CONTROLLER	0xA4200101
+#define EXP_ID_CODE_WIIUPRO_CONTROLLER  0xA4200120
+//    const uchar nunchukType[6] = { 0x00, 0x00, 0xA4, 0x20, 0x00, 0x00 };
     
 	/* offsets in wiimote memory */
 #define WM_MEM_OFFSET_CALIBRATION	0x16
@@ -199,7 +203,7 @@ extern "C" {
 #define CLASSIC_CTRL_BUTTON_DOWN		0x4000
 #define CLASSIC_CTRL_BUTTON_RIGHT		0x8000
 #define CLASSIC_CTRL_BUTTON_ALL			0xFEFF
-    
+        
 	/* expansion codes */
 #define EXP_NONE						0
 #define EXP_CLASSIC						2

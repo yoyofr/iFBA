@@ -554,7 +554,6 @@ inline static INT32 CheckSleep(INT32)
 	return 0;
 }
 
-
 static INT32 DrvFrame()
 {
 	INT32 nInterleave = 10;

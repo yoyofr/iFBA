@@ -1673,7 +1673,7 @@ static INT32 DrvFrame()
 		nCycleSegment = (nCyclesTotal[0] - nCyclesDone[0]) / (nInterleave - i);
 		nCyclesDone[0] += SekRun(nCycleSegment);
 
-		BurnTimerUpdateYM3812((INT64)i *(INT64)nCyclesTotal[1] / nInterleave);
+		BurnTimerUpdateYM3812(i * (nCyclesTotal[1] / nInterleave));
 
 		INT32 scanline = i >> 1;
 
@@ -1700,9 +1700,10 @@ static INT32 DrvFrame()
 	if (pBurnSoundOut) {
 		ZetOpen(0);
 		BurnYM3812Update(pBurnSoundOut, nBurnSoundLen);
-        MSM6295Render(0, pBurnSoundOut, nBurnSoundLen);
 		ZetClose();
+        MSM6295Render(0, pBurnSoundOut, nBurnSoundLen);
     }
+
 	memcpy (DrvSprBuf, DrvSprRAM, 0x800);
 //bprintf (PRINT_NORMAL, _T("end\n"));
 

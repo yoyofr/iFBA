@@ -566,7 +566,7 @@ void YMZ280BWriteRegister(UINT8 nValue)
 						YMZ280BChannelInfo[nWriteChannel].nStep = 127;
 
 						if (YMZ280BChannelInfo[nWriteChannel].nMode > 1) {
-#ifdef zDEBUG
+#ifdef DEBUG
 		//					bprintf(0,_T("Sample Start: %08X - Stop: %08X.\n"),YMZ280BChannelInfo[nWriteChannel].nSampleStart, YMZ280BChannelInfo[nWriteChannel].nSampleStop);
 #endif
 						}

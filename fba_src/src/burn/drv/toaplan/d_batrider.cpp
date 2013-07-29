@@ -1022,8 +1022,6 @@ static INT32 drvFrame()
     
 	INT32 nSoundBufferPos = 0;
     
-    
-    
 	ZetOpen(0);
 	for (INT32 i = 1; i <= nInterleave; i++) {
     	INT32 nCurrentCPU;

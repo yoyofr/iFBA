@@ -398,6 +398,7 @@ void __fastcall ps5_write_word(UINT32 address, UINT16 data)
 #ifdef LSB_FIRST
 	address ^= 2;
 #endif
+
 	if ((address & 0xfffffe00) == 0x4050000) {
 		*((UINT16 *)(DrvZoomRAM + (address & 0x1fe))) = data;
 		return;
