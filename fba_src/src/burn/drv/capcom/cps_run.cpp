@@ -52,7 +52,7 @@ static INT32 DrvReset()
 	if (Cps == 2 || PangEEP || Cps1Qs == 1 || CpsBootlegEEPROM) EEPROMReset();
     
     //HACK
-    if (glob_ffingeron) {
+    if (glob_ffingeron&&virtual_stick_on) {
         wait_control=60;
         glob_framecpt=0;
         glob_replay_last_dx16=glob_replay_last_dy16=0;
@@ -328,7 +328,7 @@ INT32 Cps1Frame()
 	CpsRwGetInp();												// Update the input port values
     
     //HACK for 'follow finger' touchpad mode
-    if (glob_ffingeron) {
+    if (glob_ffingeron&&virtual_stick_on) {
         if ( wait_control==0 ) PatchMemory68KFFinger();
         else wait_control--;
     }
@@ -465,7 +465,7 @@ INT32 Cps2Frame()
 	CpsRwGetInp();											// Update the input port values
     
     //HACK for 'follow finger' touchpad mode
-    if (glob_ffingeron) {
+    if (glob_ffingeron&&virtual_stick_on) {
         if ( wait_control==0 ) PatchMemory68KFFinger();
         else wait_control--;
     }

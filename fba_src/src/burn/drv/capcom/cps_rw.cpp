@@ -618,7 +618,7 @@ for (i = 0; i < 8; i++) { Inp##nnnn |= (CpsInp##nnnn[i] & 1) << i; }  }
     } else {
         
         //HACK
-        if (glob_ffingeron) {
+        if (glob_ffingeron&&virtual_stick_on) {
             if (glob_mov_y>0) Inp001|=8;
             if (glob_mov_y<0) Inp001|=4;
             if (glob_mov_x<0) Inp001|=2;

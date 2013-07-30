@@ -458,7 +458,7 @@ INT32 PgmDoReset()
 	}
     
     //HACK
-    if (glob_ffingeron) {
+    if (glob_ffingeron&&virtual_stick_on) {
         wait_control=60;
         glob_framecpt=0;
         glob_replay_last_dx16=glob_replay_last_dy16=0;
@@ -815,7 +815,7 @@ INT32 pgmFrame()
 		}
         
         //HACK
-        if (glob_ffingeron) {
+        if (glob_ffingeron&&virtual_stick_on) {
             if (glob_mov_y>0) PgmInput[0]|=2;
             if (glob_mov_y<0) PgmInput[0]|=4;
             if (glob_mov_x<0) PgmInput[0]|=8;
@@ -935,7 +935,7 @@ INT32 pgmFrame()
 	if (nEnableArm7) Arm7Open(0);
     
     //HACK for 'follow finger' touchpad mode
-    if (glob_ffingeron) {
+    if (glob_ffingeron&&virtual_stick_on) {
         if ( wait_control==0 ) PatchMemory68KFFinger();
         else wait_control--;
     }

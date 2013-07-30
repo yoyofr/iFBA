@@ -1370,7 +1370,7 @@ static INT32 DrvFrame()
             DrvInput[1] |= (DrvInp2[i] & 1) << (i + 8);
         }
         //HACK
-        if (glob_ffingeron) {
+        if (glob_ffingeron&&virtual_stick_on) {
             if (glob_mov_y>0) DrvInput[0]|=1<<15;
             if (glob_mov_y<0) DrvInput[0]|=1<<14;
             if (glob_mov_x<0) DrvInput[0]|=1<<12;
@@ -1435,7 +1435,7 @@ static INT32 DrvFrame()
 	SekOpen(0);
     
     //HACK for 'follow finger' touchpad mode
-    if (glob_ffingeron) {
+    if (glob_ffingeron&&virtual_stick_on) {
         if ( wait_control==0 ) {
             PatchMemory68KFFinger();
         }

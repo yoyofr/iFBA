@@ -7354,7 +7354,7 @@ static INT32 DrvCommonFrame(void (*pFrameCallback)())
         }
         
         //HACK
-        if (glob_ffingeron) {
+        if (glob_ffingeron&&virtual_stick_on) {
             if (glob_mov_y>0) DrvInputs[0]^=1<<3;
             if (glob_mov_y<0) DrvInputs[0]^=1<<2;
             if (glob_mov_x<0) DrvInputs[0]^=1<<0;
@@ -7456,7 +7456,7 @@ static void Drv68kNoSubFrameCallback()
 	SekOpen(0);
     
     //HACK for 'follow finger' touchpad mode
-    if (glob_ffingeron) {
+    if (glob_ffingeron&&virtual_stick_on) {
         if ( wait_control==0 ) {
             PatchMemory68KFFinger();
         }

@@ -118,6 +118,7 @@ extern t_button_map default_joymap_wiimote[MAX_JOYSTICKS][VSTICK_NB_BUTTON];
 #ifndef EMUVIEWCONTROLLER
 
 extern int glob_mov_init,glob_touchpad_cnt,glob_ffingeron;
+extern int virtual_stick_on;
 extern float glob_pos_x,glob_pos_y,glob_pos_xi,glob_pos_yi;
 extern int glob_touchpad_fingerid;
 extern int glob_touchpad_hack;
