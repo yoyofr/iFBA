@@ -71,7 +71,9 @@ EmuViewController *emuvc;
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.    
+	// Do any additional setup after loading the view, typically from a nib.
+    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
+    self.navigationController.navigationBar.translucent = NO;
     
     emuvc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];
     

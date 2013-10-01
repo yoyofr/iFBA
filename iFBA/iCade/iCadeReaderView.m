@@ -160,7 +160,7 @@ static char *OFF_STATES;
     if ([text length]>1) {
         NSLog(@"WARNING: text: %@",text);
     }
- //   NSLog(@"Text: %@",text);
+//    NSLog(@"Text: %@",text);
     char ch = [text characterAtIndex:0];
     char *p;
     

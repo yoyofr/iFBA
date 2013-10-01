@@ -129,6 +129,10 @@ NSMutableArray *filterEntries;
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+//    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
+//    self.navigationController.navigationBar.translucent = NO;
+//    self.navigationController
+        
     launchMenuAS=nil;
     menuASactive=0;
     

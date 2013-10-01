@@ -66,7 +66,6 @@ extern int glob_replay_currentslot;
     }
     authorTextField.text=tmpStr;
     
-    
     [cancelBtn setType:BButtonTypeDanger];
     [uploadBtn setType:BButtonTypePrimary];
     
