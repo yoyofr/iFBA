@@ -12,8 +12,8 @@
 //#define IFBAONLINE "http://localhost:10081/"
 #define IFBAONLINE "http://ifba-online.appspot.com/"
 
-#define iFBA_VERSION_MAJOR 0
-#define iFBA_VERSION_MINOR 6
+#define iFBA_VERSION_MAJOR 1
+#define iFBA_VERSION_MINOR 0
 
 #define REPLAY_COVERAGE @"batrider,batrideru,batriderc,batriderj,batriderk,batriderja,batridert,batsugun,batsugunsp,bbakraid,bbakraidj,bbakraidja,bgaregga,bgareggabl,bgareggacn,bgareggahk,bgareggat2,bgareggatw,blazstar,daioh,daioha,ddonpach,ddonpachj,ddp2,ddp2100,ddp2101,ddpdoj,ddpdoja,ddpdojb,ddpdojblk,dfeveron,dimahoo,dogyuun,dogyuuna,dogyuunt,donpachi,donpachij,dragnblz,espgal,esprade,feversos,gigawing,grindstm,grindstma,gunbird,gunbird2,ironclad,ket,kingdmgp,mahoudai,mmatrix,pulstar,progear,s1945,s1945ii,s1945iii,samuraia,shippumd,sngkace,sstriker,sstrikera,tengai,tengaij,truxton2,varth,varthr1,varthu,varthj,vfive"
 

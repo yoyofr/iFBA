@@ -8,7 +8,9 @@
 
 #define min(a,b) (a<b?a:b)
 
+#ifdef TESTFLIGHT_BUILD
 #include "TestFlight.h"
+#endif
 
 #define EMUVIEWCONTROLLER
 #import "fbaconf.h"
@@ -28,6 +30,10 @@ volatile int glob_touchpad_hack;
 volatile int glob_buttons_limit;
 volatile float glob_scr_ratioX=1,glob_scr_ratioY=1;
 int wait_control;
+
+volatile float mScaleFactor;
+volatile int mDeviceType,mDevice_ww,mDevice_hh;
+
 
 
 int LoadReplay(int slot);
@@ -81,52 +87,54 @@ float joy_analog_l[MAX_JOYSTICKS];
 float joy_analog_r[MAX_JOYSTICKS];
 int wm_joy_pl[MAX_JOYSTICKS];
 int wm_prev_joy_pl[MAX_JOYSTICKS];
+float patch_analog_x[MAX_JOYSTICKS];
+float patch_analog_y[MAX_JOYSTICKS];
 
 t_button_map default_joymap_iCade[MAX_JOYSTICKS][VSTICK_NB_BUTTON]={
-    {{"Start",4},
-     {"Select/Coin",8},
-     {"Menu",0},
-     {"Turbo",0},
-     {"Service",0},
-     {"Fire 1",1},
-     {"Fire 2",2},
-     {"Fire 3",3},
-     {"Fire 4",5},
-     {"Fire 5",6},
-     {"Fire 6",7}},
-    {{"Start",4},
+    {{"Start",7},
         {"Select/Coin",8},
         {"Menu",0},
         {"Turbo",0},
         {"Service",0},
         {"Fire 1",1},
-        {"Fire 2",2},
-        {"Fire 3",3},
-        {"Fire 4",5},
-        {"Fire 5",6},
-        {"Fire 6",7}},
-    {{"Start",4},
+        {"Fire 2",3},
+        {"Fire 3",5},
+        {"Fire 4",2},
+        {"Fire 5",4},
+        {"Fire 6",6}},
+    {{"Start",7},
         {"Select/Coin",8},
         {"Menu",0},
         {"Turbo",0},
         {"Service",0},
         {"Fire 1",1},
-        {"Fire 2",2},
-        {"Fire 3",3},
-        {"Fire 4",5},
-        {"Fire 5",6},
-        {"Fire 6",7}},
-    {{"Start",4},
+        {"Fire 2",3},
+        {"Fire 3",5},
+        {"Fire 4",2},
+        {"Fire 5",4},
+        {"Fire 6",6}},
+    {{"Start",7},
         {"Select/Coin",8},
         {"Menu",0},
         {"Turbo",0},
         {"Service",0},
         {"Fire 1",1},
-        {"Fire 2",2},
-        {"Fire 3",3},
-        {"Fire 4",5},
-        {"Fire 5",6},
-        {"Fire 6",7}},
+        {"Fire 2",3},
+        {"Fire 3",5},
+        {"Fire 4",2},
+        {"Fire 5",4},
+        {"Fire 6",6}},
+    {{"Start",7},
+        {"Select/Coin",8},
+        {"Menu",0},
+        {"Turbo",0},
+        {"Service",0},
+        {"Fire 1",1},
+        {"Fire 2",3},
+        {"Fire 3",5},
+        {"Fire 4",2},
+        {"Fire 5",4},
+        {"Fire 6",6}}
 };
 
 int joymap_dir_iCade[MAX_JOYSTICKS][8];
@@ -267,19 +275,19 @@ void computePadLayouts(int nb_button){
     if (cur_ifba_conf->vpad_pad_manual_layout[0]==0){
         if (device_isIpad) {
             cur_ifba_conf->vpad_pad_x[0] = virtual_stick_maxdist;
-            cur_ifba_conf->vpad_pad_y[0] = 1024-virtual_stick_maxdist-80;
+            cur_ifba_conf->vpad_pad_y[0] = mDevice_hh-virtual_stick_maxdist-80;
         } else {
             cur_ifba_conf->vpad_pad_x[0] = virtual_stick_maxdist;
-            cur_ifba_conf->vpad_pad_y[0] = 480-virtual_stick_maxdist-0;
+            cur_ifba_conf->vpad_pad_y[0] = mDevice_hh-virtual_stick_maxdist-0;
         }
     }
     if (cur_ifba_conf->vpad_pad_manual_layout[1]==0){
         if (device_isIpad) {
             cur_ifba_conf->vpad_pad_x[1] = virtual_stick_maxdist+40;
-            cur_ifba_conf->vpad_pad_y[1] = 768-virtual_stick_maxdist-40;
+            cur_ifba_conf->vpad_pad_y[1] = mDevice_ww-virtual_stick_maxdist-40;
         } else {
             cur_ifba_conf->vpad_pad_x[1] = virtual_stick_maxdist;
-            cur_ifba_conf->vpad_pad_y[1] = 320-virtual_stick_maxdist;
+            cur_ifba_conf->vpad_pad_y[1] = mDevice_ww-virtual_stick_maxdist;
             
         }
     }
@@ -310,26 +318,26 @@ void computePadLayouts(int nb_button){
             virtual_stick[i].sw=64;virtual_stick[i].sh=32;
         }
         
-        cur_ifba_conf->vpad_button_x[0][0]=768-64;
+        cur_ifba_conf->vpad_button_x[0][0]=mDevice_ww-64;
         cur_ifba_conf->vpad_button_y[0][0]=0;
-        cur_ifba_conf->vpad_button_x[1][0]=768-64-96;
+        cur_ifba_conf->vpad_button_x[1][0]=mDevice_ww-64-96;
         cur_ifba_conf->vpad_button_y[1][0]=0;
         cur_ifba_conf->vpad_button_x[2][0]=0;
         cur_ifba_conf->vpad_button_y[2][0]=0;
         cur_ifba_conf->vpad_button_x[3][0]=96;
         cur_ifba_conf->vpad_button_y[3][0]=0;
-        cur_ifba_conf->vpad_button_x[4][0]=768/2-32;
+        cur_ifba_conf->vpad_button_x[4][0]=mDevice_ww/2-32;
         cur_ifba_conf->vpad_button_y[4][0]=0;
         
-        cur_ifba_conf->vpad_button_x[0][1]=1024-64;
+        cur_ifba_conf->vpad_button_x[0][1]=mDevice_hh-64;
         cur_ifba_conf->vpad_button_y[0][1]=0;
-        cur_ifba_conf->vpad_button_x[1][1]=1024-64;
+        cur_ifba_conf->vpad_button_x[1][1]=mDevice_hh-64;
         cur_ifba_conf->vpad_button_y[1][1]=100;
         cur_ifba_conf->vpad_button_x[2][1]=0;
         cur_ifba_conf->vpad_button_y[2][1]=0;
         cur_ifba_conf->vpad_button_x[3][1]=0;
         cur_ifba_conf->vpad_button_y[3][1]=100;
-        cur_ifba_conf->vpad_button_x[4][1]=1024/2-32;
+        cur_ifba_conf->vpad_button_x[4][1]=mDevice_hh/2-32;
         cur_ifba_conf->vpad_button_y[4][1]=0;
     } else {
         for (int i=0;i<5;i++) {
@@ -338,26 +346,26 @@ void computePadLayouts(int nb_button){
         }
         
         
-        cur_ifba_conf->vpad_button_x[0][0]=320-48;
+        cur_ifba_conf->vpad_button_x[0][0]=mDevice_ww-48;
         cur_ifba_conf->vpad_button_y[0][0]=0;
-        cur_ifba_conf->vpad_button_x[1][0]=320-48-64;
+        cur_ifba_conf->vpad_button_x[1][0]=mDevice_ww-48-64;
         cur_ifba_conf->vpad_button_y[1][0]=0;
         cur_ifba_conf->vpad_button_x[2][0]=0;
         cur_ifba_conf->vpad_button_y[2][0]=0;
         cur_ifba_conf->vpad_button_x[3][0]=64;
         cur_ifba_conf->vpad_button_y[3][0]=0;
-        cur_ifba_conf->vpad_button_x[4][0]=320/2-24;
+        cur_ifba_conf->vpad_button_x[4][0]=mDevice_ww/2-24;
         cur_ifba_conf->vpad_button_y[4][0]=0;
         
-        cur_ifba_conf->vpad_button_x[0][1]=480-48;
+        cur_ifba_conf->vpad_button_x[0][1]=mDevice_hh-48;
         cur_ifba_conf->vpad_button_y[0][1]=0;
-        cur_ifba_conf->vpad_button_x[1][1]=480-48;
+        cur_ifba_conf->vpad_button_x[1][1]=mDevice_hh-48;
         cur_ifba_conf->vpad_button_y[1][1]=48;
         cur_ifba_conf->vpad_button_x[2][1]=0;
         cur_ifba_conf->vpad_button_y[2][1]=0;
         cur_ifba_conf->vpad_button_x[3][1]=0;
         cur_ifba_conf->vpad_button_y[3][1]=48;
-        cur_ifba_conf->vpad_button_x[4][1]=480/2-24;
+        cur_ifba_conf->vpad_button_x[4][1]=mDevice_hh/2-24;
         cur_ifba_conf->vpad_button_y[4][1]=0;
     }
     
@@ -383,11 +391,11 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
     
     
     if (device_isIpad) {
-        w=768;
-        h=1024-40;
+        w=mDevice_ww;
+        h=mDevice_hh-40;
     } else {
-        w=320;
-        h=480;
+        w=mDevice_ww;
+        h=mDevice_hh;
     }
     w-=10;
     h-=10; //dirty hack to compensate the +30% touch area size
@@ -473,11 +481,11 @@ cur_ifba_conf->vpad_button_x[a][o]=px; cur_ifba_conf->vpad_button_y[a][o]=py; \
     }
     
     if (device_isIpad) {
-        w=1024;
-        h=768-40;
+        w=mDevice_hh;
+        h=mDevice_ww-40;
     } else {
-        w=480;
-        h=320;
+        w=mDevice_hh;
+        h=mDevice_ww;
     }
     w-=10;
     h-=10; //dirty hack to compensate the +30% touch area size
@@ -700,20 +708,18 @@ static int statusLoadMsgUpdated=0;
 		mDeviceType=0; //iphone   (iphone 4 res currently not handled)
 		mDevice_hh=480;
 		mDevice_ww=320;
-		UIScreen* mainscr = cur_screen;
+        
+        UIScreen* mainscr = [UIScreen mainScreen];
 		if ([mainscr respondsToSelector:@selector(currentMode)]) {
 			if (mainscr.currentMode.size.width>480) {  //iphone 4
-				mDeviceType=2;
-				mScaleFactor=1;//(float)mainscr.currentMode.size.width/480.0f;
-                
-				// mDevice_ww = mainscr.currentMode.size.width;
-				// mDevice_hh = mainscr.currentMode.size.height;
+				mDeviceType=0;
+				mScaleFactor=1;
 			}
+            if(mainscr.bounds.size.height>=568) {
+                mDevice_hh=568; //iPhone 5
+            }
 		}
-		
 	}
-    
-    
     
     m_oglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
 	[EAGLContext setCurrentContext:m_oglContext];
@@ -783,6 +789,8 @@ static int statusLoadMsgUpdated=0;
         joy_analog_y[i]=0;
         joy_analog_l[i]=0;
         joy_analog_r[i]=0;
+        patch_analog_x[i]=0;
+        patch_analog_y[i]=0;
     }
 }
 
@@ -794,10 +802,17 @@ static int statusLoadMsgUpdated=0;
     // e.g. self.myOutlet = nil;
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden=YES;
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     
     
     //assign good conf
@@ -825,24 +840,24 @@ static int statusLoadMsgUpdated=0;
     //icade map
     memset(joymap_dir_iCade,0,sizeof(joymap_dir_iCade));
     for (int joy=0;joy<MAX_JOYSTICKS;joy++)
-    for (int i=0;i<VSTICK_NB_BUTTON;i++) {
-        int j=cur_ifba_conf->joymap_iCade[joy][i].dev_btn;
-        if (j) {
-            switch (i) {
-                case 0:joymap_dir_iCade[joy][j-1]=GN_START;break;
-                case 1:joymap_dir_iCade[joy][j-1]=GN_SELECT_COIN;break;
-                case 2:joymap_dir_iCade[joy][j-1]=GN_MENU_KEY;break;
-                case 3:joymap_dir_iCade[joy][j-1]=GN_TURBO;break;
-                case 4:joymap_dir_iCade[joy][j-1]=GN_SERVICE;break;
-                case 5:joymap_dir_iCade[joy][j-1]=GN_A;break;
-                case 6:joymap_dir_iCade[joy][j-1]=GN_B;break;
-                case 7:joymap_dir_iCade[joy][j-1]=GN_C;break;
-                case 8:joymap_dir_iCade[joy][j-1]=GN_D;break;
-                case 9:joymap_dir_iCade[joy][j-1]=GN_E;break;
-                case 10:joymap_dir_iCade[joy][j-1]=GN_F;break;
+        for (int i=0;i<VSTICK_NB_BUTTON;i++) {
+            int j=cur_ifba_conf->joymap_iCade[joy][i].dev_btn;
+            if (j) {
+                switch (i) {
+                    case 0:joymap_dir_iCade[joy][j-1]=GN_START;break;
+                    case 1:joymap_dir_iCade[joy][j-1]=GN_SELECT_COIN;break;
+                    case 2:joymap_dir_iCade[joy][j-1]=GN_MENU_KEY;break;
+                    case 3:joymap_dir_iCade[joy][j-1]=GN_TURBO;break;
+                    case 4:joymap_dir_iCade[joy][j-1]=GN_SERVICE;break;
+                    case 5:joymap_dir_iCade[joy][j-1]=GN_A;break;
+                    case 6:joymap_dir_iCade[joy][j-1]=GN_B;break;
+                    case 7:joymap_dir_iCade[joy][j-1]=GN_C;break;
+                    case 8:joymap_dir_iCade[joy][j-1]=GN_D;break;
+                    case 9:joymap_dir_iCade[joy][j-1]=GN_E;break;
+                    case 10:joymap_dir_iCade[joy][j-1]=GN_F;break;
+                }
             }
         }
-    }
     //wiimotes map
     memset(joymap_dir_wiimote,0,sizeof(joymap_dir_wiimote));
     for (int joy=0;joy<MAX_JOYSTICKS;joy++)
@@ -886,6 +901,7 @@ static int statusLoadMsgUpdated=0;
     //
     for (int j=0;j<MAX_JOYSTICKS;j++) {
         joy_analog_x[j]=0;joy_analog_y[j]=0;
+        patch_analog_x[j]=0;patch_analog_y[j]=0;
         joy_state[j][GN_UP]=0;
         joy_state[j][GN_DOWN]=0;
         joy_state[j][GN_LEFT]=0;
@@ -906,9 +922,12 @@ static int statusLoadMsgUpdated=0;
     m_displayLink.frameInterval = 2; //30fps
 	[m_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 }
-    
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    
     if (renderVPADonly) {
         nShouldExit=3;
     } else {
@@ -1068,7 +1087,9 @@ static int statusLoadMsgUpdated=0;
             
             
             if (cur_ifba_conf->vpad_followfinger) {
+#ifdef TESTFLIGHT_BUILD
                 [TestFlight passCheckpoint:@"FINGER_MODE"];
+#endif
                 //printf("Using follow-finger touchscreen mode\n");
                 
                 UIAlertView* alert =
@@ -1179,7 +1200,9 @@ static int statusLoadMsgUpdated=0;
     
     if (glob_replay_mode==REPLAY_RECORD_MODE) { //SAVE
         SaveReplay(glob_replay_currentslot);
+#ifdef TESTFLIGHT_BUILD
         [TestFlight passCheckpoint:@"Save replay"];
+#endif
     }
     
     if (nShouldExit==1) {
@@ -1218,6 +1241,8 @@ static int statusLoadMsgUpdated=0;
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -1328,6 +1353,7 @@ static int statusLoadMsgUpdated=0;
         default:
             break;
     }
+    
     
     if (joy_state[0][GN_MENU_KEY]) nShouldExit=2;
     bAppDoFast=joy_state[0][GN_TURBO];
@@ -1669,9 +1695,10 @@ void stopWiimoteDetection(void) {
     }
     sprintf(argv[1],"%s",gameName);
     
+#ifdef TESTFLIGHT_BUILD
     //TFLog(@"Start game: %s",gameName);
     [TestFlight passCheckpoint:[NSString stringWithFormat:@"Start game: %s",gameName]];
-    
+#endif
     
     fba_main(argc,(char**)argv);
     free (argv[0]);
@@ -2371,6 +2398,7 @@ int StopProgressBar() {
     
 }
 
+
 - (void)doFrame {
     
     int width,height,rw,rh;
@@ -2379,6 +2407,39 @@ int StopProgressBar() {
     
     if (doFrame_inProgress) return;
     doFrame_inProgress=1;
+    
+    if (virtual_stick_on==0) {
+        //analog patch
+        float fincr=0.1f;
+        for (int i=0;i<MAX_JOYSTICKS;i++) {
+            if (joy_state[i][GN_LEFT]) {
+                if (patch_analog_x[i]>-1) patch_analog_x[i]-=fincr;
+                else patch_analog_x[i]=-1;
+            }
+            if (joy_state[i][GN_RIGHT]) {
+                if (patch_analog_x[i]<1) patch_analog_x[i]+=fincr;
+                else patch_analog_x[i]=1;
+            }
+            if ( !(joy_state[i][GN_LEFT]||joy_state[i][GN_RIGHT]) ) {
+                if (patch_analog_x[i]>0) patch_analog_x[i]-=fincr;
+                if (patch_analog_x[i]<0) patch_analog_x[i]+=fincr;
+            }
+            if (joy_state[i][GN_DOWN]) {
+                if (patch_analog_y[i]>-1) patch_analog_y[i]-=fincr;
+                else patch_analog_y[i]=-1;
+            }
+            if (joy_state[i][GN_UP]) {
+                if (patch_analog_y[i]<1) patch_analog_y[i]+=fincr;
+                else patch_analog_y[i]=1;
+            }
+            if ( !(joy_state[i][GN_UP]||joy_state[i][GN_DOWN]) ) {
+                if (patch_analog_y[i]>0) patch_analog_y[i]-=fincr;
+                if (patch_analog_y[i]<0) patch_analog_y[i]+=fincr;
+            }
+            joy_analog_x[i]=patch_analog_x[i];
+            joy_analog_y[i]=patch_analog_y[i];
+        }
+    }
     
     //get ogl context & bind
     
@@ -2559,7 +2620,7 @@ int StopProgressBar() {
             break;
     }
     
-    if (virtual_stick_on) [self drawVPad];
+    if (virtual_stick_on&&(glob_replay_mode!=REPLAY_PLAYBACK_MODE)) [self drawVPad];
     [m_oglContext presentRenderbuffer:GL_RENDERBUFFER_OES];
     
     //get time
@@ -2685,8 +2746,11 @@ int LoadReplay(int slot) {
             return -2;
         } else {
             //            NSLog(@"Loading: %dKB / FPS: %d / Estimated running time: %d:%02d",glob_replay_data_index_max/1024,tmpFPS,glob_framecpt_max*100/tmpFPS/60,(glob_framecpt_max*100/tmpFPS)%60);
+#ifdef TESTFLIGHT_BUILD
             [TestFlight passCheckpoint:@"Load replay"];
+#endif
             fread((void*)glob_replay_data_stream,glob_replay_data_index_max,1,f);
+            
         }
         fclose(f);
     }

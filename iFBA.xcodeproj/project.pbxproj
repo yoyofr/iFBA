@@ -2487,6 +2487,7 @@
 		33F444DA14F5685100BA36E1 /* EmuViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 33F444D914F5685100BA36E1 /* EmuViewController.mm */; };
 		33FB5BBB15094C6F00D1904B /* crt-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 33FB5BB715094C6F00D1904B /* crt-1.png */; };
 		33FB5BBD15094C6F00D1904B /* scanline-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 33FB5BB915094C6F00D1904B /* scanline-1.png */; };
+		CC4595371803ED48001DF600 /* MyNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4595361803ED48001DF600 /* MyNavigationController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -5273,6 +5274,8 @@
 		33F444D914F5685100BA36E1 /* EmuViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EmuViewController.mm; sourceTree = "<group>"; };
 		33FB5BB715094C6F00D1904B /* crt-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crt-1.png"; sourceTree = "<group>"; };
 		33FB5BB915094C6F00D1904B /* scanline-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scanline-1.png"; sourceTree = "<group>"; };
+		CC4595351803ED48001DF600 /* MyNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyNavigationController.h; sourceTree = "<group>"; };
+		CC4595361803ED48001DF600 /* MyNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyNavigationController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -6705,6 +6708,8 @@
 			children = (
 				339E5FC114F1851E006FB970 /* AppDelegate.h */,
 				339E5FC214F1851E006FB970 /* AppDelegate.mm */,
+				CC4595351803ED48001DF600 /* MyNavigationController.h */,
+				CC4595361803ED48001DF600 /* MyNavigationController.m */,
 				336D5BBE151DE94A006D8984 /* DBHelper.h */,
 				336D5BBF151DE94A006D8984 /* DBHelper.mm */,
 				33E47CF91783678000A1F2AD /* BButton */,
@@ -11147,6 +11152,7 @@
 				336B55D914F4439B00CE9A63 /* interface.cpp in Sources */,
 				336B55DE14F4439B00CE9A63 /* 2xpm.cpp in Sources */,
 				336B55DF14F4439B00CE9A63 /* 2xsai.cpp in Sources */,
+				CC4595371803ED48001DF600 /* MyNavigationController.m in Sources */,
 				336B55E214F4439B00CE9A63 /* epx.cpp in Sources */,
 				336B55E414F4439B00CE9A63 /* hq2xs.cpp in Sources */,
 				336B55E514F4439B00CE9A63 /* hq2xs_16.cpp in Sources */,
@@ -11290,7 +11296,7 @@
 		334F5FEF14FCB09800ED3CDB /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "";
 				GCC_CHAR_IS_UNSIGNED_CHAR = NO;
 				GCC_ENABLE_BUILTIN_FUNCTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

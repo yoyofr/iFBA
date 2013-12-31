@@ -15,16 +15,23 @@ pthread_mutex_t db_mutex;
 void DBHelper::createDB() {
     NSError *error;
     NSString *pathToDBTemplate=[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"iFBA.db"];
-    
+
+#ifdef RELEASE_DEBUG
     NSString *pathToDB=[NSString stringWithFormat:@"%@/iFBA.db",[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents"]];
-    
+#else
+    NSString *pathToDB=[NSString stringWithFormat:@"/var/mobile/Documents/iFBA/iFBA.db"];
+#endif
     NSFileManager *fileManager=[[NSFileManager alloc] init];
     [fileManager copyItemAtPath:pathToDBTemplate toPath:pathToDB error:&error];
     [fileManager release];
 }
 
 void DBHelper::setGameStats(const char *gameName,int playCount,int fav,char *lastPlayed,int playTime) {
+#ifdef RELEASE_DEBUG
     NSString *pathToDB=[NSString stringWithFormat:@"%@/iFBA.db",[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents"]];
+#else
+    NSString *pathToDB=[NSString stringWithFormat:@"/var/mobile/Documents/iFBA/iFBA.db"];
+#endif
 	sqlite3 *db;
 	int err;
     BOOL success;
@@ -54,7 +61,11 @@ void DBHelper::setGameStats(const char *gameName,int playCount,int fav,char *las
 	pthread_mutex_unlock(&db_mutex);
 }
 void DBHelper::getGameStats(const char *gameName,int *playCount,int *fav,char *lastPlayed,int *playTime) {
+#ifdef RELEASE_DEBUG
     NSString *pathToDB=[NSString stringWithFormat:@"%@/iFBA.db",[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents"]];
+#else
+    NSString *pathToDB=[NSString stringWithFormat:@"/var/mobile/Documents/iFBA/iFBA.db"];
+#endif
 	sqlite3 *db;
 	int err;
     BOOL success;
@@ -95,7 +106,11 @@ void DBHelper::getGameStats(const char *gameName,int *playCount,int *fav,char *l
 }
 
 void DBHelper::getGameInfo(const char *gameName,char *gameInfo) {
-	NSString *pathToDB=[NSString stringWithFormat:@"%@/iFBA.db",[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents"]];
+#ifdef RELEASE_DEBUG
+    NSString *pathToDB=[NSString stringWithFormat:@"%@/iFBA.db",[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents"]];
+#else
+    NSString *pathToDB=[NSString stringWithFormat:@"/var/mobile/Documents/iFBA/iFBA.db"];
+#endif
 	sqlite3 *db;
 	int err;
     BOOL success;
@@ -140,4 +155,97 @@ void DBHelper::getGameInfo(const char *gameName,char *gameInfo) {
 	sqlite3_close(db);
 	
 	pthread_mutex_unlock(&db_mutex);
+}
+
+int DBHelper::getFavGames(char ***gameNameA) {
+    int nbEntries=0;
+    return nbEntries;
+}
+
+void DBHelper::freeFavGames(int nbEntries,char ***gameNameA) {
+    if (nbEntries>0) {
+        for (int i=0;i<nbEntries;i++) {
+            if ((*gameNameA)[i]) free((*gameNameA)[i]);
+        }
+        free(*gameNameA);
+    }
+}
+
+
+void DBHelper::freeMostPlayedGames(int nbEntries,char ***gameNameA,int **playCountA) {
+    if (nbEntries>0) {
+        for (int i=0;i<nbEntries;i++) {
+            if ((*gameNameA)[i]) free((*gameNameA)[i]);
+        }
+        free(*playCountA);
+        free(*gameNameA);
+    }
+}
+
+int DBHelper::getMostPlayedGames(char ***gameNameA,int **playCountA) {
+#ifdef RELEASE_DEBUG
+    NSString *pathToDB=[NSString stringWithFormat:@"%@/iFBA.db",[NSHomeDirectory() stringByAppendingPathComponent:  @"Documents"]];
+#else
+    NSString *pathToDB=[NSString stringWithFormat:@"/var/mobile/Documents/iFBA/iFBA.db"];
+#endif
+	sqlite3 *db;
+	int err;
+    BOOL success;
+    int nbEntries;
+    
+    nbEntries=0;
+    if (!gameNameA) return 0;
+    if (!playCountA) return 0;
+    
+    NSFileManager *fileManager=[[NSFileManager alloc] init];
+    success = [fileManager fileExistsAtPath:pathToDB];
+    [fileManager release];
+    if (!success) createDB();
+	
+	pthread_mutex_lock(&db_mutex);
+    
+    if (sqlite3_open([pathToDB UTF8String], &db) == SQLITE_OK){
+		char sqlStatement[1024];
+		sqlite3_stmt *stmt;
+		
+		sprintf(sqlStatement,"SELECT COUNT(1) FROM play_stats WHERE play_count>0");
+		
+		err=sqlite3_prepare_v2(db, sqlStatement, -1, &stmt, NULL);
+		if (err==SQLITE_OK){
+			while (sqlite3_step(stmt) == SQLITE_ROW) {
+                nbEntries=sqlite3_column_int(stmt, 0);
+			}
+			sqlite3_finalize(stmt);
+		} else NSLog(@"ErrSQL : %d",err);
+	}
+    
+    if (nbEntries>0) {
+		char sqlStatement[1024];
+		sqlite3_stmt *stmt;
+        int idx=0;
+        
+        *gameNameA=(char**)malloc(nbEntries*sizeof(char*));
+        *playCountA=(int*)malloc(nbEntries*sizeof(int));
+		
+		sprintf(sqlStatement,"SELECT game_name,play_count FROM play_stats WHERE play_count>0 ORDER BY play_count DESC");
+		
+		err=sqlite3_prepare_v2(db, sqlStatement, -1, &stmt, NULL);
+		if (err==SQLITE_OK){
+			while (sqlite3_step(stmt) == SQLITE_ROW) {
+                char *strGame=(char*)sqlite3_column_text(stmt, 0);
+                
+                (*gameNameA)[idx]=(char*)malloc(strlen(strGame)+1);
+                strcpy((*gameNameA)[idx],strGame);
+                (*playCountA)[idx]=sqlite3_column_int(stmt,1);
+                idx++;
+			}
+			sqlite3_finalize(stmt);
+		} else NSLog(@"ErrSQL : %d",err);
+    }
+    
+	sqlite3_close(db);
+	
+	pthread_mutex_unlock(&db_mutex);
+    
+    return nbEntries;
 }

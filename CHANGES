@@ -8,6 +8,16 @@ TODO
 - pad restrictor: 2ways, 4ways, 8ways
 - check forgotten worlds main dump => garbage in bg gfx
 - analog stick mul factor: currently implemented as a hack in loadSettings functions
+- analog stick wrapper when using iCade/gamepad with no analog stick
+
+V1.0 - 31/12/2013
+-----------------
+- updated FBA core
+- new 'follow-finger' mode for several classic shmup: cave, raizing, toaplan, psikyo, ...
+- new 'record & playback' replays for several games. Online sharing capabilities
+- iMpulse controller support
+- iOS 7 support
+- multiple bugfixes
 
 v0.5 - 15/04/2012
 -----------------

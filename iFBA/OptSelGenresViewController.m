@@ -155,6 +155,10 @@ static int viewWA_patch=0;
     [self.mnview setNeedsLayout];
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
 
 
 #pragma uitableview

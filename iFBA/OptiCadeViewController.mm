@@ -97,6 +97,11 @@ static CADisplayLink* m_displayLink;
     return YES;
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+
 //static int viewWA_patch=0;
 
 - (void)viewWillAppear:(BOOL)animated {

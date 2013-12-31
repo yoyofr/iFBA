@@ -35,6 +35,10 @@ static iCadeReaderView *iCaderv;
 static CADisplayLink* m_displayLink;
 static int bypass_reinit_view;
 
+static char **filter_gamesNames;
+static int *filter_playCounts;
+
+
 extern char szAppRomPaths[DIRS_MAX][MAX_PATH];
 extern volatile int emuThread_running;
 extern char gameInfo[64*1024];
@@ -132,6 +136,10 @@ NSMutableArray *filterEntries;
 //    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
 //    self.navigationController.navigationBar.translucent = NO;
 //    self.navigationController
+    
+    filter_gamesNames=NULL;
+    filter_playCounts=NULL;
+
         
     launchMenuAS=nil;
     menuASactive=0;
@@ -523,6 +531,11 @@ NSMutableArray *filterEntries;
     [tabView reloadData];
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+
 
 #pragma mark - UI Actions
 
@@ -554,6 +567,11 @@ NSMutableArray *filterEntries;
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     return sectionLblMin;
 }
+
+- (NSInteger)tableView:(UITableView *)tabView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    return index;
+}
+
 
 -(NSString*) genreStr:(int)genre {
     NSString *result=[NSString stringWithFormat:@""];
@@ -1228,6 +1246,16 @@ static int replay_slot[10];
 -(IBAction) showMostplayed{
     UIAlertView *alertMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:NSLocalizedString(@"Not dev yet",@"") delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
     [alertMsg show];
+
+/*
+    DBHelper::getMostPlayedGames(&filter_gamesNames, &filter_playCounts);
+    //TODO: handle free
+    
+    cur_game_section=-1;
+    [self scanRomsDirs];
+    [tabView reloadData];
+    if (cur_game_section>=0) [self.tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cur_game_row inSection:cur_game_section] animated:FALSE scrollPosition:UITableViewScrollPositionMiddle];
+ */
 }
 -(IBAction) showGenres{
     [self presentSemiModalViewController:selgenrevc];

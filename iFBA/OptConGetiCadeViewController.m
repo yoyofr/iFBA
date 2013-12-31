@@ -85,6 +85,11 @@ static int viewWA_patch=0;
     return YES;
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+
 /****************************************************/
 /****************************************************/
 /*        ICADE                                     */

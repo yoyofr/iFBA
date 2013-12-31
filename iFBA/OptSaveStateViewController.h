@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "EmuViewController.h"
 #import "iCadeReaderView.h"
+#import "BButton.h"
 
 @interface OptSaveStateViewController : UIViewController <iCadeEventDelegate> {
     IBOutlet UITableView *tabView;
     IBOutlet UIImageView *imgview;
     IBOutlet UIBarButtonItem *btn_backToEmu;
-    IBOutlet UIButton *btn_save,*btn_load;
+    IBOutlet BButton *btn_save,*btn_load;
 @public
     EmuViewController *emuvc;
     
@@ -23,7 +24,7 @@
 @property (nonatomic, retain) IBOutlet UITableView *tabView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *btn_backToEmu;
 @property (nonatomic, retain) IBOutlet UIImageView *imgview;
-@property (nonatomic, retain) IBOutlet UIButton *btn_save,*btn_load;
+@property (nonatomic, retain) IBOutlet BButton *btn_save,*btn_load;
 @property (nonatomic, retain) EmuViewController *emuvc;
 
 

@@ -62,6 +62,10 @@ static int selectedSlot;
     tabView.backgroundView=nil;
     tabView.backgroundView=[[[UIView alloc] init] autorelease];
     
+    [btn_load setType:BButtonTypeGray];
+    [btn_save setType:BButtonTypeGray];
+    
+    
     //ICADE & Wiimote
     ui_currentIndex_s=-1;
     iCaderv = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
@@ -139,6 +143,11 @@ static int selectedSlot;
     return YES;
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -195,8 +204,10 @@ static int selectedSlot;
         if (pad_action) {
             pad_action=2;
             cur_action=2;
-            [btn_load setHighlighted:YES];
-            [btn_save setHighlighted:NO];
+            //[btn_load setHighlighted:YES];
+            //[btn_save setHighlighted:NO];
+            [btn_load setType:BButtonTypePrimary];
+            [btn_save setType:BButtonTypeGray];
         }
     } else {
         [imgview setImage:nil];
@@ -204,8 +215,10 @@ static int selectedSlot;
         if (pad_action) {
             pad_action=1;
             cur_action=1;
-            [btn_load setHighlighted:NO];
-            [btn_save setHighlighted:YES];
+            //[btn_load setHighlighted:NO];
+            //[btn_save setHighlighted:YES];
+            [btn_load setType:BButtonTypeGray];
+            [btn_save setType:BButtonTypePrimary];
         }
     }
     btn_save.hidden=NO;
@@ -367,27 +380,29 @@ static int selectedSlot;
         } else if (button&iCadeButtonB) { //back
             if (pad_action) {
                 pad_action=cur_action=0;
-                [btn_load setHighlighted:NO];
-                [btn_save setHighlighted:NO];
+                //[btn_load setHighlighted:NO];
+                //[btn_save setHighlighted:NO];
+                [btn_load setType:BButtonTypeGray];
+                [btn_save setType:BButtonTypeGray];
             } else [[self navigationController] popViewControllerAnimated:YES];
         } else if (button&iCadeJoystickLeft) {
             if (pad_action==2) {
                 if (cur_action==2) cur_action=1;
                 else cur_action=2;
             }
-            if (cur_action==1) [btn_save setHighlighted:YES];
-            else [btn_save setHighlighted:NO];
-            if (cur_action==2) [btn_load setHighlighted:YES];
-            else [btn_load setHighlighted:NO];
+            if (cur_action==1) [btn_save setType:BButtonTypePrimary];
+            else [btn_save setType:BButtonTypeGray];
+            if (cur_action==2) [btn_load setType:BButtonTypePrimary];
+            else [btn_load setType:BButtonTypeGray];
         } else if (button&iCadeJoystickRight) {
             if (pad_action==2) {
                 if (cur_action==2) cur_action=1;
                 else cur_action=2;
             }
-            if (cur_action==1) [btn_save setHighlighted:YES];
-            else [btn_save setHighlighted:NO];
-            if (cur_action==2) [btn_load setHighlighted:YES];
-            else [btn_load setHighlighted:NO];
+            if (cur_action==1) [btn_save setType:BButtonTypePrimary];
+            else [btn_save setType:BButtonTypeGray];
+            if (cur_action==2) [btn_load setType:BButtonTypePrimary];
+            else [btn_load setType:BButtonTypeGray];
         }
     }    
     if (pad_action==0) [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];

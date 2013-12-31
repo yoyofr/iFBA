@@ -47,10 +47,7 @@
     iCadeReaderView *control;
     //BTDiscoveryViewController* discoveryView;
     
-    
-    float mScaleFactor;
-    int mDeviceType,mDevice_ww,mDevice_hh;        
-    
+        
     BTstackManager *bt;
 }
 

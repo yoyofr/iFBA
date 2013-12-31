@@ -12,6 +12,8 @@ int lowmem_device;
 
 static float sys_brightness;
 
+BOOL is_ios7,is_retina;
+
 
 #define VERSION_SETTINGS 2
 
@@ -20,7 +22,9 @@ static float sys_brightness;
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
+#ifdef TESTFLIGHT_BUILD
 #include "TestFlight.h"
+#endif
 
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
@@ -881,12 +885,24 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
 	return machine;
 }
 
+/*
+ *  System Versioning Preprocessor Macros
+ */
+
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#ifdef TESTFLIGHT_BUILD
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     [TestFlight takeOff:@"56f0ec34-3ad4-4db7-9a15-0edbd4f1f3ff"];
-    
+#endif
     
     //TODO: to review
     if([[UIScreen screens]count]*0 > 1) { //if there are more than 1 screens connected to the device
@@ -966,9 +982,6 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     strcpy(debug_bundle_path,[[[NSBundle mainBundle] resourcePath] UTF8String]);
 
 #endif
-    
-
-    
     // Override point for customization after application launch.
     UIViewController *menuvc;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -988,8 +1001,29 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
     
     lowmem_device=0;
     
-    self.navController = [[[UINavigationController alloc] init] autorelease];
-    [[self.navController navigationBar] setBarStyle:UIBarStyleBlack]; // UIBarStyleDefault];
+    self.navController = [[[MyNavigationController alloc] init] autorelease];
+    
+    
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        is_ios7=FALSE;
+    } else is_ios7=TRUE;
+    
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
+        // RETINA DISPLAY
+        is_retina=TRUE;
+    } else is_retina=FALSE;
+    
+    if (!is_ios7) {
+        [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleBlackOpaque];
+        [[self.navController navigationBar] setBarStyle:UIBarStyleBlack]; // UIBarStyleDefault];
+        self.navController.navigationBar.translucent = NO;
+    } else {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+        [[self.navController navigationBar] setBarStyle:UIBarStyleDefault];
+        self.navController.navigationBar.translucent = NO;        
+    }
+
     //    [[self.navController navigationBar] setTranslucent:YES];
     //****************************************************
     //Init background image with a mosaic of random titles
@@ -1057,8 +1091,9 @@ keyStr=[NSString stringWithFormat:@"%@_%@",gameStr,a];\
         UIAlertView *settingsMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning",@"") message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
         [settingsMsg show];
     }
-    
+#ifdef TESTFLIGHT_BUILD
     [TestFlight passCheckpoint:@"LAUNCH_OK"];
+#endif
     return YES;
 }
 

@@ -72,8 +72,8 @@ EmuViewController *emuvc;
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
-    self.navigationController.navigationBar.translucent = NO;
+//    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
+//    self.navigationController.navigationBar.translucent = NO;
     
     emuvc = [[EmuViewController alloc] initWithNibName:@"EmuViewController" bundle:nil];
     
@@ -198,6 +198,14 @@ EmuViewController *emuvc;
 	[super viewDidDisappear:animated];
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     //    [emuvc shouldAutorotateToInterfaceOrientation:interfaceOrientation];
@@ -295,7 +303,7 @@ EmuViewController *emuvc;
             if (indexPath.row==0) {
                 cell.textLabel.text=NSLocalizedString(@"About",@"");                
             } else if (indexPath.row==1) {
-                cell.textLabel.text=@"Beta info";
+                cell.textLabel.text=@"'Follow-finger' mode info";
             }
             break;
         case 3:
@@ -384,8 +392,8 @@ EmuViewController *emuvc;
             NSString *msgString=[NSString stringWithFormat:NSLocalizedString(@"About_Msg",@""),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"],nBurnDrvCount];
             UIAlertView *aboutMsg=[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"About",@"") message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
             [aboutMsg show];
-        } else if (indexPath.row==1) {//beta test-info
-            NSString *msgString=[NSString stringWithFormat:@"'follow-finger' coverage:\n%@\n----------------------------------\nReplay coverage:\n%@",[FFINGER_COVERAGE stringByReplacingOccurrencesOfString:@"," withString:@"\n"],[REPLAY_COVERAGE stringByReplacingOccurrencesOfString:@"," withString:@"\n"]];
+        } else if (indexPath.row==1) {//follow-finger mode info
+            NSString *msgString=[NSString stringWithFormat:@"'Follow-finger' coverage:\n%@\n----------------------------------\nReplay coverage:\n%@",[FFINGER_COVERAGE stringByReplacingOccurrencesOfString:@"," withString:@"\n"],[REPLAY_COVERAGE stringByReplacingOccurrencesOfString:@"," withString:@"\n"]];
             UIAlertView *aboutBetaMsg=[[[UIAlertView alloc] initWithTitle:@"Beta info" message:msgString delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil] autorelease];
             [aboutBetaMsg show];
         }
