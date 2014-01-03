@@ -10,6 +10,12 @@ TODO
 - analog stick mul factor: currently implemented as a hack in loadSettings functions
 - analog stick wrapper when using iCade/gamepad with no analog stick
 
+V1.1 - xx/01/2014
+-----------------
+- bugfix: replay download
+- bugfix: buttons drawing during replay
+- 
+
 V1.0 - 31/12/2013
 -----------------
 - updated FBA core

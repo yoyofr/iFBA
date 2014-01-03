@@ -128,6 +128,8 @@ EmuViewController *emuvc;
         [tabView selectRowAtIndexPath:[NSIndexPath indexPathForRow:ui_currentIndex_r inSection:ui_currentIndex_s] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
     }
     
+    self.tabView.alpha = 1.0;
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -192,6 +194,8 @@ EmuViewController *emuvc;
     
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
+    [UIView animateWithDuration:0.3 animations:^(){ self.tabView.alpha = 0.0; }];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

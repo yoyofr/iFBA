@@ -88,6 +88,8 @@ static CADisplayLink* m_displayLink;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.tabView.alpha = 1.0;
+    
     /* Wiimote check => rely on cadisplaylink*/
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];
     m_displayLink.frameInterval = 3; //20fps
@@ -113,6 +115,9 @@ static CADisplayLink* m_displayLink;
 }
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
+    
+    [UIView animateWithDuration:0.3 animations:^(){ self.tabView.alpha = 0.0; }];
+    
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
     [dirlist release];

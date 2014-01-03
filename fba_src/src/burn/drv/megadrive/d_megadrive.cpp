@@ -174,7 +174,7 @@ INT32 MegadriveGetZipName(char** pszName, UINT32 i)
 //		szFilename[j] = pszGameName[j + 3];
 //	}
 
-	*pszName = szFilename;
+	*pszName = pszGameName;//szFilename;
 
 	return 0;
 }

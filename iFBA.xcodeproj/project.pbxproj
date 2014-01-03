@@ -2412,7 +2412,6 @@
 		33A7E73F14FA97E5007B42B9 /* sdl_font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33A7E73D14FA97D7007B42B9 /* sdl_font.cpp */; };
 		33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33A7E74314FABEDB007B42B9 /* fastarm_memfunc.o */; };
 		33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AD897B14F85A4D00239FB6 /* Cyclone.o */; };
-		33B581FD176CC06B00421AE5 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33B581F9176CC06B00421AE5 /* libTestFlight.a */; };
 		33B581FE176CC06B00421AE5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 33B581FA176CC06B00421AE5 /* README.md */; };
 		33B581FF176CC06B00421AE5 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 33B581FB176CC06B00421AE5 /* release_notes.md */; };
 		33B584EF150E8463000B5D03 /* DPad_D.png in Resources */ = {isa = PBXBuildFile; fileRef = 33B584E6150E8463000B5D03 /* DPad_D.png */; };
@@ -5299,7 +5298,6 @@
 				33AD898314F85A4D00239FB6 /* Cyclone.o in Frameworks */,
 				33A7E74414FABEDB007B42B9 /* fastarm_memfunc.o in Frameworks */,
 				334F5FB614FC000900ED3CDB /* libBTstack.dylib in Frameworks */,
-				33B581FD176CC06B00421AE5 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6667,7 +6665,6 @@
 				339A94DD14F238EF00225183 /* Default.png */,
 				339A94DB14F238E900225183 /* Icon@2x.png */,
 				339A94D914F238E600225183 /* Icon.png */,
-				339E631F14F199E9006FB970 /* QuartzCore.framework */,
 				339E5FB814F1851E006FB970 /* iFBA */,
 				3366754A178EAC2400C88902 /* CMActionSheet */,
 				339E62D814F18ACA006FB970 /* Resources */,
@@ -6688,6 +6685,7 @@
 		339E5FB114F1851E006FB970 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				339E631F14F199E9006FB970 /* QuartzCore.framework */,
 				33E47CE51780CA8D00A1F2AD /* SystemConfiguration.framework */,
 				33E47CE31780CA6100A1F2AD /* MobileCoreServices.framework */,
 				33E47CE11780C9C700A1F2AD /* CFNetwork.framework */,

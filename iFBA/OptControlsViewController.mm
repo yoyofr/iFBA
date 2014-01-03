@@ -71,9 +71,13 @@ static CADisplayLink* m_displayLink;
     [super viewWillDisappear:animated];
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
+    
+    [UIView animateWithDuration:0.3 animations:^(){ self.tabView.alpha = 0.0; }];
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    self.tabView.alpha = 1.0;
     
     /* Wiimote check => rely on cadisplaylink*/
     m_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkWiimote)];

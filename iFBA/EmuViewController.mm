@@ -2112,7 +2112,8 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     
     for (int i=(cur_ifba_conf->vpad_showSpecial?0:VPAD_SPECIALS_BUTTON_NB);i<vpad_button_nb;i++) {
         if (renderVPADonly&&(i!=2)&&(i<VPAD_SPECIALS_BUTTON_NB)) continue;
-        //        if (i<=VPAD_SPECIALS_BUTTON_NB) {
+        if ((i>=VPAD_SPECIALS_BUTTON_NB)&&(glob_replay_mode==REPLAY_PLAYBACK_MODE)) break;
+
         if (i>=VPAD_SPECIALS_BUTTON_NB) {
             glBindTexture(GL_TEXTURE_2D, vpad_button_texture[i-VPAD_SPECIALS_BUTTON_NB]);
         }
@@ -2147,7 +2148,7 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
     }
     //now the stick
     
-    if (glob_ffingeron==0)
+    if ((glob_ffingeron==0)&&(glob_replay_mode!=REPLAY_PLAYBACK_MODE)) {
         switch (cur_ifba_conf->vpad_style) {
             case 0: //animated pad
                 glBindTexture(GL_TEXTURE_2D, vpad_animated_dpad[virtual_stick_pad]);    /* Bind The Texture */
@@ -2269,13 +2270,13 @@ void updateVbuffer(unsigned short *buff,int w,int h,int pitch,int rotated,int nX
                 glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
                 break;
         }
-    
+    }
     
     
     
     glDisable(GL_TEXTURE_2D);
     
-    if (cur_ifba_conf->vpad_style==2) { //highlight direction
+    if ((glob_ffingeron==0)&&(glob_replay_mode!=REPLAY_PLAYBACK_MODE)&&(cur_ifba_conf->vpad_style==2)) { //highlight direction
         for (int i=0;i<4;i++) {
             vertices[0][0]=(float)(cur_ifba_conf->vpad_pad_x[device_orientation]+0.9f*0.9f*virtual_stick_maxdist*cosf(i*M_PI/2))/cur_width;
             vertices[0][1]=(float)(cur_ifba_conf->vpad_pad_y[device_orientation]-0.9f*0.9f*virtual_stick_maxdist*sinf(i*M_PI/2))/cur_height;
@@ -2620,7 +2621,7 @@ int StopProgressBar() {
             break;
     }
     
-    if (virtual_stick_on&&(glob_replay_mode!=REPLAY_PLAYBACK_MODE)) [self drawVPad];
+    if (virtual_stick_on/*&&(glob_replay_mode!=REPLAY_PLAYBACK_MODE)*/) [self drawVPad];
     [m_oglContext presentRenderbuffer:GL_RENDERBUFFER_OES];
     
     //get time

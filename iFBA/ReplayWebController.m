@@ -106,7 +106,7 @@ static ASIHTTPRequest *request=nil;
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
     if (request) {
-        [request cancel];
+        //[request cancel];
         request=nil;
     }
 }

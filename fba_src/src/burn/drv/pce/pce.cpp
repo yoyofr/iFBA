@@ -89,7 +89,7 @@ INT32 PceGetZipName(char** pszName, UINT32 i)
 //		szFilename[j] = pszGameName[j + 4];
 //	}
 
-	*pszName = szFilename;
+	*pszName = pszGameName;//szFilename;
 
 	return 0;
 }

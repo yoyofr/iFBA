@@ -446,6 +446,8 @@ NSMutableArray *filterEntries;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    self.tabView.alpha = 1.0;
     //    cur_game_section=-1;
     
     /* Wiimote check => rely on cadisplaylink*/
@@ -484,6 +486,8 @@ NSMutableArray *filterEntries;
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
+    
+    [UIView animateWithDuration:0.3 animations:^(){ self.tabView.alpha = 0.0; }];
     
     if (m_displayLink) [m_displayLink invalidate];
     m_displayLink=nil;
@@ -1156,7 +1160,7 @@ static int replay_slot[10];
             
             
             menuASactive=0;
-            [[self navigationController] popViewControllerAnimated:NO];
+            //[[self navigationController] popViewControllerAnimated:NO];
         }];
         
         
